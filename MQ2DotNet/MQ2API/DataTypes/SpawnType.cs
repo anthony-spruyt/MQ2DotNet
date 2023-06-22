@@ -28,7 +28,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="mq2TypeFactory"></param>
         /// <param name="pSpawn"></param>
         public SpawnType(MQ2TypeFactory mq2TypeFactory, IntPtr pSpawn) 
-            : base("spawn", mq2TypeFactory, new MQ2VarPtr {Ptr = pSpawn})
+            : base("spawn", mq2TypeFactory, new MQ2VarPtr(pSpawn))
         {
             SpawnStatus = new IndexedMember<IntType, int>(this, "SpawnStatus");
             SeeInvis = new IndexedMember<IntType, int>(this, "SeeInvis");

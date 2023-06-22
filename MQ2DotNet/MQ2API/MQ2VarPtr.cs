@@ -1,72 +1,113 @@
-﻿using System;
-using System.Drawing;
+﻿using JetBrains.Annotations;
+using System;
 using System.Runtime.InteropServices;
-using JetBrains.Annotations;
 
 namespace MQ2DotNet.MQ2API
 {
-    /// <summary>
-    /// Data component of an MQ2 variable
-    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Size = 32)]
+    public struct NativeMQ2VarPtr { }
     [PublicAPI]
-
-# if WIN64
-    [StructLayout(LayoutKind.Explicit, Size = 0x20)]
-# else
-    [StructLayout(LayoutKind.Explicit, Size = 0x18)]
-#endif
-    public struct MQ2VarPtr
+    public class MQ2VarPtr
     {
-#pragma warning disable 1591
-        [FieldOffset(0)]
-        public IntPtr Ptr;
+        public NativeMQ2VarPtr VarPtr { get; }
 
-        [FieldOffset(0)]
-        public float Float;
-
-        [FieldOffset(0)]
-        public uint Dword;
-
-        [FieldOffset(0)]
-        public int Int;
-
-        //[MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-        //[FieldOffset(0)]
-        //public byte[] Array; // This one seems pointless
-        
-        //[MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-        //[FieldOffset(0)]
-        //public byte[] FullArray;
-
-        [FieldOffset(0)]
-        public double Double;
-
-        [FieldOffset(0)]
-        public long Int64;
-
-        [FieldOffset(0)]
-        public ulong UInt64;
-
-        public Color Argb
+        public int Int
         {
-            get => Color.FromArgb(Int);
-            set => Int = value.ToArgb();
+            get { return NativeMethods.MQVarPtr__GetInt(VarPtr); }
+            set { NativeMethods.MQVarPtr__SetInt(VarPtr, value); }
         }
 
-#if WIN64
-        [FieldOffset(0x10)]
-#else
-        [FieldOffset(0x8)]
-#endif
-        public long Which;
+        public UInt32 Dword
+        {
+            get { return NativeMethods.MQVarPtr__GetDword(VarPtr); }
+            set { NativeMethods.MQVarPtr__SetDword(VarPtr, value); }
+        }
 
+        public IntPtr Ptr
+        {
+            get { return NativeMethods.MQVarPtr__GetPtr(VarPtr); }
+            set { NativeMethods.MQVarPtr__SetPtr(VarPtr, value); }
+        }
 
-#if WIN64
-        [FieldOffset(0x18)]
-#else
-        [FieldOffset(0x10)]
-#endif
-        public uint HighPart;
-#pragma warning restore 1591
+        public double Double
+        {
+            get { return NativeMethods.MQVarPtr__GetDouble(VarPtr); }
+            set { NativeMethods.MQVarPtr__SetDouble(VarPtr, value); }
+        }
+
+        public float Float
+        {
+            get { return NativeMethods.MQVarPtr__GetFloat(VarPtr); }
+            set { NativeMethods.MQVarPtr__SetFloat(VarPtr, value); }
+        }
+
+        public Int64 Int64
+        {
+            get { return NativeMethods.MQVarPtr__GetInt64(VarPtr); }
+            set { NativeMethods.MQVarPtr__SetInt64(VarPtr, value); }
+        }
+
+        public UInt64 UInt64
+        {
+            get { return NativeMethods.MQVarPtr__GetUInt64(VarPtr); }
+            set { NativeMethods.MQVarPtr__SetUInt64(VarPtr, value); }
+        }
+
+        public MQ2VarPtr(NativeMQ2VarPtr varPtr)
+        {
+            VarPtr = varPtr;
+        }
+
+        public MQ2VarPtr(IntPtr intPtr)
+        {
+            VarPtr = default;
+
+            Ptr = intPtr;
+        }
+
+        private static class NativeMethods
+        {
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern Int32 MQVarPtr__GetInt(NativeMQ2VarPtr varPtr);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void MQVarPtr__SetInt(NativeMQ2VarPtr varPtr, Int32 value);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern UInt32 MQVarPtr__GetDword(NativeMQ2VarPtr varPtr);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void MQVarPtr__SetDword(NativeMQ2VarPtr varPtr, UInt32 value);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern IntPtr MQVarPtr__GetPtr(NativeMQ2VarPtr varPtr);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void MQVarPtr__SetPtr(NativeMQ2VarPtr varPtr, IntPtr value);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern double MQVarPtr__GetDouble(NativeMQ2VarPtr varPtr);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void MQVarPtr__SetDouble(NativeMQ2VarPtr varPtr, double value);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern float MQVarPtr__GetFloat(NativeMQ2VarPtr varPtr);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void MQVarPtr__SetFloat(NativeMQ2VarPtr varPtr, float value);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern Int64 MQVarPtr__GetInt64(NativeMQ2VarPtr varPtr);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void MQVarPtr__SetInt64(NativeMQ2VarPtr varPtr, Int64 value);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern UInt64 MQVarPtr__GetUInt64(NativeMQ2VarPtr varPtr);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void MQVarPtr__SetUInt64(NativeMQ2VarPtr varPtr, UInt64 value);
+        }
     }
 }

@@ -1,7 +1,6 @@
-﻿using System;
+﻿using MQ2DotNet.MQ2API.DataTypes;
+using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using MQ2DotNet.MQ2API.DataTypes;
 
 /* To create the member properties, grab everything in the switch statement from the cpp MQ2xxxType::GetMember function
  * Then in notepad++, find all:
@@ -39,9 +38,9 @@ namespace MQ2DotNet.MQ2API
         /// <param name="typeFactory">MQ2TypeFactory to use with GetMember calls</param>
         /// <param name="varPtr"></param>
         protected MQ2DataType(string typeName, MQ2TypeFactory typeFactory, MQ2VarPtr varPtr)
-            : this(typeFactory, new MQ2TypeVar { Type = FindMQ2DataType(typeName), VarPtr = varPtr })
+            : this(typeFactory, new MQ2TypeVar(typeName, varPtr))
         {
-            if (_typeVar.Type == IntPtr.Zero)
+            if (_typeVar.Type.IntPtr == IntPtr.Zero)
                 throw new KeyNotFoundException($"MQ2Type not found: {typeName}");
         }
         
@@ -225,11 +224,6 @@ namespace MQ2DotNet.MQ2API
             {
             }
         }
-        #endregion
-
-        #region Unmanaged imports
-        [DllImport("MQ2Main.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr FindMQ2DataType(string name);
         #endregion
     }
 }

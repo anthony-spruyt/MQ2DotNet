@@ -20,7 +20,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="mq2TypeFactory"></param>
         /// <param name="pGroundItem"></param>
         public GroundType(MQ2TypeFactory mq2TypeFactory, IntPtr pGroundItem)
-            : base("ground", mq2TypeFactory, new MQ2VarPtr { Ptr = pGroundItem })
+            : base("ground", mq2TypeFactory, new MQ2VarPtr(pGroundItem))
         {
         }
 
