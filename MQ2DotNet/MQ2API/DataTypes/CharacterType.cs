@@ -8,7 +8,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [PublicAPI]
     [MQ2Type("character")]
-    public class CharacterType : SpawnType // Inheritance won't work, use Spawn
+    public class CharacterType : MQ2DataType
     {
         internal CharacterType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -415,6 +415,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Current favor/tribute
         /// </summary>
         public long? CurrentFavor => GetMember<Int64Type>("CurrentFavor");
+
+        /// <summary>
+        /// Current hit points
+        /// </summary>
+        public int? CurrentHPs => GetMember<IntType>("CurrentHPs");
 
         /// <summary>
         /// Current weight
@@ -1195,6 +1200,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Your character's lowest resist
         /// </summary>
         // ReSharper disable once InconsistentNaming
+#pragma warning disable IDE1006 // Naming Styles
         public int? svChromatic => GetMember<IntType>("svChromatic");
 
         /// <summary>
@@ -1238,7 +1244,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public int? svPrismatic => GetMember<IntType>("svPrismatic");
-
+#pragma warning restore IDE1006 // Naming Styles
         /// <summary>
         /// Buff from the Symbol line
         /// </summary>
