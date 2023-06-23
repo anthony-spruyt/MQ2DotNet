@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ninject.Infrastructure.Language;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace MQ2DotNet.MQ2API
                 // Find all subclasses of MQ2DataType, and get their MQ2Type attribute
                 foreach (var type in assembly.ExportedTypes)
                 {
-                    if (!InheritsFrom<MQ2DataType>(type))
+                    if (!InheritsFrom<MQ2DataType>(type) || type.HasAttribute<ObsoleteAttribute>())
                         continue;
 
                     var mq2Type = type.GetCustomAttribute<MQ2TypeAttribute>();

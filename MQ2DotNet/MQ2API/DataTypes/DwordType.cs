@@ -8,6 +8,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [PublicAPI]
     [MQ2Type("dword")]
+    [Obsolete("This is not a basic type exposed in MQ even though there is an internal dword member.")]
     public class DwordType : MQ2DataType
     {
         internal DwordType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
