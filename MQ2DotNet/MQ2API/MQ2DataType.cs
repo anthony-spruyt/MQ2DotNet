@@ -18,7 +18,7 @@ namespace MQ2DotNet.MQ2API
     public class MQ2DataType
     {
         private readonly MQ2TypeFactory _typeFactory;
-        private MQ2TypeVar _typeVar;
+        private readonly MQ2TypeVar _typeVar;
 
         /// <summary>
         /// Create a new MQ2DataType from an MQ2TypeVar

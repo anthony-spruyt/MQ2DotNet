@@ -107,7 +107,17 @@ extern "C" __declspec(dllexport) bool MQ2Type__FromString(MQ2Type * pThis, MQVar
 extern "C" __declspec(dllexport) void MQ2Type__InitVariable(MQ2Type * pThis, MQVarPtr &varPtr) { pThis->InitVariable(varPtr); }
 extern "C" __declspec(dllexport) void MQ2Type__FreeVariable(MQ2Type * pThis, MQVarPtr &varPtr) { pThis->FreeVariable(varPtr); }
 extern "C" __declspec(dllexport) bool MQ2Type__GetMember(MQ2Type * pThis, MQVarPtr varPtr, const char* memberName, char* index, MQTypeVar &destination) { return pThis->GetMember(varPtr, memberName, index, destination); }
-extern "C" __declspec(dllexport) bool MQ2Type__ToString(MQ2Type * pThis, MQVarPtr varPtr, char* destination) { return pThis->ToString(varPtr, destination); }
+extern "C" __declspec(dllexport) bool MQ2Type__ToString(MQ2Type * pThis, MQVarPtr varPtr, char* destination)
+{ 
+	try
+	{
+		return pThis->ToString(varPtr, destination);
+	}
+	catch (const std::exception&)
+	{
+		return false;
+	}
+}
 
 void GetStructSizes()
 {

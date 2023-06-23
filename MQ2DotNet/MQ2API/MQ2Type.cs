@@ -19,7 +19,9 @@ namespace MQ2DotNet.MQ2API
         {
             if (IntPtr == IntPtr.Zero)
             {
-                throw new InvalidOperationException();
+                typeVar = null;
+
+                return false;
             }
 
             if (!NativeMethods.MQ2Type__GetMember(IntPtr, varPtr.VarPtr, memberName, index, out var nativeTypeVar))
@@ -32,18 +34,20 @@ namespace MQ2DotNet.MQ2API
             typeVar = new MQ2TypeVar(nativeTypeVar);
 
             if (typeVar.Type.IntPtr == IntPtr.Zero)
-            {
                 return false;
-            }
 
             return true;
         }
 
         public string ToString(MQ2VarPtr varPtr)
         {
+            if (IntPtr == IntPtr.Zero)
+                return "IntPtr.Zero";
+
             var stringBuilder = new StringBuilder(2048);
 
-            NativeMethods.MQ2Type__ToString(IntPtr, varPtr.VarPtr, stringBuilder);
+            if (!NativeMethods.MQ2Type__ToString(IntPtr, varPtr.VarPtr, stringBuilder))
+                return "MQ2Type::ToString failed";
 
             return stringBuilder.ToString();
         }

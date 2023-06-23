@@ -12,7 +12,7 @@ namespace MQ2DotNet.Program
 {
     internal class LoadedProgramAppDomain : LoadedAppDomainBase
     {
-        private readonly IProgram _program;
+        private IProgram _program;
         private CancellationTokenSource _cts = new CancellationTokenSource();
         private Task _task;
 
@@ -95,6 +95,11 @@ namespace MQ2DotNet.Program
                 if (disposing)
                 {
                     // dispose-only, i.e. non-finalizable logic
+                    if (_program != null)
+                    {
+                        _program.Dispose();
+                        _program = null;
+                    }
                 }
 
                 _disposed = true;

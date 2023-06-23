@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace MQ2DotNet.Program
 {
     /// <summary>
     /// Interface which a program must implement
     /// </summary>
-    public interface IProgram
+    public interface IProgram : IDisposable
     {
         /// <summary>
         /// Entry point of the program
