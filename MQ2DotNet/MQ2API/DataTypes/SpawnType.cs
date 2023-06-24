@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
 namespace MQ2DotNet.MQ2API.DataTypes
@@ -311,6 +312,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The spawn a player is following using /follow on - also returns your pet's target via ${Me.Pet.Following}
         /// </summary>
+        [JsonIgnore]
         public SpawnType Following => GetMember<SpawnType>("Following");
 
         /// <summary>
@@ -478,6 +480,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Master, if it is charmed or a pet
         /// </summary>
+        [JsonIgnore]
         public SpawnType Master => GetMember<SpawnType>("Master");
 
         /// <summary>
@@ -513,6 +516,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// This spawn's mount 
         /// </summary>
+        [JsonIgnore]
         public SpawnType Mount => GetMember<SpawnType>("Mount");
 
         /// <summary>
@@ -539,15 +543,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Nth closest spawn to this spawn, or the nth closest matching a search string e.g. "2,npc" for the second closest NPC
         /// </summary>
         public IndexedMember<SpawnType, int, SpawnType, string> NearestSpawn { get; }
-        
+
         /// <summary>
         /// Next spawn in the linked list
         /// </summary>
+        [JsonIgnore]
         public SpawnType Next => GetMember<SpawnType>("Next");
 
         /// <summary>
         /// Owner, if mercenary
         /// </summary>
+        [JsonIgnore]
         public SpawnType Owner => GetMember<SpawnType>("Owner");
 
         /// <summary>
@@ -579,6 +585,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Next spawn in EQ's favourite data structure
         /// </summary>
+        [JsonIgnore]
         public SpawnType Prev => GetMember<SpawnType>("Prev");
 
         /// <summary>
@@ -676,6 +683,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Target of this spawn's target
         /// </summary>
+        [JsonIgnore]
         public SpawnType TargetOfTarget => GetMember<SpawnType>("TargetOfTarget");
 
         /// <summary>

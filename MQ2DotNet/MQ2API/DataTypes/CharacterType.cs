@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
 namespace MQ2DotNet.MQ2API.DataTypes
@@ -172,6 +173,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Spawn info for aggro lock player
         /// </summary>
+        [JsonIgnore]
         public SpawnType AggroLock => GetMember<SpawnType>("AggroLock");
 
         /// <summary>
@@ -198,7 +200,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Am I the group leader?
         /// </summary>
-        public string AmIGroupLeader => GetMember<StringType>("AmIGroupLeader");
+        public bool AmIGroupLeader => GetMember<BoolType>("AmIGroupLeader");
 
         /// <summary>
         /// AncientDraconicCoin
@@ -600,6 +602,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Target of the group's main assist
         /// </summary>
+        [JsonIgnore]
         public SpawnType GroupAssistTarget => GetMember<SpawnType>("GroupAssistTarget");
 
         /// <summary>
@@ -870,6 +873,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public int? MaxBuffSlots => GetMember<IntType>("MaxBuffSlots");
 
         /// <summary>
+        /// Maximum hit points
+        /// </summary>
+        public new int? MaxHPs => GetMember<IntType>("MaxHPs");
+
+        /// <summary>
+        /// Maximum level, inclusive
+        /// </summary>
+        public int? MaxLevel => GetMember<IntType>("MaxLevel");
+
+        /// <summary>
         /// Mercenary AA experience, out of 1000
         /// </summary>
         public long? MercAAExp => GetMember<Int64Type>("MercAAExp");
@@ -1064,6 +1077,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Spawn that has secondary aggro
         /// </summary>
+        [JsonIgnore]
         public SpawnType SecondaryAggroPlayer => GetMember<SpawnType>("SecondaryAggroPlayer");
 
         /// <summary>
@@ -1139,6 +1153,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The character's spawn
         /// </summary>
+        [JsonIgnore]
         public SpawnType Spawn => GetMember<SpawnType>("Spawn");
 
         /// <summary>

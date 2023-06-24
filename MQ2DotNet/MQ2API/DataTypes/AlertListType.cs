@@ -22,7 +22,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Maximum level, inclusive
         /// </summary>
-        public int? MaxLevel => GetMember<IntType>("MaxLevel");
+        public uint? MaxLevel => GetMember<IntType>("MaxLevel");
 
         /// <summary>
         /// Type, see eSpawnType in MQ2Internal.h

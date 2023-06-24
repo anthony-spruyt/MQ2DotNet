@@ -1,5 +1,6 @@
 ﻿using MQ2DotNet.MQ2API.DataTypes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 /* To create the member properties, grab everything in the switch statement from the cpp MQ2xxxType::GetMember function
@@ -17,6 +18,8 @@ namespace MQ2DotNet.MQ2API
     /// </summary>
     public class MQ2DataType
     {
+        public static readonly ConcurrentDictionary<string, Exception> DataTypeErrors = new ConcurrentDictionary<string, Exception>();
+
         private readonly MQ2TypeFactory _typeFactory;
         private readonly MQ2TypeVar _typeVar;
 
@@ -42,6 +45,7 @@ namespace MQ2DotNet.MQ2API
         {
             if (_typeVar.Type.IntPtr == IntPtr.Zero)
                 throw new KeyNotFoundException($"MQ2Type not found: {typeName}");
+            // rather just return null?
         }
         
         /// <summary>
@@ -69,7 +73,20 @@ namespace MQ2DotNet.MQ2API
             if (!_typeVar.TryGetMember(name, index, out var result))
                 return null;
 
-            return (T) _typeFactory.Create(result);
+            T member;
+
+            try
+            {
+                member = (T)_typeFactory.Create(result);
+            }
+            catch (Exception ex)
+            {
+                DataTypeErrors.TryAdd($"{name}_{index}_{typeof(T)}", ex);
+
+                member = null;
+            }
+
+            return member;
         }
 
         /// <summary>

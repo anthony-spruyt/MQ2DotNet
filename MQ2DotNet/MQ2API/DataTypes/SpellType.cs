@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
 namespace MQ2DotNet.MQ2API.DataTypes
@@ -211,7 +212,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Max level the spell can affect
         /// </summary>
-        public int? MaxLevel => GetMember<IntType>("MaxLevel");
+        public long? MaxLevel => GetMember<Int64Type>("MaxLevel");
 
         /// <summary>
         /// Category of the spell e.g. Direct Damage, Heals
@@ -350,6 +351,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns the spell/combat ability name for the rank the character has.
         /// </summary>
+        [JsonIgnore]
         public SpellType RankName => GetMember<SpellType>("RankName");
 
         /// <summary>

@@ -98,34 +98,22 @@ namespace MQ2DotNet.Services
                 // Like plugin API callbacks, command handlers get executed with our sync context set
                 _eventLoopContext.SetExecuteRestore(() =>
                 {
+                    //===================================================================================================================================================
+                    // TODO: buggy original implementation
+                    // From testing if an await is used in the handler body then it never cotinues past that, it will only execute up to the first await in the handler.
+                    //===================================================================================================================================================
                     try
                     {
+                        // When an async command is executed, instead of calling the handler directly, a task is created to await the handler
+                        // As I understand it, this basically means the handler will be posted as a continuation to EventLoopContext, and run on the next DoEvents()
                         var task = handler(GetArgs(buffer).ToArray());
-                        bool og = false;
-
-                        if (og)
-                        {
-                            //===================================================================================================================================================
-                            // TODO: buggy block
-                            // From testing if an await is used in the handler body then it never cotinues past that, it will not execute the awaited statement.
-                            //===================================================================================================================================================
-                            // When an async command is executed, instead of calling the handler directly, a task is created to await the handler
-                            // As I understand it, this basically means the handler will be posted as a continuation to EventLoopContext, and run on the next DoEvents()
-                            Task.Factory.StartNew
-                            (
-                                async () => await task,
-                                CancellationToken.None,
-                                TaskCreationOptions.None,
-                                TaskScheduler.FromCurrentSynchronizationContext()
-                            );
-                        }
-                        else
-                        {
-                            //===================================================================================================================================================
-                            // FIX? Not sure of implications yet but it works during basic testing
-                            //===================================================================================================================================================
-                            _ = Task.Run(() => task).ConfigureAwait(false);
-                        }
+                        Task.Factory.StartNew
+                        (
+                            async () => await task,
+                            CancellationToken.None,
+                            TaskCreationOptions.None,
+                            TaskScheduler.FromCurrentSynchronizationContext()
+                        );
                     }
                     catch (Exception e)
                     {
