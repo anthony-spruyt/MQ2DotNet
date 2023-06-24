@@ -466,10 +466,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         public uint? MaxPower => GetMember<IntType>("MaxPower");
 
-        ///// <summary>
-        ///// Quantity of item active merchant has
-        ///// </summary>
-        //public int? MerchQuantity => GetMember<IntType>("MerchQuantity");
+        /// <summary>
+        /// Quantity of item active merchant has
+        /// </summary>
+        public uint? MerchQuantity => GetMember<IntType>("MerchQuantity");
 
         /// <summary>
         /// Mount spell on the item

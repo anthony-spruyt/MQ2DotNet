@@ -40,6 +40,8 @@ namespace MQ2DotNet.Services
         {
             get
             {
+                // Broken, doesnt always crash but returns bunch of empty / default data. The count seems valid since in guild hall there were only 8 spawns (7npc + character) at the time.
+                // So the count is fine, but the data type mapping/binding is bad.
                 var hDll = NativeMethods.LoadLibrary("eqlib.dll");
                 var ppSpawnManager = Marshal.ReadIntPtr(NativeMethods.GetProcAddress(hDll, "pSpawnManager"));
                 var pSpawnManager = Marshal.ReadIntPtr(ppSpawnManager);
@@ -60,6 +62,7 @@ namespace MQ2DotNet.Services
         {
             get
             {
+                // This hard crashes the app currently.
                 var pGroundItemListManager = GetItemList();
                 var pGroundItem = Marshal.ReadIntPtr(pGroundItemListManager);
 

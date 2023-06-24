@@ -186,5 +186,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// UI scale factor
         /// </summary>
         public float? UiScale => GetMember<FloatType>("UiScale");
+
+        public override string ToString()
+        {
+            return nameof(EverQuestType);
+        }
     }
 }

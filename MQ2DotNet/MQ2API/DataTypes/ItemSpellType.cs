@@ -12,75 +12,76 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal ItemSpellType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
         }
+        // Needs to be checked this causes CTD
 
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public int? SpellID => GetMember<IntType>("SpellID");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public int? RequiredLevel => GetMember<IntType>("RequiredLevel");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public int? EffectType => GetMember<IntType>("EffectType");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public int? EffectiveCasterLevel => GetMember<IntType>("EffectiveCasterLevel");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public int? MaxCharges => GetMember<IntType>("MaxCharges");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public int? CastTime => GetMember<IntType>("CastTime");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public int? TimerID => GetMember<IntType>("TimerID");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public int? RecastType => GetMember<IntType>("RecastType");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public int? ProcRate => GetMember<IntType>("ProcRate");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public string OtherName => GetMember<StringType>("OtherName");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public int? OtherID => GetMember<IntType>("OtherID");
-
-        /// <summary>
-        /// The spell
-        /// </summary>
-        public SpellType Spell => GetMember<SpellType>("Spell");
-
-        /// <summary>
-        /// Same as OtherName
-        /// </summary>
-        public string OverrideName => GetMember<StringType>("OverrideName");
-
-        /// <summary>
-        /// TODO: What is this?
-        /// </summary>
-        public string OverrideDescription => GetMember<StringType>("OverrideDescription");
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public int? SpellID => GetMember<IntType>("SpellID");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public int? RequiredLevel => GetMember<IntType>("RequiredLevel");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public int? EffectType => GetMember<IntType>("EffectType");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public int? EffectiveCasterLevel => GetMember<IntType>("EffectiveCasterLevel");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public int? MaxCharges => GetMember<IntType>("MaxCharges");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public int? CastTime => GetMember<IntType>("CastTime");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public int? TimerID => GetMember<IntType>("TimerID");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public int? RecastType => GetMember<IntType>("RecastType");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public int? ProcRate => GetMember<IntType>("ProcRate");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public string OtherName => GetMember<StringType>("OtherName");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public int? OtherID => GetMember<IntType>("OtherID");
+        //
+        ///// <summary>
+        ///// The spell
+        ///// </summary>
+        //public SpellType Spell => GetMember<SpellType>("Spell");
+        //
+        ///// <summary>
+        ///// Same as OtherName
+        ///// </summary>
+        //public string OverrideName => GetMember<StringType>("OverrideName");
+        //
+        ///// <summary>
+        ///// TODO: What is this?
+        ///// </summary>
+        //public string OverrideDescription => GetMember<StringType>("OverrideDescription");
     }
 }
