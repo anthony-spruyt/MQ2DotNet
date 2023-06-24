@@ -106,8 +106,8 @@ extern "C" __declspec(dllexport) bool MQ2Type__FromData(MQ2Type * pThis, MQVarPt
 extern "C" __declspec(dllexport) bool MQ2Type__FromString(MQ2Type * pThis, MQVarPtr &varPtr, const char* source) { return pThis->FromString(varPtr, source); }
 extern "C" __declspec(dllexport) void MQ2Type__InitVariable(MQ2Type * pThis, MQVarPtr &varPtr) { pThis->InitVariable(varPtr); }
 extern "C" __declspec(dllexport) void MQ2Type__FreeVariable(MQ2Type * pThis, MQVarPtr &varPtr) { pThis->FreeVariable(varPtr); }
-extern "C" __declspec(dllexport) bool MQ2Type__GetMember(MQ2Type * pThis, MQVarPtr varPtr, const char* memberName, char* index, MQTypeVar &destination) { return pThis->GetMember(varPtr, memberName, index, destination); }
-extern "C" __declspec(dllexport) bool MQ2Type__ToString(MQ2Type * pThis, MQVarPtr varPtr, char* destination)
+extern "C" __declspec(dllexport) bool MQ2Type__GetMember(MQ2Type * pThis, MQVarPtr &varPtr, const char* memberName, char* index, MQTypeVar &destination) { return pThis->GetMember(varPtr, memberName, index, destination); }
+extern "C" __declspec(dllexport) bool MQ2Type__ToString(MQ2Type * pThis, MQVarPtr &varPtr, char* destination)
 { 
 	try
 	{
