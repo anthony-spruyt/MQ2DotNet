@@ -48,6 +48,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
+        /// Implicit conversion to a nullable uint
+        /// </summary>
+        /// <param name="typeVar"></param>
+        public static implicit operator bool(IntType typeVar)
+        {
+            uint? nVal = typeVar?.VarPtr.Dword;
+
+            return nVal.HasValue && nVal.Value > 0;
+        }
+
+        /// <summary>
         /// Implicit conversion to a Class enum
         /// </summary>
         /// <param name="typeVar"></param>
@@ -65,6 +76,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public static implicit operator WindowType(IntType typeVar)
         {
             return null;
+        }
+
+        /// <summary>
+        /// Implicit conversion to a WindowType. This happens when a window (parent, child etc) member internally is a 0, IE null.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator ItemSize?(IntType typeVar)
+        {
+            return (ItemSize?)typeVar?.VarPtr.Dword;
         }
     }
 }

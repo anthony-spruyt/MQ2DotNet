@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -17,11 +18,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Name of the caster who cast the buff, if available.
-        /// </summary>
-        public string Caster => GetMember<StringType>("Caster");
-
-        /// <summary>
         /// The ID of the buff or shortbuff slot
         /// </summary>
         public int? ID => GetMember<IntType>("ID");
@@ -29,7 +25,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The level of the person that cast the buff on you (not the level of the spell)
         /// </summary>
-        public int? Level => GetMember<IntType>("Level");
+        public uint? Level => GetMember<IntType>("Level");
 
         /// <summary>
         /// The spell
@@ -44,7 +40,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The time remaining before the buff fades (not total duration)
         /// </summary>
-        public TimeStampType Duration => GetMember<TimeStampType>("Duration");
+        public TimeSpan? Duration => GetMember<TimeStampType>("Duration");
 
         /// <summary>
         /// The remaining damage absorption of the buff (if any)
@@ -56,6 +52,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Total number of counters (disease, poison, curse, corruption) added by the buff
         /// </summary>
         public long? TotalCounters => GetMember<Int64Type>("TotalCounters");
+
+        /// <summary>
+        /// Number of hit counts remaining on the buff
+        /// </summary>
+        public uint? HitCount => GetMember<IntType>("HitCount");
 
         /// <summary>
         /// Total number of counters disease added by the buff
@@ -78,9 +79,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public long? CountersCorruption => GetMember<Int64Type>("CountersCorruption");
 
         /// <summary>
-        /// Number of hit counts remaining on the buff
+        /// Name of the caster who cast the buff, if available.
         /// </summary>
-        public int? HitCount => GetMember<IntType>("HitCount");
+        public string Caster => GetMember<StringType>("Caster");
 
         /// <summary>
         /// Remove the buff

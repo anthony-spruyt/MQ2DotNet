@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using JetBrains.Annotations;
+using MQ2DotNet.EQ;
+using MQ2DotNet.Utility;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -27,6 +31,39 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public static implicit operator string(StringType typeVar)
         {
             return typeVar?._string;
+        }
+
+        /// <summary>
+        /// Implicit conversion to a LDoNTheme
+        /// TODO: havent tested this type of parsing yet.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator LDoNTheme?(StringType typeVar)
+        {
+            return typeVar?._string?.ToEnum<LDoNTheme>();
+        }
+
+        /// <summary>
+        /// Implicit conversion to a DMGBonusType
+        /// TODO: havent tested this type of parsing yet.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator DMGBonusType?(StringType typeVar)
+        {
+            return typeVar?._string?.ToEnum<DMGBonusType>();
+        }
+
+        /// <summary>
+        /// Implicit conversion to a EffectType
+        /// TODO: havent tested this type of parsing yet.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator EffectType?(StringType typeVar)
+        {
+            return typeVar?._string?.ToEnum<EffectType>();
         }
     }
 }

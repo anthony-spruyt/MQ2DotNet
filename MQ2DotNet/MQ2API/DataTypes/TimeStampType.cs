@@ -82,8 +82,28 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <returns></returns>
         public static implicit operator TimeSpan? (TimeStampType timestampType)
         {
-            // Dword is in ms
-            return timestampType != null ? TimeSpan.FromMilliseconds(timestampType.VarPtr.Dword) : (TimeSpan?)null;
+            if (timestampType == null)
+            {
+                return null;
+            }
+
+            TimeSpan? timespan = null;
+
+            // First try UInt64
+            // MQBuffType::Duration
+            // MQ2ItemType::CastTime
+            if (timestampType.VarPtr.UInt64 > 0)
+            {
+                timespan = TimeSpan.FromMilliseconds(timestampType.VarPtr.UInt64);
+            }
+            // then UInt32
+            // this was the previous implementation
+            else if (timestampType.VarPtr.Dword > 0)
+            {
+                timespan = TimeSpan.FromMilliseconds(timestampType.VarPtr.Dword);
+            }
+
+            return timespan;
         }
     }
 }

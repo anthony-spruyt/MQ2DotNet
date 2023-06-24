@@ -18,19 +18,19 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The hours component of "hh:mm:ss"
         /// </summary>
         [Obsolete("Use conversion to TimeSpan")]
-        public int? Hours => GetMember<IntType>("Hours");
+        public uint? Hours => GetMember<IntType>("Hours");
 
         /// <summary>
         /// The minutes component of "hh:mm:ss"
         /// </summary>
         [Obsolete("Use conversion to TimeSpan")]
-        public int? Minutes => GetMember<IntType>("Minutes");
+        public uint? Minutes => GetMember<IntType>("Minutes");
 
         /// <summary>
         /// The seconds component of "hh:mm:ss"
         /// </summary>
         [Obsolete("Use conversion to TimeSpan")]
-        public int? Seconds => GetMember<IntType>("Seconds");
+        public uint? Seconds => GetMember<IntType>("Seconds");
 
         /// <summary>
         /// The total time in "hh:mm:ss"
@@ -49,19 +49,19 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The total number of minutes
         /// </summary>
         [Obsolete("Use conversion to TimeSpan")]
-        public int? TotalMinutes => GetMember<IntType>("TotalMinutes");
+        public uint? TotalMinutes => GetMember<IntType>("TotalMinutes");
 
         /// <summary>
         /// The total number of seconds
         /// </summary>
         [Obsolete("Use conversion to TimeSpan")]
-        public int? TotalSeconds => GetMember<IntType>("TotalSeconds");
+        public uint? TotalSeconds => GetMember<IntType>("TotalSeconds");
 
         /// <summary>
         /// The number of ticks
         /// </summary>
         [Obsolete("Use conversion to TimeSpan")]
-        public int? Ticks => GetMember<IntType>("Ticks");
+        public uint? Ticks => GetMember<IntType>("Ticks");
 
         /// <summary>
         /// Implicit conversion to TimeSpan

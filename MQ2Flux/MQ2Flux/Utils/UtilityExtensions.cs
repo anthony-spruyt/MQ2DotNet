@@ -34,11 +34,6 @@ namespace MQ2Flux
                     {
                         var json = @object.Serialize();
 
-                        if (json.Length > 1000)
-                        {
-                            json = json.Substring(0, 1000);
-                        }
-
                         logger.LogDebug(json);
                     }
                     catch (Exception ex)

@@ -8,7 +8,7 @@ namespace MQ2DotNet.EQ
     /// </summary>
     [PublicAPI]
     [Flags]
-    public enum Class
+    public enum Class : int
     {
 #pragma warning disable 1591
         Warrior = 0x1,
