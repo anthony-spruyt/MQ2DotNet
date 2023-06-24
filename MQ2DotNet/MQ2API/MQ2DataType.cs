@@ -70,14 +70,14 @@ namespace MQ2DotNet.MQ2API
         /// <exception cref="InvalidCastException" />
         protected T GetMember<T>(string name, string index = "") where T : MQ2DataType
         {
-            if (!_typeVar.TryGetMember(name, index, out var result))
+            if (!_typeVar.TryGetMember(name, index, out var memberTypeVar))
                 return null;
 
             T member;
 
             try
             {
-                member = (T)_typeFactory.Create(result);
+                member = (T)_typeFactory.Create(memberTypeVar);
             }
             catch (Exception ex)
             {

@@ -290,7 +290,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// First beneficial buff on character
         /// </summary>
-        public TargetBuffType Beneficial => GetMember<TargetBuffType>("Beneficial");
+        public BuffType Beneficial => GetMember<BuffType>("Beneficial");
 
         /// <summary>
         /// Bind location, valid indexes are 0 - 4
@@ -967,6 +967,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Percentage of your experience going to AA
         /// </summary>
         public int? PctExpToAA => GetMember<IntType>("PctExpToAA");
+
+        /// <summary>
+        /// HP as a percentage
+        /// </summary>
+        public new int? PctHPs => GetMember<IntType>("PctHPs");
 
         /// <summary>
         /// Current mercenary AA experience as a oercentage

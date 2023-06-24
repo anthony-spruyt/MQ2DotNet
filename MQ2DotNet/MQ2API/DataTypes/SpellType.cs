@@ -160,7 +160,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The number of counters that the spell adds
         /// </summary>
-        public int? CounterNumber => GetMember<IntType>("CounterNumber");
+        public long? CounterNumber => GetMember<Int64Type>("CounterNumber");
 
         /// <summary>
         /// Same as Stacks

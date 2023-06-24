@@ -56,5 +56,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             return (Class?) typeVar?.VarPtr.Int;
         }
+
+        /// <summary>
+        /// Implicit conversion to a WindowType. This happens when a window (parent, child etc) member internally is a 0, IE null.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator WindowType(IntType typeVar)
+        {
+            return null;
+        }
     }
 }

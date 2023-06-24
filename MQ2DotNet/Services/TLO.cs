@@ -335,7 +335,20 @@ namespace MQ2DotNet.Services
             if (!NativeMethods.FindTLO(name, index, out var typeVar))
                 return null;
 
-            return (T)_typeFactory.Create(new MQ2TypeVar(typeVar));
+            T tlo;
+
+            try
+            {
+                tlo = (T)_typeFactory.Create(new MQ2TypeVar(typeVar));
+            }
+            catch (Exception ex)
+            {
+                MQ2DataType.DataTypeErrors.TryAdd($"{name}_{index}_{typeof(T)}", ex);
+
+                tlo = null;
+            }
+
+            return tlo;
         }
 
         #region Helper classes

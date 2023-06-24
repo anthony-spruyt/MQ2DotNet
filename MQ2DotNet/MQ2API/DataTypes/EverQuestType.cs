@@ -65,7 +65,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Number of chat channels you are in
         /// </summary>
-        public int? ChatChannels => GetMember<IntType>("ChatChannels");
+        public uint? ChatChannels => GetMember<IntType>("ChatChannels");
 
         /// <summary>
         /// Name of a chat channel by number, or true/false if you are in a chat channel by name
@@ -116,16 +116,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Process ID of this eqgame.exe
         /// </summary>
         public int? PID => GetMember<IntType>("PID");
-        
-        /// <summary>
-        /// Screen mode, 2 = windowed ?
-        /// </summary>
-        public int? ScreenMode => GetMember<IntType>("ScreenMode");
 
         /// <summary>
         /// Process priority of this eqgame.exe, one of "LOW", "BELOW NORMAL", "NORMAL", "ABOVE NORMAL", "REALTIME"
         /// </summary>
         public string PPriority => GetMember<StringType>("PPriority");
+
+        /// <summary>
+        /// Screen mode, 2 = windowed ?
+        /// </summary>
+        public int? ScreenMode => GetMember<IntType>("ScreenMode");
 
         /// <summary>
         /// Is a /copylayout currently in progress?
@@ -155,7 +155,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Handle to the window
         /// </summary>
-        public IntPtr? HWND => GetMember<IntType>("HWND");
+        public long? HWND => GetMember<Int64Type>("HWND");
 
         /// <summary>
         /// Is the window in the foreground?
@@ -171,5 +171,20 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Path to the Everquest folder
         /// </summary>
         public string Path => GetMember<StringType>("Path");
+
+        /// <summary>
+        /// Max foreground FPS
+        /// </summary>
+        public uint? MaxFPS => GetMember<IntType>("MaxFPS");
+
+        /// <summary>
+        /// Max background FPS
+        /// </summary>
+        public uint? MaxBGFPS => GetMember<IntType>("MaxBGFPS");
+
+        /// <summary>
+        /// UI scale factor
+        /// </summary>
+        public float? UiScale => GetMember<FloatType>("UiScale");
     }
 }

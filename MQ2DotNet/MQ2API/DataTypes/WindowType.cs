@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -20,25 +21,29 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns TRUE if the window is open
         /// </summary>
         public bool Open => GetMember<BoolType>("Open");
-        
+
         /// <summary>
         /// A child item by name
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<WindowType> Child { get; }
 
         /// <summary>
         /// Parent window
         /// </summary>
+        [JsonIgnore]
         public WindowType Parent => GetMember<WindowType>("Parent");
 
         /// <summary>
         /// First child window/control
         /// </summary>
+        [JsonIgnore]
         public WindowType FirstChild => GetMember<WindowType>("FirstChild");
 
         /// <summary>
         /// Next sibling window
         /// </summary>
+        [JsonIgnore]
         public WindowType Next => GetMember<WindowType>("Next");
 
         /// <summary>
