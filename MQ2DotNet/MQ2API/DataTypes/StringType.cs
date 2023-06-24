@@ -11,7 +11,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     [MQ2Type("string")]
     public class StringType : MQ2DataType
     {
-        private string _string;
+        private readonly string _string;
 
         internal StringType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {

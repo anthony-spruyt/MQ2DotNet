@@ -8,7 +8,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [PublicAPI]
     [MQ2Type("character")]
-    public class CharacterType : MQ2DataType
+    public class CharacterType : SpawnType
     {
         internal CharacterType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -418,8 +418,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Current hit points
+        /// Override this as the spawn has a different data type for the member.
         /// </summary>
-        public int? CurrentHPs => GetMember<IntType>("CurrentHPs");
+        public new uint? CurrentHPs => GetMember<IntType>("CurrentHPs");
 
         /// <summary>
         /// Current weight

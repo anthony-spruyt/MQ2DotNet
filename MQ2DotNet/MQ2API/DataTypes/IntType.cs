@@ -29,6 +29,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
+        /// Implicit conversion to a nullable uint
+        /// </summary>
+        /// <param name="typeVar"></param>
+        public static implicit operator uint?(IntType typeVar)
+        {
+            return typeVar?.VarPtr.Dword;
+        }
+
+        /// <summary>
         /// Implicit conversion to a nullable IntPtr
         /// </summary>
         /// <param name="typeVar"></param>
