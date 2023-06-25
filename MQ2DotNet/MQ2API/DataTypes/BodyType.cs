@@ -4,6 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for the body type of a spawn
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("body")]
@@ -16,7 +17,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// ID of the body type, internal use only?
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// Description e.g. Humanoid
