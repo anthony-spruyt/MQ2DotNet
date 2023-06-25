@@ -1,9 +1,11 @@
 ﻿using JetBrains.Annotations;
+using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for the character's group
+    /// MQ2 type for the character's group.
+    /// Last Verified: 2023-06-26
     /// </summary>
     [PublicAPI]
     [MQ2Type("group")]
@@ -11,9 +13,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal GroupType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
+            Member = new IndexedMember<GroupMemberType, string, GroupMemberType, int>(this, "Member");
             Injured = new IndexedMember<IntType, int>(this, "Injured");
             LowMana = new IndexedMember<IntType, int>(this, "LowMana");
-            Member = new IndexedMember<GroupMemberType, string, GroupMemberType, int>(this, "Member");
         }
 
         /// <summary>
@@ -24,7 +26,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Total number of group members, excluding yourself
         /// </summary>
-        public int? Members => GetMember<IntType>("Members");
+        public uint? Members => GetMember<IntType>("Members");
 
         /// <summary>
         /// Data on the leader of the group
@@ -34,7 +36,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Number of members in your group, including yourself
         /// </summary>
-        public int? GroupSize => GetMember<IntType>("GroupSize");
+        public uint? GroupSize => GetMember<IntType>("GroupSize");
 
         /// <summary>
         /// Data on the main tank of the group
@@ -69,47 +71,49 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Number of group members (excluding yourself) that are in zone and alive
         /// </summary>
-        public int? Present => GetMember<IntType>("Present");
+        public uint? Present => GetMember<IntType>("Present");
 
         /// <summary>
         /// Count of how many mercenaries are in your group
         /// </summary>
-        public int? MercenaryCount => GetMember<IntType>("MercenaryCount");
+        public uint? MercenaryCount => GetMember<IntType>("MercenaryCount");
 
         /// <summary>
         /// Count of how many Tank mercenaries are in your group
         /// </summary>
-        public int? TankMercCount => GetMember<IntType>("TankMercCount");
+        public uint? TankMercCount => GetMember<IntType>("TankMercCount");
 
         /// <summary>
         /// Count of how many Healer mercenaries are in your group
         /// </summary>
-        public int? HealerMercCount => GetMember<IntType>("HealerMercCount");
+        public uint? HealerMercCount => GetMember<IntType>("HealerMercCount");
 
         /// <summary>
         /// Count of how many Melee DPS mercenaries are in your group
         /// </summary>
-        public int? MeleeMercCount => GetMember<IntType>("MeleeMercCount");
+        public uint? MeleeMercCount => GetMember<IntType>("MeleeMercCount");
 
         /// <summary>
         /// Count of how many Caster DPS mercenaries are in your group
         /// </summary>
-        public int? CasterMercCount => GetMember<IntType>("CasterMercCount");
+        public uint? CasterMercCount => GetMember<IntType>("CasterMercCount");
         
         /// <summary>
         /// Average HP percentage of group members, including yourself
         /// </summary>
-        public int? AvgHPs => GetMember<IntType>("AvgHPs");
+        public long? AvgHPs => GetMember<IntType>("AvgHPs");
 
         /// <summary>
-        /// Will return the numbers of people in the group that has less than a certain percentage HP
+        /// Will return the numbers of people in the group that has less than a certain percentage HP.
+        /// Resulting value is stored in <see cref="MQ2VarPtr.Dword"/> so cast to <see cref="uint"/>.
         /// </summary>
-        public IndexedMember<IntType, int> Injured;
+        public IndexedMember<IntType, int> Injured { get; }
 
         /// <summary>
-        /// Will return the numbers of people in the group that has less than a certain percentage mana
+        /// Will return the numbers of people in the group that has less than a certain percentage mana.
+        /// Resulting value is stored in <see cref="MQ2VarPtr.Dword"/> so cast to <see cref="uint"/>.
         /// </summary>
-        public IndexedMember<IntType, int> LowMana;
+        public IndexedMember<IntType, int> LowMana { get; }
 
         /// <summary>
         /// The first non-mercenary cleric in the group

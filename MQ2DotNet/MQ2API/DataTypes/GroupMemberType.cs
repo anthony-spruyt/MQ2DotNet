@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a member of a group
+    /// MQ2 type for a member of a group.
+    /// Last Verified: 2023-06-26
     /// </summary>
     [PublicAPI]
     [MQ2Type("groupmember")]
@@ -20,6 +21,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// TRUE if the member is the group's leader, FALSE otherwise
+        /// Note in MQ client source -> TODO: GroupMembers: use IsGroupLeader
         /// </summary>
         public bool Leader => GetMember<BoolType>("Leader");
 
@@ -31,7 +33,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The member's level
         /// </summary>
-        public int? Level => GetMember<IntType>("Level");
+        public uint? Level => GetMember<IntType>("Level");
 
         /// <summary>
         /// TRUE if the member is designated as the group's Main Tank, FALSE otherwise
@@ -66,12 +68,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Member's aggro percentage as shown in the group window
         /// </summary>
-        public int? PctAggro => GetMember<IntType>("PctAggro");
+        public uint? PctAggro => GetMember<IntType>("PctAggro");
 
         /// <summary>
         /// Index (0 based) of the member in the group
         /// </summary>
-        public int? Index => GetMember<IntType>("Index");
+        public uint? Index => GetMember<IntType>("Index");
 
         /// <summary>
         /// TRUE if the member is offline and FALSE if online
@@ -87,6 +89,5 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TRUE if the member is online but in another zone and FALSE if online and in same zone as you
         /// </summary>
         public bool OtherZone => GetMember<BoolType>("OtherZone");
-
     }
 }

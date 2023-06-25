@@ -5,7 +5,8 @@ using MQ2DotNet.EQ;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a 32 bit integer
+    /// MQ2 type for a 32 bit integer. <- hah if only this was true.It is used as int, uint, long and others, big mess this class internally along with the time related data types.
+    /// Last Verified: 2023-06-26
     /// </summary>
     [PublicAPI]
     [MQ2Type("int")]
@@ -16,7 +17,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         // MQ2 type has a bunch of members, but it hardly seems worth implementing them here
-
+        /*
+         
+        ScopedTypeMember(IntMembers, Float);
+	    ScopedTypeMember(IntMembers, Double);
+	    ScopedTypeMember(IntMembers, Hex);
+	    ScopedTypeMember(IntMembers, Reverse);
+	    ScopedTypeMember(IntMembers, LowPart);
+	    ScopedTypeMember(IntMembers, HighPart);
+	    ScopedTypeMember(IntMembers, Prettify);
+         */
 
         /// <summary>
         /// Implicit conversion to a nullable int
@@ -35,6 +45,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public static implicit operator uint?(IntType typeVar)
         {
             return typeVar?.VarPtr.Dword;
+        }
+
+        /// <summary>
+        /// Implicit conversion to a nullable long
+        /// </summary>
+        /// <param name="typeVar"></param>
+        public static implicit operator long?(IntType typeVar)
+        {
+            //GroupType::AvgHPs
+            return typeVar?.VarPtr.Int64;
         }
 
         /// <summary>
