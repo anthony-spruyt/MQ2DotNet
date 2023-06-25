@@ -76,5 +76,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             return typeVar?._string?.ToEnum<CombatState>();
         }
+
+        /// <summary>
+        /// Implicit conversion to a DZStatus
+        /// TODO: havent tested this type of parsing yet.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator DZStatus?(StringType typeVar)
+        {
+            return typeVar?._string?.ToEnum<DZStatus>();
+        }
     }
 }
