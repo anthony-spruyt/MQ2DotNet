@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a deity
+    /// MQ2 type for a deity.
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("Deity")]
@@ -16,7 +17,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// ID of the deity
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// Name of the deity e.g. Innoruuk
@@ -25,6 +26,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Team, one of "good", "evil", "neutral", "none"
+        /// TODO: map to an enum
         /// </summary>
         public string Team => GetMember<StringType>("Team");
     }

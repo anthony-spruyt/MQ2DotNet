@@ -36,7 +36,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The total time in "hh:mm:ss"
         /// </summary>
         [Obsolete("Use conversion to TimeSpan")]
-        // ReSharper disable once InconsistentNaming
         public string TimeHMS => GetMember<StringType>("TimeHMS");
 
         /// <summary>
@@ -70,8 +69,32 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <returns></returns>
         public static implicit operator TimeSpan?(TicksType ticksType)
         {
-            // Dword is the number of 6 second ticks
-            return ticksType != null ? TimeSpan.FromSeconds(6 * ticksType.VarPtr.Dword) : (TimeSpan?) null;
+            if (ticksType?.VarPtr == null)
+            {
+                return null;
+            }
+
+            // CharacterType::AltAbilityTimer
+            // TODO: confirm but it looks like it is stored as seconds - reusetimer * 1000
+            if (ticksType.VarPtr.Int64 > 0)
+            {
+                return TimeSpan.FromSeconds(ticksType.VarPtr.Int64);
+            }
+            // CharacterType::CombatAbilityTimer
+            if (ticksType.VarPtr.Int > 0)
+            {
+                // value is the number of 6 second ticks
+                return TimeSpan.FromSeconds(6 * ticksType.VarPtr.Int);
+            }
+            // CharacterType::Downtime
+            // CharacterType::TributeTimer but it stores in MS
+            if (ticksType.VarPtr.Dword > 0)
+            {
+                // value is the number of 6 second ticks
+                return TimeSpan.FromSeconds(6 * ticksType.VarPtr.Dword);
+            }
+
+            return TimeSpan.Zero;
         }
     }
 }

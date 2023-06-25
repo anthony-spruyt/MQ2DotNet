@@ -65,5 +65,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             return typeVar?._string?.ToEnum<EffectType>();
         }
+
+        /// <summary>
+        /// Implicit conversion to a CombatState
+        /// TODO: havent tested this type of parsing yet.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator CombatState?(StringType typeVar)
+        {
+            return typeVar?._string?.ToEnum<CombatState>();
+        }
     }
 }

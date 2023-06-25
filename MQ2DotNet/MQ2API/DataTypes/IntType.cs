@@ -79,13 +79,31 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Implicit conversion to a WindowType. This happens when a window (parent, child etc) member internally is a 0, IE null.
+        /// Implicit conversion to an ItemSize enum
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
         public static implicit operator ItemSize?(IntType typeVar)
         {
             return (ItemSize?)typeVar?.VarPtr.Dword;
+        }
+
+        /// <summary>
+        /// Implicit conversion to a SpawnType enum
+        /// </summary>
+        /// <param name="typeVar"></param>
+        public static implicit operator EQ.SpawnType?(IntType typeVar)
+        {
+            return (EQ.SpawnType?)typeVar?.VarPtr.Dword;
+        }
+
+        /// <summary>
+        /// Implicit conversion to a ZoneType enum
+        /// </summary>
+        /// <param name="typeVar"></param>
+        public static implicit operator EQ.ZoneType?(IntType typeVar)
+        {
+            return (EQ.ZoneType?)typeVar?.VarPtr.Dword;
         }
     }
 }
