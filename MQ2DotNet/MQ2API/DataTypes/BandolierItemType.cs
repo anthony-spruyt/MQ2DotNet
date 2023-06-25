@@ -4,6 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for an item in a bandolier set
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("bandolieritem")]
@@ -16,12 +17,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Icon ID of the item
         /// </summary>
-        public int? IconID => GetMember<IntType>("IconID");
+        public uint? IconID => GetMember<IntType>("IconID");
 
         /// <summary>
         /// Item ID
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// Name of the item
