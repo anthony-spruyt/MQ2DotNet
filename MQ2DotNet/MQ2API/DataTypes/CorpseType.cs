@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a corpse
+    /// MQ2 type for a corpse.
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("corpse")]
@@ -22,11 +23,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// An item on the corpse by name or number
         /// </summary>
-        public IndexedMember<ItemType, int, ItemType, string> Item;
+        public IndexedMember<ItemType, int, ItemType, string> Item { get; }
 
         /// <summary>
         /// Number of items on the corpse
         /// </summary>
-        public int? Items => GetMember<IntType>("Items");
+        public uint? Items => GetMember<IntType>("Items");
     }
 }
