@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type from the MQ2Cast plugin
+    /// MQ2 type from the MQ2Cast plugin.
+    /// Last Verified: 2023-06-25
     /// TODO: Invalidate this and make member calls throw if MQ2Cast isn't loaded
     /// </summary>
     [PublicAPI]
@@ -32,7 +33,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: What is this?
         /// </summary>
-        public int? Timing => GetMember<IntType>("Timing");
+        public uint? Timing => GetMember<IntType>("Timing");
 
         /// <summary>
         /// TODO: What is this?
@@ -47,7 +48,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: What is this?
         /// </summary>
-        public string Return => GetMember<StringType>("Return");
+        public string Return => Result;
 
         /// <summary>
         /// TODO: What is this?
