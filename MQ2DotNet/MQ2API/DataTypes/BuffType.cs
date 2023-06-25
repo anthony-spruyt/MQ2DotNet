@@ -5,6 +5,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for a buff on the local character
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("buff")]
@@ -54,11 +55,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public long? TotalCounters => GetMember<Int64Type>("TotalCounters");
 
         /// <summary>
-        /// Number of hit counts remaining on the buff
-        /// </summary>
-        public uint? HitCount => GetMember<IntType>("HitCount");
-
-        /// <summary>
         /// Total number of counters disease added by the buff
         /// </summary>
         public long? CountersDisease => GetMember<Int64Type>("CountersDisease");
@@ -77,6 +73,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Total number of counters corruption added by the buff
         /// </summary>
         public long? CountersCorruption => GetMember<Int64Type>("CountersCorruption");
+
+        /// <summary>
+        /// Number of hit counts remaining on the buff
+        /// </summary>
+        public uint? HitCount => GetMember<IntType>("HitCount");
 
         /// <summary>
         /// Name of the caster who cast the buff, if available.
