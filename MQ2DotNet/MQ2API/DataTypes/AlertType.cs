@@ -4,6 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for an alert list (a list of spawn searches)
+    /// Last Verified: 2023-06-23
     /// </summary>
     [PublicAPI]
     [MQ2Type("alert")]
@@ -22,6 +23,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Number of spawn searches on the alert list
         /// </summary>
-        public int? Size => GetMember<IntType>("Size");
+        public uint? Size => GetMember<IntType>("Size");
     }
 }
