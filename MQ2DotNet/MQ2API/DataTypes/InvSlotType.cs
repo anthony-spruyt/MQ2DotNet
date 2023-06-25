@@ -13,7 +13,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
     // 8000-8031 inspect window
 
     /// <summary>
-    /// MQ2 type for an inventory slot
+    /// MQ2 type for an inventory slot.
+    /// Last Verified: 2023-06-26
     /// </summary>
     [PublicAPI]
     [MQ2Type("invslot")]
@@ -26,7 +27,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// ID of this item slot (usable directly by /itemnotify)
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// Item data for the item in this slot
@@ -41,7 +42,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Slot number inside the pack which holds the item, otherwise NULL
         /// </summary>
-        public int? Slot => GetMember<IntType>("Slot");
+        public uint? Slot => GetMember<IntType>("Slot");
 
         /// <summary>
         /// For inventory slots not inside packs, the slot name, otherwise NULL

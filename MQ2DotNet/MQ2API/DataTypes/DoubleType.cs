@@ -14,35 +14,37 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
         }
 
-        /// <summary>
-        /// TODO: new member
-        /// </summary>
-        public string Deci => GetMember<StringType>("Deci");
+        // Dont need these TBH, commented out.
 
-        /// <summary>
-        /// TODO: new member
-        /// </summary>
-        public string Centi => GetMember<StringType>("Centi");
-
-        /// <summary>
-        /// TODO: new member
-        /// </summary>
-        public string Milli => GetMember<StringType>("Milli");
-
-        /// <summary>
-        /// TODO: new member
-        /// </summary>
-        public int? Int => GetMember<IntType>("Int");
-
-        /// <summary>
-        /// TODO: new member
-        /// </summary>
-        public string Precision => GetMember<StringType>("Precision");
-
-        /// <summary>
-        /// TODO: new member
-        /// </summary>
-        public string Prettify => GetMember<StringType>("Prettify");
+        ///// <summary>
+        ///// TODO: new member
+        ///// </summary>
+        //public string Deci => GetMember<StringType>("Deci");
+        //
+        ///// <summary>
+        ///// TODO: new member
+        ///// </summary>
+        //public string Centi => GetMember<StringType>("Centi");
+        //
+        ///// <summary>
+        ///// TODO: new member
+        ///// </summary>
+        //public string Milli => GetMember<StringType>("Milli");
+        //
+        ///// <summary>
+        ///// TODO: new member
+        ///// </summary>
+        //public int? Int => GetMember<IntType>("Int");
+        //
+        ///// <summary>
+        ///// TODO: new member
+        ///// </summary>
+        //public string Precision => GetMember<StringType>("Precision");
+        //
+        ///// <summary>
+        ///// TODO: new member
+        ///// </summary>
+        //public string Prettify => GetMember<StringType>("Prettify");
 
         /// <summary>
         /// Implicit conversion to double

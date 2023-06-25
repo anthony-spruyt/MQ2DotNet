@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a 64 bit integer
+    /// MQ2 type for a 64 bit integer.
+    /// Last Verified: 2023-06-26
     /// </summary>
     [PublicAPI]
     [MQ2Type("int64")]
@@ -14,6 +15,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         // MQ2 type has a bunch of members, but it hardly seems worth implementing them here
+
+        /*
+        ScopedTypeMember(Int64Members, Float);
+        ScopedTypeMember(Int64Members, Double);
+        ScopedTypeMember(Int64Members, Hex);
+        ScopedTypeMember(Int64Members, Reverse);
+        ScopedTypeMember(Int64Members, LowPart);
+        ScopedTypeMember(Int64Members, HighPart);
+        ScopedTypeMember(Int64Members, Prettify);
+         */
 
         /// <summary>
         /// Implicit conversion to a nullable long
