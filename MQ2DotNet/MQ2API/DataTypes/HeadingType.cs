@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a heading
+    /// MQ2 type for a heading.
+    /// Last Verified: 2023-06-26
     /// </summary>
     [PublicAPI]
     [MQ2Type("heading")]
@@ -16,7 +17,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The nearest clock direction, e.g. 1-12
         /// </summary>
-        public int? Clock => GetMember<IntType>("Clock");
+        public uint? Clock => GetMember<IntType>("Clock");
 
         /// <summary>
         /// Heading in degrees (same as casting to float). N = 0, E = 90, S = 180, W = 270
