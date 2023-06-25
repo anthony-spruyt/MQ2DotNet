@@ -39,12 +39,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Number of items in the personal loot list with either Need, Always Need, Greed, or Always Greed checked
         /// </summary>
-        public int? PWantCount => GetMember<IntType>("PWantCount");
+        public uint? PWantCount => GetMember<IntType>("PWantCount");
 
         /// <summary>
         /// Number of items in the shared loot list with either Need, Always Need, Greed, or Always Greed checked
         /// </summary>
-        public int? SWantCount => GetMember<IntType>("SWantCount");
+        public uint? SWantCount => GetMember<IntType>("SWantCount");
 
         /// <summary>
         /// True if any item is currently being looted? TODO: Confirm this
@@ -55,5 +55,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns a filter from the advanced loot filters TODO: By what? Number in list or item ID?
         /// </summary>
         public IndexedMember<ItemFilterDataType, int> Filter { get; }
+
+        public override string ToString()
+        {
+            return nameof(AdvLootType);
+        }
     }
 }
