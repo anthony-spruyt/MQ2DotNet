@@ -3,7 +3,7 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 array type. Not well supported
+    /// MQ2 array type. Not well supported.
     /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]

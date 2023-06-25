@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an AA
+    /// MQ2 type for an AA.
     /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]

@@ -3,7 +3,7 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a bandolier item set
+    /// MQ2 type for a bandolier item set.
     /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]

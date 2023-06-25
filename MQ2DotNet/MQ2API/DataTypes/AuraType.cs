@@ -3,7 +3,7 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an aura
+    /// MQ2 type for an aura.
     /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]

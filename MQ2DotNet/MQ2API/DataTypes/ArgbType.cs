@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a colour
+    /// MQ2 type for a colour.
     /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
@@ -33,7 +33,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
             }
             catch (Exception ex)
             {
-
                 throw new InvalidCastException($"Failed to cast from type {nameof(ArgbType)} to {nameof(Color)}", ex);
             }
 

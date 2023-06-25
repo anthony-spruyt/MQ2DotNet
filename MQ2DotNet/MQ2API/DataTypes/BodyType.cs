@@ -3,7 +3,7 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for the body type of a spawn
+    /// MQ2 type for the body type of a spawn.
     /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]

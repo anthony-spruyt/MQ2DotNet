@@ -4,12 +4,12 @@ using System;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a buff on the local character
+    /// MQ2 type for a buff on the local character.
     /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("buff")]
-    public class BuffType : MQ2DataType //SpellType
+    public class BuffType : MQ2DataType
     {
         // SpellType inheritance would be nice but is problematic. BuffType.VarPtr is a PSPELLBUFF, but SpellType.VarPtr requires a PSPELL
         // MQ2 system gets around this by finding the spell before calling the base class, but we don't have that luxury here.
