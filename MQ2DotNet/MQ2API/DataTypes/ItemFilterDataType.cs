@@ -4,6 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for a filter in advanced loot
+    /// Last Verified: 2023-06-23
     /// </summary>
     [PublicAPI]
     [MQ2Type("itemfilterdata")]
@@ -21,7 +22,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// ID of the item
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// Auto roll enabled?
@@ -46,11 +47,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Item's icon ID
         /// </summary>
-        public int? IconID => GetMember<IntType>("IconID");
+        public uint? IconID => GetMember<IntType>("IconID");
 
         /// <summary>
         /// Bitmask of settings, 1 = AutoRoll, 2 = Need, 4 = Greed, 8 = Never
+        /// TODO: <see cref="EQ.ItemFilterSetting"/>
         /// </summary>
-        public int? Types => GetMember<IntType>("Types");
+        public uint? Types => GetMember<IntType>("Types");
     }
 }

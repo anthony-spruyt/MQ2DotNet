@@ -4,6 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for the advanced loot window. Moreso the contents than the window itself
+    /// Last Verified: 2023-06-23
     /// </summary>
     [PublicAPI]
     [MQ2Type("advloot")]

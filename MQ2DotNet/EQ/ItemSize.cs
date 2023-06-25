@@ -5,9 +5,9 @@
     /// </summary>
     public enum ItemSize : uint
     {
-        Small = 1,
-        Medium = 2,
-        Large = 3,
-        Giant = 4
+        Small = 1U,
+        Medium = 2U,
+        Large = 3U,
+        Giant = 4U
     }
 }

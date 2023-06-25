@@ -9,15 +9,15 @@ namespace MQ2DotNet.EQ
     public enum GameState : uint
     {
 #pragma warning disable 1591
-        CharSelect = 1,
-        CharCreate = 2,
-        Something = 4,
-        InGame = 5,
+        CharSelect = 1U,
+        CharCreate = 2U,
+        Something = 4U,
+        InGame = 5U,
         PreCharSelect = uint.MaxValue,
-        PostFrontLoad = 500,
-        LoggingIn = 253,
-        Unloading = 255,
-        Unknown = 65535
+        PostFrontLoad = 500U,
+        LoggingIn = 253U,
+        Unloading = 255U,
+        Unknown = 65535U
 #pragma warning restore 1591
     }
 }
