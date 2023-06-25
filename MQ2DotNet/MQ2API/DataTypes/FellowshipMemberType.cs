@@ -1,9 +1,11 @@
 ﻿using JetBrains.Annotations;
+using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a member of a fellowship
+    /// MQ2 type for a member of a fellowship.
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("fellowshipmember")]
@@ -21,7 +23,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Member's level
         /// </summary>
-        public int? Level => GetMember<IntType>("Level");
+        public uint? Level => GetMember<IntType>("Level");
 
         /// <summary>
         /// Member's class
@@ -29,9 +31,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public ClassType Class => GetMember<ClassType>("Class");
 
         /// <summary>
-        /// How long since the member was last online
+        /// How long since the member was last online.
+        /// Stores data in the <see cref="MQ2VarPtr.Dword"/> field.
         /// </summary>
-        public TicksType LastOn => GetMember<TicksType>("LastOn");
+        public TimeSpan? LastOn => GetMember<TicksType>("LastOn");
 
         /// <summary>
         /// Member's name

@@ -1,9 +1,11 @@
 ﻿using JetBrains.Annotations;
+using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a fellowship
+    /// MQ2 type for a fellowship.
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("fellowship")]
@@ -12,12 +14,18 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal FellowshipType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             Member = new IndexedMember<FellowshipMemberType, string, FellowshipMemberType, int>(this, "Member");
+            Sharing = new IndexedMember<BoolType, int>(this, "Sharing");
         }
+
+        /// <summary>
+        /// Returns TRUE if a fellowship exists.
+        /// </summary>
+        public bool Exists => GetMember<BoolType>("Exists");
 
         /// <summary>
         /// Fellowship ID
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// Fellowship leader's name
@@ -32,12 +40,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Number of members in the fellowship
         /// </summary>
-        public int? Members => GetMember<IntType>("Members");
-
-        /// <summary>
-        /// Returns TRUE if a fellowship exists.
-        /// </summary>
-        public bool Exists => GetMember<BoolType>("Exists");
+        public uint? Members => GetMember<IntType>("Members");
 
         /// <summary>
         /// Member data by name or #
@@ -45,9 +48,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public IndexedMember<FellowshipMemberType, string, FellowshipMemberType, int> Member { get; }
 
         /// <summary>
-        /// Time left on current campfire
+        /// Time left on current campfire.
+        /// Stores data in the <see cref="MQ2VarPtr.Dword"/> field.
         /// </summary>
-        public TicksType CampfireDuration => GetMember<TicksType>("CampfireDuration");
+        public TimeSpan? CampfireDuration => GetMember<TicksType>("CampfireDuration");
 
         /// <summary>
         /// Campfire Y location
@@ -73,5 +77,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TRUE if campfire is up, FALSE if not
         /// </summary>
         public bool Campfire => GetMember<BoolType>("Campfire");
+
+        /// <summary>
+        /// Is sharing by #
+        /// </summary>
+        public IndexedMember<BoolType, int> Sharing { get; }
     }
 }

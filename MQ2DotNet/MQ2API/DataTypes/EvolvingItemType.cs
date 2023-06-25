@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an evolving item
+    /// MQ2 type for an evolving item.
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("Evolving")]
@@ -14,14 +15,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Current percentage experience
-        /// </summary>
-        public float? ExpPct => GetMember<FloatType>("ExpPct");
-
-        /// <summary>
         /// Is experience enabled?
         /// </summary>
         public bool ExpOn => GetMember<BoolType>("ExpOn");
+
+        /// <summary>
+        /// Current percentage experience
+        /// </summary>
+        public float? ExpPct => GetMember<FloatType>("ExpPct");
 
         /// <summary>
         /// Current level of the item
