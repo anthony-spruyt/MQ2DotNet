@@ -1,11 +1,11 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a character class
+    /// MQ2 type for a character class.
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("class")]
@@ -18,7 +18,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: What is this
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// Full name of the class e.g. Cleric
@@ -77,6 +77,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Implicit conversion to a Class enumeration
+        /// TODO: validate this still works.
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>

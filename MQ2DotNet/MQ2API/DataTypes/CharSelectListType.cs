@@ -45,5 +45,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// ID of the zone the character is in
         /// </summary>
         public uint? ZoneID => GetMember<IntType>("ZoneID");
+
+        public override string ToString()
+        {
+            return Name ?? nameof(CharSelectListType);
+        }
     }
 }
