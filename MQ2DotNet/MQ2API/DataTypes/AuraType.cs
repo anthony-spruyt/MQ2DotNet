@@ -22,7 +22,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Returns the position of the index if found within the aura's name.
-        /// The value is stored in the <see cref="IntType.Dword"/> property.
+        /// Cast to <see cref="uint"/> to get the value.
         /// </summary>
         public IndexedMember<IntType, string> Find { get; }
 
