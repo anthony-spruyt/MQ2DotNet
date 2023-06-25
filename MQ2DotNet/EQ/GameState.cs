@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Runtime.Serialization;
 
 namespace MQ2DotNet.EQ
 {
@@ -8,16 +9,18 @@ namespace MQ2DotNet.EQ
     [PublicAPI]
     public enum GameState : uint
     {
-#pragma warning disable 1591
+        [EnumMember(Value = "CHARSELECT")]
         CharSelect = 1U,
         CharCreate = 2U,
         Something = 4U,
+        [EnumMember(Value = "INGAME")]
         InGame = 5U,
+        [EnumMember(Value = "PRECHARSELECT")]
         PreCharSelect = uint.MaxValue,
         PostFrontLoad = 500U,
         LoggingIn = 253U,
         Unloading = 255U,
+        [EnumMember(Value = "UNKNOWN")]
         Unknown = 65535U
-#pragma warning restore 1591
     }
 }

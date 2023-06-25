@@ -1,10 +1,12 @@
 ﻿using System;
 using JetBrains.Annotations;
+using MQ2DotNet.EQ;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for general game information
+    /// MQ2 type for general game information.
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("everquest")]
@@ -12,15 +14,21 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal EverQuestType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            CharSelectList = new IndexedMember<CharSelectListType, string, CharSelectListType, int>(this, "CharSelectList");
             ChatChannel = new IndexedStringMember<int, BoolType, string>(this, "ChatChannel");
+            CharSelectList = new IndexedMember<CharSelectListType, string, CharSelectListType, int>(this, "CharSelectList");
             ValidLoc = new IndexedMember<BoolType, string>(this, "ValidLoc");
         }
 
         /// <summary>
-        /// Current game state, one of "PRECHARSELECT", "CHARSELECT", "INGAME", "UNKNOWN"
+        /// Handle to the window
         /// </summary>
-        public string GameState => GetMember<StringType>("GameState");
+        public long? HWND => GetMember<Int64Type>("HWND");
+
+        /// <summary>
+        /// Current game state, one of "PRECHARSELECT", "CHARSELECT", "INGAME", "UNKNOWN"
+        /// TODO: havent testing parsing to enum yet.
+        /// </summary>
+        public GameState? GameState => GetMember<StringType>("GameState");
 
         /// <summary>
         /// Username of your account name
@@ -45,22 +53,22 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Number of clock ticks this instance of eqgame.exe has been running for
         /// </summary>
-        public int? Running => GetMember<IntType>("Running");
+        public uint? Running => GetMember<IntType>("Running");
 
         /// <summary>
         /// X (horizontal) coordinate of the mouse cursor in UI coordinate space, relative to the left edge of the game window
         /// </summary>
-        public int? MouseX => GetMember<IntType>("MouseX");
+        public uint? MouseX => GetMember<IntType>("MouseX");
 
         /// <summary>
         /// Y (vertical) coordinate of the mouse cursor in UI coordinate space relative to the top edge of the game window
         /// </summary>
-        public int? MouseY => GetMember<IntType>("MouseY");
+        public uint? MouseY => GetMember<IntType>("MouseY");
 
         /// <summary>
         /// Ping time to the EQ server in milliseconds
         /// </summary>
-        public int? Ping => GetMember<IntType>("Ping");
+        public uint? Ping => GetMember<IntType>("Ping");
 
         /// <summary>
         /// Number of chat channels you are in
@@ -75,32 +83,32 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// X (horizontal) start of viewport, always 0?
         /// </summary>
-        public int? ViewportX => GetMember<IntType>("ViewportX");
+        public uint? ViewportX => GetMember<IntType>("ViewportX");
 
         /// <summary>
         /// Y (vertical) start of viewport, always 0?
         /// </summary>
-        public int? ViewportY => GetMember<IntType>("ViewportY");
+        public uint? ViewportY => GetMember<IntType>("ViewportY");
 
         /// <summary>
         /// X (horizontal) end of viewport
         /// </summary>
-        public int? ViewportXMax => GetMember<IntType>("ViewportXMax");
+        public uint? ViewportXMax => GetMember<IntType>("ViewportXMax");
 
         /// <summary>
         /// Y (vertical) end of viewport
         /// </summary>
-        public int? ViewportYMax => GetMember<IntType>("ViewportYMax");
+        public uint? ViewportYMax => GetMember<IntType>("ViewportYMax");
 
         /// <summary>
         /// X (horizontal) center of viewport
         /// </summary>
-        public int? ViewportXCenter => GetMember<IntType>("ViewportXCenter");
+        public uint? ViewportXCenter => GetMember<IntType>("ViewportXCenter");
 
         /// <summary>
         /// Y (vertical) center of viewport
         /// </summary>
-        public int? ViewportYCenter => GetMember<IntType>("ViewportYCenter");
+        public uint? ViewportYCenter => GetMember<IntType>("ViewportYCenter");
 
         /// <summary>
         /// TODO: Document EverQuestType.LClickedObject
@@ -115,20 +123,38 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Process ID of this eqgame.exe
         /// </summary>
-        public int? PID => GetMember<IntType>("PID");
+        public uint? PID => GetMember<IntType>("PID");
 
         /// <summary>
-        /// Process priority of this eqgame.exe, one of "LOW", "BELOW NORMAL", "NORMAL", "ABOVE NORMAL", "REALTIME"
+        /// TODO: new member + confirm as it doesnt follow the usual pattern and templates <seealso cref="ScreenMode"/>
         /// </summary>
-        public string PPriority => GetMember<StringType>("PPriority");
+        public uint? xScreenMode => GetMember<IntType>("xScreenMode");
 
         /// <summary>
         /// Screen mode, 2 = windowed ?
+        /// TODO: confirm this one, it doesnt follow the usual pattern and templates <seealso cref="xScreenMode"/>
         /// </summary>
         public int? ScreenMode => GetMember<IntType>("ScreenMode");
 
         /// <summary>
+        /// Max foreground FPS
+        /// </summary>
+        public uint? MaxFPS => GetMember<IntType>("MaxFPS");
+
+        /// <summary>
+        /// Max background FPS
+        /// </summary>
+        public uint? MaxBGFPS => GetMember<IntType>("MaxBGFPS");
+
+        /// <summary>
+        /// Process priority of this eqgame.exe, one of "LOW", "BELOW NORMAL", "NORMAL", "ABOVE NORMAL", "REALTIME"
+        /// TODO: map to an enum
+        /// </summary>
+        public string PPriority => GetMember<StringType>("PPriority");
+
+        /// <summary>
         /// Is a /copylayout currently in progress?
+        /// TODO: does this need to be a nullable bool?
         /// </summary>
         public bool? LayoutCopyInProgress => GetMember<BoolType>("LayoutCopyInProgress");
 
@@ -149,16 +175,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// True if using default UI skin
+        /// TODO: does this need to be a nullable bool?
         /// </summary>
         public bool? IsDefaultUILoaded => GetMember<BoolType>("IsDefaultUILoaded");
 
         /// <summary>
-        /// Handle to the window
-        /// </summary>
-        public long? HWND => GetMember<Int64Type>("HWND");
-
-        /// <summary>
         /// Is the window in the foreground?
+        /// TODO: does this need to be a nullable bool?
         /// </summary>
         public bool? Foreground => GetMember<BoolType>("Foreground");
 
@@ -171,16 +194,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Path to the Everquest folder
         /// </summary>
         public string Path => GetMember<StringType>("Path");
-
-        /// <summary>
-        /// Max foreground FPS
-        /// </summary>
-        public uint? MaxFPS => GetMember<IntType>("MaxFPS");
-
-        /// <summary>
-        /// Max background FPS
-        /// </summary>
-        public uint? MaxBGFPS => GetMember<IntType>("MaxBGFPS");
 
         /// <summary>
         /// UI scale factor
