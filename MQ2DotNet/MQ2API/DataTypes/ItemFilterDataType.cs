@@ -3,8 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a filter in advanced loot
-    /// Last Verified: 2023-06-23
+    /// MQ2 type for a filter in advanced loot.
+    /// Last Verified: 2023-06-26
     /// </summary>
     [PublicAPI]
     [MQ2Type("itemfilterdata")]

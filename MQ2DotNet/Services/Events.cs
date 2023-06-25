@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
-using MQ2DotNet.EQ;
 using MQ2DotNet.MQ2API.DataTypes;
 
 namespace MQ2DotNet.Services
@@ -346,7 +344,7 @@ namespace MQ2DotNet.Services
         /// <summary>
         /// Called once directly after initialization, and then every time the gamestate changes
         /// </summary>
-        public event EventHandler<GameState> SetGameState
+        public event EventHandler<EQ.GameState> SetGameState
         {
             add
             {
@@ -359,7 +357,7 @@ namespace MQ2DotNet.Services
                 _setGameState -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<GameState> _setGameState;
+        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<EQ.GameState> _setGameState;
 
         private void SubscribeAll()
         {
@@ -486,7 +484,7 @@ namespace MQ2DotNet.Services
             _onZoned?.Invoke(this, e);
         }
 
-        private void _appDomainBase_SetGameState(object sender, GameState e)
+        private void _appDomainBase_SetGameState(object sender, EQ.GameState e)
         {
             _setGameState?.Invoke(this, e);
         }

@@ -1,10 +1,8 @@
-﻿using System;
-using MQ2DotNet.EQ;
-using MQ2DotNet.MQ2API;
+﻿using MQ2DotNet.MQ2API;
 using MQ2DotNet.MQ2API.DataTypes;
-using MQ2DotNet.Services;
 using MQ2DotNet.Utility;
 using Ninject;
+using System;
 using WeakEvent;
 
 namespace MQ2DotNet
@@ -308,8 +306,8 @@ namespace MQ2DotNet
         /// <summary>
         /// Called once directly after initialization, and then every time the gamestate changes
         /// </summary>
-        public WeakEventSource<GameState> SetGameState = new WeakEventSource<GameState>();
-        internal void InvokeSetGameState(GameState gameState)
+        public WeakEventSource<EQ.GameState> SetGameState = new WeakEventSource<EQ.GameState>();
+        internal void InvokeSetGameState(EQ.GameState gameState)
         {
             if (_disposed)
                 throw new ObjectDisposedException(nameof(LoadedAppDomainBase));
