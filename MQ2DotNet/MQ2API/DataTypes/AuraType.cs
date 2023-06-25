@@ -1,10 +1,10 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for an aura
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("auratype")]
@@ -18,10 +18,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Appears to be the slot the aura is in. 1 based
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
-        /// Returns the position of the index if found within the aura's name
+        /// Returns the position of the index if found within the aura's name.
+        /// The value is stored in the <see cref="IntType.Dword"/> property.
         /// </summary>
         public IndexedMember<IntType, string> Find { get; }
 
@@ -33,7 +34,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Spawn ID of the caster
         /// </summary>
-        public int? SpawnID => GetMember<IntType>("SpawnID");
+        public uint? SpawnID => GetMember<IntType>("SpawnID");
 
         /// <summary>
         /// Remove the aura
