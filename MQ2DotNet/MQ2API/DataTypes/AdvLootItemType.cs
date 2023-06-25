@@ -4,6 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for an item in the advanced loot window
+    /// Last Verified: 2023-06-23
     /// </summary>
     [PublicAPI]
     [MQ2Type("advlootitem")]
@@ -16,8 +17,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Index of the item in either the shared or personal loot list
         /// </summary>
-        // ReSharper disable once InconsistentNaming
-        public int? Index => GetMember<IntType>("Index");
+        public uint? Index => GetMember<IntType>("Index");
 
         /// <summary>
         /// Name of the item
@@ -32,7 +32,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Maximum number of these items in one stack
         /// </summary>
-        public int? StackSize => GetMember<IntType>("StackSize");
+        public uint? StackSize => GetMember<IntType>("StackSize");
 
         /// <summary>
         /// Spawn the item was dropped by
@@ -77,7 +77,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// ID of the icon for this item
         /// </summary>
-        public int? IconID => GetMember<IntType>("IconID");
+        public uint? IconID => GetMember<IntType>("IconID");
 
         /// <summary>
         /// True if the item is no drop
