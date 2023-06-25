@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for an AA
+    /// Last Verified: 2023-06-23
     /// </summary>
     [PublicAPI]
     [MQ2Type("altability")]
@@ -20,6 +22,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public string Name => GetMember<StringType>("Name");
         
         /// <summary>
+        /// Description as it appears in the AA window
+        /// </summary>
+        public string Description => GetMember<StringType>("Description");
+
+        /// <summary>
+        /// Returns name of the category that this AA belongs to.
+        /// TODO: create an enum for this.
+        /// </summary>
+        public string Category => GetMember<StringType>("Category");
+
+        /// <summary>
         /// Short name of the ability
         /// </summary>
         public string ShortName => GetMember<StringType>("ShortName");
@@ -30,34 +43,36 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public string ShortName2 => GetMember<StringType>("ShortName2");
 
         /// <summary>
-        /// Description as it appears in the AA window
-        /// </summary>
-        public string Description => GetMember<StringType>("Description");
-
-        /// <summary>
         /// ID of the ability, for use with /alt activate
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public uint? ID => GetMember<IntType>("ID");
+
+        /// <summary>
+        /// Group ID of the ability, for use with /alt activate.
+        /// Instead use <see cref="ID"/>
+        /// </summary>
+        [Obsolete]
+        public uint? GroupID => ID;
 
         /// <summary>
         /// Reuse time in seconds
         /// </summary>
-        public int? ReuseTime => GetMember<IntType>("ReuseTime");
+        public uint? ReuseTime => GetMember<IntType>("ReuseTime");
 
         /// <summary>
         /// Reuse time in seconds after modifiers have been applied
         /// </summary>
-        public int? MyReuseTime => GetMember<IntType>("MyReuseTime");
+        public uint? MyReuseTime => GetMember<IntType>("MyReuseTime");
 
         /// <summary>
         /// Minimum level to train
         /// </summary>
-        public int? MinLevel => GetMember<IntType>("MinLevel");
+        public uint? MinLevel => GetMember<IntType>("MinLevel");
 
         /// <summary>
         /// Base cost to train
         /// </summary>
-        public int? Cost => GetMember<IntType>("Cost");
+        public uint? Cost => GetMember<IntType>("Cost");
 
         /// <summary>
         /// Spell used by the ability (if any)
@@ -72,38 +87,38 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Points required in <see cref="RequiresAbility"/>
         /// </summary>
-        public int? RequiresAbilityPoints => GetMember<IntType>("RequiresAbilityPoints");
+        public uint? RequiresAbilityPoints => GetMember<IntType>("RequiresAbilityPoints");
 
         /// <summary>
         /// Max rank available in this ability
         /// </summary>
-        public int? MaxRank => GetMember<IntType>("MaxRank");
+        public uint? MaxRank => GetMember<IntType>("MaxRank");
 
         /// <summary>
         /// Current rank in this ability
         /// </summary>
-        public int? Rank => GetMember<IntType>("Rank");
+        public uint? Rank => GetMember<IntType>("Rank");
 
         /// <summary>
         /// Deprecated, use <see cref="Rank"/>
         /// </summary>
         [Obsolete]
-        public int? AARankRequired => Rank;
+        public uint? AARankRequired => Rank;
 
         /// <summary>
-        /// Type (1-6) TODO: Document properly
+        /// Type (1-6) TODO: Document properly and create enum
         /// </summary>
-        public int? Type => GetMember<IntType>("Type");
-
-        /// <summary>
-        /// TODO: Document properly
-        /// </summary>
-        public int? Flags => GetMember<IntType>("Flags");
+        public uint? Type => GetMember<IntType>("Type");
 
         /// <summary>
         /// TODO: Document properly
         /// </summary>
-        public int? Expansion => GetMember<IntType>("Expansion");
+        public uint? Flags => GetMember<IntType>("Flags");
+
+        /// <summary>
+        /// TODO: Document properly
+        /// </summary>
+        public uint? Expansion => GetMember<IntType>("Expansion");
 
         /// <summary>
         /// True if the ability does not require activation
@@ -119,7 +134,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TODO: What is AltAbilityType.Index
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public int? Index => GetMember<IntType>("Index");
+        public uint? Index => GetMember<IntType>("Index");
 
         /// <summary>
         /// Returns true/false on if the Alternative Ability can be trained
@@ -127,14 +142,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool CanTrain => GetMember<BoolType>("CanTrain");
 
         /// <summary>
-        /// Returns name of the category that this AA belongs to.
-        /// </summary>
-        public string Category => GetMember<StringType>("Category");
-
-        /// <summary>
         /// Returns the next index number of the Alternative Ability
         /// </summary>
-        public int? NextIndex => GetMember<IntType>("NextIndex");
-
+        public uint? NextIndex => GetMember<IntType>("NextIndex");
     }
 }
