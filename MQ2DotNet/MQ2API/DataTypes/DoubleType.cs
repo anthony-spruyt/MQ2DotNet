@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a double precision float
+    /// MQ2 type for a double precision float.
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("double")]
@@ -12,6 +13,36 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal DoubleType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
         }
+
+        /// <summary>
+        /// TODO: new member
+        /// </summary>
+        public string Deci => GetMember<StringType>("Deci");
+
+        /// <summary>
+        /// TODO: new member
+        /// </summary>
+        public string Centi => GetMember<StringType>("Centi");
+
+        /// <summary>
+        /// TODO: new member
+        /// </summary>
+        public string Milli => GetMember<StringType>("Milli");
+
+        /// <summary>
+        /// TODO: new member
+        /// </summary>
+        public int? Int => GetMember<IntType>("Int");
+
+        /// <summary>
+        /// TODO: new member
+        /// </summary>
+        public string Precision => GetMember<StringType>("Precision");
+
+        /// <summary>
+        /// TODO: new member
+        /// </summary>
+        public string Prettify => GetMember<StringType>("Prettify");
 
         /// <summary>
         /// Implicit conversion to double
