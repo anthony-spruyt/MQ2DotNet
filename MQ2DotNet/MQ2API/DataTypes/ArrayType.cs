@@ -17,5 +17,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? Dimensions => GetMember<IntType>("Dimensions");
 
         public uint? Size => GetMember<IntType>("Size");
+
+        public override string ToString()
+        {
+            return nameof(ArrayType);
+        }
     }
 }
