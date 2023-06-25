@@ -4,6 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for a bandolier item set
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("bandolier")]
@@ -22,7 +23,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// 1 based index of the set in the window
         /// </summary>
-        public int? Index => GetMember<IntType>("Index");
+        public uint? Index => GetMember<IntType>("Index");
 
         /// <summary>
         /// Item in the set by index (1 - 4)
