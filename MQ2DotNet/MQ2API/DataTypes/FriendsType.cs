@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for the friends list
+    /// MQ2 type for the friends list.
+    /// Last Verified: 2023-06-26
     /// </summary>
     [PublicAPI]
     [MQ2Type("friend")]
