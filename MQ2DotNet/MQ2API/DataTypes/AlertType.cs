@@ -4,7 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for an alert list (a list of spawn searches)
-    /// Last Verified: 2023-06-23
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("alert")]

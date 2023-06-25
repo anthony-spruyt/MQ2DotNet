@@ -4,7 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for an alert list
-    /// Last Verified: 2023-06-23
+    /// Last Verified: 2023-06-25
     /// </summary>
     /// <remarks>VarPtr identifies a SPAWNSEARCH struct on an alert list</remarks>
     [PublicAPI]
