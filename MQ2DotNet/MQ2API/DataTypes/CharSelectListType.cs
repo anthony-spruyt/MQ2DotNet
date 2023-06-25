@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for the character in the select list
+    /// MQ2 type for the character in the select list.
+    /// Last Verified: 2023-06-25
     /// </summary>
     [PublicAPI]
     [MQ2Type("charselectlist")]
@@ -14,6 +15,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
+        /// Total number of characters in the character select list
+        /// </summary>
+        public uint? Count => GetMember<IntType>("Count");
+
+        /// <summary>
         /// Character's name
         /// </summary>
         public string Name => GetMember<StringType>("Name");
@@ -21,26 +27,23 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Character's level
         /// </summary>
-        public int? Level => GetMember<IntType>("Level");
+        public uint? Level => GetMember<IntType>("Level");
 
         /// <summary>
-        /// ID of the zone the character is in
-        /// </summary>
-        public int? ZoneID => GetMember<IntType>("ZoneID");
-
-        /// <summary>
-        /// Total number of characters in the character select list
-        /// </summary>
-        public int? Count => GetMember<IntType>("Count");
-
-        /// <summary>
-        /// Character's class
+        /// Character's class.
+        /// TODO: map to an enum.
         /// </summary>
         public string Class => GetMember<StringType>("Class");
 
         /// <summary>
-        /// Character's race
+        /// Character's race.
+        /// TODO: map to an enum.
         /// </summary>
         public string Race => GetMember<StringType>("Race");
+
+        /// <summary>
+        /// ID of the zone the character is in
+        /// </summary>
+        public uint? ZoneID => GetMember<IntType>("ZoneID");
     }
 }
