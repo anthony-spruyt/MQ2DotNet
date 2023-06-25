@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using JetBrains.Annotations;
+using System.Runtime.Serialization;
 
 namespace MQ2DotNet.EQ
 {
@@ -11,6 +12,7 @@ namespace MQ2DotNet.EQ
     /// Spell Scroll - Scribeable spell scroll
     /// Worn - item has a focus effect
     /// </summary>
+    [PublicAPI]
     public enum EffectType
     {
         [EnumMember(Value = "Click Inventory")]

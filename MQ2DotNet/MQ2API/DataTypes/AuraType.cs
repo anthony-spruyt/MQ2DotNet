@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -24,6 +25,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns the position of the index if found within the aura's name.
         /// Cast to <see cref="uint"/> to get the value.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<IntType, string> Find { get; }
 
         /// <summary>

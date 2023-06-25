@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -18,6 +19,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Information about a spawn search on the alert list (0 based)
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<AlertListType, int> List { get; }
 
         /// <summary>

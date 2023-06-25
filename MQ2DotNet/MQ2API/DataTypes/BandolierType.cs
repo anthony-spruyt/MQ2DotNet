@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -28,6 +29,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Item in the set by index (1 - 4)
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BandolierItemType, int> Item { get; }
 
         /// <summary>

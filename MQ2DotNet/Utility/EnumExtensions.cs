@@ -21,8 +21,8 @@ namespace MQ2DotNet.Utility
             var enumType = typeof(T);
             foreach (var name in Enum.GetNames(enumType))
             {
-                var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
-                if (enumMemberAttribute.Value == str) return (T)Enum.Parse(enumType, name);
+                var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).FirstOrDefault();
+                if (enumMemberAttribute != null && string.Compare(enumMemberAttribute.Value, str, true) == 0) return (T)Enum.Parse(enumType, name);
             }
             return default;
         }

@@ -320,8 +320,10 @@ namespace MQ2DotNet.Services
         /// </summary>
         public IndexedTLO<BoolType> SubDefined { get; }
 
-        // TODO: Plugin types
-        //public CastType Cast => GetTLO<CastType>("Cast");
+        /// <summary>
+        /// Dependency on MQ2Cast.
+        /// </summary>
+        public CastType Cast => GetTLO<CastType>("Cast");
 
         /// <summary>
         /// Get a TLO by name

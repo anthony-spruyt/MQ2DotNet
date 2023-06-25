@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -23,6 +24,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// An item on the corpse by name or number
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<ItemType, int, ItemType, string> Item { get; }
 
         /// <summary>

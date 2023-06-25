@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using System;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -21,6 +22,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// A group member by name or number (0 - 5)
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<GroupMemberType, string, GroupMemberType, int> Member { get; }
 
         /// <summary>
@@ -107,12 +109,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Will return the numbers of people in the group that has less than a certain percentage HP.
         /// Resulting value is stored in <see cref="MQ2VarPtr.Dword"/> so cast to <see cref="uint"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<IntType, int> Injured { get; }
 
         /// <summary>
         /// Will return the numbers of people in the group that has less than a certain percentage mana.
         /// Resulting value is stored in <see cref="MQ2VarPtr.Dword"/> so cast to <see cref="uint"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<IntType, int> LowMana { get; }
 
         /// <summary>

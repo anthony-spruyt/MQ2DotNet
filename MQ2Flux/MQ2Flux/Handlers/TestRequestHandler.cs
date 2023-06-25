@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,13 +26,13 @@ namespace MQ2Flux
             {
                 //request.Context.MQ2.DoCommand("/useitem \"Fresh Cookie Dispenser\"");
                 //request.Context.MQ2.DoCommand("/autoinv");
-                logger.LogDebugJson(request.Context.MQ2);
-                logger.LogDebugJson(request.Context.Events);
-                logger.LogDebugJson(request.Context.Commands);
-                logger.LogDebugJson(request.Context.Chat);
-                logger.LogDebugJson(request.Context.Spawns);
-                logger.LogDebugJson(request.Context.TLO);
-                logger.LogDebugJson(request.Context.TLO.Me);
+                logger.LogDebugJson(request.Context.TLO.Cursor);
+                //logger.LogDebugJson(request.Context.TLO.Alias["/chaseon"]); // need test data, that didnt get anything, guess no alias
+                //logger.LogDebugJson(request.Context.TLO.AlertByNumber); // need test data
+                //logger.LogDebugJson(request.Context.TLO.Alerts); // need test data
+                //logger.LogDebugJson(request.Context.TLO.AdvLoot); // need to test while there is actually something to loot
+                //logger.LogDebugJson(request.Context.Spawns.All); // bad mapping
+                //logger.LogDebugJson(request.Context.Spawns.AllGround); // crashes
 
             }
             catch (Exception ex)

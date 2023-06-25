@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -29,6 +30,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: new member
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<DZTimerType, int, DZTimerType, string> Timer { get; }
 
         /// <summary>
@@ -54,6 +56,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Member of the dynamic zone by name or number
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<DZMemberType, int, DZMemberType, string> Member { get; }
 
         /// <summary>

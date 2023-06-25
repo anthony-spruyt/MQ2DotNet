@@ -81,7 +81,7 @@ namespace MQ2DotNet.MQ2API
             }
             catch (Exception ex)
             {
-                DataTypeErrors.TryAdd($"{name}_{index}_{typeof(T)}", ex);
+                DataTypeErrors.TryAdd($"{name}_{index}_{typeof(T).DeclaringType ?? typeof(T)}", ex);
 
                 member = null;
             }

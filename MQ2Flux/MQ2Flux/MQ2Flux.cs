@@ -88,7 +88,7 @@ namespace MQ2Flux
                 {
                     while (!linkedTokenSource.IsCancellationRequested)
                     {
-                        if (string.Compare(tlo.EverQuest.GameState, "INGAME") == 0)
+                        if (tlo.EverQuest.GameState == MQ2DotNet.EQ.GameState.InGame)
                         {
                             await mediator.Send
                             (

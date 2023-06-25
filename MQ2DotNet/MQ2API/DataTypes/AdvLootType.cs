@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -25,6 +26,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns an item from the personal loot list
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<AdvLootItemType> PList { get; }
 
         /// <summary>
@@ -35,6 +37,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns an item from shared loot list
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<AdvLootItemType> SList { get; }
 
         /// <summary>
@@ -55,6 +58,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns a filter from the advanced loot filters TODO: By what? Number in list or item ID?
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<ItemFilterDataType, int> Filter { get; }
 
         public override string ToString()

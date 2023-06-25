@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using MQ2DotNet.EQ;
 
@@ -166,6 +167,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Character in the character select list by name or position (1 based)
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<CharSelectListType, string, CharSelectListType, int> CharSelectList { get; }
 
         /// <summary>
@@ -188,6 +190,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Is the given location, in yxz format separated by spaces, a valid location in the current zone?
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BoolType, string> ValidLoc { get; }
 
         /// <summary>

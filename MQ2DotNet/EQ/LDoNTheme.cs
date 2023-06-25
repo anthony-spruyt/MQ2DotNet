@@ -1,7 +1,9 @@
-﻿using System.Runtime.Serialization;
+﻿using JetBrains.Annotations;
+using System.Runtime.Serialization;
 
 namespace MQ2DotNet.EQ
 {
+    [PublicAPI]
     public enum LDoNTheme
     {
         [EnumMember(Value = "All")]

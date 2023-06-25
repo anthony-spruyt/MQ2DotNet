@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
 using System;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -173,27 +174,32 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Blocked pet buff by index, valid index are 1 - 40
         /// In the MQ client this looks to be the same as <see cref="BlockedBuff"/>
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SpellType, int> BlockedPetBuff { get; }
 
         /// <summary>
         /// Blocked buff by index, valid index are 1 - 40
         /// In the MQ client this looks to be the same as <see cref="BlockedPetBuff"/>
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SpellType, int> BlockedBuff { get; }
 
         /// <summary>
         /// Buff by name or slot number
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BuffType, string, BuffType, int> Buff { get; }
 
         /// <summary>
         /// Song (short buff) by name or slot number
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BuffType, string, BuffType, int> Song { get; }
 
         /// <summary>
         /// TODO: new member
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BuffType, string> FindBuff { get; }
 
         /// <summary>
@@ -413,16 +419,19 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// An item from your inventory by slot name or number
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<ItemType, string, ItemType, int> Inventory { get; }
 
         /// <summary>
         /// Item in this bankslot #
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<ItemType, int> Bank { get; }
 
         /// <summary>
         /// TODO: new member
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<ItemType, int> SharedBank { get; }
 
         /// <summary>
@@ -560,29 +569,34 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The gem number that a spell name is memorized in, or the spell in a gem number.
         /// Cast to <see cref="uint"/> to get the value if using a <see cref="string"/> index / by name.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SpellType, int, IntType, string> Gem { get; }
 
         /// <summary>
         /// Language skill by name or number.
         /// Cast to <see cref="uint"/> to get the value.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<IntType, int, IntType, string> LanguageSkill { get; }
 
         /// <summary>
         /// Combat ability spell by number, or number by name.
         /// Cast to <see cref="uint"/> to get the value if using a <see cref="string"/> index / by name.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SpellType, int, IntType, string> CombatAbility { get; }
 
         /// <summary>
         /// Combat ability reuse time remaining by name or number.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<TicksType, int, TicksType, string> CombatAbilityTimer { get; }
 
         /// <summary>
         /// Combat ability ready by name or number.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BoolType, int, BoolType, string> CombatAbilityReady { get; }
 
         /// <summary>
@@ -609,34 +623,40 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Alt ability reuse time remaining by name or number.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<TimeStampType, int, TimeStampType, string> AltAbilityTimer { get; }
 
         /// <summary>
         /// Alt ability ready by name or number
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BoolType, int, BoolType, string> AltAbilityReady { get; }
 
         /// <summary>
         /// Returns an alt ability by name or number
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<AltAbilityType, int, AltAbilityType, string> AltAbility { get; }
 
         /// <summary>
         /// Skill level by name or number.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<IntType, string, IntType, int> Skill { get; }
 
         /// <summary>
         /// Skill base level by name or number.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<IntType, string, IntType, int> SkillBase { get; }
 
         /// <summary>
         /// Skill cap by name or number.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<IntType, string, IntType, int> SkillCap { get; }
 
         /// <summary>
@@ -649,6 +669,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Ability with this name or on this button # ready?.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BoolType, int, BoolType, string> AbilityReady { get; }
 
         /// <summary>
@@ -666,16 +687,19 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Spell in your spellbook by slot number, or slot in your spellbook by spell name.
         /// If a string index was provided then cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SpellType, int, IntType, string> Book { get; }
 
         /// <summary>
         /// TODO: new member
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SpellType, int, SpellType, string> Spell { get; }
 
         /// <summary>
         /// Is an item ready to cast?
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BoolType, int, BoolType, string> ItemReady { get; }
 
         /// <summary>
@@ -686,12 +710,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Indiciates if a spell is ready, by spell name or gem number
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BoolType, int, BoolType, string> SpellReady { get; }
 
         /// <summary>
         /// A buff on your pet by slot number, or a slot number by buff name.
         /// If a string index was provided then cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SpellType, int, IntType, string> PetBuff { get; }
 
         /// <summary>
@@ -722,6 +748,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current raid assist target (1-3)
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SpawnType, int> RaidAssistTarget { get; }
 
         /// <summary>
@@ -732,11 +759,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current raid marked NPC (1-3)
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SpawnType, int> RaidMarkNPC { get; }
 
         /// <summary>
         /// Current group marked NPC (1 - 3)
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SpawnType, int> GroupMarkNPC { get; }
 
         /// <summary>
@@ -874,6 +903,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Aura by name or slot #
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<AuraType, string, AuraType, int> Aura { get; }
 
         /// <summary>
@@ -1258,6 +1288,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Number of mobs on your XTarget, excluding your current target, that have less than the supplied % of aggro on you.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<IntType, int> XTAggroCount { get; }
 
         /// <summary>
@@ -1269,6 +1300,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns a spawn from your XTarget by index (1 - 13) or name.
         /// If no index was provided then it returns the count. Cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/> when no index is provided.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<XTargetType, int, XTargetType, string> XTarget { get; }
 
         /// <summary>
@@ -1280,6 +1312,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns the total amount of a SPA your character has.
         /// Cast to <see cref="uint"/> to get the value. The value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<IntType, int> SPA { get; }
 
         /// <summary>
@@ -1291,11 +1324,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Recast time remaining on a spell gem by number or spell name.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<TimeStampType, int, TimeStampType, string> GemTimer { get; }
 
         /// <summary>
         /// Returns TRUE/FALSE if you have that expansion by # or name
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BoolType, int, BoolType, string> HaveExpansion { get; }
 
         /// <summary>
@@ -1364,6 +1399,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Quantity of an alt currency by name or number.
         /// Cast to <see cref="uint"/> to get the value. The value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<IntType, int, IntType, string> AltCurrency { get; }
 
         /// <summary>
@@ -1569,11 +1605,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Bind location, valid indexes are 0 - 4
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<WorldLocationType, int> BoundLocation { get; }
 
         /// <summary>
         /// Autoskill by number
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<SkillType, int> AutoSkill { get; }
 
         /// <summary>
@@ -1634,6 +1672,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Bandolier set by slot number (1 - 20) or name
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<BandolierType, string, BandolierType, int> Bandolier { get; }
 
         /// <summary>
@@ -1675,6 +1714,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Ability with this name or on this button # ready?
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<TimeStampType, int, TimeStampType, string> AbilityTimer { get; }
 
         /// <summary>
