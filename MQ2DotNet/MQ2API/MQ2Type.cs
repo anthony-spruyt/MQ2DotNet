@@ -12,6 +12,11 @@ namespace MQ2DotNet.MQ2API
 
         public MQ2Type(IntPtr intPtr)
         {
+            if (intPtr == IntPtr.Zero)
+            {
+                throw new ArgumentNullException(nameof(intPtr));
+            }
+
             IntPtr = intPtr;
         }
 
@@ -33,21 +38,22 @@ namespace MQ2DotNet.MQ2API
 
             typeVar = new MQ2TypeVar(nativeTypeVar);
 
-            if (typeVar.Type.IntPtr == IntPtr.Zero)
-                return false;
-
             return true;
         }
 
         public string ToString(MQ2VarPtr varPtr)
         {
             if (IntPtr == IntPtr.Zero)
-                return "IntPtr.Zero";
+            {
+                return ToString();
+            }
 
             var stringBuilder = new StringBuilder(2048);
 
             if (!NativeMethods.MQ2Type__ToString(IntPtr, varPtr.VarPtr, stringBuilder))
-                return "MQ2Type::ToString failed";
+            {
+                return ToString();
+            }
 
             return stringBuilder.ToString();
         }
@@ -56,25 +62,25 @@ namespace MQ2DotNet.MQ2API
         {
             [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
             [return: MarshalAs(UnmanagedType.I1)]
-            public static extern bool MQ2Type__FromData(IntPtr pThis, out NativeMQ2VarPtr varPtr, ref NativeMQ2TypeVar source);
+            public static extern bool MQ2Type__FromData(IntPtr type, out NativeMQ2VarPtr varPtr, ref NativeMQ2TypeVar typeVar);
 
             [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
             [return: MarshalAs(UnmanagedType.I1)]
-            public static extern bool MQ2Type__FromString(IntPtr pThis, out NativeMQ2VarPtr varPtr, string source);
+            public static extern bool MQ2Type__FromString(IntPtr type, out NativeMQ2VarPtr varPtr, [MarshalAs(UnmanagedType.LPStr)] string source);
 
             [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
-            public static extern void MQ2Type__InitVariable(IntPtr pThis, out NativeMQ2VarPtr varPtr);
+            public static extern void MQ2Type__InitVariable(IntPtr type, out NativeMQ2VarPtr varPtr);
 
             [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
-            public static extern void MQ2Type__FreeVariable(IntPtr pThis, ref NativeMQ2VarPtr varPtr);
-
-            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
-            [return: MarshalAs(UnmanagedType.I1)]
-            public static extern bool MQ2Type__GetMember(IntPtr pThis, NativeMQ2VarPtr varPtr, string memberName, string index, out NativeMQ2TypeVar destination);
+            public static extern void MQ2Type__FreeVariable(IntPtr type, in NativeMQ2VarPtr varPtr);
 
             [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
             [return: MarshalAs(UnmanagedType.I1)]
-            public static extern bool MQ2Type__ToString(IntPtr pThis, NativeMQ2VarPtr varPtr, [MarshalAs(UnmanagedType.LPStr)] StringBuilder destination);
+            public static extern bool MQ2Type__GetMember(IntPtr type, in NativeMQ2VarPtr varPtr, [MarshalAs(UnmanagedType.LPStr)] string memberName, [MarshalAs(UnmanagedType.LPStr)] string index, out NativeMQ2TypeVar typeVar);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            [return: MarshalAs(UnmanagedType.I1)]
+            public static extern bool MQ2Type__ToString(IntPtr type, in NativeMQ2VarPtr varPtr, [MarshalAs(UnmanagedType.LPStr)] StringBuilder destination);
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using MQ2DotNet.MQ2API;
 using MQ2DotNet.MQ2API.DataTypes;
+using System;
+using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.Services
 {
@@ -47,6 +48,7 @@ namespace MQ2DotNet.Services
             Alias = new IndexedTLO<BoolType>(this, "Alias");
             AlertByNumber = new IndexedTLO<AlertType>(this, "Alert");
             SubDefined = new IndexedTLO<BoolType>(this, "SubDefined");
+            Heading = new IndexedTLO<HeadingType, string>(this, "");
         }
 
         /// <summary>
@@ -163,80 +165,97 @@ namespace MQ2DotNet.Services
         /// Zone you are currently in
         /// </summary>
         public CurrentZoneType CurrentZone => GetTLO<CurrentZoneType>("Zone");
-    
+
         /// <summary>
-        /// Heading to a location in y,x format
+        /// Heading to a location in y,x format.
+        /// TODO: I think this is incorrect and shoud be an IndexedTLO so converted it but havent tested yet...
         /// </summary>
-        public HeadingType Heading => GetTLO<HeadingType>("Heading");
+        //public HeadingType Heading => GetTLO<HeadingType>("Heading");
+        [JsonIgnore]
+        public IndexedTLO<HeadingType, string> Heading { get; }
 
         /// <summary>
         /// First spawn that matches a search string
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<SpawnType> Spawn { get; }
 
         /// <summary>
         /// Spell by name or ID
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<SpellType, string, SpellType, int> Spell { get; }
 
         /// <summary>
         /// Ground item by name (partial match), or your current ground target if an empty index is supplied
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<GroundType> GroundItem { get; }
 
         /// <summary>
         /// Number of ground items by name (partial match), or total number of ground items if an empty index is supplied
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<IntType> GroundItemCount { get; }
 
         /// <summary>
         /// Window by name
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<WindowType> Window { get; }
 
         /// <summary>
         /// Zone by ID or short name. For current zone, use <see cref="CurrentZone"/>
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<ZoneType> Zone { get; }
 
         /// <summary>
         /// Spawn by position in the list, from the end for negative numbers
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<SpawnType, int> LastSpawn { get; }
 
         /// <summary>
         /// Nth nearest spawn that matches a search e.g. "2,npc" for the 2nd closest NPC
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<SpawnType> NearestSpawn { get; }
 
         /// <summary>
         /// Total number of spawns that match a search
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<IntType> SpawnCount { get; }
 
         /// <summary>
         /// Is a variable by the given name defined?
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<BoolType> Defined { get; }
 
         /// <summary>
         /// Item by name, partial match unless it begins with an = e.g. "=Water Flask"
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<ItemType> FindItem { get; }
 
         /// <summary>
         /// An item in your bank, partial match unless it begins with an = e.g. "=Water Flask"
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<ItemType> FindItemBank { get; }
 
         /// <summary>
         /// Total number of an item you have, partial match unless it begins with an = e.g. "=Water Flask"
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<IntType> FindItemCount { get; }
 
         /// <summary>
         /// Total number of an item you have in your bank, partial match unless it begins with an = e.g. "=Water Flask"
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<IntType> FindItemBankCount { get; }
 
         /// <summary>
@@ -251,6 +270,7 @@ namespace MQ2DotNet.Services
         /// 6000-6080 merchant window
         /// 7000-7080 bazaar window
         /// 8000-8031 inspect window</remarks>
+        [JsonIgnore]
         public IndexedTLO<InvSlotType, string, InvSlotType, int> InvSlot { get; }
 
         /// <summary>
@@ -261,47 +281,56 @@ namespace MQ2DotNet.Services
         /// <summary>
         /// Skill by name or number
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<SkillType, string, SkillType, int> Skill { get; }
 
         /// <summary>
         /// Alt ability by name or number
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<AltAbilityType> AltAbility { get; }
 
         /// <summary>
         /// Is there line of sight between two locations, in the format "y,x,z:y,x,z"
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<BoolType> LineOfSight { get; }
 
         /// <summary>
         /// Task by name or position in window (1 based)
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<TaskType, string, TaskType, int> Task { get; }
 
         /// <summary>
         /// Mount (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<KeyRingType, string, KeyRingType, int> Mount { get; }
 
         /// <summary>
         /// Illusion (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<KeyRingType, string, KeyRingType, int> Illusion { get; }
 
         /// <summary>
         /// Familiar (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<KeyRingType, string, KeyRingType, int> Familiar { get; }
 
         /// <summary>
         /// Is an alias set for a command, including the slash e.g. Alias["/chaseon"]
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<BoolType> Alias { get; }
 
         /// <summary>
         /// An alert list by number
         /// For the equivalent of ${Alert}, see <see cref="Alerts"/>
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<AlertType> AlertByNumber { get; }
 
         /// <summary>
@@ -318,6 +347,7 @@ namespace MQ2DotNet.Services
         /// <summary>
         /// Is a sub with the given name defined?
         /// </summary>
+        [JsonIgnore]
         public IndexedTLO<BoolType> SubDefined { get; }
 
         /// <summary>
@@ -335,7 +365,9 @@ namespace MQ2DotNet.Services
         public T GetTLO<T>(string name, string index = "") where T : MQ2DataType
         {
             if (!NativeMethods.FindTLO(name, index, out var typeVar))
+            {
                 return null;
+            }
 
             T tlo;
 
@@ -345,7 +377,7 @@ namespace MQ2DotNet.Services
             }
             catch (Exception ex)
             {
-                MQ2DataType.DataTypeErrors.TryAdd($"{name}_{index}_{typeof(T)}", ex);
+                MQ2DataType.DataTypeErrors.TryAdd($"{name}_{index}_{typeof(T).DeclaringType ?? typeof(T)}", ex);
 
                 tlo = null;
             }

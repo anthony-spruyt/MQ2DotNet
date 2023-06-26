@@ -64,59 +64,81 @@ extern "C" __declspec(dllexport) fMQUnloadPlugin g_pfOnUnloadPlugin { nullptr };
 // Exported helper functions to make things easier in the managed world
 extern "C" __declspec(dllexport) PCHAR __stdcall GetIniPath() { return gPathConfig; }
 extern "C" __declspec(dllexport) EQGroundItemListManager* GetItemList() { return &pItemList->Instance(); }
-extern "C" __declspec(dllexport) bool FindTLO(const char* name, const char* index, MQTypeVar &typeVar)
-{
-	auto item = FindMQ2Data(name);
-	if (item == nullptr)
-		return false;
 
-	return item->Function(index, typeVar);
+// Exported helper to get TLOs
+extern "C" __declspec(dllexport) bool FindTLO(const char* name, const char* index, MQTypeVar& typeVar)
+{
+	auto mq2Data = FindMQ2Data(name);
+	return mq2Data != nullptr && mq2Data->Function(index, typeVar) && typeVar.Type != nullptr;
 }
 
 // Exported MQ2TypeVar functions
-extern "C" __declspec(dllexport) MQ2Type* MQTypeVar__GetType(MQTypeVar typeVar) { return typeVar.Type; }
-extern "C" __declspec(dllexport) MQVarPtr MQTypeVar__GetVarPtr(MQTypeVar typeVar) { return typeVar.VarPtr; }
+extern "C" __declspec(dllexport) MQ2Type* MQTypeVar__GetType(MQTypeVar& typeVar)
+{ 
+	return typeVar.Type;
+}
+extern "C" __declspec(dllexport) void MQTypeVar__GetVarPtr(MQTypeVar& typeVar, MQVarPtr& varPtr)
+{
+	varPtr = typeVar.VarPtr;
+}
 
 // Exported MQVarPtr functions
 // Int
-extern "C" __declspec(dllexport) int MQVarPtr__GetInt(MQVarPtr varPtr) { return varPtr.Get<int32_t>(); }
-extern "C" __declspec(dllexport) void MQVarPtr__SetInt(MQVarPtr varPtr, int32_t value) { varPtr.Set<int32_t>(value); }
+extern "C" __declspec(dllexport) int MQVarPtr__GetInt(MQVarPtr& varPtr)
+{ return varPtr.Get<int32_t>(); }
+extern "C" __declspec(dllexport) void MQVarPtr__SetInt(MQVarPtr& varPtr, int32_t value)
+{ varPtr.Set<int32_t>(value); }
 // Ptr
-extern "C" __declspec(dllexport) void* MQVarPtr__GetPtr(MQVarPtr varPtr) { return varPtr.Get<void*>(); }
-extern "C" __declspec(dllexport) void MQVarPtr__SetPtr(MQVarPtr varPtr, void* value) { varPtr.Set<void*>(value); }
+extern "C" __declspec(dllexport) void* MQVarPtr__GetPtr(MQVarPtr& varPtr)
+{ return varPtr.Get<void*>(); }
+extern "C" __declspec(dllexport) void MQVarPtr__SetPtr(MQVarPtr& varPtr, void* value)
+{ varPtr.Set<void*>(value); }
 // Float
-extern "C" __declspec(dllexport) float MQVarPtr__GetFloat(MQVarPtr varPtr) { return varPtr.Get<float>(); }
-extern "C" __declspec(dllexport) void MQVarPtr__SetFloat(MQVarPtr varPtr, float value) { varPtr.Set<float>(value); }
+extern "C" __declspec(dllexport) float MQVarPtr__GetFloat(MQVarPtr& varPtr)
+{ return varPtr.Get<float>(); }
+extern "C" __declspec(dllexport) void MQVarPtr__SetFloat(MQVarPtr& varPtr, float value)
+{ varPtr.Set<float>(value); }
 // Double
-extern "C" __declspec(dllexport) double MQVarPtr__GetDouble(MQVarPtr varPtr) { return varPtr.Get<double>(); }
-extern "C" __declspec(dllexport) void MQVarPtr__SetDouble(MQVarPtr varPtr, double value) { varPtr.Set<double>(value); }
+extern "C" __declspec(dllexport) double MQVarPtr__GetDouble(MQVarPtr& varPtr)
+{ return varPtr.Get<double>(); }
+extern "C" __declspec(dllexport) void MQVarPtr__SetDouble(MQVarPtr& varPtr, double value)
+{ varPtr.Set<double>(value); }
 // Dword
-extern "C" __declspec(dllexport) uint32_t MQVarPtr__GetDword(MQVarPtr varPtr) { return varPtr.Get<uint32_t>(); }
-extern "C" __declspec(dllexport) void MQVarPtr__SetDword(MQVarPtr varPtr, uint32_t value) { varPtr.Set<uint32_t>(value); }
+extern "C" __declspec(dllexport) uint32_t MQVarPtr__GetDword(MQVarPtr& varPtr)
+{ return varPtr.Get<uint32_t>(); }
+extern "C" __declspec(dllexport) void MQVarPtr__SetDword(MQVarPtr& varPtr, uint32_t value)
+{ varPtr.Set<uint32_t>(value); }
 // Int64
-extern "C" __declspec(dllexport) int64_t MQVarPtr__GetInt64(MQVarPtr varPtr) { return varPtr.Get<int64_t>(); }
-extern "C" __declspec(dllexport) void MQVarPtr__SetInt64(MQVarPtr varPtr, int64_t value) { varPtr.Set<int64_t>(value); }
+extern "C" __declspec(dllexport) int64_t MQVarPtr__GetInt64(MQVarPtr& varPtr)
+{ return varPtr.Get<int64_t>(); }
+extern "C" __declspec(dllexport) void MQVarPtr__SetInt64(MQVarPtr& varPtr, int64_t value)
+{ varPtr.Set<int64_t>(value); }
 // UInt64
-extern "C" __declspec(dllexport) uint64_t MQVarPtr__GetUInt64(MQVarPtr varPtr) { return varPtr.Get<uint64_t>(); }
-extern "C" __declspec(dllexport) void MQVarPtr__SetUInt64(MQVarPtr varPtr, uint64_t value) { varPtr.Set<uint64_t>(value); }
+extern "C" __declspec(dllexport) uint64_t MQVarPtr__GetUInt64(MQVarPtr& varPtr)
+{ return varPtr.Get<uint64_t>(); }
+extern "C" __declspec(dllexport) void MQVarPtr__SetUInt64(MQVarPtr& varPtr, uint64_t value)
+{ varPtr.Set<uint64_t>(value); }
 //TODO low + high parts and ARGB
 
 // Exported MQ2Type functions
-extern "C" __declspec(dllexport) bool MQ2Type__FromData(MQ2Type * pThis, MQVarPtr &varPtr, const MQTypeVar &source) { return pThis->FromData(varPtr, source); }
-extern "C" __declspec(dllexport) bool MQ2Type__FromString(MQ2Type * pThis, MQVarPtr &varPtr, const char* source) { return pThis->FromString(varPtr, source); }
-extern "C" __declspec(dllexport) void MQ2Type__InitVariable(MQ2Type * pThis, MQVarPtr &varPtr) { pThis->InitVariable(varPtr); }
-extern "C" __declspec(dllexport) void MQ2Type__FreeVariable(MQ2Type * pThis, MQVarPtr &varPtr) { pThis->FreeVariable(varPtr); }
-extern "C" __declspec(dllexport) bool MQ2Type__GetMember(MQ2Type * pThis, MQVarPtr &varPtr, const char* memberName, char* index, MQTypeVar &destination) { return pThis->GetMember(varPtr, memberName, index, destination); }
-extern "C" __declspec(dllexport) bool MQ2Type__ToString(MQ2Type * pThis, MQVarPtr &varPtr, char* destination)
+extern "C" __declspec(dllexport) bool MQ2Type__FromData(MQ2Type* type, MQVarPtr& varPtr, const MQTypeVar &typeVar)
+{ return type->FromData(varPtr, typeVar); }
+extern "C" __declspec(dllexport) bool MQ2Type__FromString(MQ2Type* type, MQVarPtr& varPtr, const char* source)
+{ return type->FromString(varPtr, source); }
+extern "C" __declspec(dllexport) void MQ2Type__InitVariable(MQ2Type* type, MQVarPtr& varPtr)
+{ type->InitVariable(varPtr); }
+extern "C" __declspec(dllexport) void MQ2Type__FreeVariable(MQ2Type* type, MQVarPtr& varPtr)
+{ type->FreeVariable(varPtr); }
+extern "C" __declspec(dllexport) bool MQ2Type__GetMember(MQ2Type* type, MQVarPtr& varPtr, const char* memberName, char* index, MQTypeVar& typeVar)
+{
+	return type != nullptr && 
+		type->CanEvaluateMethodOrMember(memberName) &&
+		type->GetMember(varPtr, memberName, index, typeVar) &&
+		typeVar.Type != nullptr;
+}
+extern "C" __declspec(dllexport) bool MQ2Type__ToString(MQ2Type* type, MQVarPtr& varPtr, char* destination)
 { 
-	try
-	{
-		return pThis->ToString(varPtr, destination);
-	}
-	catch (const std::exception&)
-	{
-		return false;
-	}
+	return type != nullptr && type->ToString(varPtr, destination);
 }
 
 void GetStructSizes()
