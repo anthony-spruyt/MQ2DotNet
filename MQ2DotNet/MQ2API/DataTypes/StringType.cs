@@ -98,5 +98,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             return typeVar?._string?.ToEnum<GameState>();
         }
+
+        /// <summary>
+        /// Implicit conversion to a PetStance
+        /// TODO: havent tested this type of parsing yet.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator PetStance?(StringType typeVar)
+        {
+            return typeVar?._string?.ToEnum<PetStance>();
+        }
     }
 }

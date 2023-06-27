@@ -19,6 +19,5 @@ namespace MQ2DotNet.EQ
         InDynamicZone,
         [EnumMember(Value = "Link Dead")]
         LinkDead
-
     }
 }
