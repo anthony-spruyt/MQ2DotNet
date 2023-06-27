@@ -1,9 +1,11 @@
 ﻿using JetBrains.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a context menu
+    /// MQ2 type for a context menu.
+    /// Last Verified: 2023-06-27
     /// </summary>
     [PublicAPI]
     [MQ2Type("menu")]
@@ -20,30 +22,31 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="containing">Text to search for</param>
         /// <returns>true if an item was found, otherwise false</returns>
         public bool Select(string containing) => GetMember<BoolType>("Select", containing);
-
+        
         /// <summary>
         /// TODO: What is this?
         /// </summary>
-        public int? NumVisibleMenus => GetMember<IntType>("NumVisibleMenus");
-
+        public uint? NumVisibleMenus => GetMember<IntType>("NumVisibleMenus");
+        
         /// <summary>
         /// TODO: What is this?
         /// </summary>
-        public int? CurrMenu => GetMember<IntType>("CurrMenu");
-
+        public uint? CurrMenu => GetMember<IntType>("CurrMenu");
+        
         /// <summary>
         /// TODO: What is this?
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-
+        
         /// <summary>
         /// TODO: What is this?
         /// </summary>
-        public int? NumItems => GetMember<IntType>("NumItems");
-
+        public uint? NumItems => GetMember<IntType>("NumItems");
+        
         /// <summary>
         /// TODO: What is this?
         /// </summary>
+        [JsonIgnore]
         public IndexedMember<StringType, int> Items { get; }
     }
 }
