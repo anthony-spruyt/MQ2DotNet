@@ -1,9 +1,13 @@
 ﻿using JetBrains.Annotations;
+using MQ2DotNet.EQ;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a raid
+    /// MQ2 type for a raid.
+    /// Last Verified: 2023-06-27
     /// </summary>
     [PublicAPI]
     [MQ2Type("raid")]
@@ -11,7 +15,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal RaidType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Member = new IndexedMember<RaidMemberType, string, RaidMemberType, int>(this, "Member");
+            _member = new IndexedMember<RaidMemberType, string, RaidMemberType, int>(this, "Member");
+            _looter = new IndexedStringMember<int>(this, "Looter");
+            _markNPC = new IndexedMember<RaidMemberType, int, RaidMemberType, string>(this, "MarkNPC");
         }
 
         /// <summary>
@@ -27,12 +33,63 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Raid member by name or number (1 based)
         /// </summary>
-        public IndexedMember<RaidMemberType, string, RaidMemberType, int> Member { get; }
+        [JsonIgnore]
+        private IndexedMember<RaidMemberType, string, RaidMemberType, int> _member { get; }
+
+        /// <summary>
+        /// Get raid member by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public RaidMemberType GetMember(string name)
+        {
+            return _member[name];
+        }
+
+        /// <summary>
+        /// Get raid member by index.
+        /// </summary>
+        /// <param name="index">The 1 based index.</param>
+        /// <returns></returns>
+        public RaidMemberType GetMember(int index)
+        {
+            return _member[index];
+        }
+
+        /// <summary>
+        /// All raid members.
+        /// </summary>
+        public IEnumerable<RaidMemberType> RaidMembers
+        {
+            get
+            {
+                var items = new List<RaidMemberType>();
+                var index = 1;
+                var count = Members;
+
+                while (count.HasValue)
+                {
+                    var item = GetMember(index);
+
+                    if (item != null && index <= count)
+                    {
+                        items.Add(item);
+                        index++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// Total number of raid members
         /// </summary>
-        public int? Members => GetMember<IntType>("Members");
+        public uint? Members => GetMember<IntType>("Members");
 
         /// <summary>
         /// Raid target (clicked in raid window)
@@ -47,7 +104,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Sum of all raid members' levels
         /// </summary>
-        public int? TotalLevels => GetMember<IntType>("TotalLevels");
+        public uint? TotalLevels => GetMember<IntType>("TotalLevels");
 
         /// <summary>
         /// Average level of raid members (more accurate than in the window)
@@ -55,19 +112,61 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public float? AverageLevel => GetMember<FloatType>("AverageLevel");
 
         /// <summary>
-        /// Loot type number (1 = Leader, 2 = Leader and GroupLeader, 3 = Leader and Specified
+        /// Loot type number (1 = Leader, 2 = Leader and GroupLeader, 3 = Leader and Specified)
+        /// TODO: test enum conversion.
         /// </summary>
-        public int? LootType => GetMember<IntType>("LootType");
+        public RaidLootType? LootType => GetMember<IntType>("LootType");
 
         /// <summary>
         /// Number of specified looters
         /// </summary>
-        public int? Looters => GetMember<IntType>("Looters");
+        public uint? Looters => GetMember<IntType>("Looters");
 
         /// <summary>
-        /// Specified looter name by number (1 - <see cref="Looters"/>)
+        /// Specified looter name by 1 based index/number (1 - <see cref="Looters"/>).
         /// </summary>
-        public string Looter => GetMember<StringType>("Looter");
+        [JsonIgnore]
+        private IndexedStringMember<int> _looter { get; }
+
+        /// <summary>
+        /// Get a raid looter name by index.
+        /// </summary>
+        /// <param name="index">The 1 based index.</param>
+        /// <returns></returns>
+        public string GetLooter(int index)
+        {
+            return _looter[index];
+        }
+
+        /// <summary>
+        /// All raid looters.
+        /// </summary>
+        public IEnumerable<string> RaidLooters
+        {
+            get
+            {
+                var items = new List<string>();
+                var index = 1;
+                var count = Members;
+
+                while (count.HasValue)
+                {
+                    var item = GetLooter(index);
+
+                    if (item != null && index <= count)
+                    {
+                        items.Add(item);
+                        index++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// Raid main assist
@@ -78,5 +177,20 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Raid master looter
         /// </summary>
         public RaidMemberType MasterLooter => GetMember<RaidMemberType>("MasterLooter");
+
+        /// <summary>
+        /// Raid mark NPC
+        /// </summary>
+        private IndexedMember<RaidMemberType, int, RaidMemberType, string> _markNPC { get; }
+
+        /// <summary>
+        /// Get the first mark NPC raid member.
+        /// </summary>
+        public RaidMemberType MarkNPC => GetMember<RaidMemberType>("MarkNPC");
+
+        public override string ToString()
+        {
+            return typeof(RaidType).FullName;
+        }
     }
 }

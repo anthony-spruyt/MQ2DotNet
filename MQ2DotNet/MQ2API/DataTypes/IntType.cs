@@ -125,5 +125,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             return (EQ.ZoneType?)typeVar?.VarPtr.Dword;
         }
+
+        /// <summary>
+        /// Implicit conversion to a RaidLootType enum
+        /// </summary>
+        /// <param name="typeVar"></param>
+        public static implicit operator RaidLootType?(IntType typeVar)
+        {
+            return (EQ.RaidLootType?)typeVar?.VarPtr.Dword;
+        }
     }
 }
