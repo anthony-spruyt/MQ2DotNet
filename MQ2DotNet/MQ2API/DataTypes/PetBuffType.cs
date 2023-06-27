@@ -1,7 +1,5 @@
 ﻿using JetBrains.Annotations;
-using MQ2DotNet.EQ;
 using System;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
