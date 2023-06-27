@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a zone
+    /// MQ2 type for a zone.
+    /// Last Verified: 2023-06-28
     /// </summary>
     [PublicAPI]
     [MQ2Type("zone")]
@@ -17,17 +18,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Long name of the zone e.g. "The Plane of Knowledge"
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-
+        
         /// <summary>
         /// Short name of the zone e.g. "PoKnowledge"
         /// </summary>
         public string ShortName => GetMember<StringType>("ShortName");
-
+        
         /// <summary>
         /// Zone ID
         /// </summary>
         public int? ID => GetMember<IntType>("ID");
-
+        
         /// <summary>
         /// Zone flags, see ZONELIST::ZoneFlags in eqdata.h
         /// </summary>
