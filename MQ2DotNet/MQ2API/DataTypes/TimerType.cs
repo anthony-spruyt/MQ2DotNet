@@ -1,9 +1,11 @@
 ﻿using JetBrains.Annotations;
+using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a timer
+    /// MQ2 type for a timer.
+    /// Last Verified: 2023-06-28
     /// </summary>
     [PublicAPI]
     [MQ2Type("timer")]
@@ -14,13 +16,29 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
+        /// TODO: new method
+        /// </summary>
+        public void Expire() => GetMember<MQ2DataType>("Expire");
+
+        /// <summary>
+        /// TODO: new method
+        /// </summary>
+        public void Reset() => GetMember<MQ2DataType>("Reset");
+
+        /// <summary>
+        /// TODO: new method
+        /// </summary>
+        /// <param name="duration"></param>
+        public void Set(TimeSpan duration) => GetMember<MQ2DataType>("Set", $"{duration.TotalSeconds}s");
+
+        /// <summary>
         /// Current value of the timer in 100ms intervals
         /// </summary>
-        public int? Value => GetMember<IntType>("Value");
-
+        public uint? Value => GetMember<IntType>("Value");
+        
         /// <summary>
         /// Original value of the timer in 100ms, from when the variable was first created
         /// </summary>
-        public int? OriginalValue => GetMember<IntType>("OriginalValue");
+        public uint? OriginalValue => GetMember<IntType>("OriginalValue");
     }
 }
