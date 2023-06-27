@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a world location
+    /// MQ2 type for a world location.
+    /// Last Verified: 2023-06-28
     /// </summary>
     /// <remarks>This type is only used for character's bound locations, VarPtr.Dword is an index in CHARINFO2::BoundLocations</remarks>
     [PublicAPI]
@@ -17,28 +18,28 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Zone ID
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
-
+        public uint? ID => GetMember<IntType>("ID");
+        
         /// <summary>
         /// Zone information
         /// </summary>
         public ZoneType Zone => GetMember<ZoneType>("Zone");
-
+        
         /// <summary>
         /// Y coordinate (Northward-positive)
         /// </summary>
         public float? Y => GetMember<FloatType>("Y");
-
+        
         /// <summary>
         /// X coordinate (Westward-positive)
         /// </summary>
         public float? X => GetMember<FloatType>("X");
-
+        
         /// <summary>
         /// Z coordinate (Upward-positive)
         /// </summary>
         public float? Z => GetMember<FloatType>("Z");
-
+        
         /// <summary>
         /// Direction facing
         /// </summary>
