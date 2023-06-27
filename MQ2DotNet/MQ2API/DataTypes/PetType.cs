@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
@@ -30,9 +31,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Find the 1 based index of a pet buff by name.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public uint? FindPetBuff(string name)
+        /// <param name="name">The name of the buff.</param>
+        /// <returns>The 1 based index of the pet buff.</returns>
+        public uint? GetPetBuff(string name)
         {
             return _buff[name];
         }
@@ -41,7 +42,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Get a buff on your pet by index.
         /// </summary>
         /// <param name="index">The 1 based index.</param>
-        /// <returns></returns>
+        /// <returns>The pet buff.</returns>
         public PetBuffType GetPetBuff(int index)
         {
             return _buff[index];
@@ -54,12 +55,22 @@ namespace MQ2DotNet.MQ2API.DataTypes
         [JsonIgnore]
         private IndexedMember<TimeStampType, int, TimeStampType, string> _buffDuration { get; }
 
-        public TimeSpan? GetBuffDuration(int index)
+        /// <summary>
+        /// Get the remaining duration of a pet buff.
+        /// </summary>
+        /// <param name="index">The 1 based index.</param>
+        /// <returns>The remaining duration of the buff.</returns>
+        public TimeSpan? GetPetBuffDuration(int index)
         {
             return _buffDuration[index];
         }
 
-        public TimeSpan? FindBuffDuration(string name)
+        /// <summary>
+        /// Get the remaining duration of a pet buff.
+        /// </summary>
+        /// <param name="name">The name of the pet buff</param>
+        /// <returns>The remaining duration of the buff.</returns>
+        public TimeSpan? GetPetBuffDuration(string name)
         {
             return _buffDuration[name];
         }
@@ -115,9 +126,43 @@ namespace MQ2DotNet.MQ2API.DataTypes
         [JsonIgnore]
         private IndexedMember<BuffType> _findBuff { get; }
 
-        public BuffType FindBuff(string name)
+        /// <summary>
+        /// Get a buff by name if on the pet.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public BuffType GetBuff(string name)
         {
             return _findBuff[name];
+        }
+
+        /// <summary>
+        /// All the current pet buffs.
+        /// </summary>
+        public IEnumerable<PetBuffType> PetBuffs
+        {
+            get
+            {
+                var petBuffs = new List<PetBuffType>();
+                var index = 1;
+
+                while (true)
+                {
+                    var petBuff = GetPetBuff(index);
+
+                    if (petBuff != null && index <= 100)
+                    {
+                        petBuffs.Add(petBuff);
+                        index++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return petBuffs;
+            }
         }
     }
 }
