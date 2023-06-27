@@ -85,7 +85,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <returns></returns>
         public static implicit operator Class?(IntType typeVar)
         {
-            return (Class?) typeVar?.VarPtr.Int;
+            return (Class?)typeVar?.VarPtr.Int;
         }
 
         /// <summary>

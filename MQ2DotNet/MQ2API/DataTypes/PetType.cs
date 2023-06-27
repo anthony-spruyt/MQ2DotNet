@@ -143,16 +143,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var petBuffs = new List<PetBuffType>();
+                var items = new List<PetBuffType>();
                 var index = 1;
 
                 while (true)
                 {
-                    var petBuff = GetPetBuff(index);
+                    var item = GetPetBuff(index);
 
-                    if (petBuff != null && index <= 100)
+                    if (item != null && index <= 100)
                     {
-                        petBuffs.Add(petBuff);
+                        items.Add(item);
                         index++;
                     }
                     else
@@ -161,7 +161,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
                     }
                 }
 
-                return petBuffs;
+                return items;
             }
         }
     }
