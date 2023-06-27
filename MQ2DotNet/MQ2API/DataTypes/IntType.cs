@@ -68,7 +68,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Implicit conversion to a nullable uint
+        /// Implicit conversion to a bool
         /// </summary>
         /// <param name="typeVar"></param>
         public static implicit operator bool(IntType typeVar)
@@ -79,7 +79,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Implicit conversion to a Class enum
+        /// Implicit conversion to a nullable Class enum
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
@@ -99,7 +99,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Implicit conversion to an ItemSize enum
+        /// Implicit conversion to an nullable ItemSize enum
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
@@ -109,7 +109,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Implicit conversion to a SpawnType enum
+        /// Implicit conversion to a nullable SpawnType enum
         /// </summary>
         /// <param name="typeVar"></param>
         public static implicit operator EQ.SpawnType?(IntType typeVar)
@@ -118,7 +118,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Implicit conversion to a ZoneType enum
+        /// Implicit conversion to a nullable ZoneType enum
         /// </summary>
         /// <param name="typeVar"></param>
         public static implicit operator EQ.ZoneType?(IntType typeVar)
@@ -127,12 +127,22 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Implicit conversion to a RaidLootType enum
+        /// Implicit conversion to a nullable RaidLootType enum
         /// </summary>
         /// <param name="typeVar"></param>
         public static implicit operator RaidLootType?(IntType typeVar)
         {
             return (EQ.RaidLootType?)typeVar?.VarPtr.Dword;
+        }
+
+        /// <summary>
+        /// Implicit conversion to a nullable TimeSpan
+        /// </summary>
+        /// <param name="typeVar"></param>
+        public static implicit operator TimeSpan?(IntType typeVar)
+        {
+            // SkillType::ReuseTime
+            return typeVar == null ? TimeSpan.Zero : TimeSpan.FromMilliseconds(typeVar.VarPtr.Dword);
         }
     }
 }

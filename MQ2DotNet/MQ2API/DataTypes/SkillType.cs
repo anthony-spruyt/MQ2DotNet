@@ -1,9 +1,11 @@
 ﻿using JetBrains.Annotations;
+using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a skill
+    /// MQ2 type for a skill.
+    /// Last Verified: 2023-06-27
     /// </summary>
     [PublicAPI]
     [MQ2Type("skill")]
@@ -17,37 +19,37 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Name of the skill
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-
+        
         /// <summary>
         /// Skill number
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
-
+        public uint? ID => GetMember<IntType>("ID");
+        
         /// <summary>
         /// Reuse time for the ability in milliseconds (not time remaining)
         /// </summary>
-        public int? ReuseTime => GetMember<IntType>("ReuseTime");
-
+        public TimeSpan? ReuseTime => GetMember<IntType>("ReuseTime");
+        
         /// <summary>
         /// Minimum level for your class
         /// </summary>
-        public int? MinLevel => GetMember<IntType>("MinLevel");
-
+        public uint? MinLevel => GetMember<IntType>("MinLevel");
+        
         /// <summary>
         /// Skill cap based on your current level and class
         /// </summary>
-        public int? SkillCap => GetMember<IntType>("SkillCap");
-
+        public uint? SkillCap => GetMember<IntType>("SkillCap");
+        
         /// <summary>
         /// TODO: Is this the common timer number (shared by other skills, but not the same as AA timers)
         /// </summary>
-        public int? AltTimer => GetMember<IntType>("AltTimer");
-
+        public uint? AltTimer => GetMember<IntType>("AltTimer");
+        
         /// <summary>
         /// Returns TRUE if the skill has been activated
         /// </summary>
         public bool Activated => GetMember<BoolType>("Activated");
-
+        
         /// <summary>
         /// Skill has /autoskill on?
         /// </summary>
