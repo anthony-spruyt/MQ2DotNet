@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a member of a shared task
+    /// MQ2 type for a member of a shared task.
+    /// Last Verified: 2023-06-27
     /// </summary>
     [PublicAPI]
     [MQ2Type("taskmember")]
@@ -17,15 +18,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Name of the task member
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-
+        
         /// <summary>
         /// Is this member the task leader?
         /// </summary>
         public bool Leader => GetMember<BoolType>("Leader");
-
+        
         /// <summary>
         /// Index of the member in the list (1 based)
         /// </summary>
-        public int? Index => GetMember<IntType>("Index");
+        public uint? Index => GetMember<IntType>("Index");
     }
 }

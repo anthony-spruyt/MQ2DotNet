@@ -1,59 +1,178 @@
 ﻿using JetBrains.Annotations;
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a task
+    /// MQ2 type for a task.
+    /// Last Verified: 2023-06-27
     /// </summary>
     [PublicAPI]
     [MQ2Type("task")]
     public class TaskType : MQ2DataType
     {
+        public const int MAX_TASK_ELEMENTS = 20;
+
         internal TaskType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Member = new IndexedMember<TaskMemberType, string, TaskMemberType, int>(this, "Member");
-            Objective = new IndexedMember<TaskObjectiveType, string, TaskObjectiveType, int>(this, "Objective");
+            _member = new IndexedMember<TaskMemberType, string, TaskMemberType, int>(this, "Member");
+            _objective = new IndexedMember<TaskObjectiveType, string, TaskObjectiveType, int>(this, "Objective");
         }
 
         /// <summary>
-        /// Type of task, either Shared or Quest
+        /// Select the task in the task window
+        /// </summary>
+        /// <returns>True if success</returns>
+        public bool Select() => GetMember<BoolType>("Select");
+
+        /// <summary>
+        /// Type of task, either Shared, Quest or Unknown
+        /// TODO: map to an enum.
         /// </summary>
         public string Type => GetMember<StringType>("Type");
-
+        
         /// <summary>
         /// Index of the task in your task list, 1 based
         /// </summary>
         public int? Index => GetMember<IntType>("Index");
-
+        
         /// <summary>
-        /// Name of the leader of the task
+        /// The leader of the task
         /// </summary>
-        public string Leader => GetMember<StringType>("Leader");
-
+        public TaskMemberType Leader => GetMember<TaskMemberType>("Leader");
+        
         /// <summary>
         /// Name/title of the task
         /// </summary>
         public string Title => GetMember<StringType>("Title");
-
+        
         /// <summary>
         /// Time remaining on the task
         /// </summary>
-        public TimeStampType Timer => GetMember<TimeStampType>("Timer");
-
+        public TimeSpan? Timer => GetMember<TimeStampType>("Timer");
+        
         /// <summary>
         /// Member of the task, by name or index (1 based)
         /// </summary>
-        public IndexedMember<TaskMemberType, string, TaskMemberType, int> Member { get; }
+        [JsonIgnore]
+        private IndexedMember<TaskMemberType, string, TaskMemberType, int> _member { get; }
+
+        /// <summary>
+        /// Get a task member.
+        /// </summary>
+        /// <param name="name">The task name.</param>
+        /// <returns></returns>
+        public TaskMemberType GetTaskMember(string name)
+        {
+            return _member[name];
+        }
+
+        /// <summary>
+        /// Get a task member.
+        /// </summary>
+        /// <param name="index">The 1 based index.</param>
+        /// <returns></returns>
+        public TaskMemberType GetTaskMember(int index)
+        {
+            return _member[index];
+        }
+
+        /// <summary>
+        /// All task members.
+        /// </summary>
+       public  IEnumerable<TaskMemberType> TaskMembers
+        {
+            get
+            {
+                var items = new List<TaskMemberType>();
+                var index = 1;
+                var count = Members;
+
+                while (count.HasValue)
+                {
+                    var item = GetTaskMember(index);
+
+                    if (item != null && index <= count)
+                    {
+                        items.Add(item);
+                        index++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// Number of members
         /// </summary>
-        public int? Members => GetMember<IntType>("Members");
+        public uint? Members => GetMember<IntType>("Members");
+
+        /// <summary>
+        /// TODO: new member
+        /// </summary>
+        public int? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// Task objective by name or index (1 based)
         /// </summary>
-        public IndexedMember<TaskObjectiveType, string, TaskObjectiveType, int> Objective { get; }
+        [JsonIgnore]
+        public IndexedMember<TaskObjectiveType, string, TaskObjectiveType, int> _objective { get; }
+
+        /// <summary>
+        /// Get a task objective.
+        /// </summary>
+        /// <param name="name">The task objective name.</param>
+        /// <returns></returns>
+        public TaskObjectiveType GetTaskObjective(string name)
+        {
+            return _objective[name];
+        }
+
+        /// <summary>
+        /// Get a task objective.
+        /// </summary>
+        /// <param name="index">The 1 based index.</param>
+        /// <returns></returns>
+        public TaskObjectiveType GetTaskObjective(int index)
+        {
+            return _objective[index];
+        }
+
+        /// <summary>
+        /// All task objective.
+        /// </summary>
+        public IEnumerable<TaskObjectiveType> TaskObjectives
+        {
+            get
+            {
+                var items = new List<TaskObjectiveType>();
+                var index = 1;
+
+                while (true)
+                {
+                    var item = GetTaskObjective(index);
+
+                    if (item != null && index <= MAX_TASK_ELEMENTS)
+                    {
+                        items.Add(item);
+                        index++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// First task objective with a status other than "Done"
@@ -61,8 +180,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public TaskObjectiveType Step => GetMember<TaskObjectiveType>("Step");
 
         /// <summary>
-        /// Select the task in the task window
+        /// TODO: new member
         /// </summary>
-        public void Select() => GetMember<MQ2DataType>("Select");
+        public uint? WindowIndex => GetMember<IntType>("WindowIndex");
     }
 }
