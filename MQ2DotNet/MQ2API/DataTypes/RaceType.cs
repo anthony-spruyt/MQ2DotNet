@@ -4,7 +4,8 @@ using MQ2DotNet.EQ;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a character race
+    /// MQ2 type for a character race.
+    /// Last Verified: 2023-06-27
     /// </summary>
     [PublicAPI]
     [MQ2Type("race")]
@@ -17,10 +18,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// ID of the race, this should correspond to the <see cref="Race"/> enum
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
-
+        public uint? ID => GetMember<IntType>("ID");
+        
         /// <summary>
         /// Full name of the race e.g. Froglok
+        /// TODO: map to an enum.
         /// </summary>
         public string Name => GetMember<StringType>("Name");
     }
