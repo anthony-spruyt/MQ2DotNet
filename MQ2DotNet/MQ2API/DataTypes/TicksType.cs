@@ -90,6 +90,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             // CharacterType::TributeTimer but it stores in MS
             // FellowshipMemberType::LastOn
             // FellowshipType::CampfireDuration
+            // ItemType::Timer
             if (ticksType.VarPtr.Dword > 0)
             {
                 // value is the number of 6 second ticks

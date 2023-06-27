@@ -97,6 +97,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
             // CharacterType::AbilityTimer
             // CharacterType::CastTimeLeft
             // DZTimerType::Timer
+            // ItemType::CastTime
+            // TaskType::Timer
             if (timestampType.VarPtr.UInt64 > 0)
             {
                 timespan = TimeSpan.FromMilliseconds(timestampType.VarPtr.UInt64);
