@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a solvent
+    /// MQ2 type for a solvent.
+    /// Last Verified: 2023-06-27
     /// </summary>
     [PublicAPI]
     [MQ2Type("solventtype")]
@@ -17,20 +18,20 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Item name
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-
+        
         /// <summary>
         /// Item ID
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
-
+        public uint? ID => GetMember<IntType>("ID");
+        
         /// <summary>
         /// <see cref="ItemType"/> for the solvent, if available
         /// </summary>
         public ItemType Item => GetMember<ItemType>("Item");
-
+        
         /// <summary>
         /// How many we currently have in inventory
         /// </summary>
-        public int? Count => GetMember<IntType>("Count");
+        public uint? Count => GetMember<IntType>("Count");
     }
 }
