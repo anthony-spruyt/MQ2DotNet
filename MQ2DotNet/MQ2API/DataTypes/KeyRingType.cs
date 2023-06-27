@@ -3,7 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an item on the keyring
+    /// MQ2 type for a keyring.
+    /// Last Verified: 2023-06-27
     /// </summary>
     [PublicAPI]
     [MQ2Type("keyring")]
@@ -14,13 +15,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Index of the item in the list (1 based)
+        /// TODO: new member
         /// </summary>
-        public int? Index => GetMember<IntType>("Index");
+        public uint? Count => GetMember<IntType>("Count");
 
         /// <summary>
-        /// Name of the item
+        /// TODO: new member
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public KeyRingItemType Stat => GetMember<KeyRingItemType>("Stat");
     }
 }

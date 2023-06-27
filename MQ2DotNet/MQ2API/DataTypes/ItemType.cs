@@ -6,7 +6,8 @@ using MQ2DotNet.EQ;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an item. This is used for both generic item information (ITEMINFO), and a specific item (CONTENTS)
+    /// MQ2 type for an item. This is used for both generic item information (ITEMINFO), and a specific item (CONTENTS).
+    /// Last Verified: 2023-06-27
     /// </summary>
     [PublicAPI]
     [MQ2Type("item")]
