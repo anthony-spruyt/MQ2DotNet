@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -59,6 +60,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// - plugins
         /// - resources
         /// </summary>
+        [JsonIgnore]
         public IndexedStringMember<string> Path { get; }
 
         /// <summary>
@@ -80,5 +82,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Is anonymized?
         /// </summary>
         public bool Anonymize => GetMember<BoolType>("Anonymize");
+
+        public override string ToString()
+        {
+            return typeof(MacroQuestType).FullName;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -33,6 +34,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public static implicit operator long?(Int64Type typeVar)
         {
             return typeVar?.VarPtr.Int64;
+        }
+
+        /// <summary>
+        /// Implicit conversion to a nullable TimeSpan
+        /// </summary>
+        /// <param name="typeVar"></param>
+        public static implicit operator TimeSpan?(Int64Type typeVar)
+        {
+            // MacroType::RunTime
+            return typeVar?.VarPtr.Int64 == null ? (TimeSpan?)null : TimeSpan.FromMilliseconds(typeVar.VarPtr.Int64);
         }
     }
 }

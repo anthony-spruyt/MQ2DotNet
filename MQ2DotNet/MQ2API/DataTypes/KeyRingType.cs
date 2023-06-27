@@ -23,5 +23,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TODO: new member
         /// </summary>
         public KeyRingItemType Stat => GetMember<KeyRingItemType>("Stat");
+
+        public override string ToString()
+        {
+            return typeof(KeyRingType).FullName;
+        }
     }
 }
