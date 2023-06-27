@@ -117,9 +117,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="timeType"></param>
         public static implicit operator DateTimeOffset?(TimeType timeType)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             return timeType.MillisecondsSinceEpoch == null ?
                 (DateTimeOffset?)null :
                 DateTimeOffset.FromUnixTimeMilliseconds(timeType.MillisecondsSinceEpoch.Value);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <summary>
@@ -128,9 +130,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="timeType"></param>
         public static implicit operator DateTime?(TimeType timeType)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             return timeType.MillisecondsSinceEpoch == null ?
                 (DateTime?)null :
                 DateTimeOffset.FromUnixTimeMilliseconds(timeType.MillisecondsSinceEpoch.Value).DateTime;
+#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 }
