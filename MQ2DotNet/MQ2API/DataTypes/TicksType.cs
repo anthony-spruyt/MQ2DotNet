@@ -4,7 +4,8 @@ using JetBrains.Annotations;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a number of in game ticks
+    /// MQ2 type for a number of in game ticks.
+    /// Last Verified: 2023-06-28
     /// </summary>
     [PublicAPI]
     [MQ2Type("ticks")]
