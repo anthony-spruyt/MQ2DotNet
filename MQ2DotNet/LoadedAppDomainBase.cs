@@ -161,7 +161,7 @@ namespace MQ2DotNet
                 throw new ObjectDisposedException(nameof(LoadedAppDomainBase));
 
             var item = new GroundType(_typeFactory, pItem);
-
+            
             EventLoopContext.SetExecuteRestore(() => OnAddGroundItem.Raise(null, item));
         }
 
@@ -175,7 +175,7 @@ namespace MQ2DotNet
                 throw new ObjectDisposedException(nameof(LoadedAppDomainBase));
 
             var item = new GroundType(_typeFactory, pItem);
-
+            
             EventLoopContext.SetExecuteRestore(() => OnRemoveGroundItem.Raise(null, item));
         }
 

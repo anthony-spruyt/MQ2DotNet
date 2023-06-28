@@ -2,6 +2,7 @@
 using MQ2DotNet.EQ;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -89,10 +90,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Is Stop enabled?
         /// </summary>
         public bool Stop => GetMember<BoolType>("Stop");
-        
+
         /// <summary>
         /// Pet's target
         /// </summary>
+
+        [JsonIgnore]
         public SpawnType Target => GetMember<SpawnType>("Target");
         
         /// <summary>
