@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -33,8 +32,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Raid member by name or number (1 based)
         /// </summary>
-        [JsonIgnore]
-        private IndexedMember<RaidMemberType, string, RaidMemberType, int> _member { get; }
+        private IndexedMember<RaidMemberType, string, RaidMemberType, int> _member;
 
         /// <summary>
         /// Get raid member by name.
@@ -119,8 +117,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Specified looter name by 1 based index/number (1 - <see cref="Looters"/>).
         /// </summary>
-        [JsonIgnore]
-        private IndexedStringMember<int> _looter { get; }
+        private IndexedStringMember<int> _looter;
 
         /// <summary>
         /// Get a raid looter name by index.
@@ -172,7 +169,51 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Raid mark NPC
         /// </summary>
-        private IndexedMember<RaidMemberType, int, RaidMemberType, string> _markNPC { get; }
+        private IndexedMember<RaidMemberType, int, RaidMemberType, string> _markNPC;
+
+        /// <summary>
+        /// Get raid mark NPC by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public RaidMemberType GetMarkNPC(string name) => _markNPC[name];
+
+        /// <summary>
+        /// Get raid mark NPC by base 1 index.
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public RaidMemberType GetMarkNPC(int index) => _markNPC[index];
+
+        /// <summary>
+        /// All mark NPCs.
+        /// </summary>
+        public IEnumerable<RaidMemberType> RaidMarkNPCs
+        {
+            get
+            {
+                var items = new List<RaidMemberType>();
+                var index = 1;
+                var count = Members;
+
+                while (count.HasValue)
+                {
+                    var item = GetMarkNPC(index);
+
+                    if (item != null && index <= count)
+                    {
+                        items.Add(item);
+                        index++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// Get the first mark NPC raid member.

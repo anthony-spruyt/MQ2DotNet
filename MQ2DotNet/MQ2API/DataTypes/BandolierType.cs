@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -13,7 +12,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal BandolierType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Item = new IndexedMember<BandolierItemType, int>(this, "Item");
+            _item = new IndexedMember<BandolierItemType, int>(this, "Item");
         }
 
         /// <summary>
@@ -29,8 +28,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Item in the set by index (1 - 4)
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BandolierItemType, int> Item { get; }
+        private IndexedMember<BandolierItemType, int> _item;
 
         /// <summary>
         /// Name of the set

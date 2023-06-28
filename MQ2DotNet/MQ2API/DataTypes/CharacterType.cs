@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
 using System;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -15,48 +14,48 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal CharacterType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            BlockedPetBuff = new IndexedMember<SpellType, int>(this, "BlockedPetBuff");
-            BlockedBuff = new IndexedMember<SpellType, int>(this, "BlockedBuff");
-            Buff = new IndexedMember<BuffType, string, BuffType, int>(this, "Buff");
-            Song = new IndexedMember<BuffType, string, BuffType, int>(this, "Song");
-            FindBuff = new IndexedMember<BuffType, string>(this, "FindBuff");
-            Inventory = new IndexedMember<ItemType, string, ItemType, int>(this, "Inventory");
-            Bank = new IndexedMember<ItemType, int>(this, "Bank");
-            SharedBank = new IndexedMember<ItemType, int>(this, "SharedBank");
-            Gem = new IndexedMember<SpellType, int, IntType, string>(this, "Gem");
-            LanguageSkill = new IndexedMember<IntType, int, IntType, string>(this, "LanguageSkill");
-            CombatAbility = new IndexedMember<SpellType, int, IntType, string>(this, "CombatAbility");
-            CombatAbilityTimer = new IndexedMember<TicksType, int, TicksType, string>(this, "CombatAbilityTimer");
-            CombatAbilityReady = new IndexedMember<BoolType, int, BoolType, string>(this, "CombatAbilityReady");
-            AltAbilityTimer = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "AltAbilityTimer");
-            AltAbilityReady = new IndexedMember<BoolType, int, BoolType, string>(this, "AltAbilityReady");
-            AltAbility = new IndexedMember<AltAbilityType, int, AltAbilityType, string>(this, "AltAbility");
-            Skill = new IndexedMember<IntType, string, IntType, int>(this, "Skill");
-            SkillBase = new IndexedMember<IntType, string, IntType, int>(this, "SkillBase");
-            SkillCap = new IndexedMember<IntType, string, IntType, int>(this, "SkillCap");
-            Ability = new IndexedStringMember<int, IntType, string>(this, "Ability");
-            AbilityReady = new IndexedMember<BoolType, int, BoolType, string>(this, "AbilityReady");
-            Book = new IndexedMember<SpellType, int, IntType, string>(this, "Book");
-            Spell = new IndexedMember<SpellType, int, SpellType, string>(this, "Spell");
-            ItemReady = new IndexedMember<BoolType, int, BoolType, string>(this, "ItemReady");
-            SpellReady = new IndexedMember<BoolType, int, BoolType, string>(this, "SpellReady");
-            PetBuff = new IndexedMember<SpellType, int, IntType, string>(this, "PetBuff");
-            RaidAssistTarget = new IndexedMember<SpawnType, int>(this, "RaidAssistTarget");
-            RaidMarkNPC = new IndexedMember<SpawnType, int>(this, "RaidMarkNPC");
-            GroupMarkNPC = new IndexedMember<SpawnType, int>(this, "GroupMarkNPC");
-            Language = new IndexedStringMember<int, IntType, string>(this, "Language");
-            Aura = new IndexedMember<AuraType, string, AuraType, int>(this, "Aura");
-            XTAggroCount = new IndexedMember<IntType, int>(this, "XTAggroCount");
-            XTarget = new IndexedMember<XTargetType, int, XTargetType, string>(this, "XTarget");
-            SPA = new IndexedMember<IntType, int>(this, "SPA");
-            GemTimer = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "GemTimer");
-            HaveExpansion = new IndexedMember<BoolType, int, BoolType, string>(this, "HaveExpansion");
-            AltCurrency = new IndexedMember<IntType, int, IntType, string>(this, "AltCurrency");
-            MercListInfo = new IndexedStringMember<int, IntType, string>(this, "MercListInfo");
-            BoundLocation = new IndexedMember<WorldLocationType, int>(this, "BoundLocation");
-            AutoSkill = new IndexedMember<SkillType, int>(this, "AutoSkill");
-            Bandolier = new IndexedMember<BandolierType, string, BandolierType, int>(this, "Bandolier");
-            AbilityTimer = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "AbilityTimer");
+            _blockedPetBuff = new IndexedMember<SpellType, int>(this, "BlockedPetBuff");
+            _blockedBuff = new IndexedMember<SpellType, int>(this, "BlockedBuff");
+            _buff = new IndexedMember<BuffType, string, BuffType, int>(this, "Buff");
+            _song = new IndexedMember<BuffType, string, BuffType, int>(this, "Song");
+            _findBuff = new IndexedMember<BuffType, string>(this, "FindBuff");
+            _inventory = new IndexedMember<ItemType, string, ItemType, int>(this, "Inventory");
+            _bank = new IndexedMember<ItemType, int>(this, "Bank");
+            _sharedBank = new IndexedMember<ItemType, int>(this, "SharedBank");
+            _gem = new IndexedMember<SpellType, int, IntType, string>(this, "Gem");
+            _languageSkill = new IndexedMember<IntType, int, IntType, string>(this, "LanguageSkill");
+            _combatAbility = new IndexedMember<SpellType, int, IntType, string>(this, "CombatAbility");
+            _combatAbilityTimer = new IndexedMember<TicksType, int, TicksType, string>(this, "CombatAbilityTimer");
+            _combatAbilityReady = new IndexedMember<BoolType, int, BoolType, string>(this, "CombatAbilityReady");
+            _altAbilityTimer = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "AltAbilityTimer");
+            _altAbilityReady = new IndexedMember<BoolType, int, BoolType, string>(this, "AltAbilityReady");
+            _altAbility = new IndexedMember<AltAbilityType, int, AltAbilityType, string>(this, "AltAbility");
+            _skill = new IndexedMember<IntType, string, IntType, int>(this, "Skill");
+            _skillBase = new IndexedMember<IntType, string, IntType, int>(this, "SkillBase");
+            _skillCap = new IndexedMember<IntType, string, IntType, int>(this, "SkillCap");
+            _ability = new IndexedStringMember<int, IntType, string>(this, "Ability");
+            _abilityReady = new IndexedMember<BoolType, int, BoolType, string>(this, "AbilityReady");
+            _book = new IndexedMember<SpellType, int, IntType, string>(this, "Book");
+            _spell = new IndexedMember<SpellType, int, SpellType, string>(this, "Spell");
+            _itemReady = new IndexedMember<BoolType, int, BoolType, string>(this, "ItemReady");
+            _spellReady = new IndexedMember<BoolType, int, BoolType, string>(this, "SpellReady");
+            _petBuff = new IndexedMember<SpellType, int, IntType, string>(this, "PetBuff");
+            _raidAssistTarget = new IndexedMember<SpawnType, int>(this, "RaidAssistTarget");
+            _raidMarkNPC = new IndexedMember<SpawnType, int>(this, "RaidMarkNPC");
+            _groupMarkNPC = new IndexedMember<SpawnType, int>(this, "GroupMarkNPC");
+            _language = new IndexedStringMember<int, IntType, string>(this, "Language");
+            _aura = new IndexedMember<AuraType, string, AuraType, int>(this, "Aura");
+            _xTAggroCount = new IndexedMember<IntType, int>(this, "XTAggroCount");
+            _xTarget = new IndexedMember<XTargetType, int, XTargetType, string>(this, "XTarget");
+            _sPA = new IndexedMember<IntType, int>(this, "SPA");
+            _gemTimer = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "GemTimer");
+            _haveExpansion = new IndexedMember<BoolType, int, BoolType, string>(this, "HaveExpansion");
+            _altCurrency = new IndexedMember<IntType, int, IntType, string>(this, "AltCurrency");
+            _mercListInfo = new IndexedStringMember<int, IntType, string>(this, "MercListInfo");
+            _boundLocation = new IndexedMember<WorldLocationType, int>(this, "BoundLocation");
+            _autoSkill = new IndexedMember<SkillType, int>(this, "AutoSkill");
+            _bandolier = new IndexedMember<BandolierType, string, BandolierType, int>(this, "Bandolier");
+            _abilityTimer = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "AbilityTimer");
         }
 
         /// <summary>
@@ -172,35 +171,30 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Blocked pet buff by index, valid index are 1 - 40
-        /// In the MQ client this looks to be the same as <see cref="BlockedBuff"/>
+        /// In the MQ client this looks to be the same as <see cref="_blockedBuff"/>
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SpellType, int> BlockedPetBuff { get; }
+        private IndexedMember<SpellType, int> _blockedPetBuff;
 
         /// <summary>
         /// Blocked buff by index, valid index are 1 - 40
-        /// In the MQ client this looks to be the same as <see cref="BlockedPetBuff"/>
+        /// In the MQ client this looks to be the same as <see cref="_blockedPetBuff"/>
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SpellType, int> BlockedBuff { get; }
+        private IndexedMember<SpellType, int> _blockedBuff;
 
         /// <summary>
         /// Buff by name or slot number
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BuffType, string, BuffType, int> Buff { get; }
+        private IndexedMember<BuffType, string, BuffType, int> _buff;
 
         /// <summary>
         /// Song (short buff) by name or slot number
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BuffType, string, BuffType, int> Song { get; }
+        private IndexedMember<BuffType, string, BuffType, int> _song;
 
         /// <summary>
         /// TODO: new member
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BuffType, string> FindBuff { get; }
+        private IndexedMember<BuffType, string> _findBuff;
 
         /// <summary>
         /// Hit point bonus from gear and spells
@@ -419,20 +413,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// An item from your inventory by slot name or number
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<ItemType, string, ItemType, int> Inventory { get; }
+        private IndexedMember<ItemType, string, ItemType, int> _inventory;
 
         /// <summary>
         /// Item in this bankslot #
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<ItemType, int> Bank { get; }
+        private IndexedMember<ItemType, int> _bank;
 
         /// <summary>
         /// TODO: new member
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<ItemType, int> SharedBank { get; }
+        private IndexedMember<ItemType, int> _sharedBank;
 
         /// <summary>
         /// Platinum in your shared bank
@@ -569,35 +560,30 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The gem number that a spell name is memorized in, or the spell in a gem number.
         /// Cast to <see cref="uint"/> to get the value if using a <see cref="string"/> index / by name.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SpellType, int, IntType, string> Gem { get; }
+        private IndexedMember<SpellType, int, IntType, string> _gem;
 
         /// <summary>
         /// Language skill by name or number.
         /// Cast to <see cref="uint"/> to get the value.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<IntType, int, IntType, string> LanguageSkill { get; }
+        private IndexedMember<IntType, int, IntType, string> _languageSkill;
 
         /// <summary>
         /// Combat ability spell by number, or number by name.
         /// Cast to <see cref="uint"/> to get the value if using a <see cref="string"/> index / by name.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SpellType, int, IntType, string> CombatAbility { get; }
+        private IndexedMember<SpellType, int, IntType, string> _combatAbility;
 
         /// <summary>
         /// Combat ability reuse time remaining by name or number.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<TicksType, int, TicksType, string> CombatAbilityTimer { get; }
+        private IndexedMember<TicksType, int, TicksType, string> _combatAbilityTimer;
 
         /// <summary>
         /// Combat ability ready by name or number.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType, int, BoolType, string> CombatAbilityReady { get; }
+        private IndexedMember<BoolType, int, BoolType, string> _combatAbilityReady;
 
         /// <summary>
         /// Returns a spell if melee discipline is active.
@@ -623,54 +609,47 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Alt ability reuse time remaining by name or number.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<TimeStampType, int, TimeStampType, string> AltAbilityTimer { get; }
+        private IndexedMember<TimeStampType, int, TimeStampType, string> _altAbilityTimer;
 
         /// <summary>
         /// Alt ability ready by name or number
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType, int, BoolType, string> AltAbilityReady { get; }
+        private IndexedMember<BoolType, int, BoolType, string> _altAbilityReady;
 
         /// <summary>
         /// Returns an alt ability by name or number
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<AltAbilityType, int, AltAbilityType, string> AltAbility { get; }
+        private IndexedMember<AltAbilityType, int, AltAbilityType, string> _altAbility;
 
         /// <summary>
         /// Skill level by name or number.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<IntType, string, IntType, int> Skill { get; }
+        private IndexedMember<IntType, string, IntType, int> _skill;
 
         /// <summary>
         /// Skill base level by name or number.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<IntType, string, IntType, int> SkillBase { get; }
+        private IndexedMember<IntType, string, IntType, int> _skillBase;
 
         /// <summary>
         /// Skill cap by name or number.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<IntType, string, IntType, int> SkillCap { get; }
+        private IndexedMember<IntType, string, IntType, int> _skillCap;
 
         /// <summary>
         /// The doability button number that the skill name is on, or the skill name assigned to a doability button.
         /// If a string index was provided then cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/>.
         /// If an int index was provided then the result is a <see cref="string"/>.
         /// </summary>
-        public IndexedStringMember<int, IntType, string> Ability { get; }
+        private IndexedStringMember<int, IntType, string> _ability;
 
         /// <summary>
         /// Ability with this name or on this button # ready?.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType, int, BoolType, string> AbilityReady { get; }
+        private IndexedMember<BoolType, int, BoolType, string> _abilityReady;
 
         /// <summary>
         /// Ranged attack ready?
@@ -687,20 +666,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Spell in your spellbook by slot number, or slot in your spellbook by spell name.
         /// If a string index was provided then cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SpellType, int, IntType, string> Book { get; }
+        private IndexedMember<SpellType, int, IntType, string> _book;
 
         /// <summary>
         /// TODO: new member
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SpellType, int, SpellType, string> Spell { get; }
+        private IndexedMember<SpellType, int, SpellType, string> _spell;
 
         /// <summary>
         /// Is an item ready to cast?
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType, int, BoolType, string> ItemReady { get; }
+        private IndexedMember<BoolType, int, BoolType, string> _itemReady;
 
         /// <summary>
         /// True if you're currently playing a bard song
@@ -710,15 +686,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Indiciates if a spell is ready, by spell name or gem number
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType, int, BoolType, string> SpellReady { get; }
+        private IndexedMember<BoolType, int, BoolType, string> _spellReady;
 
         /// <summary>
         /// A buff on your pet by slot number, or a slot number by buff name.
         /// If a string index was provided then cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SpellType, int, IntType, string> PetBuff { get; }
+        private IndexedMember<SpellType, int, IntType, string> _petBuff;
 
         /// <summary>
         /// Stunned?
@@ -748,8 +722,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current raid assist target (1-3)
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SpawnType, int> RaidAssistTarget { get; }
+        private IndexedMember<SpawnType, int> _raidAssistTarget;
 
         /// <summary>
         /// Target of the group's main assist
@@ -759,14 +732,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current raid marked NPC (1-3)
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SpawnType, int> RaidMarkNPC { get; }
+        private IndexedMember<SpawnType, int> _raidMarkNPC;
 
         /// <summary>
         /// Current group marked NPC (1 - 3)
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SpawnType, int> GroupMarkNPC { get; }
+        private IndexedMember<SpawnType, int> _groupMarkNPC;
 
         /// <summary>
         /// Strength
@@ -898,13 +869,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Language name by number, or number by name
         /// </summary>
-        public IndexedStringMember<int, IntType, string> Language { get; }
+        private IndexedStringMember<int, IntType, string> _language;
 
         /// <summary>
         /// Aura by name or slot #
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<AuraType, string, AuraType, int> Aura { get; }
+        private IndexedMember<AuraType, string, AuraType, int> _aura;
 
         /// <summary>
         /// Level of Mark NPC of the current group leader (not your own ability level)
@@ -1288,8 +1258,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Number of mobs on your XTarget, excluding your current target, that have less than the supplied % of aggro on you.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<IntType, int> XTAggroCount { get; }
+        private IndexedMember<IntType, int> _xTAggroCount;
 
         /// <summary>
         /// Number of spawns in auto hater slots in your XTarget
@@ -1300,8 +1269,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns a spawn from your XTarget by index (1 - 13) or name.
         /// If no index was provided then it returns the count. Cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/> when no index is provided.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<XTargetType, int, XTargetType, string> XTarget { get; }
+        private IndexedMember<XTargetType, int, XTargetType, string> _xTarget;
 
         /// <summary>
         /// Total Combined Haste (worn and spell) as shown in Inventory Window stats
@@ -1312,8 +1280,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns the total amount of a SPA your character has.
         /// Cast to <see cref="uint"/> to get the value. The value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<IntType, int> SPA { get; }
+        private IndexedMember<IntType, int> _sPA;
 
         /// <summary>
         /// Current active mercenary stance as a string, default is NULL.
@@ -1324,14 +1291,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Recast time remaining on a spell gem by number or spell name.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<TimeStampType, int, TimeStampType, string> GemTimer { get; }
+        private IndexedMember<TimeStampType, int, TimeStampType, string> _gemTimer;
 
         /// <summary>
         /// Returns TRUE/FALSE if you have that expansion by # or name
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType, int, BoolType, string> HaveExpansion { get; }
+        private IndexedMember<BoolType, int, BoolType, string> _haveExpansion;
 
         /// <summary>
         /// Your aggro percentage
@@ -1399,8 +1364,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Quantity of an alt currency by name or number.
         /// Cast to <see cref="uint"/> to get the value. The value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<IntType, int, IntType, string> AltCurrency { get; }
+        private IndexedMember<IntType, int, IntType, string> _altCurrency;
 
         /// <summary>
         /// Debuff with a slow SPA
@@ -1526,7 +1490,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         public BuffType Strength => GetMember<BuffType>("Strength");
 
-
         /// <summary>
         /// Buff from the Brells line
         /// </summary>
@@ -1570,7 +1533,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: new member
         /// </summary>
-        public IndexedStringMember<int, IntType, string> MercListInfo { get; }
+        private IndexedStringMember<int, IntType, string> _mercListInfo;
 
         /// <summary>
         /// Using advanced looting?
@@ -1605,14 +1568,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Bind location, valid indexes are 0 - 4
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<WorldLocationType, int> BoundLocation { get; }
+        private IndexedMember<WorldLocationType, int> _boundLocation;
 
         /// <summary>
         /// Autoskill by number
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<SkillType, int> AutoSkill { get; }
+        private IndexedMember<SkillType, int> _autoSkill;
 
         /// <summary>
         /// Base strength
@@ -1672,8 +1633,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Bandolier set by slot number (1 - 20) or name
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BandolierType, string, BandolierType, int> Bandolier { get; }
+        private IndexedMember<BandolierType, string, BandolierType, int> _bandolier;
 
         /// <summary>
         /// Fear debuff if the target has one
@@ -1714,8 +1674,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Ability with this name or on this button # ready?
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<TimeStampType, int, TimeStampType, string> AbilityTimer { get; }
+        private IndexedMember<TimeStampType, int, TimeStampType, string> _abilityTimer;
 
         /// <summary>
         /// TODO: new member

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
 
 namespace MQ2DotNet.MQ2API.DataTypes
@@ -15,9 +13,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal EverQuestType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            ChatChannel = new IndexedStringMember<int, BoolType, string>(this, "ChatChannel");
-            CharSelectList = new IndexedMember<CharSelectListType, string, CharSelectListType, int>(this, "CharSelectList");
-            ValidLoc = new IndexedMember<BoolType, string>(this, "ValidLoc");
+            _chatChannel = new IndexedStringMember<int, BoolType, string>(this, "ChatChannel");
+            _charSelectList = new IndexedMember<CharSelectListType, string, CharSelectListType, int>(this, "CharSelectList");
+            _validLoc = new IndexedMember<BoolType, string>(this, "ValidLoc");
         }
 
         /// <summary>
@@ -78,7 +76,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of a chat channel by number, or true/false if you are in a chat channel by name
         /// </summary>
-        public IndexedStringMember<int, BoolType, string> ChatChannel { get; }
+        private IndexedStringMember<int, BoolType, string> _chatChannel;
 
         /// <summary>
         /// X (horizontal) start of viewport, always 0?
@@ -166,8 +164,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Character in the character select list by name or position (1 based)
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<CharSelectListType, string, CharSelectListType, int> CharSelectList { get; }
+        private IndexedMember<CharSelectListType, string, CharSelectListType, int> _charSelectList;
 
         /// <summary>
         /// Name of the current UI skin
@@ -189,8 +186,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Is the given location, in yxz format separated by spaces, a valid location in the current zone?
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType, string> ValidLoc { get; }
+        private IndexedMember<BoolType, string> _validLoc;
 
         /// <summary>
         /// Path to the Everquest folder

@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -20,8 +19,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Item by name or slot number (1 based)
         /// </summary>
-        [JsonIgnore]
-        private IndexedMember<PointMerchantItemType, string, PointMerchantItemType, int> _item { get; }
+        private IndexedMember<PointMerchantItemType, string, PointMerchantItemType, int> _item;
 
         public PointMerchantItemType GetItem(string name) => _item[name];
 

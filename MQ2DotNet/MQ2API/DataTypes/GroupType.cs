@@ -1,6 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -14,16 +12,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal GroupType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Member = new IndexedMember<GroupMemberType, string, GroupMemberType, int>(this, "Member");
-            Injured = new IndexedMember<IntType, int>(this, "Injured");
-            LowMana = new IndexedMember<IntType, int>(this, "LowMana");
+            _member = new IndexedMember<GroupMemberType, string, GroupMemberType, int>(this, "Member");
+            _injured = new IndexedMember<IntType, int>(this, "Injured");
+            _lowMana = new IndexedMember<IntType, int>(this, "LowMana");
         }
 
         /// <summary>
         /// A group member by name or number (0 - 5)
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<GroupMemberType, string, GroupMemberType, int> Member { get; }
+        private IndexedMember<GroupMemberType, string, GroupMemberType, int> _member;
 
         /// <summary>
         /// Total number of group members, excluding yourself
@@ -109,15 +106,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Will return the numbers of people in the group that has less than a certain percentage HP.
         /// Resulting value is stored in <see cref="MQ2VarPtr.Dword"/> so cast to <see cref="uint"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<IntType, int> Injured { get; }
+        private IndexedMember<IntType, int> _injured;
 
         /// <summary>
         /// Will return the numbers of people in the group that has less than a certain percentage mana.
         /// Resulting value is stored in <see cref="MQ2VarPtr.Dword"/> so cast to <see cref="uint"/>.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<IntType, int> LowMana { get; }
+        private IndexedMember<IntType, int> _lowMana;
 
         /// <summary>
         /// The first non-mercenary cleric in the group

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Text.Json.Serialization;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
+using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -15,12 +14,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal ItemType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Item = new IndexedMember<ItemType, int>(this, "Item");
-            WornSlot = new IndexedMember<BoolType, string, InvSlotType, int>(this, "WornSlot");
-            Class = new IndexedMember<ClassType, int, ClassType, string>(this, "Class");
-            Race = new IndexedMember<RaceType, int, RaceType, string>(this, "Race");
-            Deity = new IndexedMember<DeityType, int, DeityType, string>(this, "Deity");
-            AugSlot = new IndexedMember<AugType, int>(this, "AugSlot");
+            _item = new IndexedMember<ItemType, int>(this, "Item");
+            _wornSlot = new IndexedMember<BoolType, string, InvSlotType, int>(this, "WornSlot");
+            _class = new IndexedMember<ClassType, int, ClassType, string>(this, "Class");
+            _race = new IndexedMember<RaceType, int, RaceType, string>(this, "Race");
+            _deity = new IndexedMember<DeityType, int, DeityType, string>(this, "Deity");
+            _augSlot = new IndexedMember<AugType, int>(this, "AugSlot");
         }
 
         /// <summary>
@@ -181,8 +180,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// If the item is a container, the item in the nth slot (1 based)
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<ItemType, int> Item { get; }
+        private IndexedMember<ItemType, int> _item;
 
         /// <summary>
         /// Stackable?
@@ -217,8 +215,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Can item be worn in invslot with name, or the nth invslot (1 based) that the item can be worn in
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType, string, InvSlotType, int> WornSlot { get; }
+        private IndexedMember<BoolType, string, InvSlotType, int> _wornSlot;
 
         /// <summary>
         /// Number of slots this item can be worn in (fingers/ears count as 2)
@@ -316,8 +313,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Class that can use the item, by number (1 - Classes), or by class name or 3 letter code
         /// TODO: see if we can use <see cref="MQ2DotNet.EQ.Class"/> here to improve usage.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<ClassType, int, ClassType, string> Class { get; }
+        private IndexedMember<ClassType, int, ClassType, string> _class;
 
         /// <summary>
         /// Number of races that can use the item. 16 if usable by all races
@@ -327,8 +323,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Race that can use the item, by number (1 - Races), or by name (full name e.g. Froglok, not FRG)
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<RaceType, int, RaceType, string> Race { get; }
+        private IndexedMember<RaceType, int, RaceType, string> _race;
 
         /// <summary>
         /// Number of deities that can use the item. Returns 0 if there are no restrictions
@@ -339,8 +334,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Deity that can use the item, by number (1 - Deities), or by name. Returns null if there are no restrictions
         /// TODO: look at adding in an enum here.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<DeityType, int, DeityType, string> Deity { get; }
+        private IndexedMember<DeityType, int, DeityType, string> _deity;
 
         /// <summary>
         /// Required level to wear the item. Items with no required level will return 0
@@ -492,8 +486,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Augment slots on the item (0 - 5).
         /// TODO: native MQ client has comment which might mean this is broken? // FIXME: ItemIndex
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<AugType, int> AugSlot { get; }
+        private IndexedMember<AugType, int> _augSlot;
 
         /// <summary>
         /// Type of the 1st aug slot

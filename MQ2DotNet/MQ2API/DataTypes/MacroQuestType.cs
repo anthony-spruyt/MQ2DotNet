@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -13,7 +12,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal MacroQuestType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Path = new IndexedStringMember<string>(this, "Path");
+            _path = new IndexedStringMember<string>(this, "Path");
         }
 
         /// <summary>
@@ -60,8 +59,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// - plugins
         /// - resources
         /// </summary>
-        [JsonIgnore]
-        public IndexedStringMember<string> Path { get; }
+        private IndexedStringMember<string> _path;
 
         /// <summary>
         /// Version number of MQ2Main.dll

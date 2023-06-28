@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -13,7 +12,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal MenuType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Items = new IndexedMember<StringType, int>(this, "Items");
+            _items = new IndexedMember<StringType, int>(this, "Items");
         }
         
         /// <summary>
@@ -46,7 +45,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: What is this?
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<StringType, int> Items { get; }
+        private IndexedMember<StringType, int> _items;
     }
 }

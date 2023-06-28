@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -13,8 +12,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal DynamicZoneType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Timer = new IndexedMember<DZTimerType, int, DZTimerType, string>(this, "Timer");
-            Member = new IndexedMember<DZMemberType, int, DZMemberType, string>(this, "Member");
+            _timer = new IndexedMember<DZTimerType, int, DZTimerType, string>(this, "Timer");
+            _member = new IndexedMember<DZMemberType, int, DZMemberType, string>(this, "Member");
         }
 
         /// <summary>
@@ -30,8 +29,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: new member
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<DZTimerType, int, DZTimerType, string> Timer { get; }
+        private IndexedMember<DZTimerType, int, DZTimerType, string> _timer;
 
         /// <summary>
         /// The full name of the dynamic zone
@@ -56,8 +54,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Member of the dynamic zone by name or number
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<DZMemberType, int, DZMemberType, string> Member { get; }
+        private IndexedMember<DZMemberType, int, DZMemberType, string> _member;
 
         /// <summary>
         /// The leader of the dynamic zone

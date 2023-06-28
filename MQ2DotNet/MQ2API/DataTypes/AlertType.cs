@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -13,14 +12,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal AlertType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            List = new IndexedMember<AlertListType, int>(this, "List");
+            _list = new IndexedMember<AlertListType, int>(this, "List");
         }
 
         /// <summary>
         /// Information about a spawn search on the alert list (0 based)
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<AlertListType, int> List { get; }
+        private IndexedMember<AlertListType, int> _list;
 
         /// <summary>
         /// Number of spawn searches on the alert list

@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -52,12 +51,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Time remaining on the task
         /// </summary>
         public TimeSpan? Timer => GetMember<TimeStampType>("Timer");
-        
+
         /// <summary>
         /// Member of the task, by name or index (1 based)
         /// </summary>
-        [JsonIgnore]
-        private IndexedMember<TaskMemberType, string, TaskMemberType, int> _member { get; }
+        private IndexedMember<TaskMemberType, string, TaskMemberType, int> _member;
 
         /// <summary>
         /// Get a task member.
@@ -116,8 +114,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Task objective by name or index (1 based)
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<TaskObjectiveType, string, TaskObjectiveType, int> _objective { get; }
+        public IndexedMember<TaskObjectiveType, string, TaskObjectiveType, int> _objective;
 
         /// <summary>
         /// Get a task objective.

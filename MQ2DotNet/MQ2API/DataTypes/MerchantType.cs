@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -13,7 +12,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal MerchantType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Item = new IndexedMember<ItemType, int, ItemType, string>(this, "Item");
+            _item = new IndexedMember<ItemType, int, ItemType, string>(this, "Item");
         }
 
         /// <summary>
@@ -58,8 +57,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// An item in the merchant's inventory, by name or slot number (1 based)
         /// Name is a partial match unless the string begins with = e.g. "=Water Flask"
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<ItemType, int, ItemType, string> Item { get; }
+        private IndexedMember<ItemType, int, ItemType, string> _item;
         
         /// <summary>
         /// Number of items on the merchant

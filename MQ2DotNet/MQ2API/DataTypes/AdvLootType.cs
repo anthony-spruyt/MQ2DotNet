@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -13,9 +12,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal AdvLootType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            PList = new IndexedMember<AdvLootItemType>(this, "PList");
-            SList = new IndexedMember<AdvLootItemType>(this, "SList");
-            Filter = new IndexedMember<ItemFilterDataType, int>(this, "Filter");
+            _pList = new IndexedMember<AdvLootItemType>(this, "PList");
+            _sList = new IndexedMember<AdvLootItemType>(this, "SList");
+            _filter = new IndexedMember<ItemFilterDataType, int>(this, "Filter");
         }
 
         /// <summary>
@@ -26,8 +25,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns an item from the personal loot list
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<AdvLootItemType> PList { get; }
+        private IndexedMember<AdvLootItemType> _pList;
 
         /// <summary>
         /// Number of items in the shared loot list
@@ -37,8 +35,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns an item from shared loot list
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<AdvLootItemType> SList { get; }
+        private IndexedMember<AdvLootItemType> _sList;
 
         /// <summary>
         /// Number of items in the personal loot list with either Need, Always Need, Greed, or Always Greed checked
@@ -58,8 +55,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns a filter from the advanced loot filters TODO: By what? Number in list or item ID?
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<ItemFilterDataType, int> Filter { get; }
+        private IndexedMember<ItemFilterDataType, int> _filter;
 
         public override string ToString()
         {

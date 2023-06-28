@@ -2,7 +2,6 @@
 using MQ2DotNet.EQ;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -25,8 +24,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// A buff on your pet index (1 based), or the index of a buff on your pet by name.
         /// Cast the to <see cref="uint"/> when searching by buff name since the returned index of the buff is stored in the <see cref="MQ2VarPtr.Dword"/> property.
         /// </summary>
-        [JsonIgnore]
-        private IndexedMember<PetBuffType, int, IntType, string> _buff { get; }
+        private IndexedMember<PetBuffType, int, IntType, string> _buff;
 
         /// <summary>
         /// Find the 1 based index of a pet buff by name.
@@ -46,8 +44,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Remaining duration on a pet's buff, by spell name or index (1 based).
         /// Cast the result to <see cref="TimeSpan"/>.
         /// </summary>
-        [JsonIgnore]
-        private IndexedMember<TimeStampType, int, TimeStampType, string> _buffDuration { get; }
+        private IndexedMember<TimeStampType, int, TimeStampType, string> _buffDuration;
 
         /// <summary>
         /// Get the remaining duration of a pet buff.
@@ -111,8 +108,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: new member
         /// </summary>
-        [JsonIgnore]
-        private IndexedMember<BuffType> _findBuff { get; }
+        private IndexedMember<BuffType> _findBuff;
 
         /// <summary>
         /// Get a buff by name if on the pet.

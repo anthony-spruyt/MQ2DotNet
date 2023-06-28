@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using System;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -14,9 +13,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal MacroType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            IsTLO = new IndexedMember<BoolType>(this, "IsTLO");
-            IsOuterVariable = new IndexedMember<BoolType>(this, "IsOuterVariable");
-            Variable = new IndexedMember<MQ2DataType>(this, "Variable");
+            _isTLO = new IndexedMember<BoolType>(this, "IsTLO");
+            _isOuterVariable = new IndexedMember<BoolType>(this, "IsOuterVariable");
+            _variable = new IndexedMember<MQ2DataType>(this, "Variable");
         }
 
         /// <summary>
@@ -43,20 +42,18 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Value returned by the last subroutine call
         /// </summary>
         public string Return => GetMember<StringType>("Return");
-        
+
         /// <summary>
         /// Is the given name a Top Level Object?
         /// Can/Should only be used it there is no active macro.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType> IsTLO { get; }
+        private IndexedMember<BoolType> _isTLO;
 
         /// <summary>
         /// Is the given name a variable declared with outer scope?
         /// Can/Should only be used it there is no active macro.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType> IsOuterVariable { get; }
+        private IndexedMember<BoolType> _isOuterVariable;
         
         /// <summary>
         /// Stack depth of the currently executing macro
@@ -91,7 +88,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: new member
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<MQ2DataType> Variable { get; }
+        private IndexedMember<MQ2DataType> _variable;
     }
 }

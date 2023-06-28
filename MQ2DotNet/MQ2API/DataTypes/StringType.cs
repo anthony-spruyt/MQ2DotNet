@@ -7,7 +7,8 @@ using System.Runtime.InteropServices;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a string
+    /// MQ2 type for a string.
+    /// Last Verified: 2023-06-28
     /// </summary>
     [PublicAPI]
     [MQ2Type("string")]

@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -13,7 +12,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal CorpseType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Item = new IndexedMember<ItemType, int, ItemType, string>(this, "Item");
+            _item = new IndexedMember<ItemType, int, ItemType, string>(this, "Item");
         }
 
         /// <summary>
@@ -24,8 +23,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// An item on the corpse by name or number
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<ItemType, int, ItemType, string> Item { get; }
+        private IndexedMember<ItemType, int, ItemType, string> _item;
 
         /// <summary>
         /// Number of items on the corpse

@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using System;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -14,8 +13,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal FellowshipType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Member = new IndexedMember<FellowshipMemberType, string, FellowshipMemberType, int>(this, "Member");
-            Sharing = new IndexedMember<BoolType, int>(this, "Sharing");
+            _member = new IndexedMember<FellowshipMemberType, string, FellowshipMemberType, int>(this, "Member");
+            _sharing = new IndexedMember<BoolType, int>(this, "Sharing");
         }
 
         /// <summary>
@@ -46,8 +45,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Member data by name or #
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<FellowshipMemberType, string, FellowshipMemberType, int> Member { get; }
+        private IndexedMember<FellowshipMemberType, string, FellowshipMemberType, int> _member;
 
         /// <summary>
         /// Time left on current campfire.
@@ -83,7 +81,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Is sharing by #
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<BoolType, int> Sharing { get; }
+        private IndexedMember<BoolType, int> _sharing;
     }
 }

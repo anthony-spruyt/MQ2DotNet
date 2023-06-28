@@ -1,7 +1,5 @@
 ﻿using JetBrains.Annotations;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -28,8 +26,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Member name from an internal ID number (1 based), or ID number from name
         /// </summary>
-        [JsonIgnore]
-        private IndexedStringMember<int, IntType, string> _member { get; }
+        private IndexedStringMember<int, IntType, string> _member;
 
         public string GetMember(int id) => _member[id];
 
