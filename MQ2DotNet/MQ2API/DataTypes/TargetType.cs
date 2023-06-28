@@ -1,9 +1,11 @@
 ﻿using JetBrains.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for the current target
+    /// MQ2 type for the current target.
+    /// Last Verified: 2023-06-28
     /// </summary>
     [PublicAPI]
     [MQ2Type("target")]
@@ -11,46 +13,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal TargetType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            BuffDuration = new IndexedMember<TimeStampType, string, TimeStampType, int>(this, "BuffDuration");
-            MyBuffDuration = new IndexedMember<TimeStampType, string, TimeStampType, int>(this, "MyBuffDuration");
-            MyBuff = new IndexedMember<SpellType, string, SpellType, int>(this, "MyBuff");
-            Buff = new IndexedMember<SpellType, string, SpellType, int>(this, "Buff");
         }
-
-        /// <summary>
-        /// Returns TRUE when the target's buffs are finished populating.
-        /// </summary>
-        public bool BuffsPopulated => GetMember<BoolType>("BuffsPopulated");
-
-        /// <summary>
-        /// Buff/debuff on the target by name or slot # (1 based)
-        /// </summary>
-        public IndexedMember<SpellType, string, SpellType, int> Buff { get; }
-
-        /// <summary>
-        /// Buff/debuff on the target that you cast, by name or slot # (1 based)
-        /// </summary>
-        public IndexedMember<SpellType, string, SpellType, int> MyBuff { get; }
-
-        /// <summary>
-        /// Total number of buffs/debuffs
-        /// </summary>
-        public int? BuffCount => GetMember<IntType>("BuffCount");
-
-        /// <summary>
-        /// Total number of buffs/debuffs cast by you
-        /// </summary>
-        public int? MyBuffCount => GetMember<IntType>("MyBuffCount");
-
-        /// <summary>
-        /// Remaining duration on a buff you cast by name or slot # (1 based)
-        /// </summary>
-        public IndexedMember<TimeStampType, string, TimeStampType, int> MyBuffDuration { get; }
-
-        /// <summary>
-        /// Remaining duration on a buff by name or slot # (1 based)
-        /// </summary>
-        public IndexedMember<TimeStampType, string, TimeStampType, int> BuffDuration { get; }
 
         /// <summary>
         /// Your percentage aggro on the target
@@ -245,6 +208,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Maximum range from which the character can melee hit the target
         /// </summary>
-        public CachedBuffType MaxMeleeTo => GetMember<CachedBuffType>("MaxMeleeTo");
+        public float? MaxMeleeTo => GetMember<FloatType>("MaxMeleeTo");
     }
 }
