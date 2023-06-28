@@ -92,6 +92,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
             // FellowshipMemberType::LastOn
             // FellowshipType::CampfireDuration
             // ItemType::Timer
+            // SpellType::MyDuration
+            // SpellType::Duration
             if (ticksType.VarPtr.Dword > 0)
             {
                 // value is the number of 6 second ticks

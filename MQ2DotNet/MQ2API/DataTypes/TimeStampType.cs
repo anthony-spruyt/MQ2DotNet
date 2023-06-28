@@ -100,6 +100,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
             // DZTimerType::Timer
             // ItemType::CastTime
             // TaskType::Timer
+            // SpellType::CastTime
+            // SpellType::RecoveryTime
+            // SpellType::FizzleTime
+            // SpellType::RecastTime
+            // SpellType::MyCastTime
             if (timestampType.VarPtr.UInt64 > 0)
             {
                 timespan = TimeSpan.FromMilliseconds(timestampType.VarPtr.UInt64);
