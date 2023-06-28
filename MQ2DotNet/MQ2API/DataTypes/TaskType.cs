@@ -64,25 +64,19 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="name">The task name.</param>
         /// <returns></returns>
-        public TaskMemberType GetTaskMember(string name)
-        {
-            return _member[name];
-        }
+        public TaskMemberType GetTaskMember(string name) => _member[name];
 
         /// <summary>
         /// Get a task member.
         /// </summary>
         /// <param name="index">The 1 based index.</param>
         /// <returns></returns>
-        public TaskMemberType GetTaskMember(int index)
-        {
-            return _member[index];
-        }
+        public TaskMemberType GetTaskMember(int index) => _member[index];
 
         /// <summary>
         /// All task members.
         /// </summary>
-       public  IEnumerable<TaskMemberType> TaskMembers
+        public  IEnumerable<TaskMemberType> TaskMembers
         {
             get
             {
@@ -130,20 +124,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="name">The task objective name.</param>
         /// <returns></returns>
-        public TaskObjectiveType GetTaskObjective(string name)
-        {
-            return _objective[name];
-        }
+        public TaskObjectiveType GetTaskObjective(string name) => _objective[name];
 
         /// <summary>
         /// Get a task objective.
         /// </summary>
         /// <param name="index">The 1 based index.</param>
         /// <returns></returns>
-        public TaskObjectiveType GetTaskObjective(int index)
-        {
-            return _objective[index];
-        }
+        public TaskObjectiveType GetTaskObjective(int index) => _objective[index];
 
         /// <summary>
         /// All task objective.

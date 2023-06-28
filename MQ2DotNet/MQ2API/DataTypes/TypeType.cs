@@ -31,15 +31,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         [JsonIgnore]
         private IndexedStringMember<int, IntType, string> _member { get; }
 
-        public string GetMember(int id)
-        {
-            return _member[id];
-        }
+        public string GetMember(int id) => _member[id];
 
-        public int GetMemberId(string name)
-        {
-            return (int)_member[name];
-        }
+        public int GetMemberId(string name) => (int)_member[name];
 
         public IEnumerable<string> Members
         {

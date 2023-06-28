@@ -33,20 +33,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="name">The name of the buff.</param>
         /// <returns>The 1 based index of the pet buff.</returns>
-        public uint? GetPetBuff(string name)
-        {
-            return _buff[name];
-        }
+        public uint? GetPetBuff(string name) => _buff[name];
 
         /// <summary>
         /// Get a buff on your pet by index.
         /// </summary>
         /// <param name="index">The 1 based index.</param>
         /// <returns>The pet buff.</returns>
-        public PetBuffType GetPetBuff(int index)
-        {
-            return _buff[index];
-        }
+        public PetBuffType GetPetBuff(int index) => _buff[index];
 
         /// <summary>
         /// Remaining duration on a pet's buff, by spell name or index (1 based).
@@ -60,20 +54,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="index">The 1 based index.</param>
         /// <returns>The remaining duration of the buff.</returns>
-        public TimeSpan? GetPetBuffDuration(int index)
-        {
-            return _buffDuration[index];
-        }
+        public TimeSpan? GetPetBuffDuration(int index) => _buffDuration[index];
 
         /// <summary>
         /// Get the remaining duration of a pet buff.
         /// </summary>
         /// <param name="name">The name of the pet buff</param>
         /// <returns>The remaining duration of the buff.</returns>
-        public TimeSpan? GetPetBuffDuration(string name)
-        {
-            return _buffDuration[name];
-        }
+        public TimeSpan? GetPetBuffDuration(string name) => _buffDuration[name];
 
         /// <summary>
         /// Is pet in combat?
@@ -131,10 +119,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public BuffType GetBuff(string name)
-        {
-            return _findBuff[name];
-        }
+        public BuffType GetBuff(string name) => _findBuff[name];
 
         /// <summary>
         /// All the current pet buffs.

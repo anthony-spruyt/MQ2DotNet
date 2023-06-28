@@ -26,8 +26,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public long? HWND => GetMember<Int64Type>("HWND");
 
         /// <summary>
-        /// Current game state, one of "PRECHARSELECT", "CHARSELECT", "INGAME", "UNKNOWN"
-        /// TODO: havent testing parsing to enum yet.
+        /// Current game state.
         /// </summary>
         public GameState? GameState => GetMember<StringType>("GameState");
 

@@ -23,15 +23,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         [JsonIgnore]
         private IndexedMember<PointMerchantItemType, string, PointMerchantItemType, int> _item { get; }
 
-        public PointMerchantItemType GetItem(string name)
-        {
-            return _item[name];
-        }
+        public PointMerchantItemType GetItem(string name) => _item[name];
 
-        public PointMerchantItemType GetItem(int index)
-        {
-            return _item[index];
-        }
+        public PointMerchantItemType GetItem(int index) => _item[index];
 
         public IEnumerable<PointMerchantItemType> Items
         {

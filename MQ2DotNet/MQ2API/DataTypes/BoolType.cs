@@ -21,7 +21,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public static implicit operator bool(BoolType typeVar)
         {
             // A null will be converted to a false
-            return typeVar?.VarPtr.Dword != 0;
+            // GroundType::LineOfSight -> Int
+            // Pretty much everything else uses the Dword prop.
+            return typeVar?.VarPtr.Dword != 0 || typeVar?.VarPtr.Int != 0;
         }
     }
 }

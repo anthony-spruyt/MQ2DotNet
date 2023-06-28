@@ -1,7 +1,6 @@
 ﻿using MQ2DotNet.MQ2API.DataTypes;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 /* To create the member properties, grab everything in the switch statement from the cpp MQ2xxxType::GetMember function
  * Then in notepad++, find all:

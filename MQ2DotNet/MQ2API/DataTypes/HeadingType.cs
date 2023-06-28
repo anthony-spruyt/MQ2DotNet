@@ -45,6 +45,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="typeVar"></param>
         public static implicit operator float?(HeadingType typeVar)
         {
+            // GroundType::HeadingTo
+            if (typeVar?.VarPtr.Double > 0)
+            {
+                return (float)typeVar?.VarPtr.Double;
+            }
+
+            // Everything else...
             return typeVar?.VarPtr.Float;
         }
     }

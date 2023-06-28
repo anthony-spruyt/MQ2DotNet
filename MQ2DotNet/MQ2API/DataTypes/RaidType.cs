@@ -41,20 +41,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public RaidMemberType GetMember(string name)
-        {
-            return _member[name];
-        }
+        public RaidMemberType GetMember(string name) => _member[name];
 
         /// <summary>
         /// Get raid member by index.
         /// </summary>
         /// <param name="index">The 1 based index.</param>
         /// <returns></returns>
-        public RaidMemberType GetMember(int index)
-        {
-            return _member[index];
-        }
+        public RaidMemberType GetMember(int index) => _member[index];
 
         /// <summary>
         /// All raid members.
@@ -133,10 +127,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="index">The 1 based index.</param>
         /// <returns></returns>
-        public string GetLooter(int index)
-        {
-            return _looter[index];
-        }
+        public string GetLooter(int index) => _looter[index];
 
         /// <summary>
         /// All raid looters.

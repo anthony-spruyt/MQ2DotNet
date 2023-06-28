@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
 using MQ2DotNet.Utility;
+using System;
+using System.Runtime.InteropServices;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
