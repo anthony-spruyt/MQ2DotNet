@@ -1,4 +1,6 @@
 ﻿using JetBrains.Annotations;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Text.Json.Serialization;
 
 namespace MQ2DotNet.MQ2API.DataTypes
@@ -12,11 +14,114 @@ namespace MQ2DotNet.MQ2API.DataTypes
     [MQ2Type("window")]
     public class WindowType : MQ2DataType
     {
+        public const int MAX_CHILDREN = 100;
+
         internal WindowType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             List = new ListMember(this);
-            Child = new IndexedMember<WindowType>(this, "Child");
+            _tab = new IndexedMember<WindowType, string, WindowType, int>(this, "Tab");
         }
+        
+        /// <summary>
+        /// Sends a left mouse button down notification to the window/control
+        /// </summary>
+        public void LeftMouseDown() => GetMember<MQ2DataType>("LeftMouseDown");
+
+        /// <summary>
+        /// Sends a left mouse button up notification to the window/control
+        /// </summary>
+        public void LeftMouseUp() => GetMember<MQ2DataType>("LeftMouseUp");
+
+        /// <summary>
+        /// Sends a left mouse button held notification to the window/control
+        /// </summary>
+        public void LeftMouseHeld() => GetMember<MQ2DataType>("LeftMouseHeld");
+
+        /// <summary>
+        /// Sends a left mouse button held up notification to the window/control
+        /// </summary>
+        public void LeftMouseHeldUp() => GetMember<MQ2DataType>("LeftMouseHeldUp");
+
+        /// <summary>
+        /// Sends a right mouse button down notification to the window/control
+        /// </summary>
+        public void RightMouseDown() => GetMember<MQ2DataType>("RightMouseDown");
+
+        /// <summary>
+        /// Sends a right mouse button up notification to the window/control
+        /// </summary>
+        public void RightMouseUp() => GetMember<MQ2DataType>("RightMouseUp");
+
+        /// <summary>
+        /// Sends a right mouse button held notification to the window/control
+        /// </summary>
+        public void RightMouseHeld() => GetMember<MQ2DataType>("RightMouseHeld");
+
+        /// <summary>
+        /// Sends a right mouse held up notification to the window/control
+        /// </summary>
+        public void RightMouseHeldUp() => GetMember<MQ2DataType>("RightMouseHeldUp");
+
+        /// <summary>
+        /// Open the window
+        /// </summary>
+        public void DoOpen() => GetMember<MQ2DataType>("DoOpen");
+
+        /// <summary>
+        /// Close the window
+        /// </summary>
+        public void DoClose() => GetMember<MQ2DataType>("DoClose");
+
+        /// <summary>
+        /// Select an item in a listbox or combobox
+        /// </summary>
+        /// <param name="index">1 based index of the item to select</param>
+        public void Select(int index) => GetMember<MQ2DataType>("Select", index.ToString());
+
+        /// <summary>
+        /// TODO: new method
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        public void Move(int left, int top, int width, int height) => GetMember<MQ2DataType>("Move", $"{left},{top},{width},{height}");
+
+        /// <summary>
+        /// TODO: new method
+        /// </summary>
+        /// <param name="color"></param>
+        public void SetBGColor(Color color) => GetMember<MQ2DataType>("SetBGColor", color.ToArgb().ToString());
+
+        /// <summary>
+        /// TODO: new method
+        /// </summary>
+        /// <param name="rgb"></param>
+        public void SetBGColor(int rgb) => GetMember<MQ2DataType>("SetBGColor", rgb.ToString());
+
+        /// <summary>
+        /// TODO: new method
+        /// </summary>
+        /// <param name="alpha"></param>
+        public void SetAlpha(int alpha) => GetMember<MQ2DataType>("SetAlpha", alpha.ToString());
+
+        /// <summary>
+        /// TODO: new method
+        /// </summary>
+        /// <param name="alpha"></param>
+        public void SetFadeAlpha(int alpha) => GetMember<MQ2DataType>("SetFadeAlpha", alpha.ToString());
+
+        /// <summary>
+        /// TODO: new method
+        /// </summary>
+        /// <param name="index"></param>
+        public void SetCurrentTab(int index) => GetMember<MQ2DataType>("SetCurrentTab", index.ToString());
+
+        /// <summary>
+        /// TODO: new method
+        /// </summary>
+        /// <param name="tabText"></param>
+        public void SetCurrentTab(string tabText) => GetMember<MQ2DataType>("SetCurrentTab", tabText);
 
         /// <summary>
         /// Returns TRUE if the window is open
@@ -24,11 +129,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Open => GetMember<BoolType>("Open");
         
         /// <summary>
-        /// A child item by name
+        /// Get a child window by name.
         /// </summary>
-        [JsonIgnore]
-        public IndexedMember<WindowType> Child { get; }
-        
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public WindowType GetChild(string name) => Children ? GetMember<WindowType>("Child", name) : null;
+
         /// <summary>
         /// Parent window
         /// </summary>
@@ -39,23 +145,47 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// First child window/control
         /// </summary>
         [JsonIgnore]
-        public WindowType FirstChild => GetMember<WindowType>("FirstChild");
+        public WindowType FirstChild => Children ? GetMember<WindowType>("FirstChild") : null;
         
         /// <summary>
         /// Next sibling window
         /// </summary>
         [JsonIgnore]
         public WindowType Next => GetMember<WindowType>("Next");
+
+        /// <summary>
+        /// Get all child windows.
+        /// </summary>
+        public IEnumerable<WindowType> GetChildren()
+        {
+            List<WindowType> items = new List<WindowType>();
+
+            if (!Children)
+            {
+                return items;
+            }
+
+            var current = FirstChild;
+
+            while (current.Siblings && items.Count <= MAX_CHILDREN)
+            {
+                items.Add(current);
+
+                current = current.Next;
+            }
+
+            return items;
+        }
         
         /// <summary>
         /// Vertical scrollbar range
         /// </summary>
-        public int? VScrollMax => GetMember<IntType>("VScrollMax");
+        public uint? VScrollMax => GetMember<IntType>("VScrollMax");
         
         /// <summary>
         /// Vertical scrollbar position
         /// </summary>
-        public int? VScrollPos => GetMember<IntType>("VScrollPos");
+        public uint? VScrollPos => GetMember<IntType>("VScrollPos");
         
         /// <summary>
         /// Vertical scrollbar position in % to range from 0 to 100
@@ -65,17 +195,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Horizontal scrollbar range
         /// </summary>
-        public int? HScrollMax => GetMember<IntType>("HScrollMax");
+        public uint? HScrollMax => GetMember<IntType>("HScrollMax");
         
         /// <summary>
         /// Horizontal scrollbar position
         /// </summary>
-        public int? HScrollPos => GetMember<IntType>("HScrollPos");
+        public uint? HScrollPos => GetMember<IntType>("HScrollPos");
         
         /// <summary>
         /// Horizontal scrollbar position in % to range from 0 to 100
         /// </summary>
-        public int? HScrollPct => GetMember<IntType>("HScrollPct");
+        public uint? HScrollPct => GetMember<IntType>("HScrollPct");
         
         /// <summary>
         /// Returns TRUE if the window has children
@@ -100,27 +230,32 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Screen X position
         /// </summary>
-        public int? X => GetMember<IntType>("X");
+        public uint? X => GetMember<IntType>("X");
         
         /// <summary>
         /// Screen Y position
         /// </summary>
-        public int? Y => GetMember<IntType>("Y");
-        
+        public uint? Y => GetMember<IntType>("Y");
+
+        /// <summary>
+        /// TODO: new member.
+        /// </summary>
+        public string Size => GetMember<StringType>("Size");
+
         /// <summary>
         /// Width in pixels
         /// </summary>
-        public int? Width => GetMember<IntType>("Width");
+        public uint? Width => GetMember<IntType>("Width");
         
         /// <summary>
         /// Height in pixels
         /// </summary>
-        public int? Height => GetMember<IntType>("Height");
+        public uint? Height => GetMember<IntType>("Height");
         
         /// <summary>
         /// Background color
         /// </summary>
-        public ArgbType BGColor => GetMember<ArgbType>("BGColor");
+        public Color? BGColor => GetMember<ArgbType>("BGColor");
         
         /// <summary>
         /// Window's text
@@ -150,8 +285,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Window style code
         /// </summary>
-        public int? Style => GetMember<IntType>("Style");
-        
+        public uint? Style => GetMember<IntType>("Style");
+
+        /// <summary>
+        /// Access to list box items
+        /// </summary>
+        public ListMember List { get; }
+
         /// <summary>
         /// Name of window piece, e.g. "ChatWindow" for top level windows, or the piece name for child windows. Note: this is Custom UI dependent
         /// </summary>
@@ -170,7 +310,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Number of items in a Listbox or Combobox
         /// </summary>
-        public int? Items => GetMember<IntType>("Items");
+        public uint? Items => GetMember<IntType>("Items");
         
         /// <summary>
         /// Has the other person clicked the Trade button?
@@ -186,67 +326,75 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The 1 based index of the currently selected item in a listbox or combobox
         /// </summary>
         public int? GetCurSel => GetMember<IntType>("GetCurSel");
-        
+
         /// <summary>
-        /// Access to list box items
+        /// TODO: new member
         /// </summary>
-        public ListMember List { get; }
-        
+        public float? Value => GetMember<FloatType>("Value");
+
         /// <summary>
-        /// Sends a left mouse button down notification to the window/control
+        /// TODO: new member
         /// </summary>
-        public void LeftMouseDown() => GetMember<MQ2DataType>("LeftMouseDown");
-        
+        public uint? TabCount => GetMember<IntType>("TabCount");
+
         /// <summary>
-        /// Sends a left mouse button up notification to the window/control
+        /// Get a tab by 1 based index or tab text.
         /// </summary>
-        public void LeftMouseUp() => GetMember<MQ2DataType>("LeftMouseUp");
-        
+        private IndexedMember<WindowType, string, WindowType, int> _tab;
+
         /// <summary>
-        /// Sends a left mouse button held notification to the window/control
+        /// Get tab by tab text.
         /// </summary>
-        public void LeftMouseHeld() => GetMember<MQ2DataType>("LeftMouseHeld");
-        
+        /// <param name="tabText"></param>
+        /// <returns></returns>
+        public WindowType GetTab(string tabText) => _tab[tabText];
+
         /// <summary>
-        /// Sends a left mouse button held up notification to the window/control
+        /// Get tab by 1 based index.
         /// </summary>
-        public void LeftMouseHeldUp() => GetMember<MQ2DataType>("LeftMouseHeldUp");
-        
+        /// <param name="index">The 1 based index.</param>
+        /// <returns></returns>
+        public WindowType GetTab(int index) => _tab[index];
+
         /// <summary>
-        /// Sends a right mouse button down notification to the window/control
+        /// All tabs.
         /// </summary>
-        public void RightMouseDown() => GetMember<MQ2DataType>("RightMouseDown");
-        
+        public IEnumerable<WindowType> Tabs
+        {
+            get
+            {
+                var items = new List<WindowType>();
+                var index = 1;
+                var count = TabCount;
+
+                while (count.HasValue)
+                {
+                    var item = GetTab(index);
+
+                    if (item != null && index <= count)
+                    {
+                        items.Add(item);
+                        index++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return items;
+            }
+        }
+
         /// <summary>
-        /// Sends a right mouse button up notification to the window/control
+        /// TODO: new member
         /// </summary>
-        public void RightMouseUp() => GetMember<MQ2DataType>("RightMouseUp");
-        
+        public WindowType CurrentTab => GetMember<WindowType>("CurrentTab");
+
         /// <summary>
-        /// Sends a right mouse button held notification to the window/control
+        /// TODO: new member
         /// </summary>
-        public void RightMouseHeld() => GetMember<MQ2DataType>("RightMouseHeld");
-        
-        /// <summary>
-        /// Sends a right mouse held up notification to the window/control
-        /// </summary>
-        public void RightMouseHeldUp() => GetMember<MQ2DataType>("RightMouseHeldUp");
-        
-        /// <summary>
-        /// Open the window
-        /// </summary>
-        public void DoOpen() => GetMember<MQ2DataType>("DoOpen");
-        
-        /// <summary>
-        /// Close the window
-        /// </summary>
-        public void DoClose() => GetMember<MQ2DataType>("DoClose");
-        
-        /// <summary>
-        /// Select an item in a listbox or combobox
-        /// </summary>
-        /// <param name="index">1 based index of the item to select</param>
-        public void Select(int index) => GetMember<MQ2DataType>("Select", index.ToString());
+        public int? CurrentTabIndex => GetMember<IntType>("CurrentTabIndex");
 
         /// <summary>
         /// Provides custom index access for list box items
