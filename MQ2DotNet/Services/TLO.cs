@@ -10,7 +10,7 @@ namespace MQ2DotNet.Services
 {
     /// <summary>
     /// Provides access to all top level objects.
-    /// Last Verified: 2023-06-XX WIP...
+    /// Last Verified: 2023-06-30 WIP...
     /// https://docs.macroquest.org/reference/top-level-objects/
     /// </summary>
     [PublicAPI]
@@ -26,10 +26,10 @@ namespace MQ2DotNet.Services
         {
             _typeFactory = typeFactory;
             _alert = new IndexedTLO<AlertType, int, StringType, string>(this, "Alert");
+            _alias = new IndexedTLO<BoolType>(this, "Alias");
+            _altAbility = new IndexedTLO<AltAbilityType, int, AltAbilityType, string>(this, "AltAbility");
 
             //AlertByNumber = new IndexedTLO<AlertType>(this, "Alert");
-            //Alias = new IndexedTLO<BoolType>(this, "Alias");
-            //AltAbility = new IndexedTLO<AltAbilityType>(this, "AltAbility");
             //Defined = new IndexedTLO<BoolType>(this, "Defined");
             //Familiar = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Familiar");
             //FindItem = new IndexedTLO<ItemType>(this, "FindItem");
@@ -78,13 +78,13 @@ namespace MQ2DotNet.Services
         /// <summary>
         /// List of all alert IDs in use.
         /// Equivalent of ${Alert}
-        /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/#forms
         /// </summary>
         public IEnumerable<int> AlertIDs => ((string)_alert[""])?.Split('|').Select(id => int.Parse(id));
 
         /// <summary>
         /// Retrieve information for the alert category by its id.
-        /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/#forms
         /// </summary>
         /// <param name="alertID"></param>
         /// <returns></returns>
@@ -92,9 +92,49 @@ namespace MQ2DotNet.Services
 
         /// <summary>
         /// Provides access to spawn search filter criteria in alerts. Alerts are created using /alert.
-        /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/#forms
         /// </summary>
         public IEnumerable<AlertType> Alerts => AlertIDs.Select(id => GetAlert(id));
+
+        /// <summary>
+        /// Provides a way to query whether a given alias exists. See /alias.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-alias/
+        /// </summary>
+        private IndexedTLO<BoolType> _alias;
+
+        /// <summary>
+        /// Returns bool indicating if named aliase exists
+        /// Alias[ Name ]
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-alias/#forms
+        /// </summary>
+        /// <param name="alias"></param>
+        /// <returns></returns>
+        public bool IsAlias(string name) => (bool)_alias[name];
+
+        /// <summary>
+        /// Danger: The AltAbility TLO should not be used except for when experimenting with data. If you've already purchased the AA, use <see cref="CharacterType._altAbility"/>, which is tailored to your character and is much faster.
+        /// </summary>
+        private IndexedTLO<AltAbilityType, int, AltAbilityType, string> _altAbility;
+
+        /// <summary>
+        /// Danger: The AltAbility TLO should not be used except for when experimenting with data. If you've already purchased the AA, use <see cref="CharacterType._altAbility"/>, which is tailored to your character and is much faster.
+        /// Look up an AltAbility by its altability id
+        /// AltAbility[ Number ]
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-altability/#forms
+        /// </summary>
+        /// <param name="altabilityID"></param>
+        /// <returns></returns>
+        public AltAbilityType GetAltAbility(int altabilityID) => _altAbility[altabilityID];
+
+        /// <summary>
+        /// Danger: The AltAbility TLO should not be used except for when experimenting with data. If you've already purchased the AA, use <see cref="CharacterType._altAbility"/>, which is tailored to your character and is much faster.
+        /// Look up an AltAbility by its name
+        /// AltAbility[ Name ]
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-altability/#forms
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public AltAbilityType GetAltAbility(string name) => _altAbility[name];
 
         /// <summary>
         /// Character object which allows you to get properties of you as a character.
@@ -326,12 +366,6 @@ namespace MQ2DotNet.Services
         ///// </summary>
         //[JsonIgnore]
         //public IndexedTLO<SkillType, string, SkillType, int> Skill { get; }
-        //
-        ///// <summary>
-        ///// Alt ability by name or number
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<AltAbilityType> AltAbility { get; }
         //
         ///// <summary>
         ///// Is there line of sight between two locations, in the format "y,x,z:y,x,z"
