@@ -1,10 +1,12 @@
 ﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for the advanced loot window. Moreso the contents than the window itself.
-    /// Last Verified: 2023-06-25
+    /// Last Verified: 2023-06-30
+    /// https://docs.macroquest.org/reference/top-level-objects/tlo-advloot/
     /// </summary>
     [PublicAPI]
     [MQ2Type("advloot")]
@@ -12,54 +14,112 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal AdvLootType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            _pList = new IndexedMember<AdvLootItemType>(this, "PList");
-            _sList = new IndexedMember<AdvLootItemType>(this, "SList");
+            _pList = new IndexedMember<AdvLootItemType, int>(this, "PList");
+            _sList = new IndexedMember<AdvLootItemType, int>(this, "SList");
             _filter = new IndexedMember<ItemFilterDataType, int>(this, "Filter");
         }
 
         /// <summary>
-        /// Number of items in the personal loot list
+        /// Inspect the item at the specified index in the personal loot list.
+        /// PList[ Index ]
         /// </summary>
-        public int? PCount => GetMember<IntType>("PCount");
+        public int? PersonalCount => GetMember<IntType>("PCount");
 
         /// <summary>
         /// Returns an item from the personal loot list
         /// </summary>
-        private IndexedMember<AdvLootItemType> _pList;
+        private IndexedMember<AdvLootItemType, int> _pList;
 
         /// <summary>
-        /// Number of items in the shared loot list
+        /// Inspect the item at the specified index in the personal loot list.
+        /// PList[ Index ]
         /// </summary>
-        public int? SCount => GetMember<IntType>("SCount");
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public AdvLootItemType GetPersonalListItem(int index) => _pList[index];
+
+        public IEnumerable<AdvLootItemType> PersonalList
+        {
+            get
+            {
+                var count = PersonalCount ?? 0;
+                List<AdvLootItemType> items = new List<AdvLootItemType>(count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    items.Add(GetPersonalListItem(i + 1));
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
-        /// Returns an item from shared loot list
+        /// Item count from the Shared list
         /// </summary>
-        private IndexedMember<AdvLootItemType> _sList;
+        public int? SharedCount => GetMember<IntType>("SCount");
 
         /// <summary>
-        /// Number of items in the personal loot list with either Need, Always Need, Greed, or Always Greed checked
+        /// Inspect the item at the specified index in the shared loot list.
+        /// SList[ Index ]
+        /// </summary>
+        private IndexedMember<AdvLootItemType, int> _sList;
+
+        /// <summary>
+        /// Inspect the item at the specified index in the shared loot list.
+        /// SList[ Index ]
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public AdvLootItemType GetSharedListItem(int index) => _sList[index];
+
+        public IEnumerable<AdvLootItemType> SharedList
+        {
+            get
+            {
+                var count = SharedCount ?? 0;
+                List<AdvLootItemType> items = new List<AdvLootItemType>(count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    items.Add(GetSharedListItem(i + 1));
+                }
+
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// Want count from the Personal list (AN + AG + ND + GD)
         /// </summary>
         public uint? PWantCount => GetMember<IntType>("PWantCount");
 
         /// <summary>
-        /// Number of items in the shared loot list with either Need, Always Need, Greed, or Always Greed checked
+        /// Want count from the Shared list (AN + AG + ND + GD)
         /// </summary>
         public uint? SWantCount => GetMember<IntType>("SWantCount");
 
         /// <summary>
-        /// True if any item is currently being looted? TODO: Confirm this
+        /// True/False if looting from AdvLoot is in progress
         /// </summary>
         public bool LootInProgress => GetMember<BoolType>("LootInProgress");
 
         /// <summary>
-        /// Returns a filter from the advanced loot filters TODO: By what? Number in list or item ID?
+        /// Inspect the loot filter for a given ItemID.
+        /// Filter[ ItemID ]
         /// </summary>
         private IndexedMember<ItemFilterDataType, int> _filter;
 
+        /// <summary>
+        /// Inspect the loot filter for a given ItemID.
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        public ItemFilterDataType GetItemById(int itemID) => _filter[itemID];
+
         public override string ToString()
         {
-            return nameof(AdvLootType);
+            return OriginalToString();
         }
     }
 }

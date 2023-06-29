@@ -83,7 +83,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         public override string ToString()
         {
-            return typeof(MacroQuestType).FullName;
+            return OriginalToString();
         }
     }
 }

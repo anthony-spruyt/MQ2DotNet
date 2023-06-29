@@ -26,7 +26,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         public override string ToString()
         {
-            return typeof(KeyRingType).FullName;
+            return OriginalToString();
         }
     }
 }

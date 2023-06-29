@@ -4,7 +4,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for a filter in advanced loot.
-    /// Last Verified: 2023-06-26
+    /// Last Verified: 2023-06-30
+    /// https://docs.macroquest.org/reference/top-level-objects/tlo-advloot/#itemfilterdata-type
     /// </summary>
     [PublicAPI]
     [MQ2Type("itemfilterdata")]
@@ -15,44 +16,53 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Name of the item
+        /// The Name of the item.
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// ID of the item
+        /// The ID of the item.
         /// </summary>
         public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
-        /// Auto roll enabled?
+        /// The Auto Roll state (dice icon).
         /// </summary>
         public bool AutoRoll => GetMember<BoolType>("AutoRoll");
 
         /// <summary>
-        /// Always need?
+        /// The Need (ND) state.
         /// </summary>
         public bool Need => GetMember<BoolType>("Need");
 
         /// <summary>
-        /// Always greed?
+        /// The Greed (GD) state.
         /// </summary>
         public bool Greed => GetMember<BoolType>("Greed");
 
         /// <summary>
-        /// Never?
+        /// The Never (NV) state.
         /// </summary>
         public bool Never => GetMember<BoolType>("Never");
 
         /// <summary>
-        /// Item's icon ID
+        /// The ID of the icon.
         /// </summary>
         public uint? IconID => GetMember<IntType>("IconID");
 
         /// <summary>
-        /// Bitmask of settings, 1 = AutoRoll, 2 = Need, 4 = Greed, 8 = Never
-        /// TODO: <see cref="EQ.ItemFilterSetting"/>
+        /// Bit field representing all the loot filter flags for this item.
+        /// TODO: <see cref="EQ.ItemFilterSetting"/> Bitmask 1 = AutoRoll, 2 = Need, 4 = Greed, 8 = Never
         /// </summary>
         public uint? Types => GetMember<IntType>("Types");
+
+        /// <summary>
+        /// Same as Name
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

@@ -4,7 +4,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for an alert list.
-    /// Last Verified: 2023-06-25
+    /// Last Verified: 2023-06-30
+    /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/#alertlist-type
     /// </summary>
     /// <remarks>VarPtr identifies a SPAWNSEARCH struct on an alert list</remarks>
     [PublicAPI]
@@ -16,297 +17,297 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Minimum level, inclusive
+        /// Any spawn that is at this level or greater
         /// </summary>
         public uint? MinLevel => GetMember<IntType>("MinLevel");
 
         /// <summary>
-        /// Maximum level, inclusive
+        /// Any spawn that is at this level or lower
         /// </summary>
         public uint? MaxLevel => GetMember<IntType>("MaxLevel");
 
         /// <summary>
-        /// Type, see eSpawnType in MQ2Internal.h
+        /// Any spawn with the given type
         /// </summary>
         public EQ.SpawnType? SpawnType => GetMember<IntType>("SpawnType");
 
         /// <summary>
-        /// Spawn ID to match
+        /// Any spawn with the given Spawn ID
         /// </summary>
         public uint? SpawnID => GetMember<IntType>("SpawnID");
 
         /// <summary>
-        /// Last spawn ID returned, used when iterating through a search spawn
+        /// Search starts at given spawn id
         /// </summary>
         public uint? FromSpawnID => GetMember<IntType>("FromSpawnID");
 
         /// <summary>
-        /// Radius in which to search (around xLoc/yLoc if set, otherwise around character)
+        /// Excludes the spawn if any player is within this distance (nopcnear filter)
         /// </summary>
         public float? Radius => GetMember<FloatType>("Radius");
 
         /// <summary>
-        /// Include spawns matching this name
+        /// Any spawn with the given name
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// Include spawns with this body type description e.g. Humanoid
+        /// Any spawn with given body type
         /// TODO: can we maybe make an enum?
         /// </summary>
         public string BodyType => GetMember<StringType>("BodyType");
 
         /// <summary>
-        /// Include spawns with this race e.g. Vah Shir
+        /// Any spawn with the given race
         /// TODO: can we maybe make an enum? <see cref="EQ.Race"/>
         /// </summary>
         public string Race => GetMember<StringType>("Race");
 
         /// <summary>
-        /// Include spawns with this class e.g. Cleric
+        /// Any spawn that is the given class
         /// TODO: can we maybe make an enum? <see cref="EQ.Class"/>
         /// </summary>
         public string Class => GetMember<StringType>("Class");
 
         /// <summary>
-        /// Include spawns with this light
+        /// Any spawn that is equipped with the given light source
         /// </summary>
         public string Light => GetMember<StringType>("Light");
 
         /// <summary>
-        /// Include spawns in this guild ID
+        /// Any member of the guild with the given id
         /// </summary>
         public long? GuildID => GetMember<Int64Type>("GuildID");
-        
+
         /// <summary>
-        /// SpawnID filter enabled?
+        /// Indicates usage of the id filter
         /// </summary>
         public bool bSpawnID => GetMember<BoolType>("bSpawnID");
 
         /// <summary>
-        /// Not near alert filter enabled?
+        /// Indicates usage of notnearalert filter
         /// </summary>
         public bool bNotNearAlert => GetMember<BoolType>("bNotNearAlert");
 
         /// <summary>
-        /// Near alert filter enabled?
+        /// Indicates usage of nearalert filter
         /// </summary>
         public bool bNearAlert => GetMember<BoolType>("bNearAlert");
 
         /// <summary>
-        /// No alert filter enabled?
+        /// Indicates usage of noalert filter
         /// </summary>
         public bool bNoAlert => GetMember<BoolType>("bNoAlert");
 
         /// <summary>
-        /// Alert filter enabled?
+        /// Indicates usage of alert filter
         /// </summary>
         public bool bAlert => GetMember<BoolType>("bAlert");
 
         /// <summary>
-        /// Only include LFG spawns?
+        /// Any player that is flagged as LFG
         /// </summary>
         public bool bLFG => GetMember<BoolType>("bLFG");
 
         /// <summary>
-        /// Only include trader spawns?
+        /// Any player that is a trader
         /// </summary>
         public bool bTrader => GetMember<BoolType>("bTrader");
 
         /// <summary>
-        /// Light filter enabled?
+        /// Indicates usage of a light filter
         /// </summary>
         public bool bLight => GetMember<BoolType>("bLight");
 
         /// <summary>
-        /// Return next spawn in list after <see cref="FromSpawnID"/>?
+        /// Indicates usage of the next filter
         /// </summary>
         public bool bTargNext => GetMember<BoolType>("bTargNext");
 
         /// <summary>
-        /// Return prev spawn in list before <see cref="FromSpawnID"/>?
+        /// Indicates usage of the prev filter
         /// </summary>
         public bool bTargPrev => GetMember<BoolType>("bTargPrev");
 
         /// <summary>
-        /// Include group members only?
+        /// Any member of the group
         /// </summary>
         public bool bGroup => GetMember<BoolType>("bGroup");
 
         /// <summary>
-        /// Include fellowship members only?
+        /// Any member of the fellowship
         /// </summary>
         public bool bFellowship => GetMember<BoolType>("bFellowship");
 
         /// <summary>
-        /// Exclude group members?
+        /// Exclude any player that is in the group
         /// </summary>
         public bool bNoGroup => GetMember<BoolType>("bNoGroup");
 
         /// <summary>
-        /// Exclude raid members?
+        /// Any member of the raid
         /// </summary>
         public bool bRaid => GetMember<BoolType>("bRaid");
 
         /// <summary>
-        /// Include GMs only?
+        /// Any player flagged as a GM
         /// </summary>
         public bool bGM => GetMember<BoolType>("bGM");
 
         /// <summary>
-        /// Include named NPCs only?
+        /// Any "named" NPC
         /// </summary>
         public bool bNamed => GetMember<BoolType>("bNamed");
 
         /// <summary>
-        /// Include merchants only?
+        /// Any merchant
         /// </summary>
         public bool bMerchant => GetMember<BoolType>("bMerchant");
 
         /// <summary>
-        /// Include only bankers
+        /// Any banker
         /// </summary>
         public bool bBanker => GetMember<BoolType>("bBanker");
 
         /// <summary>
-        /// Include tribute masters only?
+        /// Any NPC that is a tribute master
         /// </summary>
         public bool bTributeMaster => GetMember<BoolType>("bTributeMaster");
 
         /// <summary>
-        /// Include knights (PAL/SHD) only?
+        /// Any player that is a knight
         /// </summary>
         public bool bKnight => GetMember<BoolType>("bKnight");
 
         /// <summary>
-        /// Include tanks (WAR/PAL/SHD) only?
+        /// Any player that is a tank class
         /// </summary>
         public bool bTank => GetMember<BoolType>("bTank");
 
         /// <summary>
-        /// Include healers (CLR/SHM/DRU) only?
+        /// Any player that is a healer class
         /// </summary>
         public bool bHealer => GetMember<BoolType>("bHealer");
 
         /// <summary>
-        /// Include DPS classes only?
+        /// Any player that is a DPS class
         /// </summary>
         public bool bDps => GetMember<BoolType>("bDps");
 
         /// <summary>
-        /// Include classes (ENC/SHM/BRD) that can slow only?
+        /// Any player that is a slower
         /// </summary>
         public bool bSlower => GetMember<BoolType>("bSlower");
 
         /// <summary>
-        /// Not used
+        /// Any aur.
         /// </summary>
         public bool bAura => GetMember<BoolType>("bAura");
 
         /// <summary>
-        /// Not used
+        /// Any banner
         /// </summary>
         public bool bBanner => GetMember<BoolType>("bBanner");
 
         /// <summary>
-        /// Not used
+        ///	Any campfire
         /// </summary>
         public bool bCampfire => GetMember<BoolType>("bCampfire");
 
         /// <summary>
-        /// Exclude spawn with an id of <see cref="SpawnID"/>
+        /// Excludes any spawn with the given id
         /// </summary>
         public uint? NotID => GetMember<IntType>("NotID");
 
         /// <summary>
-        /// Exclude spawns near a spawn on this alert list
+        /// Excludes any spawn near the given alert list
         /// </summary>
         public uint? NotNearAlertList => GetMember<IntType>("NotNearAlertList");
 
         /// <summary>
-        /// Include spawns near a spawn on this alert list
+        /// Any spawn near the given alert list
         /// </summary>
         public uint? NearAlertList => GetMember<IntType>("NearAlertList");
 
         /// <summary>
-        /// Exclude spawns on this alert list
+        /// Excludes any spawn in the given alert list
         /// </summary>
         public uint? NoAlertList => GetMember<IntType>("NoAlertList");
 
         /// <summary>
-        /// Include spawns on this alert list
+        /// Any spawn on the associated alert list
         /// </summary>
         public uint? AlertList => GetMember<IntType>("AlertList");
 
         /// <summary>
-        /// Include spawns within this distance of zLoc if set, otherwise character's z location
+        /// z distance component of the loc filter
         /// </summary>
         public double? ZRadius => GetMember<DoubleType>("ZRadius");
 
         /// <summary>
-        /// Include spawns within this 3D distance of the xLoc/yLoc/zLoc if specified, otherwise character's location
+        /// Any spawn that is given distance from the given loc filter
         /// </summary>
         public double? FRadius => GetMember<DoubleType>("FRadius");
 
         /// <summary>
-        /// X location to base search around instead of character's
+        /// x component of the loc filter
         /// </summary>
         public float? xLoc => GetMember<FloatType>("xLoc");
 
         /// <summary>
-        /// Y location to base search around instead of character's
+        /// y component of the loc filter
         /// </summary>
         public float? yLoc => GetMember<FloatType>("yLoc");
 
         /// <summary>
-        /// If true, use xLoc/yLoc/zLoc insted of character's position
+        /// Indicates usage of a loc filter
         /// </summary>
         public bool bKnownLocation => GetMember<BoolType>("bKnownLocation");
 
         /// <summary>
-        /// Exclude pets?
+        /// Exclude any spawn that is a pet
         /// </summary>
         public bool bNoPet => GetMember<BoolType>("bNoPet");
 
         /// <summary>
-        /// What to sort the list by
+        /// Indicates the sort order of the filter
         /// 0 = level, 1 = display name (default), 2 = race, 3 = class, 4 = distance (2D, XY), 5 = guild, 6 = id
         /// </summary>
         public uint? SortBy => GetMember<IntType>("SortBy");
 
         /// <summary>
-        /// Exclude spawns in a guild
+        /// Exclude any player that is in the guild
         /// </summary>
         public bool bNoGuild => GetMember<BoolType>("bNoGuild");
 
         /// <summary>
-        /// Only include spawns you have line of sight to
+        /// Any spawn in line of sight
         /// </summary>
         public bool bLoS => GetMember<BoolType>("bLoS");
 
         /// <summary>
-        /// Match exact name rather than partial
+        /// Name match requiries an exact match
         /// </summary>
         public bool bExactName => GetMember<BoolType>("bExactName");
 
         /// <summary>
-        /// Include only targetable spawns
+        /// Any spawn that is targetable
         /// </summary>
         public bool bTargetable => GetMember<BoolType>("bTargetable");
 
         /// <summary>
-        /// Bitmask of player states to include
+        /// Any spawn with the given state (bitmask?)
         /// </summary>
         public uint? PlayerState => GetMember<IntType>("PlayerState");
 
         /// <summary>
-        /// Return the first spawn matching the ID or Name filters (ignores all other filters)
+        /// If an ID or Name is part of the filter, attempts to return a spawn with the matching ID or Name
         /// </summary>
         public SpawnType Spawn => GetMember<SpawnType>("Spawn");
 
         public override string ToString()
         {
-            return nameof(AlertListType);
+            return OriginalToString();
         }
     }
 }

@@ -200,7 +200,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         public override string ToString()
         {
-            return nameof(EverQuestType);
+            return OriginalToString();
         }
     }
 }
