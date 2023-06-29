@@ -30,7 +30,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         public string GetMember(int id) => _member[id];
 
-        public int GetMemberId(string name) => (int)_member[name];
+        public int? GetMemberId(string name) => (int?)_member[name];
 
         public IEnumerable<string> Members
         {

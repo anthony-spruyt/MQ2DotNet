@@ -111,6 +111,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             }
             // then UInt32
             // this was the previous implementation
+            // SpawnType::TimeBeenDead
             else if (timestampType.VarPtr.Dword > 0)
             {
                 timespan = TimeSpan.FromMilliseconds(timestampType.VarPtr.Dword);

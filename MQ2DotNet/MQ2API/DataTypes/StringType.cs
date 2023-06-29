@@ -108,5 +108,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             return typeVar?._string?.ToEnum<PetStance>();
         }
+
+        /// <summary>
+        /// Implicit conversion to a ConColor
+        /// TODO: havent tested this type of parsing yet.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator ConColor?(StringType typeVar)
+        {
+            return typeVar?._string?.ToEnum<ConColor>();
+        }
     }
 }
