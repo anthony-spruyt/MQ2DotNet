@@ -30,14 +30,14 @@ namespace MQ2DotNet.Services
             _altAbility = new IndexedTLO<AltAbilityType, int, AltAbilityType, string>(this, "AltAbility");
             _bool = new IndexedTLO<BoolType>(this, "Bool");
             _defined = new IndexedTLO<BoolType>(this, "Defined");
-
+            _familiar = new IndexedTLO<KeyRingItemType, string, KeyRingItemType, int>(this, "Familiar");
 
             //TODO below
 
 
 
 
-            Familiar = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Familiar");
+
             FindItem = new IndexedTLO<ItemType>(this, "FindItem");
             FindItemBank = new IndexedTLO<ItemType>(this, "FindItemBank");
             FindItemBankCount = new IndexedTLO<IntType>(this, "FindItemBankCount");
@@ -94,7 +94,7 @@ namespace MQ2DotNet.Services
                 List<int> items = new List<int>();
 
                 var raw = (string)_alert[""];
-                
+
                 if (!string.IsNullOrWhiteSpace(raw))
                 {
                     items.AddRange(raw.Split('|').Select(id => int.Parse(id)));
@@ -223,6 +223,55 @@ namespace MQ2DotNet.Services
         /// </summary>
         public EverQuestType EverQuest => GetTLO<EverQuestType>("EverQuest");
 
+        /// <summary>
+        /// Used to get information about items on your familiars keyring.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-familiar/
+        /// </summary>
+        private IndexedTLO<KeyRingItemType, string, KeyRingItemType, int> _familiar;
+
+        /// <summary>
+        /// Access to the familiar keyring.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-familiar/
+        /// </summary>
+        public KeyRingType FamiliarKeyRing => GetTLO<KeyRingType>("Familiar");
+
+        /// <summary>
+        /// Retrieves the item in your familiar keyring by index (base 1).
+        /// Familiar[N]
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-familiar/
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public KeyRingItemType GetFamiliarKeyRingItem(int index) => _familiar[index];
+
+        /// <summary>
+        /// Retrieve the item in your familiar keyring by name. A = can be prepended for an exact match.
+        /// Familiar[name]
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-familiar/
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public KeyRingItemType GetFamiliarKeyRingItem(string name) => _familiar[name];
+
+        /// <summary>
+        /// Familiars on the familiar keyring.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-familiar/
+        /// </summary>
+        public IEnumerable<KeyRingItemType> Familiars
+        {
+            get
+            {
+                var count = (int?)FamiliarKeyRing?.Count ?? 0;
+                List<KeyRingItemType> items = new List<KeyRingItemType>(count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    items.Add(GetFamiliarKeyRingItem(i + 1));
+                }
+
+                return items;
+            }
+        }
 
         //TODO below
 
@@ -376,8 +425,6 @@ namespace MQ2DotNet.Services
         /// </summary>
         public IndexedTLO<IntType> SpawnCount { get; }
         
-        
-        
         /// <summary>
         /// Item by name, partial match unless it begins with an = e.g. "=Water Flask"
         /// </summary>
@@ -441,11 +488,6 @@ namespace MQ2DotNet.Services
         /// Illusion (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
         /// </summary>
         public IndexedTLO<KeyRingType, string, KeyRingType, int> Illusion { get; }
-        
-        /// <summary>
-        /// Familiar (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
-        /// </summary>
-        public IndexedTLO<KeyRingType, string, KeyRingType, int> Familiar { get; }
         
         /// <summary>
         /// Requires EXPANSION_LEVEL_TOL

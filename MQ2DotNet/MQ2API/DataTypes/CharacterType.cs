@@ -5,8 +5,10 @@ using System;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
+    /// TODO: Update members and methods according to doco and implement indexed member wrapper methods and properties.
     /// MQ2 type for the local player character.
-    /// Last Verified: 2023-06-25
+    /// Last Verified: 2023-06-30
+    /// https://docs.macroquest.org/reference/data-types/datatype-character/
     /// </summary>
     [PublicAPI]
     [MQ2Type("character")]

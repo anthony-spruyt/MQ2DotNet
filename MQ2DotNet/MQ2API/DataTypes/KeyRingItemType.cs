@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an item on the keyring.
-    /// Last Verified: 2023-06-27
+    /// This datatype deals strictly with information items on a keyring.
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-keyringitem/
     /// </summary>
     [PublicAPI]
     [MQ2Type("keyringitem")]
@@ -15,17 +16,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Index of the item in the list (1 based)
+        /// Where on the keyring list (1 based)
         /// </summary>
         public uint? Index => GetMember<IntType>("Index");
 
         /// <summary>
-        /// Name of the item
+        /// Name of the keyring item
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// TODO: new member
+        /// The item on the keyring
         /// </summary>
         public ItemType Item => GetMember<ItemType>("Item");
     }

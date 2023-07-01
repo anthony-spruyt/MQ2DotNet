@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a keyring.
-    /// Last Verified: 2023-06-27
+    /// This datatype represents information about a keyring (a.k.a. a collection of mounts, illusions, etc)
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-keyring/
     /// </summary>
     [PublicAPI]
     [MQ2Type("keyring")]
@@ -15,12 +16,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// TODO: new member
+        /// The number of items in this keyring
         /// </summary>
         public uint? Count => GetMember<IntType>("Count");
 
         /// <summary>
-        /// TODO: new member
+        /// The keyring item assigned as the stat item
         /// </summary>
         public KeyRingItemType Stat => GetMember<KeyRingItemType>("Stat");
 
