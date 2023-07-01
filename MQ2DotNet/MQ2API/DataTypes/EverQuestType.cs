@@ -1,11 +1,14 @@
 ﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
+using System;
+using System.Collections.Generic;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for general game information.
-    /// Last Verified: 2023-06-25
+    /// Data types related to the current EverQuest session.
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-everquest/
     /// </summary>
     [PublicAPI]
     [MQ2Type("everquest")]
@@ -19,105 +22,157 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Handle to the window
+        /// Window handle.
         /// </summary>
         public long? HWND => GetMember<Int64Type>("HWND");
 
         /// <summary>
-        /// Current game state.
+        /// Shows the current game state. Values: CHARSELECT, INGAME, PRECHARSELECT, UNKNOWN
         /// </summary>
         public GameState? GameState => GetMember<StringType>("GameState");
 
-        /// <summary>
-        /// Username of your account name
+        /// <summaryMouseX
+        /// Your station name
         /// </summary>
         public string LoginName => GetMember<StringType>("LoginName");
 
         /// <summary>
-        /// Name of the server in short form e.g. firiona
+        /// Name of the server in short form e.g. firiona.
+        /// doco says "Full name of your server" but this returns the short name.
         /// </summary>
         public string Server => GetMember<StringType>("Server");
 
         /// <summary>
-        /// Last command executed
+        /// Last command entered
         /// </summary>
         public string LastCommand => GetMember<StringType>("LastCommand");
 
         /// <summary>
-        /// Name of the person you last received a tell from
+        /// Name of last person to send you a tell
         /// </summary>
         public string LastTell => GetMember<StringType>("LastTell");
 
         /// <summary>
-        /// Number of clock ticks this instance of eqgame.exe has been running for
+        /// Running time of current MQ2 session, in milliseconds
         /// </summary>
-        public uint? Running => GetMember<IntType>("Running");
+        public TimeSpan? Running
+        {
+            get
+            {
+                var milliseconds = (uint?)GetMember<IntType>("Running");
+
+                if (milliseconds.HasValue)
+                {
+                    return TimeSpan.FromMilliseconds(milliseconds.Value);
+                }
+
+                return null;
+            }
+        }
 
         /// <summary>
-        /// X (horizontal) coordinate of the mouse cursor in UI coordinate space, relative to the left edge of the game window
+        /// Mouse's X location.
+        /// X (horizontal) coordinate of the mouse cursor in UI coordinate space, relative to the left edge of the game window.
         /// </summary>
         public uint? MouseX => GetMember<IntType>("MouseX");
 
         /// <summary>
-        /// Y (vertical) coordinate of the mouse cursor in UI coordinate space relative to the top edge of the game window
+        /// Mouse's Y location.
+        /// Y (vertical) coordinate of the mouse cursor in UI coordinate space relative to the top edge of the game window.
         /// </summary>
         public uint? MouseY => GetMember<IntType>("MouseY");
 
         /// <summary>
-        /// Ping time to the EQ server in milliseconds
+        /// Your current ping (milliseconds).
         /// </summary>
         public uint? Ping => GetMember<IntType>("Ping");
 
         /// <summary>
-        /// Number of chat channels you are in
+        /// Returns the number of channels currently joined
         /// </summary>
         public uint? ChatChannels => GetMember<IntType>("ChatChannels");
 
         /// <summary>
-        /// Name of a chat channel by number, or true/false if you are in a chat channel by name
+        /// Returns the name of chat channel #
+        /// ChatChannel[#]
+        /// Returns TRUE if channelname is joined
+        /// ChatChannel[channelname]
         /// </summary>
         private IndexedStringMember<int, BoolType, string> _chatChannel;
 
         /// <summary>
-        /// X (horizontal) start of viewport, always 0?
+        /// Returns the name of chat channel #
+        /// </summary>
+        /// <param name="number">The base 1 chat channel number.</param>
+        /// <returns></returns>
+        public string GetChatChannel(int number) => _chatChannel[number];
+
+        /// <summary>
+        /// Returns TRUE if channelname is joined
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool InChannel(string name) => (bool)_chatChannel[name];
+
+        /// <summary>
+        /// The names of all the chat channels you are in.
+        /// </summary>
+        public IEnumerable<string> ChatChannelNames
+        {
+            get
+            {
+                var count = (int?)ChatChannels ?? 0;
+                List<string> names = new List<string>(count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    names.Add(GetChatChannel(i + 1));
+                }
+
+                return names;
+            }
+        }
+
+        /// <summary>
+        /// EverQuest viewport upper left (X) position
         /// </summary>
         public uint? ViewportX => GetMember<IntType>("ViewportX");
 
         /// <summary>
-        /// Y (vertical) start of viewport, always 0?
+        /// EverQuest viewport upper left (Y) position
         /// </summary>
         public uint? ViewportY => GetMember<IntType>("ViewportY");
 
         /// <summary>
-        /// X (horizontal) end of viewport
+        /// EverQuest viewport lower right (X) position
         /// </summary>
         public uint? ViewportXMax => GetMember<IntType>("ViewportXMax");
 
         /// <summary>
-        /// Y (vertical) end of viewport
+        /// EverQuest viewport lower right (Y) position
         /// </summary>
         public uint? ViewportYMax => GetMember<IntType>("ViewportYMax");
 
         /// <summary>
-        /// X (horizontal) center of viewport
+        /// EverQuest viewport center (X) position
         /// </summary>
         public uint? ViewportXCenter => GetMember<IntType>("ViewportXCenter");
 
         /// <summary>
-        /// Y (vertical) center of viewport
+        /// EverQuest viewport center (Y) position
         /// </summary>
         public uint? ViewportYCenter => GetMember<IntType>("ViewportYCenter");
 
         /// <summary>
-        /// TODO: Document EverQuestType.LClickedObject
+        /// Returns TRUE if an object has been left clicked
         /// </summary>
         public bool LClickedObject => GetMember<BoolType>("LClickedObject");
 
         /// <summary>
-        /// Current window title
+        /// Titlebar text of the Everquest window.
         /// </summary>
         public string WinTitle => GetMember<StringType>("WinTitle");
-        
+
         /// <summary>
         /// Process ID of this eqgame.exe
         /// </summary>
@@ -129,7 +184,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? xScreenMode => GetMember<IntType>("xScreenMode");
 
         /// <summary>
-        /// Screen mode, 2 = windowed ?
+        /// Returns the screenmode as an integer, 2 is Normal and 3 is No Windows
         /// TODO: confirm this one, it doesnt follow the usual pattern and templates <seealso cref="xScreenMode"/>
         /// </summary>
         public int? ScreenMode => GetMember<IntType>("ScreenMode");
@@ -145,19 +200,18 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? MaxBGFPS => GetMember<IntType>("MaxBGFPS");
 
         /// <summary>
-        /// Process priority of this eqgame.exe, one of "LOW", "BELOW NORMAL", "NORMAL", "ABOVE NORMAL", "REALTIME"
+        /// Returns the processor priority that Everquest is set to. Values: UNKNOWN, LOW, BELOW NORMAL, NORMAL, ABOVE NORMAL, HIGH, REALTIME
         /// TODO: map to an enum
         /// </summary>
         public string PPriority => GetMember<StringType>("PPriority");
 
         /// <summary>
-        /// Is a /copylayout currently in progress?
-        /// TODO: does this need to be a nullable bool?
+        /// Returns TRUE if a layoutcopy is in progress and FALSE if not.
         /// </summary>
-        public bool? LayoutCopyInProgress => GetMember<BoolType>("LayoutCopyInProgress");
+        public bool LayoutCopyInProgress => GetMember<BoolType>("LayoutCopyInProgress");
 
         /// <summary>
-        /// Window the mouse cursor was last over
+        /// Returns the last window you moused over
         /// </summary>
         public WindowType LastMouseOver => GetMember<WindowType>("LastMouseOver");
 
@@ -167,26 +221,72 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private IndexedMember<CharSelectListType, string, CharSelectListType, int> _charSelectList;
 
         /// <summary>
-        /// Name of the current UI skin
+        /// Character in the character select list by position (1 based)
+        /// </summary>
+        /// <param name="nth"></param>
+        /// <returns></returns>
+        public CharSelectListType GetCharacter(int position) => _charSelectList[position];
+
+        /// <summary>
+        /// Character in the character select list by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public CharSelectListType GetCharacter(string name) => _charSelectList[name];
+
+        /// <summary>
+        /// All characters in the character select list.
+        /// </summary>
+        public IEnumerable<CharSelectListType> Characters
+        {
+            get
+            {
+                List<CharSelectListType> items = new List<CharSelectListType>(8);
+
+                var first = GetCharacter(1);
+
+                if (first != null)
+                {
+                    items.Add(first);
+
+                    for (int i = 1; i < first.Count; i++)
+                    {
+                        items.Add(GetCharacter(i));
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// return a string representing the currently loaded UI skin
         /// </summary>
         public string CurrentUI => GetMember<StringType>("CurrentUI");
 
         /// <summary>
-        /// True if using default UI skin
-        /// TODO: does this need to be a nullable bool?
+        /// returns a bool true or false if the "Default" UI skin is the one loaded
         /// </summary>
-        public bool? IsDefaultUILoaded => GetMember<BoolType>("IsDefaultUILoaded");
+        public bool IsDefaultUILoaded => GetMember<BoolType>("IsDefaultUILoaded");
 
         /// <summary>
-        /// Is the window in the foreground?
-        /// TODO: does this need to be a nullable bool?
+        /// Returns TRUE if EverQuest is in Foreground
         /// </summary>
-        public bool? Foreground => GetMember<BoolType>("Foreground");
+        public bool Foreground => GetMember<BoolType>("Foreground");
 
         /// <summary>
         /// Is the given location, in yxz format separated by spaces, a valid location in the current zone?
         /// </summary>
         private IndexedMember<BoolType, string> _validLoc;
+
+        /// <summary>
+        /// Returns true if the given coordinates are valid.
+        /// </summary>
+        /// <param name="y"></param>
+        /// <param name="x"></param>
+        /// <param name="z"></param>
+        /// <returns></returns>
+        public bool IsLocValid(int y, int x, int z) => (bool)_validLoc[$"{y} {x} {z}"];
 
         /// <summary>
         /// Path to the Everquest folder

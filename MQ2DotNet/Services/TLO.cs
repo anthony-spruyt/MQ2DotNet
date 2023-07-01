@@ -217,6 +217,12 @@ namespace MQ2DotNet.Services
         /// </summary>
         public DynamicZoneType DynamicZone => GetTLO<DynamicZoneType>("DynamicZone");
 
+        /// <summary>
+        /// Provides access to general information about the game and its state.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-everquest/
+        /// </summary>
+        public EverQuestType EverQuest => GetTLO<EverQuestType>("EverQuest");
+
 
         //TODO below
 
@@ -272,11 +278,6 @@ namespace MQ2DotNet.Services
         /// <see cref="MacroQuestType"/> instance
         /// </summary>
         public MacroQuestType MacroQuest => GetTLO<MacroQuestType>("MacroQuest");
-        
-        /// <summary>
-        /// <see cref="EverQuestType"/> instance
-        /// </summary>
-        public EverQuestType EverQuest => GetTLO<EverQuestType>("EverQuest");
         
         /// <summary>
         /// <see cref="GroupType"/> instance

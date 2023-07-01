@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for the character in the select list.
-    /// Last Verified: 2023-06-25
+    /// Provides information about the character list.
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-charselectlist/
     /// </summary>
     [PublicAPI]
     [MQ2Type("charselectlist")]
@@ -15,34 +16,34 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Total number of characters in the character select list
+        /// Number of characters in the character select list
         /// </summary>
         public uint? Count => GetMember<IntType>("Count");
 
         /// <summary>
-        /// Character's name
+        /// Name of the character
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// Character's level
+        /// Level of the character
         /// </summary>
         public uint? Level => GetMember<IntType>("Level");
 
         /// <summary>
-        /// Character's class.
+        /// Class of the character
         /// TODO: map to an enum.
         /// </summary>
         public string Class => GetMember<StringType>("Class");
 
         /// <summary>
-        /// Character's race.
+        /// Race of the character
         /// TODO: map to an enum.
         /// </summary>
         public string Race => GetMember<StringType>("Race");
 
         /// <summary>
-        /// ID of the zone the character is in
+        /// Id of the zone the character logged out in
         /// </summary>
         public uint? ZoneID => GetMember<IntType>("ZoneID");
 
