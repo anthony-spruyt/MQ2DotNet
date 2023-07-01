@@ -1,12 +1,14 @@
 ﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
 using System;
+using System.Collections.Generic;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an item. This is used for both generic item information (ITEMINFO), and a specific item (CONTENTS).
-    /// Last Verified: 2023-06-27
+    /// Contains the properties that describe an item.
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-item/
     /// </summary>
     [PublicAPI]
     [MQ2Type("item")]
@@ -23,42 +25,44 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// TODO: new member
+        /// TODO: not in official doco
         /// </summary>
         public uint? RefCount => GetMember<IntType>("RefCount");
 
         /// <summary>
-        /// ID of the item
+        /// Item ID
         /// </summary>
         public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
-        /// Name of the item
+        /// Name
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// Is lore item?
+        /// Lore?
         /// </summary>
         public bool Lore => GetMember<BoolType>("Lore");
 
         /// <summary>
-        /// Item is lore when equipped?
+        /// Item is lore when equipped? (no doco available)
         /// </summary>
         public bool LoreEquipped => GetMember<BoolType>("LoreEquipped");
 
         /// <summary>
-        /// No drop?
+        /// No Trade?
+        /// Synonym for <see cref="NoTrade"/>
         /// </summary>
         public bool NoDrop => NoTrade;
 
         /// <summary>
-        /// No trade? Same as <see cref="NoDrop"/>
+        /// No Trade?
+        /// Synonym for <see cref="NoDrop"/>
         /// </summary>
         public bool NoTrade => GetMember<BoolType>("NoTrade");
 
         /// <summary>
-        /// No rent?
+        /// Temporary?
         /// </summary>
         public bool NoRent => GetMember<BoolType>("NoRent");
 
@@ -68,17 +72,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Magic => GetMember<BoolType>("Magic");
 
         /// <summary>
-        /// Value in coppers
+        /// Item value in coppers
         /// </summary>
         public uint? Value => GetMember<IntType>("Value");
 
         /// <summary>
-        /// Item size (1 = Small, 2 = Medium, 3 = Large, 4 = Giant)
+        /// Item size: 1 SMALL 2 MEDIUM 3 LARGE 4 GIANT
         /// </summary>
         public ItemSize? Size => GetMember<IntType>("Size");
 
         /// <summary>
-        /// If item is a container, the size of items it can hold (1 = Small, 2 = Medium, 3 = Large, 4 = Giant)
+        /// If item is a container, size of items it can hold: 1 SMALL 2 MEDIUM 3 LARGE 4 GIANT
         /// </summary>
         public ItemSize? SizeCapacity => GetMember<IntType>("SizeCapacity");
 
@@ -113,7 +117,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public DMGBonusType? DMGBonusType => GetMember<StringType>("DMGBonusType");
 
         /// <summary>
-        /// If the item is a container, the number of slots it has
+        /// Number of slots, if this is a container
         /// </summary>
         public uint? Container => GetMember<IntType>("Container");
 
@@ -123,52 +127,52 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? Open => GetMember<IntType>("Open");
 
         /// <summary>
-        /// If the item is a container, the number of items in it
+        /// Number of items, if this is a container.
         /// </summary>
         public uint? Items => GetMember<IntType>("Items");
 
         /// <summary>
-        /// Clicky spell on the item
+        /// Activatable spell effect, if any.
         /// </summary>
         public ItemSpellType Clicky => GetMember<ItemSpellType>("Clicky");
 
         /// <summary>
-        /// Proc on the weapon
+        /// Combat proc effect.
         /// </summary>
         public ItemSpellType Proc => GetMember<ItemSpellType>("Proc");
 
         /// <summary>
-        /// Spell effect when item is worn
+        /// Passive worn effect, if any.
         /// </summary>
         public ItemSpellType Worn => GetMember<ItemSpellType>("Worn");
 
         /// <summary>
-        /// Focus effect on the item
+        /// First focus effect, if any.
         /// </summary>
         public ItemSpellType Focus => GetMember<ItemSpellType>("Focus");
 
         /// <summary>
-        /// Spell taught by the item if it is a scroll
+        /// Scroll effect, if any.
         /// </summary>
         public ItemSpellType Scroll => GetMember<ItemSpellType>("Scroll");
 
         /// <summary>
-        /// Second focus effect on the item
+        /// Second focus effect, if any.
         /// </summary>
         public ItemSpellType Focus2 => GetMember<ItemSpellType>("Focus2");
 
         /// <summary>
-        /// Mount spell on the item
+        /// Mount spell effect, if any.
         /// </summary>
         public ItemSpellType Mount => GetMember<ItemSpellType>("Mount");
 
         /// <summary>
-        /// Illusion spell on the item
+        /// Illusion spell effect, if any.
         /// </summary>
         public ItemSpellType Illusion => GetMember<ItemSpellType>("Illusion");
 
         /// <summary>
-        /// Familiar spell cast by the item
+        /// Familiar spell effect, if any.
         /// </summary>
         public ItemSpellType Familiar => GetMember<ItemSpellType>("Familiar");
 
@@ -179,8 +183,36 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// If the item is a container, the item in the nth slot (1 based)
+        /// Item[N]
         /// </summary>
         private IndexedMember<ItemType, int> _item;
+
+        /// <summary>
+        /// If the item is a container, the item in the nth slot (1 based)
+        /// Item[N]
+        /// </summary>
+        /// <param name="nth"></param>
+        /// <returns></returns>
+        public ItemType GetItem(int nth) => _item[nth];
+
+        /// <summary>
+        /// The items in a container if this item is a container.
+        /// </summary>
+        public IEnumerable<ItemType> Contents
+        {
+            get
+            {
+                var count = (int?)Items ?? 0;
+                List<ItemType> items = new List<ItemType>(count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    items.Add(GetItem(i + 1));
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// Stackable?
@@ -188,22 +220,24 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Stackable => GetMember<BoolType>("Stackable");
 
         /// <summary>
-        /// Inventory slot the item is in (not the slot it can be equipped in)
+        /// Inventory Slot Number (Historic and now deprecated, use ItemSlot and ItemSlot2)
         /// </summary>
+        [Obsolete]
         public InvSlotType InvSlot => GetMember<InvSlotType>("InvSlot");
 
         /// <summary>
-        /// Item slot number the item is currently in
+        /// Item Slot number see https://docs.macroquest.org/reference/general/slot-names/
         /// </summary>
         public int? ItemSlot => GetMember<IntType>("ItemSlot");
 
         /// <summary>
+        /// Item Slot subnumber see https://docs.macroquest.org/reference/general/slot-names/
         /// If the item is in a container, the index (0 based) of the slot within the container
         /// </summary>
         public int? ItemSlot2 => GetMember<IntType>("ItemSlot2");
 
         /// <summary>
-        /// The cost to buy this item from the active merchant
+        /// The cost to buy this item from active merchant
         /// </summary>
         public long? BuyPrice => GetMember<Int64Type>("BuyPrice");
 
@@ -213,9 +247,47 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? SellPrice => GetMember<IntType>("SellPrice");
 
         /// <summary>
-        /// Can item be worn in invslot with name, or the nth invslot (1 based) that the item can be worn in
+        /// The Nth invslot this item can be worn in (fingers/ears count as 2 slots)
+        /// WornSlot[N]
+        /// Can item be worn in invslot with this name? (worn slots only)
+        /// WornSlot[name]
         /// </summary>
         private IndexedMember<BoolType, string, InvSlotType, int> _wornSlot;
+
+        /// <summary>
+        /// Can item be worn in invslot with this name? (worn slots only)
+        /// WornSlot[name]
+        /// </summary>
+        /// <param name="slotName"></param>
+        /// <returns></returns>
+        public bool CanWearInSlot(string slotName) => _wornSlot[slotName];
+
+        /// <summary>
+        /// The Nth invslot this item can be worn in (fingers/ears count as 2 slots)
+        /// WornSlot[N]
+        /// </summary>
+        /// <param name="nth"></param>
+        /// <returns></returns>
+        public InvSlotType GetInvSlot(int nth) => _wornSlot[nth];
+
+        /// <summary>
+        /// The inv slots this item can be worn, if worn item.
+        /// </summary>
+        public IEnumerable<InvSlotType> RestrictedToInvSlots
+        {
+            get
+            {
+                var count = (int?)WornSlots ?? 0;
+                List<InvSlotType> items = new List<InvSlotType>(count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    items.Add(GetInvSlot(i + 1));
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// Number of slots this item can be worn in (fingers/ears count as 2)
@@ -224,6 +296,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Cast time on clicky ItemSpell
+        /// The C++ source shows Dest.UInt64 and pTimeStampType which everywhere else is milliseconds, but the online doco say it is seconds. Testing confirms it is milliseconds and the doco is incorrect. 
         /// </summary>
         public TimeSpan? CastTime => GetMember<TimeStampType>("CastTime");
 
@@ -259,12 +332,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Attuneable => GetMember<BoolType>("Attuneable");
 
         /// <summary>
-        /// Time remaining on recast timer
+        /// Returns the number of ticks remaining on an item recast timer
         /// </summary>
         public TimeSpan? Timer => GetMember<TicksType>("Timer");
 
         /// <summary>
-        /// Damage value on the weapon
+        /// Damage value on the weapon (no info in doco)
         /// </summary>
         public uint? Damage => GetMember<IntType>("Damage");
 
@@ -274,9 +347,38 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? ItemDelay => GetMember<IntType>("ItemDelay");
 
         /// <summary>
-        /// Number of seconds remaining on recast timer
+        /// Weapon delay
         /// </summary>
-        public uint? TimerReady => GetMember<IntType>("TimerReady");
+        public TimeSpan? ItemDelay2
+        {
+            get
+            {
+                if (ItemDelay.HasValue)
+                {
+                    return TimeSpan.FromSeconds(ItemDelay.Value / 10f);
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns the number of seconds remaining on an item recast timer
+        /// </summary>
+        public TimeSpan? TimerReady
+        {
+            get
+            {
+                var seconds = (uint?)GetMember<IntType>("TimerReady");
+
+                if (seconds.HasValue)
+                {
+                    return TimeSpan.FromSeconds(seconds.Value);
+                }
+
+                return null;
+            }
+        }
 
         /// <summary>
         /// Maximum number if items that can be in the stack
@@ -294,8 +396,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? StackCount => GetMember<IntType>("StackCount");
 
         /// <summary>
-        /// The number of items needed to fill all the stacks of the item you have
-        /// If you have 3 stacks (1, 10, 20 in those stacks), you have room for 60 total and you have 31 on you, so FreeStack would return 29
+        /// The number of items needed to fill all the stacks of the item you have (with a stacksize of 20).
+        /// If you have 3 stacks (1, 10, 20 in those stacks), you have room for 60 total and you have 31 on you,
+        /// so FreeStack would return 29.
         /// </summary>
         public uint? FreeStack => GetMember<IntType>("FreeStack");
 
@@ -305,44 +408,187 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? MerchQuantity => GetMember<IntType>("MerchQuantity");
 
         /// <summary>
-        /// Number of classes that can use this item
+        /// The number of classes that can use the item. Items suitable for ALL classes will return 16.
         /// </summary>
         public uint? Classes => GetMember<IntType>("Classes");
 
         /// <summary>
+        /// Returns the Nth long class name of the listed classes on an item. Items suitable for ALL classes will effectively have all 16 classes listed.
         /// Class that can use the item, by number (1 - Classes), or by class name or 3 letter code
-        /// TODO: see if we can use <see cref="MQ2DotNet.EQ.Class"/> here to improve usage.
+        /// TODO: see if we can use <see cref="Class"/> here to improve usage.
         /// </summary>
         private IndexedMember<ClassType, int, ClassType, string> _class;
 
         /// <summary>
-        /// Number of races that can use the item. 16 if usable by all races
+        /// TODO: doco description and source doesnt look like it matches.
+        /// </summary>
+        /// <param name="nth">The base 1 index.</param>
+        /// <returns></returns>
+        public ClassType GetClass(int nth) => _class[nth];
+
+        /// <summary>
+        /// TODO: doco description and source doesnt look like it matches.
+        /// </summary>
+        /// <param name="name">The class name or 3 letter code.</param>
+        /// <returns></returns>
+        public ClassType GetClass(string name) => _class[name];
+
+        /// <summary>
+        /// This convenience method does n [1,<see cref="Classes"/>]
+        /// </summary>
+        public IEnumerable<ClassType> RestrictedToClasses
+        {
+            get
+            {
+                int count = (int?)Classes ?? 0;
+                List<ClassType> items = new List<ClassType>(count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    var item = GetClass(i + 1);
+
+                    if (item != null)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// The number of races that can use the item. Items suitable for ALL races will return 15.
         /// </summary>
         public uint? Races => GetMember<IntType>("Races");
 
         /// <summary>
         /// Race that can use the item, by number (1 - Races), or by name (full name e.g. Froglok, not FRG)
+        /// Returns the Nth long race name of the listed races on an item. Items suitable for ALL races will effectively have all 15 races listed.
+        /// Race[N]
         /// </summary>
         private IndexedMember<RaceType, int, RaceType, string> _race;
 
         /// <summary>
-        /// Number of deities that can use the item. Returns 0 if there are no restrictions
+        /// Returns the Nth long race name of the listed races on an item. Items suitable for ALL races will effectively have all 15 races listed.
+        /// Race[N]
+        /// </summary>
+        /// <param name="nth"></param>
+        /// <returns></returns>
+        public RaceType GetRace(int nth) => _race[nth];
+
+        public RaceType GetRace(string name) => _race[name];
+
+        /// <summary>
+        /// This convenience method does n [1,15]
+        /// </summary>
+        public IEnumerable<RaceType> RestrictedToRaces
+        {
+            get
+            {
+                List<RaceType> items = new List<RaceType>(RaceType.NUM_OF_RACES);
+
+                for (int i = 0; i < RaceType.NUM_OF_RACES; i++)
+                {
+                    var item = GetRace(i + 1);
+
+                    if (item != null)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// The number of deities that can use the item. Items with no deity restrictions will return 0.
         /// </summary>
         public uint? Deities => GetMember<IntType>("Deities");
 
         /// <summary>
+        /// Returns the Nth deity of the listed deities on an item. Items with no deity restrictions will return NULL for all values of N.
+        /// Deity[N]
         /// Deity that can use the item, by number (1 - Deities), or by name. Returns null if there are no restrictions
         /// TODO: look at adding in an enum here.
         /// </summary>
         private IndexedMember<DeityType, int, DeityType, string> _deity;
 
         /// <summary>
-        /// Required level to wear the item. Items with no required level will return 0
+        /// Returns the Nth deity of the listed deities on an item. Items with no deity restrictions will return NULL for all values of N.
+        /// Deity[N]
+        /// </summary>
+        /// <param name="nth"></param>
+        /// <returns></returns>
+        public DeityType GetDeity(int nth) => _deity[nth];
+
+        /// <summary>
+        /// Returns the deity of the listed deities on an item. Items with no deity restrictions will return NULL for all name values.
+        /// Deity[name]
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public DeityType GetDeity(string name) => _deity[name];
+
+        /// <summary>
+        /// If no deity is returned then there are no restrictions.
+        /// This convenience method does n [1,16]
+        /// TODO: Test if <see cref="RestrictedToDeities1"/> or <see cref="RestrictedToDeities2"/> is the correct implementation.
+        /// </summary>
+        public IEnumerable<DeityType> RestrictedToDeities1
+        {
+            get
+            {
+                List<DeityType> items = new List<DeityType>(DeityType.NUM_OF_DEITIES);
+
+                for (int i = 0; i < DeityType.NUM_OF_DEITIES; i++)
+                {
+                    var item = GetDeity(i + 1);
+
+                    if (item != null)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// If no deity is returned then there are no restrictions.
+        /// This convenience method does n [1,<see cref="Deities"/>]
+        /// TODO: Test if <see cref="RestrictedToDeities1"/> or <see cref="RestrictedToDeities2"/> is the correct implementation.
+        /// </summary>
+        public IEnumerable<DeityType> RestrictedToDeities2
+        {
+            get
+            {
+                int count = (int?)Deities ?? 0;
+                List<DeityType> items = new List<DeityType>(count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    var item = GetDeity(i + 1);
+
+                    if (item != null)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// Returns the Required Level of an item. Items with no required level will return 0.
         /// </summary>
         public uint? RequiredLevel => GetMember<IntType>("RequiredLevel");
 
         /// <summary>
-        /// Recommended level to wear the item. Items with no recommended level will return 0
+        /// Returns the Recommended Level of an item. Items with no recommended level will return 0.
         /// </summary>
         public uint? RecommendedLevel => GetMember<IntType>("RecommendedLevel");
 
@@ -357,7 +603,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? SkillModMax => GetMember<IntType>("SkillModMax");
 
         /// <summary>
-        /// Details about the evolving item, if it is one
+        /// Does this item have Evolving experience on?
         /// </summary>
         public EvolvingItemType Evolving => GetMember<EvolvingItemType>("Evolving");
         
@@ -429,7 +675,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Attack value on item
         /// </summary>
-        /// 
         public uint? Attack => GetMember<IntType>("Attack");
 
         /// <summary>
@@ -473,7 +718,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? DamShield => GetMember<IntType>("DamShield");
 
         /// <summary>
-        /// Type of slot the item fits in, if it is an augment
+        /// Augmentation slot type mask.
         /// </summary>
         public uint? AugType => GetMember<IntType>("AugType");
 
@@ -483,43 +728,53 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? AugRestrictions => GetMember<IntType>("AugRestrictions");
 
         /// <summary>
+        /// Retrieve the augment in the specified slot number.
         /// Augment slots on the item (0 - 5).
         /// TODO: native MQ client has comment which might mean this is broken? // FIXME: ItemIndex
         /// </summary>
         private IndexedMember<AugType, int> _augSlot;
 
         /// <summary>
-        /// Type of the 1st aug slot
+        /// Retrieve the augment in the specified slot number.
+        /// Augment slots on the item (0 - 5).
+        /// TODO: native MQ client has comment which might mean this is broken? // FIXME: ItemIndex
+        /// </summary>
+        /// <param name="slotNumber"></param>
+        /// <returns></returns>
+        public AugType GetAugSlot(int slotNumber) => _augSlot[slotNumber];
+
+        /// <summary>
+        /// Returns the type of agument in slot 1
         /// </summary>
         public uint? AugSlot1 => GetMember<IntType>("AugSlot1");
 
         /// <summary>
-        /// Type of the 2nd aug slot
+        /// Returns the type of agument in slot 2
         /// </summary>
         public uint? AugSlot2 => GetMember<IntType>("AugSlot2");
 
         /// <summary>
-        /// Type of the 3rd aug slot
+        /// Returns the type of agument in slot 3
         /// </summary>
         public uint? AugSlot3 => GetMember<IntType>("AugSlot3");
 
         /// <summary>
-        /// Type of the 4th aug slot
+        /// Returns the type of agument in slot 4
         /// </summary>
         public uint? AugSlot4 => GetMember<IntType>("AugSlot4");
 
         /// <summary>
-        /// Type of the 5th aug slot
+        /// Returns the type of agument in slot 5
         /// </summary>
         public uint? AugSlot5 => GetMember<IntType>("AugSlot5");
 
         /// <summary>
-        /// Type of the 6th aug slot
+        /// Returns the type of agument in slot 6
         /// </summary>
         public uint? AugSlot6 => GetMember<IntType>("AugSlot6");
 
         /// <summary>
-        /// Power remaining on a power source
+        /// Power left on power source
         /// </summary>
         public uint? Power => GetMember<IntType>("Power");
 
@@ -534,7 +789,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? MaxPower => GetMember<IntType>("MaxPower");
 
         /// <summary>
-        /// Purity value on the item
+        /// Purity of item
         /// </summary>
         public uint? Purity => GetMember<IntType>("Purity");
 
@@ -574,7 +829,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? Accuracy => GetMember<IntType>("Accuracy");
 
         /// <summary>
-        /// CombatEffects value on the item
+        /// CombatEffects value on the item. (no info in doco)
         /// </summary>
         public uint? CombatEffects => GetMember<IntType>("CombatEffects");
 
@@ -673,7 +928,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? EnduranceRegen => GetMember<IntType>("EnduranceRegen");
 
         /// <summary>
-        /// Heal amount value on the item
+        /// HealAmount (regen?)
         /// </summary>
         public uint? HealAmount => GetMember<IntType>("HealAmount");
 
@@ -724,7 +979,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Heirloom => GetMember<BoolType>("Heirloom");
 
         /// <summary>
-        /// Item is collectible?
+        /// Item is collectible? (no info in doco)
         /// </summary>
         public bool Collectible => GetMember<BoolType>("Collectible");
 
@@ -744,9 +999,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Expendable => GetMember<BoolType>("Expendable");
 
         /// <summary>
-        /// just prints the actual hexlink for an item (not clickable)
+        /// Just prints the actual hexlink for an item (not clickable)
         /// </summary>
         public string ItemLink => GetMember<StringType>("ItemLink");
+
+        /// <summary>
+        /// Just prints the actual hexlink for an item (clickable)
+        /// ItemLink[CLICKABLE]
+        /// </summary>
+        public string ItemLinkClickable => GetMember<StringType>("ItemLink", "CLICKABLE");
 
         /// <summary>
         /// ID of the icon used for the item
@@ -759,7 +1020,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? OrnamentationIcon => GetMember<IntType>("OrnamentationIcon");
 
         /// <summary>
-        /// Size of items that can be placed in the container (4 = Giant)
+        /// Size of items that can be placed in the container (4 = Giant) - (no info in doco)
         /// TODO: test enum conversion
         /// </summary>
         public ItemSize? ContentSize => GetMember<IntType>("ContentSize");
@@ -795,8 +1056,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? IDFile2 => GetMember<IntType>("IDFile2");
 
         /// <summary>
-        /// TODO: new member
+        /// Opens the item display window for this item
         /// </summary>
         public void Inspect() => GetMember<MQ2DataType>("Inspect");
+
+        /// <summary>
+        /// Same as <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

@@ -4,7 +4,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for a mercenary.
-    /// Last Verified: 2023-06-27
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-mercenary/
     /// </summary>
     [PublicAPI]
     [MQ2Type("mercenary")]
@@ -28,7 +29,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current State of the mercenary
         /// </summary>
-        public string State => GetMember<StringType>("State");
+        public new string State => GetMember<StringType>("State");
 
         /// <summary>
         /// Current state ID of the mercenary as a number.
@@ -43,6 +44,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of the mercenary
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public new string Name => GetMember<StringType>("Name");
+
+        /// <summary>
+        /// Same as <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

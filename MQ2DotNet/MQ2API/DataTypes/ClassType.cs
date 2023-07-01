@@ -4,29 +4,32 @@ using MQ2DotNet.EQ;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a character class.
-    /// Last Verified: 2023-06-25
+    /// Data about a particular character class
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-class/
     /// </summary>
     [PublicAPI]
     [MQ2Type("class")]
     public class ClassType : MQ2DataType
     {
+        public const int NUM_OF_CLASSES = 16;
+
         internal ClassType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
         }
 
         /// <summary>
-        /// TODO: What is this
+        /// The class numeric ID
         /// </summary>
         public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
-        /// Full name of the class e.g. Cleric
+        /// The full name of the class. Ex: "Ranger"
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// 3 letter name e.g. CLR
+        /// The short name (three letter code) of the class. Ex: RNG for Ranger
         /// </summary>
         public string ShortName => GetMember<StringType>("ShortName");
 
@@ -36,42 +39,42 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool CanCast => GetMember<BoolType>("CanCast");
 
         /// <summary>
-        /// Any one of: Cleric, Druid, Shaman, Necromancer, Wizard, Mage, Enchanter
+        /// True if class is a pure caster (Cleric, Druid, Shaman, Necromancer, Wizard, Mage or Enchanter)
         /// </summary>
         public bool PureCaster => GetMember<BoolType>("PureCaster");
 
         /// <summary>
-        /// Any one of: Shaman, Necromancer, Mage, Beastlord
+        /// True if class is a pet class (Shaman, Necromancer, Mage or Beastlord)
         /// </summary>
         public bool PetClass => GetMember<BoolType>("PetClass");
 
         /// <summary>
-        /// Druid/Ranger?
+        /// True if class is a Druid or Ranger
         /// </summary>
         public bool DruidType => GetMember<BoolType>("DruidType");
 
         /// <summary>
-        /// Shaman/Beastlord?
+        /// True if class is Shaman or Beastlord
         /// </summary>
         public bool ShamanType => GetMember<BoolType>("ShamanType");
 
         /// <summary>
-        /// Necromancer/Shadow Knight?
+        /// True if class is a Necromancer or Shadow Knight
         /// </summary>
         public bool NecromancerType => GetMember<BoolType>("NecromancerType");
 
         /// <summary>
-        /// Cleric/Paladin?
+        /// True if class is a Cleric or Paladin
         /// </summary>
         public bool ClericType => GetMember<BoolType>("ClericType");
 
         /// <summary>
-        /// Cleric/Druid/Shaman?
+        /// True if class is a Healer (Cleric, Druid or Shaman)
         /// </summary>
         public bool HealerType => GetMember<BoolType>("HealerType");
 
         /// <summary>
-        /// Mercenary?
+        /// True if class is Mercenary
         /// </summary>
         public bool MercType => GetMember<BoolType>("MercType");
 
@@ -82,5 +85,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="typeVar"></param>
         /// <returns></returns>
         public static implicit operator Class?(ClassType typeVar) => (Class?) (1 << (typeVar?.VarPtr.Int - 1));
+
+        /// <summary>
+        /// Same as <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

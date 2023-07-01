@@ -7,7 +7,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for a spell.
-    /// Last Verified: 2023-06-29
+    /// Last Verified: 2023-07-01
     /// </summary>
     [PublicAPI]
     [MQ2Type("spell")]
@@ -32,6 +32,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _reagentCount = new IndexedMember<IntType, int>(this, "ReagentCount");
             _hasSPA = new IndexedMember<BoolType, int>(this, "HasSPA");
             _trigger = new IndexedMember<SpellType, int>(this, "Trigger");
+            _link = new IndexedStringMember<string>(this, "Link");
         }
 
         /// <summary>

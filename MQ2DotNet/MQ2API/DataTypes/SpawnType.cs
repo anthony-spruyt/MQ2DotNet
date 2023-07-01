@@ -15,7 +15,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
     /// <summary>
     /// MQ2 type for a spawn.
-    /// Last Verified: 2023-06-29
+    /// Last Verified: 2023-07-01
     /// </summary>
     [PublicAPI]
     [MQ2Type("spawn")]
@@ -45,6 +45,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _equipment = new IndexedMember<IntType, int, IntType, string>(this, "Equipment");
             _combatSkillTicks = new IndexedMember<IntType, int>(this, "CombatSkillTicks");
             _seeInvis = new IndexedMember<IntType, int>(this, "SeeInvis");
+            _spawnStatus = new IndexedMember<IntType, int>(this, "SpawnStatus");
             _cachedBuff = new IndexedMember<CachedBuffType, int, CachedBuffType, string>(this, "CachedBuff");
             _buff = new IndexedMember<CachedBuffType, int, CachedBuffType, string>(this, "Buff");
             _findBuff = new IndexedMember<CachedBuffType>(this, "FindBuff");

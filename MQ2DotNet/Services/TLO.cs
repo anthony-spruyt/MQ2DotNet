@@ -10,7 +10,7 @@ namespace MQ2DotNet.Services
 {
     /// <summary>
     /// Provides access to all top level objects.
-    /// Last Verified: 2023-06-30 WIP...
+    /// Last Verified: 2023-07-01 WIP...
     /// https://docs.macroquest.org/reference/top-level-objects/
     /// </summary>
     [PublicAPI]
@@ -28,36 +28,42 @@ namespace MQ2DotNet.Services
             _alert = new IndexedTLO<AlertType, int, StringType, string>(this, "Alert");
             _alias = new IndexedTLO<BoolType>(this, "Alias");
             _altAbility = new IndexedTLO<AltAbilityType, int, AltAbilityType, string>(this, "AltAbility");
+            _bool = new IndexedTLO<BoolType>(this, "Bool");
 
-            //AlertByNumber = new IndexedTLO<AlertType>(this, "Alert");
-            //Defined = new IndexedTLO<BoolType>(this, "Defined");
-            //Familiar = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Familiar");
-            //FindItem = new IndexedTLO<ItemType>(this, "FindItem");
-            //FindItemBank = new IndexedTLO<ItemType>(this, "FindItemBank");
-            //FindItemBankCount = new IndexedTLO<IntType>(this, "FindItemBankCount");
-            //FindItemCount = new IndexedTLO<IntType>(this, "FindItemCount");
-            //GroundItem = new IndexedTLO<GroundType>(this, "GroundItem");
-            //GroundItemCount = new IndexedTLO<IntType>(this, "GroundItemCount");
-            //Heading = new IndexedTLO<HeadingType, string>(this, "");
-            //Illusion = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Illusion");
-            //InvSlot = new IndexedTLO<InvSlotType, string, InvSlotType, int>(this, "InvSlot");
-            //LineOfSight = new IndexedTLO<BoolType>(this, "LineOfSight");
-            //Mount = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Mount");
-            //NearestSpawn = new IndexedTLO<SpawnType>(this, "NearestSpawn");
-            //Plugin = new IndexedTLO<PluginType, string, PluginType, int>(this, "Plugin");
-            //Skill = new IndexedTLO<SkillType, string, SkillType, int>(this, "Skill");
-            //Spawn = new IndexedTLO<SpawnType>(this, "Spawn");
-            //SpawnCount = new IndexedTLO<IntType>(this, "SpawnCount");
-            //Spell = new IndexedTLO<SpellType, string, SpellType, int>(this, "Spell");
-            //SubDefined = new IndexedTLO<BoolType>(this, "SubDefined");
-            //Task = new IndexedTLO<TaskType, string, TaskType, int>(this, "Task");
-            //Window = new IndexedTLO<WindowType>(this, "Window");
-            //Zone = new IndexedTLO<ZoneType>(this, "Zone");
-            //LastSpawn = new IndexedTLO<SpawnType, int>(this, "LastSpawn");
+
+            //TODO below
+
+
+
+            Defined = new IndexedTLO<BoolType>(this, "Defined");
+            Familiar = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Familiar");
+            FindItem = new IndexedTLO<ItemType>(this, "FindItem");
+            FindItemBank = new IndexedTLO<ItemType>(this, "FindItemBank");
+            FindItemBankCount = new IndexedTLO<IntType>(this, "FindItemBankCount");
+            FindItemCount = new IndexedTLO<IntType>(this, "FindItemCount");
+            GroundItem = new IndexedTLO<GroundType>(this, "GroundItem");
+            GroundItemCount = new IndexedTLO<IntType>(this, "GroundItemCount");
+            Heading = new IndexedTLO<HeadingType, string>(this, "");
+            Illusion = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Illusion");
+            InvSlot = new IndexedTLO<InvSlotType, string, InvSlotType, int>(this, "InvSlot");
+            LineOfSight = new IndexedTLO<BoolType>(this, "LineOfSight");
+            Mount = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Mount");
+            NearestSpawn = new IndexedTLO<SpawnType>(this, "NearestSpawn");
+            Plugin = new IndexedTLO<PluginType, string, PluginType, int>(this, "Plugin");
+            Skill = new IndexedTLO<SkillType, string, SkillType, int>(this, "Skill");
+            Spawn = new IndexedTLO<SpawnType>(this, "Spawn");
+            SpawnCount = new IndexedTLO<IntType>(this, "SpawnCount");
+            Spell = new IndexedTLO<SpellType, string, SpellType, int>(this, "Spell");
+            SubDefined = new IndexedTLO<BoolType>(this, "SubDefined");
+            Task = new IndexedTLO<TaskType, string, TaskType, int>(this, "Task");
+            Window = new IndexedTLO<WindowType>(this, "Window");
+            Zone = new IndexedTLO<ZoneType>(this, "Zone");
+            LastSpawn = new IndexedTLO<SpawnType, int>(this, "LastSpawn");
         }
 
         /// <summary>
-        /// TODO: NOT IMPLEMENTED YET!! Use the text API => ${Achievement[Master of Claws of Veeshan].ID} 
+        /// TODO: Not supported currently.
+        /// Use the text API => ${Achievement[Master of Claws of Veeshan].ID} 
         /// Provides access to achievements.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-achievement/
         /// </summary>
@@ -80,7 +86,22 @@ namespace MQ2DotNet.Services
         /// Equivalent of ${Alert}
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/#forms
         /// </summary>
-        public IEnumerable<int> AlertIDs => ((string)_alert[""])?.Split('|').Select(id => int.Parse(id));
+        public IEnumerable<int> AlertIDs
+        {
+            get
+            {
+                List<int> items = new List<int>();
+
+                var raw = (string)_alert[""];
+                
+                if (!string.IsNullOrWhiteSpace(raw))
+                {
+                    items.AddRange(raw.Split('|').Select(id => int.Parse(id)));
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// Retrieve information for the alert category by its id.
@@ -137,301 +158,302 @@ namespace MQ2DotNet.Services
         public AltAbilityType GetAltAbility(string name) => _altAbility[name];
 
         /// <summary>
+        /// No point exposing this.
+        /// 
+        /// Creates a bool object from a string. The resulting value is a bool depending on whether the given string is falsey or not.
+        /// "Falsey" is defined as any of the following values:
+        /// - Empty String
+        /// - FALSE
+        /// - NULL
+        /// - The string "0"
+        /// If the string is one of these values, the resulting bool is false. Otherwise, it is true.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-bool/
+        /// </summary>
+        private IndexedTLO<BoolType> _bool;
+
+        /// <summary>
+        /// Access to objects of type corpse, which is the currently active corpse (ie. the one you are looting).
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-corpse/
+        /// </summary>
+        public CorpseType Corpse => GetTLO<CorpseType>("Corpse");
+
+        /// <summary>
+        /// Creates an object which references the item on your cursor.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-cursor/
+        /// </summary>
+        public ItemType Cursor => GetTLO<ItemType>("Cursor");
+
+
+
+
+
+
+        //TODO below
+
+
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
         /// Character object which allows you to get properties of you as a character.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-me/
         /// </summary>
         public CharacterType Me => GetTLO<CharacterType>("Me");
 
-        //
-        ///// <summary>
-        ///// Your target
-        ///// </summary>
-        //public TargetType Target => GetTLO<TargetType>("Target");
-        //
-        ///// <summary>
-        ///// Your current door target
-        ///// </summary>
-        //public SwitchType Switch => GetTLO<SwitchType>("Switch");
-        //
-        ///// <summary>
-        ///// Your mercenary
-        ///// </summary>
-        //public MercenaryType Mercenary => GetTLO<MercenaryType>("Mercenary");
-        //
-        ///// <summary>
-        ///// Your pet
-        ///// </summary>
-        //public PetType Pet => GetTLO<PetType>("Pet");
-        //
-        ///// <summary>
-        ///// Merchant that is currently open
-        ///// </summary>
-        //public MerchantType Merchant => GetTLO<MerchantType>("Merchant");
-        //
-        ///// <summary>
-        ///// Corpse that is currently open
-        ///// </summary>
-        //public CorpseType Corpse => GetTLO<CorpseType>("Corpse");
-        //
-        ///// <summary>
-        ///// Macro that is running
-        ///// </summary>
-        //public MacroType Macro => GetTLO<MacroType>("Macro");
-        //
-        ///// <summary>
-        ///// <see cref="MacroQuestType"/> instance
-        ///// </summary>
-        //public MacroQuestType MacroQuest => GetTLO<MacroQuestType>("MacroQuest");
-        //
-        ///// <summary>
-        ///// <see cref="EverQuestType"/> instance
-        ///// </summary>
-        //public EverQuestType EverQuest => GetTLO<EverQuestType>("EverQuest");
-        //
-        ///// <summary>
-        ///// <see cref="GroupType"/> instance
-        ///// </summary>
-        //public GroupType Group => GetTLO<GroupType>("Group");
-        //
-        ///// <summary>
-        ///// Item on your cursor
-        ///// </summary>
-        //public ItemType Cursor => GetTLO<ItemType>("Cursor");
-        //
-        ///// <summary>
-        ///// Current in game time
-        ///// </summary>
-        //public TimeType GameTime => GetTLO<TimeType>("GameTime");
-        //
-        ///// <summary>
-        ///// TODO: What does SelectedItem give?
-        ///// </summary>
-        //public ItemType SelectedItem => GetTLO<ItemType>("SelectedItem");
-        //
-        ///// <summary>
-        ///// <see cref="RaidType"/> instance
-        ///// </summary>
-        //public RaidType Raid => GetTLO<RaidType>("Raid");
-        //
-        ///// <summary>
-        ///// Spawn whose name is currently being drawn
-        ///// </summary>
-        //public SpawnType NamingSpawn => GetTLO<SpawnType>("NamingSpawn");
-        //
-        ///// <summary>
-        ///// Your current door target
-        ///// </summary>
-        //public SpawnType DoorTarget => GetTLO<SpawnType>("DoorTarget");
-        //
-        ///// <summary>
-        ///// Your current item target
-        ///// </summary>
-        //public SpawnType ItemTarget => GetTLO<SpawnType>("ItemTarget");
-        //
-        ///// <summary>
-        ///// <see cref="DynamicZoneType"/> instance
-        ///// </summary>
-        //public DynamicZoneType DynamicZone => GetTLO<DynamicZoneType>("DynamicZone");
-        //
-        ///// <summary>
-        ///// <see cref="FriendsType"/> instance
-        ///// </summary>
-        //public FriendsType Friends => GetTLO<FriendsType>("Friends");
-        //
-        ///// <summary>
-        ///// Point merchnat that is currently open
-        ///// </summary>
-        //public PointMerchantType PointMerchant => GetTLO<PointMerchantType>("PointMerchant");
-        //
-        ///// <summary>
-        ///// Zone you are currently in
-        ///// </summary>
-        //public CurrentZoneType CurrentZone => GetTLO<CurrentZoneType>("Zone");
-        //
-        ///// <summary>
-        ///// Heading to a location in y,x format.
-        ///// TODO: I think this is incorrect and shoud be an IndexedTLO so converted it but havent tested yet...
-        ///// </summary>
-        ////public HeadingType Heading => GetTLO<HeadingType>("Heading");
-        //[JsonIgnore]
-        //public IndexedTLO<HeadingType, string> Heading { get; }
-        //
-        ///// <summary>
-        ///// First spawn that matches a search string
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<SpawnType> Spawn { get; }
-        //
-        ///// <summary>
-        ///// Spell by name or ID
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<SpellType, string, SpellType, int> Spell { get; }
-        //
-        ///// <summary>
-        ///// Ground item by name (partial match), or your current ground target if an empty index is supplied
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<GroundType> GroundItem { get; }
-        //
-        ///// <summary>
-        ///// Number of ground items by name (partial match), or total number of ground items if an empty index is supplied
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<IntType> GroundItemCount { get; }
-        //
-        ///// <summary>
-        ///// Window by name
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<WindowType> Window { get; }
-        //
-        ///// <summary>
-        ///// Zone by ID or short name. For current zone, use <see cref="CurrentZone"/>
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<ZoneType> Zone { get; }
-        //
-        ///// <summary>
-        ///// Spawn by position in the list, from the end for negative numbers
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<SpawnType, int> LastSpawn { get; }
-        //
-        ///// <summary>
-        ///// Nth nearest spawn that matches a search e.g. "2,npc" for the 2nd closest NPC
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<SpawnType> NearestSpawn { get; }
-        //
-        ///// <summary>
-        ///// Total number of spawns that match a search
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<IntType> SpawnCount { get; }
-        //
-        ///// <summary>
-        ///// Is a variable by the given name defined?
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<BoolType> Defined { get; }
-        //
-        ///// <summary>
-        ///// Item by name, partial match unless it begins with an = e.g. "=Water Flask"
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<ItemType> FindItem { get; }
-        //
-        ///// <summary>
-        ///// An item in your bank, partial match unless it begins with an = e.g. "=Water Flask"
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<ItemType> FindItemBank { get; }
-        //
-        ///// <summary>
-        ///// Total number of an item you have, partial match unless it begins with an = e.g. "=Water Flask"
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<IntType> FindItemCount { get; }
-        //
-        ///// <summary>
-        ///// Total number of an item you have in your bank, partial match unless it begins with an = e.g. "=Water Flask"
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<IntType> FindItemBankCount { get; }
-        //
-        ///// <summary>
-        ///// An inventory slot by name or number
-        ///// </summary>
-        ///// <remarks>Valid slot numbers are:
-        ///// 2000-2015 bank window
-        ///// 2500-2503 shared bank
-        ///// 5000-5031 loot window
-        ///// 3000-3015 trade window (including npc) 3000-3007 are your slots, 3008-3015 are other character's slots
-        ///// 4000-4010 world container window
-        ///// 6000-6080 merchant window
-        ///// 7000-7080 bazaar window
-        ///// 8000-8031 inspect window</remarks>
-        //[JsonIgnore]
-        //public IndexedTLO<InvSlotType, string, InvSlotType, int> InvSlot { get; }
-        //
-        ///// <summary>
-        ///// Plugin by name or number
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<PluginType, string, PluginType, int> Plugin { get; }
-        //
-        ///// <summary>
-        ///// Skill by name or number
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<SkillType, string, SkillType, int> Skill { get; }
-        //
-        ///// <summary>
-        ///// Is there line of sight between two locations, in the format "y,x,z:y,x,z"
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<BoolType> LineOfSight { get; }
-        //
-        ///// <summary>
-        ///// Task by name or position in window (1 based)
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<TaskType, string, TaskType, int> Task { get; }
-        //
-        ///// <summary>
-        ///// Mount (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<KeyRingType, string, KeyRingType, int> Mount { get; }
-        //
-        ///// <summary>
-        ///// Illusion (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<KeyRingType, string, KeyRingType, int> Illusion { get; }
-        //
-        ///// <summary>
-        ///// Familiar (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<KeyRingType, string, KeyRingType, int> Familiar { get; }
-        //
-        ///// <summary>
-        ///// Requires EXPANSION_LEVEL_TOL
-        ///// TeleportationItem (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<KeyRingType, string, KeyRingType, int> TeleportationItem { get; }
-        //
-        ///// <summary>
-        ///// Is an alias set for a command, including the slash e.g. Alias["/chaseon"]
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<BoolType> Alias { get; }
-        //
-        ///// <summary>
-        ///// An alert list by number
-        ///// For the equivalent of ${Alert}, see <see cref="Alerts"/>
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<AlertType> AlertByNumber { get; }
-        //
-        ///// <summary>
-        ///// Currently open context menu
-        ///// </summary>
-        //public MenuType Menu => GetTLO<MenuType>("Menu");
-        //
-        ///// <summary>
-        ///// Is a sub with the given name defined?
-        ///// </summary>
-        //[JsonIgnore]
-        //public IndexedTLO<BoolType> SubDefined { get; }
-        //
-        ///// <summary>
-        ///// Dependency on MQ2Cast.
-        ///// </summary>
-        //public CastType Cast => GetTLO<CastType>("Cast");
+        
+        /// <summary>
+        /// Your target
+        /// </summary>
+        public TargetType Target => GetTLO<TargetType>("Target");
+        
+        /// <summary>
+        /// Your current door target
+        /// </summary>
+        public SwitchType Switch => GetTLO<SwitchType>("Switch");
+        
+        /// <summary>
+        /// Your mercenary
+        /// </summary>
+        public MercenaryType Mercenary => GetTLO<MercenaryType>("Mercenary");
+        
+        /// <summary>
+        /// Your pet
+        /// </summary>
+        public PetType Pet => GetTLO<PetType>("Pet");
+        
+        /// <summary>
+        /// Merchant that is currently open
+        /// </summary>
+        public MerchantType Merchant => GetTLO<MerchantType>("Merchant");
+        
+        /// <summary>
+        /// Macro that is running
+        /// </summary>
+        public MacroType Macro => GetTLO<MacroType>("Macro");
+        
+        /// <summary>
+        /// <see cref="MacroQuestType"/> instance
+        /// </summary>
+        public MacroQuestType MacroQuest => GetTLO<MacroQuestType>("MacroQuest");
+        
+        /// <summary>
+        /// <see cref="EverQuestType"/> instance
+        /// </summary>
+        public EverQuestType EverQuest => GetTLO<EverQuestType>("EverQuest");
+        
+        /// <summary>
+        /// <see cref="GroupType"/> instance
+        /// </summary>
+        public GroupType Group => GetTLO<GroupType>("Group");
+        
+        /// <summary>
+        /// Current in game time
+        /// </summary>
+        public TimeType GameTime => GetTLO<TimeType>("GameTime");
+        
+        /// <summary>
+        /// TODO: What does SelectedItem give?
+        /// </summary>
+        public ItemType SelectedItem => GetTLO<ItemType>("SelectedItem");
+        
+        /// <summary>
+        /// <see cref="RaidType"/> instance
+        /// </summary>
+        public RaidType Raid => GetTLO<RaidType>("Raid");
+        
+        /// <summary>
+        /// Spawn whose name is currently being drawn
+        /// </summary>
+        public SpawnType NamingSpawn => GetTLO<SpawnType>("NamingSpawn");
+        
+        /// <summary>
+        /// Your current door target
+        /// </summary>
+        public SpawnType DoorTarget => GetTLO<SpawnType>("DoorTarget");
+        
+        /// <summary>
+        /// Your current item target
+        /// </summary>
+        public SpawnType ItemTarget => GetTLO<SpawnType>("ItemTarget");
+        
+        /// <summary>
+        /// <see cref="DynamicZoneType"/> instance
+        /// </summary>
+        public DynamicZoneType DynamicZone => GetTLO<DynamicZoneType>("DynamicZone");
+        
+        /// <summary>
+        /// <see cref="FriendsType"/> instance
+        /// </summary>
+        public FriendsType Friends => GetTLO<FriendsType>("Friends");
+        
+        /// <summary>
+        /// Point merchnat that is currently open
+        /// </summary>
+        public PointMerchantType PointMerchant => GetTLO<PointMerchantType>("PointMerchant");
+        
+        /// <summary>
+        /// Zone you are currently in
+        /// </summary>
+        public CurrentZoneType CurrentZone => GetTLO<CurrentZoneType>("Zone");
+        
+        /// <summary>
+        /// Heading to a location in y,x format.
+        /// TODO: I think this is incorrect and shoud be an IndexedTLO so converted it but havent tested yet...
+        /// </summary>
+        //public HeadingType Heading => GetTLO<HeadingType>("Heading");
+        public IndexedTLO<HeadingType, string> Heading { get; }
+        
+        /// <summary>
+        /// First spawn that matches a search string
+        /// </summary>
+        public IndexedTLO<SpawnType> Spawn { get; }
+        
+        /// <summary>
+        /// Spell by name or ID
+        /// </summary>
+        public IndexedTLO<SpellType, string, SpellType, int> Spell { get; }
+        
+        /// <summary>
+        /// Ground item by name (partial match), or your current ground target if an empty index is supplied
+        /// </summary>
+        public IndexedTLO<GroundType> GroundItem { get; }
+        
+        /// <summary>
+        /// Number of ground items by name (partial match), or total number of ground items if an empty index is supplied
+        /// </summary>
+        public IndexedTLO<IntType> GroundItemCount { get; }
+        
+        /// <summary>
+        /// Window by name
+        /// </summary>
+        public IndexedTLO<WindowType> Window { get; }
+        
+        /// <summary>
+        /// Zone by ID or short name. For current zone, use <see cref="CurrentZone"/>
+        /// </summary>
+        public IndexedTLO<ZoneType> Zone { get; }
+        
+        /// <summary>
+        /// Spawn by position in the list, from the end for negative numbers
+        /// </summary>
+        public IndexedTLO<SpawnType, int> LastSpawn { get; }
+        
+        /// <summary>
+        /// Nth nearest spawn that matches a search e.g. "2,npc" for the 2nd closest NPC
+        /// </summary>
+        public IndexedTLO<SpawnType> NearestSpawn { get; }
+        
+        /// <summary>
+        /// Total number of spawns that match a search
+        /// </summary>
+        public IndexedTLO<IntType> SpawnCount { get; }
+        
+        /// <summary>
+        /// Is a variable by the given name defined?
+        /// </summary>
+        public IndexedTLO<BoolType> Defined { get; }
+        
+        /// <summary>
+        /// Item by name, partial match unless it begins with an = e.g. "=Water Flask"
+        /// </summary>
+        public IndexedTLO<ItemType> FindItem { get; }
+        
+        /// <summary>
+        /// An item in your bank, partial match unless it begins with an = e.g. "=Water Flask"
+        /// </summary>
+        public IndexedTLO<ItemType> FindItemBank { get; }
+        
+        /// <summary>
+        /// Total number of an item you have, partial match unless it begins with an = e.g. "=Water Flask"
+        /// </summary>
+        public IndexedTLO<IntType> FindItemCount { get; }
+        
+        /// <summary>
+        /// Total number of an item you have in your bank, partial match unless it begins with an = e.g. "=Water Flask"
+        /// </summary>
+        public IndexedTLO<IntType> FindItemBankCount { get; }
+        
+        /// <summary>
+        /// An inventory slot by name or number
+        /// </summary>
+        /// <remarks>Valid slot numbers are:
+        /// 2000-2015 bank window
+        /// 2500-2503 shared bank
+        /// 5000-5031 loot window
+        /// 3000-3015 trade window (including npc) 3000-3007 are your slots, 3008-3015 are other character's slots
+        /// 4000-4010 world container window
+        /// 6000-6080 merchant window
+        /// 7000-7080 bazaar window
+        /// 8000-8031 inspect window</remarks>
+        public IndexedTLO<InvSlotType, string, InvSlotType, int> InvSlot { get; }
+        
+        /// <summary>
+        /// Plugin by name or number
+        /// </summary>
+        public IndexedTLO<PluginType, string, PluginType, int> Plugin { get; }
+        
+        /// <summary>
+        /// Skill by name or number
+        /// </summary>
+        public IndexedTLO<SkillType, string, SkillType, int> Skill { get; }
+        
+        /// <summary>
+        /// Is there line of sight between two locations, in the format "y,x,z:y,x,z"
+        /// </summary>
+        public IndexedTLO<BoolType> LineOfSight { get; }
+        
+        /// <summary>
+        /// Task by name or position in window (1 based)
+        /// </summary>
+        public IndexedTLO<TaskType, string, TaskType, int> Task { get; }
+        
+        /// <summary>
+        /// Mount (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
+        /// </summary>
+        public IndexedTLO<KeyRingType, string, KeyRingType, int> Mount { get; }
+        
+        /// <summary>
+        /// Illusion (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
+        /// </summary>
+        public IndexedTLO<KeyRingType, string, KeyRingType, int> Illusion { get; }
+        
+        /// <summary>
+        /// Familiar (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
+        /// </summary>
+        public IndexedTLO<KeyRingType, string, KeyRingType, int> Familiar { get; }
+        
+        /// <summary>
+        /// Requires EXPANSION_LEVEL_TOL
+        /// TeleportationItem (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
+        /// </summary>
+        public IndexedTLO<KeyRingType, string, KeyRingType, int> TeleportationItem { get; }
+        
+        /// <summary>
+        /// Is an alias set for a command, including the slash e.g. Alias["/chaseon"]
+        /// </summary>
+        public IndexedTLO<BoolType> Alias { get; }
+        
+        /// <summary>
+        /// Currently open context menu
+        /// </summary>
+        public MenuType Menu => GetTLO<MenuType>("Menu");
+        
+        /// <summary>
+        /// Is a sub with the given name defined?
+        /// </summary>
+        public IndexedTLO<BoolType> SubDefined { get; }
+        
+        /// <summary>
+        /// Dependency on MQ2Cast.
+        /// </summary>
+        public CastType Cast => GetTLO<CastType>("Cast");
 
         /// <summary>
         /// Get a TLO by name
