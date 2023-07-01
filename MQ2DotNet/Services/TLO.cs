@@ -29,13 +29,14 @@ namespace MQ2DotNet.Services
             _alias = new IndexedTLO<BoolType>(this, "Alias");
             _altAbility = new IndexedTLO<AltAbilityType, int, AltAbilityType, string>(this, "AltAbility");
             _bool = new IndexedTLO<BoolType>(this, "Bool");
+            _defined = new IndexedTLO<BoolType>(this, "Defined");
 
 
             //TODO below
 
 
 
-            Defined = new IndexedTLO<BoolType>(this, "Defined");
+
             Familiar = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Familiar");
             FindItem = new IndexedTLO<ItemType>(this, "FindItem");
             FindItemBank = new IndexedTLO<ItemType>(this, "FindItemBank");
@@ -183,9 +184,38 @@ namespace MQ2DotNet.Services
         /// </summary>
         public ItemType Cursor => GetTLO<ItemType>("Cursor");
 
+        /// <summary>
+        /// Determines whether a variable, array, or timer with this name exists. The variable, array or timer must not be enclosed with ${}.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-defined/
+        /// </summary>
+        private IndexedTLO<BoolType> _defined;
 
+        /// <summary>
+        /// Determines whether a variable, array, or timer with this name exists. The variable, array or timer must not be enclosed with ${}.
+        /// Returns true if the given variable name is defined.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-defined/
+        /// </summary>
+        /// <param name="name">The variable name.</param>
+        /// <returns></returns>
+        public bool IsDefined(string name) => _defined[name];
 
+        /// <summary>
+        /// This TLO gives you access to all the information in the Item Display window.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-displayitem/
+        /// </summary>
+        public ItemType DisplayItem => GetTLO<ItemType>("DisplayItem");
 
+        /// <summary>
+        /// Object used to return information on your doortarget.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-doortarget/
+        /// </summary>
+        public SpawnType DoorTarget => GetTLO<SpawnType>("DoorTarget");
+
+        /// <summary>
+        /// Provides access to properties of the current dynamic (instanced) zone.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-dynamiczone/
+        /// </summary>
+        public DynamicZoneType DynamicZone => GetTLO<DynamicZoneType>("DynamicZone");
 
 
         //TODO below
@@ -274,19 +304,9 @@ namespace MQ2DotNet.Services
         public SpawnType NamingSpawn => GetTLO<SpawnType>("NamingSpawn");
         
         /// <summary>
-        /// Your current door target
-        /// </summary>
-        public SpawnType DoorTarget => GetTLO<SpawnType>("DoorTarget");
-        
-        /// <summary>
         /// Your current item target
         /// </summary>
         public SpawnType ItemTarget => GetTLO<SpawnType>("ItemTarget");
-        
-        /// <summary>
-        /// <see cref="DynamicZoneType"/> instance
-        /// </summary>
-        public DynamicZoneType DynamicZone => GetTLO<DynamicZoneType>("DynamicZone");
         
         /// <summary>
         /// <see cref="FriendsType"/> instance
@@ -355,10 +375,7 @@ namespace MQ2DotNet.Services
         /// </summary>
         public IndexedTLO<IntType> SpawnCount { get; }
         
-        /// <summary>
-        /// Is a variable by the given name defined?
-        /// </summary>
-        public IndexedTLO<BoolType> Defined { get; }
+        
         
         /// <summary>
         /// Item by name, partial match unless it begins with an = e.g. "=Water Flask"

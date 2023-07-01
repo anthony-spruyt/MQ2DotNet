@@ -4,8 +4,9 @@ using System;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// TODO: new data type.
-    /// Last Verified: 2023-06-25
+    /// Provides information about a dynamic zone lockout timer.
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-dztimer/
     /// </summary>
     [PublicAPI]
     [MQ2Type("dztimer")]
@@ -16,24 +17,32 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// TODO: new member
+        /// The name of the expedition
         /// </summary>
         public string ExpeditionName => GetMember<StringType>("ExpeditionName");
 
         /// <summary>
-        /// TODO: new member
+        /// The name of the event
         /// </summary>
         public string EventName => GetMember<StringType>("EventName");
 
         /// <summary>
-        /// TODO: new member
-        /// Stores the value in <see cref="MQ2VarPtr.Int64"/> as ms.
+        /// The timestamp indicating when this lockout expires.
         /// </summary>
         public TimeSpan? Timer => GetMember<TimeStampType>("Timer");
 
         /// <summary>
-        /// TODO: new member
+        /// ID of the event. These values are only unique per Expedition. Non-event lockouts (Replay Timer) will have a -1 event id.
         /// </summary>
         public int? EventID => GetMember<IntType>("EventID");
+
+        /// <summary>
+        /// Returns the string formatted as "ExpeditionName|EventName"
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

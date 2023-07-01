@@ -1,10 +1,12 @@
 ﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a dynamic zone.
-    /// Last Verified: 2023-06-25
+    /// Data for the current dynamic zone instance.
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-dynamiczone/
     /// </summary>
     [PublicAPI]
     [MQ2Type("dynamiczone")]
@@ -17,19 +19,52 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// TODO: new member
+        /// Returns true if the dzleader can successfully enter the dz (this also means the dz is actually Loaded.)
         /// </summary>
         public bool LeaderFlagged => GetMember<BoolType>("LeaderFlagged");
 
         /// <summary>
-        /// TODO: new member
+        /// The number of timers present in Timers
         /// </summary>
         public uint? MaxTimers => GetMember<IntType>("MaxTimers");
 
         /// <summary>
-        /// TODO: new member
+        /// Access the list of current lockout timers. This is either an index from 1 to MaxTimers, or a "Expedition|Event" combination.
+        /// Event is optional, but if multiple Expeditions match, the timer with the earliest lockout expiration will be returned.
+        /// Timer[ # | name ]
         /// </summary>
         private IndexedMember<DZTimerType, int, DZTimerType, string> _timer;
+
+        /// <summary>
+        /// Access the list of current lockout timers. This is an index from 1 to MaxTimers
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public DZTimerType GetLockoutTimer(int index) => _timer[index];
+
+        /// <summary>
+        /// Access the list of current lockout timers. This is a "Expedition|Event" combination.
+        /// Event is optional, but if multiple Expeditions match, the timer with the earliest lockout expiration will be returned.
+        /// </summary>
+        /// <param name="query">The "Expedition|Event" combination</param>
+        /// <returns></returns>
+        public DZTimerType GetLockoutTimer(string query) => _timer[query];
+
+        public IEnumerable<DZTimerType> LockoutTimers
+        {
+            get
+            {
+                var count = (int?)MaxTimers ?? 0;
+                List<DZTimerType> items = new List<DZTimerType>(count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    items.Add(GetLockoutTimer(i + 1));
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// The full name of the dynamic zone
@@ -47,14 +82,47 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? MaxMembers => GetMember<IntType>("MaxMembers");
 
         /// <summary>
-        /// TODO: new member
+        /// Minimum number of members required.
         /// </summary>
         public uint? MinMembers => GetMember<IntType>("MinMembers");
 
         /// <summary>
-        /// Member of the dynamic zone by name or number
+        /// The dynamic zone member # or name
+        /// Member[ # | name ]
         /// </summary>
         private IndexedMember<DZMemberType, int, DZMemberType, string> _member;
+
+        /// <summary>
+        /// The dynamic zone member by #
+        /// Member[ # ]
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public DZMemberType GetDZMember(int index) => _member[index];
+
+        /// <summary>
+        /// The dynamic zone member by name
+        /// Member[ name ]
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public DZMemberType GetDZMember(string name) => _member[name];
+
+        public IEnumerable<DZMemberType> DZMembers
+        {
+            get
+            {
+                var count = (int?)Members ?? 0;
+                List<DZMemberType> items = new List<DZMemberType>(count);
+
+                for (int i = 0; i < count; i++)
+                {
+                    items.Add(GetDZMember(i + 1));
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// The leader of the dynamic zone
@@ -62,8 +130,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public DZMemberType Leader => GetMember<DZMemberType>("Leader");
         
         /// <summary>
-        /// TODO: Document DynamicZoneType.InRaid
+        /// TODO: What is this? (online doco has no info on this)
         /// </summary>
         public bool InRaid => GetMember<BoolType>("InRaid");
+
+        /// <summary>
+        /// Same as <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }
