@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an alert list (a list of spawn searches).
-    /// Last Verified: 2023-06-25
+    /// Provides access to the values of an alert.
+    /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/#alert-type
     /// </summary>
     [PublicAPI]
@@ -53,7 +53,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? Size => GetMember<IntType>("Size");
 
         /// <summary>
-        /// Returns Size as a string.
+        /// Returns <see cref="Size"/> as a string.
         /// </summary>
         /// <returns></returns>
         public override string ToString()

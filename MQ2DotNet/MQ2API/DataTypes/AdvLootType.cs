@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for the advanced loot window. Moreso the contents than the window itself.
-    /// Last Verified: 2023-06-30
+    /// The AdvLoot TLO grants access to items in the Advanced Loot window.
+    /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/top-level-objects/tlo-advloot/
     /// </summary>
     [PublicAPI]

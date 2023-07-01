@@ -3,8 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an alert list.
-    /// Last Verified: 2023-06-30
+    /// Provides access to the properties of a spawn search associated with an alert. For a spawn to be entered into an alert it must match all the criteria specified by the alert list.
+    /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/#alertlist-type
     /// </summary>
     /// <remarks>VarPtr identifies a SPAWNSEARCH struct on an alert list</remarks>

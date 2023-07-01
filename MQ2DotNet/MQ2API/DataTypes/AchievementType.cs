@@ -4,6 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// TODO: new data type
+    /// Provides the details about a single achievement and allows access to an achievement's objective.
     /// https://docs.macroquest.org/reference/data-types/datatype-achievement/
     /// </summary>
     [PublicAPI]

@@ -273,7 +273,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The inv slots this item can be worn, if worn item.
         /// </summary>
-        public IEnumerable<InvSlotType> RestrictedToInvSlots
+        public IEnumerable<InvSlotType> InvSlotRestrictions
         {
             get
             {
@@ -436,7 +436,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// This convenience method does n [1,<see cref="Classes"/>]
         /// </summary>
-        public IEnumerable<ClassType> RestrictedToClasses
+        public IEnumerable<ClassType> ClassRestrictions
         {
             get
             {
@@ -482,7 +482,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// This convenience method does n [1,15]
         /// </summary>
-        public IEnumerable<RaceType> RestrictedToRaces
+        public IEnumerable<RaceType> RaceRestrictions
         {
             get
             {
@@ -534,9 +534,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// If no deity is returned then there are no restrictions.
         /// This convenience method does n [1,16]
-        /// TODO: Test if <see cref="RestrictedToDeities1"/> or <see cref="RestrictedToDeities2"/> is the correct implementation.
+        /// TODO: Test if <see cref="DeityRestrictions1"/> or <see cref="DeityRestrictions2"/> is the correct implementation.
         /// </summary>
-        public IEnumerable<DeityType> RestrictedToDeities1
+        public IEnumerable<DeityType> DeityRestrictions1
         {
             get
             {
@@ -559,9 +559,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// If no deity is returned then there are no restrictions.
         /// This convenience method does n [1,<see cref="Deities"/>]
-        /// TODO: Test if <see cref="RestrictedToDeities1"/> or <see cref="RestrictedToDeities2"/> is the correct implementation.
+        /// TODO: Test if <see cref="DeityRestrictions1"/> or <see cref="DeityRestrictions2"/> is the correct implementation.
         /// </summary>
-        public IEnumerable<DeityType> RestrictedToDeities2
+        public IEnumerable<DeityType> DeityRestrictions2
         {
             get
             {

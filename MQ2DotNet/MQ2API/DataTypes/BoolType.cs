@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a boolean.
-    /// Last Verified: 2023-06-25
+    /// A Boolean expression is one that has just two possible outcomes: 1 (TRUE) and 0 (FALSE). Technically TRUE doesn't have to be 1, but it's always treated that way.
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-bool/
     /// </summary>
     [PublicAPI]
     [MQ2Type("bool")]
@@ -24,6 +25,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
             // GroundType::LineOfSight -> Int
             // Pretty much everything else uses the Dword prop.
             return typeVar?.VarPtr.Dword != 0 || typeVar?.VarPtr.Int != 0;
+        }
+
+        /// <summary>
+        /// "TRUE" for non-zero, or "FALSE" for zero
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

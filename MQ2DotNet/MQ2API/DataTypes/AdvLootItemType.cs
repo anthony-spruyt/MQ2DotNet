@@ -3,8 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an item in the advanced loot window.
-    /// Last Verified: 2023-06-30
+    /// Represents a discrete item being looted in an AdvLoot window.
+    /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/top-level-objects/tlo-advloot/#advlootitem-type
     /// </summary>
     [PublicAPI]
@@ -86,7 +86,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool NoDrop => GetMember<BoolType>("NoDrop");
 
         /// <summary>
-        /// Same as Name
+        /// Same as <see cref="Name"/>
         /// </summary>
         /// <returns></returns>
         public override string ToString()
