@@ -4,8 +4,9 @@ using System.Collections.Generic;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for details about another type.
-    /// Last Verified: 2023-06-28
+    /// Contains information about data types.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-type/
     /// </summary>
     [PublicAPI]
     [MQ2Type("type")]
@@ -24,38 +25,65 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public StringType Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// Member name from an internal ID number (1 based), or ID number from name
+        /// Member name based on an internal ID number (based on 1 through N, not all values will be used).
+        /// Member[N]
+        /// 
+        /// Member internal ID number based on name (will be a number from 1 to N)
+        /// Member[name]
         /// </summary>
         private IndexedStringMember<int, IntType, string> _member;
 
-        public string GetMember(int id) => _member[id];
+        /// <summary>
+        /// Member name based on an internal ID number (based on 1 through N, not all values will be used).
+        /// Member[N]
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetMemberName(int id) => _member[id];
 
+        /// <summary>
+        /// Member internal ID number based on name (will be a number from 1 to N)
+        /// Member[name]
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public int? GetMemberId(string name) => (int?)_member[name];
 
+        /// <summary>
+        /// This is likely not reliable.
+        /// TODO: test this.
+        /// </summary>
         public IEnumerable<string> Members
         {
             get
             {
-                var items = new List<string>();
-                var index = 1; // or 0?
+                var index = 1;
 
-                while (true)
+                while (index <= MAX_MEMBERS)
                 {
-                    var item = GetMember(index);
+                    var item = GetMemberName(index);
 
-                    if (item != null && index <= MAX_MEMBERS)
+                    if (item != null )
                     {
-                        items.Add(item);
                         index++;
+
+                        yield return item;
                     }
                     else
                     {
                         break;
                     }
                 }
-
-                return items;
             }
+        }
+
+        /// <summary>
+        /// Same as <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

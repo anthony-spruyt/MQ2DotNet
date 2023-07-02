@@ -48,6 +48,10 @@ namespace MQ2DotNet.Services
             _spawn = new IndexedTLO<SpawnType, string, SpawnType, int>(this, "Spawn");
             _spawnCount = new IndexedTLO<IntType>(this, "SpawnCount");
             _spell = new IndexedTLO<SpellType, string, SpellType, int>(this, "Spell");
+            _task = new IndexedTLO<TaskType, string, TaskType, int>(this, "Task");
+            _type = new IndexedTLO<TypeType>(this, "Type");
+            _window = new IndexedTLO<WindowType>(this, "Window");
+            _zone = new IndexedTLO<ZoneType, string, ZoneType, int>(this, "Zone");
 
             //TODO below
 
@@ -61,9 +65,6 @@ namespace MQ2DotNet.Services
 
             InvSlot = new IndexedTLO<InvSlotType, string, InvSlotType, int>(this, "InvSlot");
             SubDefined = new IndexedTLO<BoolType>(this, "SubDefined");
-            Task = new IndexedTLO<TaskType, string, TaskType, int>(this, "Task");
-            Window = new IndexedTLO<WindowType>(this, "Window");
-            Zone = new IndexedTLO<ZoneType>(this, "Zone");
         }
 
         /// <summary>
@@ -1038,16 +1039,156 @@ namespace MQ2DotNet.Services
         /// </summary>
         public SwitchType Switch => GetTLO<SwitchType>("Switch");
 
+        /// <summary>
+        /// Object used to get information about your current target.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-target/
+        /// </summary>
+        public TargetType Target => GetTLO<TargetType>("Target");
+
+        /// <summary>
+        /// Object used to return information on a current Task.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-task/
+        /// </summary>
+        private readonly IndexedTLO<TaskType, string, TaskType, int> _task;
+
+        /// <summary>
+        /// Task by position (base 1) in window.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-task/
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public TaskType GetTask(int index) => _task[index];
+
+        /// <summary>
+        /// Task by name.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-task/
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public TaskType GetTask(string name) => _task[name];
+
+        /// <summary>
+        /// All the character's tasks.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-task/
+        /// </summary>
+        public IEnumerable<TaskType> Tasks
+        {
+            get
+            {
+                var index = 1;
+
+                while (index <= TaskType.MAX_TASKS + TaskType.MAX_SHARED_TASKS)
+                {
+                    var task = _task[index];
+
+                    if (task != null)
+                    {
+                        index++;
+                        yield return task;
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+                }
+            }
+        }
+
+        // Next is TLO Time which we are not interested in since no use of it here.
+
+        /// <summary>
+        /// Object that interacts with the personal tradeskill depot, introduced in the Night of Shadows expansion.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-tradeskilldepot/
+        /// </summary>
+        public TradeskillDepotType TradeskillDepot => GetTLO<TradeskillDepotType>("TradeskillDepot");
+
+        /// <summary>
+        /// Used to get information on data types.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-type/
+        /// </summary>
+        private IndexedTLO<TypeType> _type;
+
+        /// <summary>
+        /// Used to get information on data types.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-type/
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public TypeType GetType(string name) => _type[name];
+
+        /// <summary>
+        /// Used to find information on a particular UI window.
+        /// You can display a list of window names using the /windows command or by using the window inspector.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-window/
+        /// </summary>
+        private readonly IndexedTLO<WindowType> _window;
+
+        /// <summary>
+        /// Used to find information on a particular UI window.
+        /// You can display a list of window names using the /windows command or by using the window inspector.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-window/
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public WindowType GetWindow(string name) => _window[name];
+
+        /// <summary>
+        /// Used to find information about a particular zone.
+        /// 
+        /// Retrieves the current zone information
+        /// Zone
+        /// 
+        /// Retrieves information about a zone by zone ID. If this zone is the current zone, then this will return currentzone.
+        /// Zone[N]
+        /// 
+        /// Retrieves information about a zone by short name. If this zone is the current zone, then this will return currentzone.
+        /// Zone[shortname]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-zone/
+        /// </summary>
+        private readonly IndexedTLO<ZoneType, string, ZoneType, int> _zone;
+
+        /// <summary>
+        /// Retrieves the current zone information.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-zone/
+        /// </summary>
+        public CurrentZoneType CurrentZone => GetTLO<CurrentZoneType>("Zone");
+
+        /// <summary>
+        /// Retrieves information about a zone by zone ID. If this zone is the current zone, then this will return currentzone.
+        /// Zone[N]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-zone/
+        /// </summary>
+        /// <param name="zoneID"></param>
+        /// <returns></returns>
+        public ZoneType GetZone(int zoneID) => _zone[zoneID];
+
+        /// <summary>
+        /// Retrieves information about a zone by short name. If this zone is the current zone, then this will return currentzone.
+        /// Zone[shortname]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-zone/
+        /// </summary>
+        /// <param name="shortName"></param>
+        /// <returns></returns>
+        public ZoneType GetZone(string shortName) => _zone[shortName];
 
 
         //TODO below
 
 
-        /// <summary>
-        /// Your target
-        /// </summary>
-        public TargetType Target => GetTLO<TargetType>("Target");
-        
+
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// Spawn whose name is currently being drawn
         /// </summary>
@@ -1057,21 +1198,6 @@ namespace MQ2DotNet.Services
         /// Point merchnat that is currently open
         /// </summary>
         public PointMerchantType PointMerchant => GetTLO<PointMerchantType>("PointMerchant");
-        
-        /// <summary>
-        /// Zone you are currently in
-        /// </summary>
-        public CurrentZoneType CurrentZone => GetTLO<CurrentZoneType>("Zone");
-
-        /// <summary>
-        /// Window by name
-        /// </summary>
-        private readonly IndexedTLO<WindowType> Window;
-
-        /// <summary>
-        /// Zone by ID or short name. For current zone, use <see cref="CurrentZone"/>
-        /// </summary>
-        private readonly IndexedTLO<ZoneType> Zone;
 
         /// <summary>
         /// An inventory slot by name or number
@@ -1086,11 +1212,6 @@ namespace MQ2DotNet.Services
         /// 7000-7080 bazaar window
         /// 8000-8031 inspect window</remarks>
         private readonly IndexedTLO<InvSlotType, string, InvSlotType, int> InvSlot;
-
-        /// <summary>
-        /// Task by name or position in window (1 based)
-        /// </summary>
-        private readonly IndexedTLO<TaskType, string, TaskType, int> Task;
 
         /// <summary>
         /// Requires EXPANSION_LEVEL_TOL

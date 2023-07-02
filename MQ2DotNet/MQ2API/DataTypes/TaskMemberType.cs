@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a member of a shared task.
-    /// Last Verified: 2023-06-27
+    /// Describes a member in your current task.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-taskmember/
     /// </summary>
     [PublicAPI]
     [MQ2Type("taskmember")]
@@ -15,17 +16,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Name of the task member
+        /// Returns name of the member.
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-        
+
         /// <summary>
-        /// Is this member the task leader?
+        /// Returns true if member is leader.
         /// </summary>
         public bool Leader => GetMember<BoolType>("Leader");
-        
+
         /// <summary>
-        /// Index of the member in the list (1 based)
+        /// Returns task index (base 1) for member (i.e., 1-6)
         /// </summary>
         public uint? Index => GetMember<IntType>("Index");
     }

@@ -6,9 +6,13 @@ using System.Text.Json.Serialization;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
+    /// This contains data related to the specified in-game window.
+    /// Windows come in many forms, but all are represented with the generic window type.
+    /// In some of the descriptions, a bold window type may be specified, which defines the behavior for that type of window.
     /// This type is used for both windows and controls on the window.
     /// Some members are only applicable to controls e.g. Checked.
-    /// Last Verified: 2023-06-28
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-window/
     /// </summary>
     [PublicAPI]
     [MQ2Type("window")]
@@ -63,12 +67,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public void RightMouseHeldUp() => GetMember<MQ2DataType>("RightMouseHeldUp");
 
         /// <summary>
-        /// Open the window
+        /// Does the action of opening a window
         /// </summary>
         public void DoOpen() => GetMember<MQ2DataType>("DoOpen");
 
         /// <summary>
-        /// Close the window
+        /// Does the action of closing a window
         /// </summary>
         public void DoClose() => GetMember<MQ2DataType>("DoClose");
 
@@ -112,13 +116,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public void SetFadeAlpha(int alpha) => GetMember<MQ2DataType>("SetFadeAlpha", alpha.ToString());
 
         /// <summary>
-        /// TODO: new method
+        /// If the window is a TabBox, set the current tab by index (base 1).
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">The base 1 index.</param>
         public void SetCurrentTab(int index) => GetMember<MQ2DataType>("SetCurrentTab", index.ToString());
 
         /// <summary>
-        /// TODO: new method
+        /// If the window is a TabBox, set the current tab by name.
         /// </summary>
         /// <param name="tabText"></param>
         public void SetCurrentTab(string tabText) => GetMember<MQ2DataType>("SetCurrentTab", tabText);
@@ -258,7 +262,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public Color? BGColor => GetMember<ArgbType>("BGColor");
         
         /// <summary>
-        /// Window's text
+        /// Window's text.
+        /// STMLBox: returns the contents of the STML.
+        /// Page: returns the name of the page's Tab.
         /// </summary>
         public string Text => GetMember<StringType>("Text");
         
@@ -321,9 +327,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Have I clicked the Trade button?
         /// </summary>
         public bool MyTradeReady => GetMember<BoolType>("MyTradeReady");
-        
+
         /// <summary>
-        /// The 1 based index of the currently selected item in a listbox or combobox
+        /// Index (base 1) of the currently selected/highlighted item in a list or treeview
         /// </summary>
         public int? GetCurSel => GetMember<IntType>("GetCurSel");
 
@@ -333,68 +339,78 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public float? Value => GetMember<FloatType>("Value");
 
         /// <summary>
-        /// TODO: new member
+        /// TabBox: The number of tabs present in the TabBox.
         /// </summary>
         public uint? TabCount => GetMember<IntType>("TabCount");
 
         /// <summary>
-        /// Get a tab by 1 based index or tab text.
+        /// TabBox: Looks up the Page window that matches the provided index (base 1) or tab text.
+        /// Tab [#/Name]
         /// </summary>
         private IndexedMember<WindowType, string, WindowType, int> _tab;
 
         /// <summary>
-        /// Get tab by tab text.
+        /// TabBox: Looks up the Page window that matches the provided tab text.
+        /// Tab [Name]
         /// </summary>
         /// <param name="tabText"></param>
         /// <returns></returns>
         public WindowType GetTab(string tabText) => _tab[tabText];
 
         /// <summary>
-        /// Get tab by 1 based index.
+        /// TabBox: Looks up the Page window that matches the provided index (base 1).
+        /// Tab [#]
         /// </summary>
         /// <param name="index">The 1 based index.</param>
         /// <returns></returns>
         public WindowType GetTab(int index) => _tab[index];
 
         /// <summary>
-        /// All tabs.
+        /// TabBox: All tabs.
         /// </summary>
         public IEnumerable<WindowType> Tabs
         {
             get
             {
-                var items = new List<WindowType>();
                 var index = 1;
                 var count = TabCount;
 
-                while (count.HasValue)
+                while (count.HasValue && index <= count)
                 {
                     var item = GetTab(index);
 
-                    if (item != null && index <= count)
+                    if (item != null)
                     {
-                        items.Add(item);
                         index++;
+
+                        yield return item;
                     }
                     else
                     {
                         break;
                     }
                 }
-
-                return items;
             }
         }
 
         /// <summary>
-        /// TODO: new member
+        /// TabBox: Returns the Page window associated with the currently selected tab.
         /// </summary>
         public WindowType CurrentTab => GetMember<WindowType>("CurrentTab");
 
         /// <summary>
-        /// TODO: new member
+        /// TabBox: Returns the index of the currently selected tab.
         /// </summary>
         public int? CurrentTabIndex => GetMember<IntType>("CurrentTabIndex");
+
+        /// <summary>
+        /// TRUE if window exists, FALSE if not
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
 
         /// <summary>
         /// Provides custom index access for list box items
@@ -409,6 +425,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             }
 
             /// <summary>
+            /// Get the text for the Nth item in a list box. Only works on list boxes. Use of y is optional and allows selection of the column of the window to get text from.
             /// Text of an item at a given location in the list, row and column are 1 based indexes
             /// </summary>
             /// <param name="row"></param>
@@ -417,6 +434,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             public string this[int row, int column = 0] => _owner.GetMember<StringType>("List", $"{row},{column}");
 
             /// <summary>
+            /// Find an item in a list box by partial match (use window.List[=text] for exact). Only works on list boxes. Use of y is optional and allows selection of the column of the window to search in.
             /// Returns the 1 based index of an item in the list with a specified text
             /// </summary>
             /// <param name="text"></param>

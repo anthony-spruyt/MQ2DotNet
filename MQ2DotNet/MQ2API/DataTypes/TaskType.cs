@@ -5,14 +5,17 @@ using System.Collections.Generic;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a task.
-    /// Last Verified: 2023-06-27
+    /// This is the type for your current task.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-task/
     /// </summary>
     [PublicAPI]
     [MQ2Type("task")]
     public class TaskType : MQ2DataType
     {
-        public const int MAX_TASK_ELEMENTS = 20;
+        public const int MAX_TASK_OBJECTIVES = 20;
+        public const int MAX_TASKS = 29;
+        public const int MAX_SHARED_TASKS = 1;
 
         internal TaskType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -27,13 +30,29 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Select() => GetMember<BoolType>("Select");
 
         /// <summary>
-        /// Type of task, either Shared, Quest or Unknown
+        /// Returns a string that can be one of the following:
+        /// - Unknown
+        /// - None
+        /// - Deliver
+        /// - Kill
+        /// - Loot
+        /// - Hail
+        /// - Explore
+        /// - Tradeskill
+        /// - Fishing
+        /// - Foraging
+        /// - Cast
+        /// - UseSkill
+        /// - DZSwitch
+        /// - DestroyObject
+        /// - Collect
+        /// - Dialogue
         /// TODO: map to an enum.
         /// </summary>
         public string Type => GetMember<StringType>("Type");
-        
+
         /// <summary>
-        /// Index of the task in your task list, 1 based
+        /// Returns the task's place (base 1) on the tasklist.
         /// </summary>
         public int? Index => GetMember<IntType>("Index");
         
@@ -58,14 +77,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private IndexedMember<TaskMemberType, string, TaskMemberType, int> _member;
 
         /// <summary>
-        /// Get a task member.
+        /// Returns specified member in task by name.
         /// </summary>
         /// <param name="name">The task name.</param>
         /// <returns></returns>
         public TaskMemberType GetTaskMember(string name) => _member[name];
 
         /// <summary>
-        /// Get a task member.
+        /// Returns specified member in task by index.
         /// </summary>
         /// <param name="index">The 1 based index.</param>
         /// <returns></returns>
@@ -78,26 +97,24 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var items = new List<TaskMemberType>();
                 var index = 1;
                 var count = Members;
 
-                while (count.HasValue)
+                while (count.HasValue && index <= count)
                 {
                     var item = GetTaskMember(index);
 
-                    if (item != null && index <= count)
+                    if (item != null)
                     {
-                        items.Add(item);
                         index++;
+
+                        yield return item;
                     }
                     else
                     {
                         break;
                     }
                 }
-
-                return items;
             }
         }
 
@@ -107,7 +124,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? Members => GetMember<IntType>("Members");
 
         /// <summary>
-        /// TODO: new member
+        /// Returns an int of the task ID.
         /// </summary>
         public int? ID => GetMember<IntType>("ID");
 
@@ -137,25 +154,23 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var items = new List<TaskObjectiveType>();
                 var index = 1;
 
-                while (true)
+                while (index <= MAX_TASK_OBJECTIVES)
                 {
                     var item = GetTaskObjective(index);
 
-                    if (item != null && index <= MAX_TASK_ELEMENTS)
+                    if (item != null)
                     {
-                        items.Add(item);
                         index++;
+
+                        yield return item;
                     }
                     else
                     {
                         break;
                     }
                 }
-
-                return items;
             }
         }
 
@@ -165,7 +180,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public TaskObjectiveType Step => GetMember<TaskObjectiveType>("Step");
 
         /// <summary>
-        /// TODO: new member
+        /// Returns the Quest Window List Index. (if the window actually has the list filled.
         /// </summary>
         public uint? WindowIndex => GetMember<IntType>("WindowIndex");
     }
