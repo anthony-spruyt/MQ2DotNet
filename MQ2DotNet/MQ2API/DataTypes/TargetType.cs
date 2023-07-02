@@ -6,7 +6,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// MQ2 type for the current target.
     /// Last Verified: 2023-07-02
     /// There is no online doco for this, according to doco here https://docs.macroquest.org/reference/top-level-objects/tlo-target/ it returns a standard spawn.
-    /// The MQ client however has this type what inherits from spawn.
+    /// The MQ client however has this type and it inherits from spawn.
     /// </summary>
     [PublicAPI]
     [MQ2Type("target")]
