@@ -29,7 +29,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Provides information about the specified item. Returns the Nth item (base 1) in the set (Primary, Secondary, Ranged, Ammo).
         /// </summary>
-        private IndexedMember<BandolierItemType, int> _item;
+        private readonly IndexedMember<BandolierItemType, int> _item;
 
         /// <summary>
         /// Provides information about the specified item. Returns the Nth item (base 1) in the set (Primary, Secondary, Ranged, Ammo).

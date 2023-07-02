@@ -22,7 +22,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Item by name or slot number (1 based)
         /// </summary>
-        private IndexedMember<PointMerchantItemType, string, PointMerchantItemType, int> _item;
+        private readonly IndexedMember<PointMerchantItemType, string, PointMerchantItemType, int> _item;
 
         /// <summary>
         /// Item by name

@@ -94,7 +94,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
-        public static implicit operator WindowType(IntType typeVar)
+        public static implicit operator WindowType(IntType _)
         {
             return null;
         }

@@ -21,7 +21,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Get the item from the list at the specified index
         /// List[ Index ]
         /// </summary>
-        private IndexedMember<AlertListType, int> _list;
+        private readonly IndexedMember<AlertListType, int> _list;
 
         /// <summary>
         /// Get the item from the list at the specified index

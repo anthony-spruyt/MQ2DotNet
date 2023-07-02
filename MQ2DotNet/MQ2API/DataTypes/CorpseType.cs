@@ -28,7 +28,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Finds an item by partial name in this corpse (use =<name> for exact match).
         /// Item [ name ]
         /// </summary>
-        private IndexedMember<ItemType, int, ItemType, string> _item;
+        private readonly IndexedMember<ItemType, int, ItemType, string> _item;
 
         /// <summary>
         /// Nth item on the corpse.

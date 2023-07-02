@@ -33,7 +33,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Event is optional, but if multiple Expeditions match, the timer with the earliest lockout expiration will be returned.
         /// Timer[ # | name ]
         /// </summary>
-        private IndexedMember<DZTimerType, int, DZTimerType, string> _timer;
+        private readonly IndexedMember<DZTimerType, int, DZTimerType, string> _timer;
 
         /// <summary>
         /// Access the list of current lockout timers. This is an index from 1 to MaxTimers
@@ -90,7 +90,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The dynamic zone member # or name
         /// Member[ # | name ]
         /// </summary>
-        private IndexedMember<DZMemberType, int, DZMemberType, string> _member;
+        private readonly IndexedMember<DZMemberType, int, DZMemberType, string> _member;
 
         /// <summary>
         /// The dynamic zone member by #

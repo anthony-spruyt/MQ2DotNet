@@ -74,7 +74,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Member of the task, by name or index (1 based)
         /// </summary>
-        private IndexedMember<TaskMemberType, string, TaskMemberType, int> _member;
+        private readonly IndexedMember<TaskMemberType, string, TaskMemberType, int> _member;
 
         /// <summary>
         /// Returns specified member in task by name.

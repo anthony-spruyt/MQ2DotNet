@@ -23,7 +23,19 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal SpawnType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Initialize();
+            _invis = new IndexedMember<BoolType, int, BoolType, string>(this, "Invis");
+            _nearestSpawn = new IndexedMember<SpawnType, int, SpawnType, string>(this, "NearestSpawn");
+            _headingToLoc = new IndexedMember<HeadingType>(this, "HeadingToLoc");
+            _equipment = new IndexedMember<IntType, int, IntType, string>(this, "Equipment");
+            _combatSkillTicks = new IndexedMember<IntType, int>(this, "CombatSkillTicks");
+            _seeInvis = new IndexedMember<IntType, int>(this, "SeeInvis");
+            _spawnStatus = new IndexedMember<IntType, int>(this, "SpawnStatus");
+            _cachedBuff = new IndexedMember<CachedBuffType, int, CachedBuffType, string>(this, "CachedBuff");
+            _buff = new IndexedMember<CachedBuffType, int, CachedBuffType, string>(this, "Buff");
+            _findBuff = new IndexedMember<CachedBuffType>(this, "FindBuff");
+            _myBuff = new IndexedMember<CachedBuffType, int, CachedBuffType, string>(this, "MyBuff");
+            _buffDuration = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "BuffDuration");
+            _myBuffDuration = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "MyBuffDuration");
         }
 
         /// <summary>
@@ -33,11 +45,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="pSpawn"></param>
         public SpawnType(MQ2TypeFactory mq2TypeFactory, IntPtr pSpawn) 
             : base("spawn", mq2TypeFactory, new MQ2VarPtr(pSpawn))
-        {
-            Initialize();
-        }
-
-        private void Initialize()
         {
             _invis = new IndexedMember<BoolType, int, BoolType, string>(this, "Invis");
             _nearestSpawn = new IndexedMember<SpawnType, int, SpawnType, string>(this, "NearestSpawn");
@@ -254,7 +261,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Invis?
         /// </summary>
-        private IndexedMember<BoolType, int, BoolType, string> _invis;
+        private readonly IndexedMember<BoolType, int, BoolType, string> _invis;
 
         /// <summary>
         /// Invisibile? (Any type)
@@ -493,7 +500,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Nth closest spawn to this spawn, or the nth closest matching a search string e.g. "2,npc" for the second closest NPC
         /// </summary>
-        private IndexedMember<SpawnType, int, SpawnType, string> _nearestSpawn;
+        private readonly IndexedMember<SpawnType, int, SpawnType, string> _nearestSpawn;
 
         /// <summary>
         /// Get the nth closest matching a search string e.g. "2,npc" for the second closest NPC
@@ -585,7 +592,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Heading to the coordinates y,x from the spawn
         /// </summary>
-        private IndexedMember<HeadingType> _headingToLoc;
+        private readonly IndexedMember<HeadingType> _headingToLoc;
 
         /// <summary>
         /// Heading to the coordinates y,x from the spawn
@@ -740,7 +747,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// ID of the equipment used by the spawn
         /// returns a inttype, it takes numbers 0-8 or names: head chest arms wrists hands legs feet primary offhand
         /// </summary>
-        private IndexedMember<IntType, int, IntType, string> _equipment;
+        private readonly IndexedMember<IntType, int, IntType, string> _equipment;
 
         /// <summary>
         /// ID of the equipment used by the spawn for a slot.
@@ -814,7 +821,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Valid indexes are 0 and 1. TODO: What is SpawnType.CombatSkillTicks
         /// </summary>
-        private IndexedMember<IntType, int> _combatSkillTicks;
+        private readonly IndexedMember<IntType, int> _combatSkillTicks;
 
         /// <summary>
         /// Valid indexes are 0 and 1. TODO: What is SpawnType.CombatSkillTicks
@@ -871,7 +878,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// SeeInvisLevels_Unead = 1,
 	    /// SeeInvisLevels_Animal = 2,
         /// </summary>
-        private IndexedMember<IntType, int> _seeInvis;
+        private readonly IndexedMember<IntType, int> _seeInvis;
 
         /// <summary>
         /// Spawn can see invis.
@@ -883,7 +890,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Spawn status, takes an index of 0 - 5. TODO: Confirm what they mean
         /// </summary>
-        private IndexedMember<IntType, int> _spawnStatus;
+        private readonly IndexedMember<IntType, int> _spawnStatus;
 
         /// <summary>
         /// Spawn status, takes an index of 0 - 5. TODO: Confirm what they mean
@@ -901,7 +908,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// This is fucked, not dealing with it.
         /// HAHA ^
         /// </summary>
-        private IndexedMember<CachedBuffType, int, CachedBuffType, string> _cachedBuff;
+        private readonly IndexedMember<CachedBuffType, int, CachedBuffType, string> _cachedBuff;
 
         /// <summary>
         /// Get a cached buff by query.
@@ -959,7 +966,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// This looks very similar to <see cref="_cachedBuff"/>. A more basic implementation/sub functionality of it.
         /// </summary>
-        private IndexedMember<CachedBuffType, int, CachedBuffType, string> _buff;
+        private readonly IndexedMember<CachedBuffType, int, CachedBuffType, string> _buff;
 
         /// <summary>
         /// Get a cached buff by name.
@@ -979,7 +986,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// So many different cached buff implementations, all seem like variations of the same thing.
         /// </summary>
-        private IndexedMember<CachedBuffType> _findBuff;
+        private readonly IndexedMember<CachedBuffType> _findBuff;
 
         /// <summary>
         /// So many different cached buff implementations, all seem like variations of the same thing.
@@ -993,7 +1000,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Another one, this is only your buffs though. IE caster name is your name.
         /// </summary>
-        private IndexedMember<CachedBuffType, int, CachedBuffType, string> _myBuff;
+        private readonly IndexedMember<CachedBuffType, int, CachedBuffType, string> _myBuff;
 
         /// <summary>
         /// TODO: new indexed member
@@ -1063,7 +1070,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Same as <see cref="_buff"/> but durations.
         /// </summary>
-        private IndexedMember<TimeStampType, int, TimeStampType, string> _buffDuration;
+        private readonly IndexedMember<TimeStampType, int, TimeStampType, string> _buffDuration;
 
         /// <summary>
         /// Get a cached buff duration by name.
@@ -1102,7 +1109,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Same as <see cref="_myBuff"/> but durations.
         /// </summary>
-        private IndexedMember<TimeStampType, int, TimeStampType, string> _myBuffDuration;
+        private readonly IndexedMember<TimeStampType, int, TimeStampType, string> _myBuffDuration;
 
         /// <summary>
         /// Get a cached buff duration by name.

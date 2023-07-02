@@ -175,28 +175,28 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Blocked pet buff by index, valid index are 1 - 40
         /// In the MQ client this looks to be the same as <see cref="_blockedBuff"/>
         /// </summary>
-        private IndexedMember<SpellType, int> _blockedPetBuff;
+        private readonly IndexedMember<SpellType, int> _blockedPetBuff;
 
         /// <summary>
         /// Blocked buff by index, valid index are 1 - 40
         /// In the MQ client this looks to be the same as <see cref="_blockedPetBuff"/>
         /// </summary>
-        private IndexedMember<SpellType, int> _blockedBuff;
+        private readonly IndexedMember<SpellType, int> _blockedBuff;
 
         /// <summary>
         /// Buff by name or slot number
         /// </summary>
-        private IndexedMember<BuffType, string, BuffType, int> _buff;
+        private readonly IndexedMember<BuffType, string, BuffType, int> _buff;
 
         /// <summary>
         /// Song (short buff) by name or slot number
         /// </summary>
-        private IndexedMember<BuffType, string, BuffType, int> _song;
+        private readonly IndexedMember<BuffType, string, BuffType, int> _song;
 
         /// <summary>
         /// TODO: new member
         /// </summary>
-        private IndexedMember<BuffType, string> _findBuff;
+        private readonly IndexedMember<BuffType, string> _findBuff;
 
         /// <summary>
         /// Hit point bonus from gear and spells
@@ -415,17 +415,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// An item from your inventory by slot name or number
         /// </summary>
-        private IndexedMember<ItemType, string, ItemType, int> _inventory;
+        private readonly IndexedMember<ItemType, string, ItemType, int> _inventory;
 
         /// <summary>
         /// Item in this bankslot #
         /// </summary>
-        private IndexedMember<ItemType, int> _bank;
+        private readonly IndexedMember<ItemType, int> _bank;
 
         /// <summary>
         /// TODO: new member
         /// </summary>
-        private IndexedMember<ItemType, int> _sharedBank;
+        private readonly IndexedMember<ItemType, int> _sharedBank;
 
         /// <summary>
         /// Platinum in your shared bank
@@ -562,30 +562,30 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The gem number that a spell name is memorized in, or the spell in a gem number.
         /// Cast to <see cref="uint"/> to get the value if using a <see cref="string"/> index / by name.
         /// </summary>
-        private IndexedMember<SpellType, int, IntType, string> _gem;
+        private readonly IndexedMember<SpellType, int, IntType, string> _gem;
 
         /// <summary>
         /// Language skill by name or number.
         /// Cast to <see cref="uint"/> to get the value.
         /// </summary>
-        private IndexedMember<IntType, int, IntType, string> _languageSkill;
+        private readonly IndexedMember<IntType, int, IntType, string> _languageSkill;
 
         /// <summary>
         /// Combat ability spell by number, or number by name.
         /// Cast to <see cref="uint"/> to get the value if using a <see cref="string"/> index / by name.
         /// </summary>
-        private IndexedMember<SpellType, int, IntType, string> _combatAbility;
+        private readonly IndexedMember<SpellType, int, IntType, string> _combatAbility;
 
         /// <summary>
         /// Combat ability reuse time remaining by name or number.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int"/>.
         /// </summary>
-        private IndexedMember<TicksType, int, TicksType, string> _combatAbilityTimer;
+        private readonly IndexedMember<TicksType, int, TicksType, string> _combatAbilityTimer;
 
         /// <summary>
         /// Combat ability ready by name or number.
         /// </summary>
-        private IndexedMember<BoolType, int, BoolType, string> _combatAbilityReady;
+        private readonly IndexedMember<BoolType, int, BoolType, string> _combatAbilityReady;
 
         /// <summary>
         /// Returns a spell if melee discipline is active.
@@ -611,47 +611,47 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Alt ability reuse time remaining by name or number.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
-        private IndexedMember<TimeStampType, int, TimeStampType, string> _altAbilityTimer;
+        private readonly IndexedMember<TimeStampType, int, TimeStampType, string> _altAbilityTimer;
 
         /// <summary>
         /// Alt ability ready by name or number
         /// </summary>
-        private IndexedMember<BoolType, int, BoolType, string> _altAbilityReady;
+        private readonly IndexedMember<BoolType, int, BoolType, string> _altAbilityReady;
 
         /// <summary>
         /// Returns an alt ability by name or number
         /// </summary>
-        private IndexedMember<AltAbilityType, int, AltAbilityType, string> _altAbility;
+        private readonly IndexedMember<AltAbilityType, int, AltAbilityType, string> _altAbility;
 
         /// <summary>
         /// Skill level by name or number.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        private IndexedMember<IntType, string, IntType, int> _skill;
+        private readonly IndexedMember<IntType, string, IntType, int> _skill;
 
         /// <summary>
         /// Skill base level by name or number.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        private IndexedMember<IntType, string, IntType, int> _skillBase;
+        private readonly IndexedMember<IntType, string, IntType, int> _skillBase;
 
         /// <summary>
         /// Skill cap by name or number.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        private IndexedMember<IntType, string, IntType, int> _skillCap;
+        private readonly IndexedMember<IntType, string, IntType, int> _skillCap;
 
         /// <summary>
         /// The doability button number that the skill name is on, or the skill name assigned to a doability button.
         /// If a string index was provided then cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/>.
         /// If an int index was provided then the result is a <see cref="string"/>.
         /// </summary>
-        private IndexedStringMember<int, IntType, string> _ability;
+        private readonly IndexedStringMember<int, IntType, string> _ability;
 
         /// <summary>
         /// Ability with this name or on this button # ready?.
         /// </summary>
-        private IndexedMember<BoolType, int, BoolType, string> _abilityReady;
+        private readonly IndexedMember<BoolType, int, BoolType, string> _abilityReady;
 
         /// <summary>
         /// Ranged attack ready?
@@ -668,17 +668,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Spell in your spellbook by slot number, or slot in your spellbook by spell name.
         /// If a string index was provided then cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        private IndexedMember<SpellType, int, IntType, string> _book;
+        private readonly IndexedMember<SpellType, int, IntType, string> _book;
 
         /// <summary>
         /// TODO: new member
         /// </summary>
-        private IndexedMember<SpellType, int, SpellType, string> _spell;
+        private readonly IndexedMember<SpellType, int, SpellType, string> _spell;
 
         /// <summary>
         /// Is an item ready to cast?
         /// </summary>
-        private IndexedMember<BoolType, int, BoolType, string> _itemReady;
+        private readonly IndexedMember<BoolType, int, BoolType, string> _itemReady;
 
         /// <summary>
         /// True if you're currently playing a bard song
@@ -688,13 +688,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Indiciates if a spell is ready, by spell name or gem number
         /// </summary>
-        private IndexedMember<BoolType, int, BoolType, string> _spellReady;
+        private readonly IndexedMember<BoolType, int, BoolType, string> _spellReady;
 
         /// <summary>
         /// A buff on your pet by slot number, or a slot number by buff name.
         /// If a string index was provided then cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        private IndexedMember<SpellType, int, IntType, string> _petBuff;
+        private readonly IndexedMember<SpellType, int, IntType, string> _petBuff;
 
         /// <summary>
         /// Stunned?
@@ -724,7 +724,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current raid assist target (1-3)
         /// </summary>
-        private IndexedMember<SpawnType, int> _raidAssistTarget;
+        private readonly IndexedMember<SpawnType, int> _raidAssistTarget;
 
         /// <summary>
         /// Target of the group's main assist
@@ -734,12 +734,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current raid marked NPC (1-3)
         /// </summary>
-        private IndexedMember<SpawnType, int> _raidMarkNPC;
+        private readonly IndexedMember<SpawnType, int> _raidMarkNPC;
 
         /// <summary>
         /// Current group marked NPC (1 - 3)
         /// </summary>
-        private IndexedMember<SpawnType, int> _groupMarkNPC;
+        private readonly IndexedMember<SpawnType, int> _groupMarkNPC;
 
         /// <summary>
         /// Strength
@@ -871,12 +871,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Language name by number, or number by name
         /// </summary>
-        private IndexedStringMember<int, IntType, string> _language;
+        private readonly IndexedStringMember<int, IntType, string> _language;
 
         /// <summary>
         /// Aura by name or slot #
         /// </summary>
-        private IndexedMember<AuraType, string, AuraType, int> _aura;
+        private readonly IndexedMember<AuraType, string, AuraType, int> _aura;
 
         /// <summary>
         /// Level of Mark NPC of the current group leader (not your own ability level)
@@ -1260,7 +1260,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Number of mobs on your XTarget, excluding your current target, that have less than the supplied % of aggro on you.
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        private IndexedMember<IntType, int> _xTAggroCount;
+        private readonly IndexedMember<IntType, int> _xTAggroCount;
 
         /// <summary>
         /// Number of spawns in auto hater slots in your XTarget
@@ -1271,7 +1271,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns a spawn from your XTarget by index (1 - 13) or name.
         /// If no index was provided then it returns the count. Cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/> when no index is provided.
         /// </summary>
-        private IndexedMember<XTargetType, int, XTargetType, string> _xTarget;
+        private readonly IndexedMember<XTargetType, int, XTargetType, string> _xTarget;
 
         /// <summary>
         /// Total Combined Haste (worn and spell) as shown in Inventory Window stats
@@ -1282,7 +1282,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns the total amount of a SPA your character has.
         /// Cast to <see cref="uint"/> to get the value. The value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        private IndexedMember<IntType, int> _sPA;
+        private readonly IndexedMember<IntType, int> _sPA;
 
         /// <summary>
         /// Current active mercenary stance as a string, default is NULL.
@@ -1293,12 +1293,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Recast time remaining on a spell gem by number or spell name.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
-        private IndexedMember<TimeStampType, int, TimeStampType, string> _gemTimer;
+        private readonly IndexedMember<TimeStampType, int, TimeStampType, string> _gemTimer;
 
         /// <summary>
         /// Returns TRUE/FALSE if you have that expansion by # or name
         /// </summary>
-        private IndexedMember<BoolType, int, BoolType, string> _haveExpansion;
+        private readonly IndexedMember<BoolType, int, BoolType, string> _haveExpansion;
 
         /// <summary>
         /// Your aggro percentage
@@ -1366,7 +1366,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Quantity of an alt currency by name or number.
         /// Cast to <see cref="uint"/> to get the value. The value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
-        private IndexedMember<IntType, int, IntType, string> _altCurrency;
+        private readonly IndexedMember<IntType, int, IntType, string> _altCurrency;
 
         /// <summary>
         /// Debuff with a slow SPA
@@ -1535,7 +1535,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: new member
         /// </summary>
-        private IndexedStringMember<int, IntType, string> _mercListInfo;
+        private readonly IndexedStringMember<int, IntType, string> _mercListInfo;
 
         /// <summary>
         /// Using advanced looting?
@@ -1570,12 +1570,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Bind location, valid indexes are 0 - 4
         /// </summary>
-        private IndexedMember<WorldLocationType, int> _boundLocation;
+        private readonly IndexedMember<WorldLocationType, int> _boundLocation;
 
         /// <summary>
         /// Autoskill by number
         /// </summary>
-        private IndexedMember<SkillType, int> _autoSkill;
+        private readonly IndexedMember<SkillType, int> _autoSkill;
 
         /// <summary>
         /// Base strength
@@ -1635,7 +1635,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Bandolier set by slot number (1 - 20) or name
         /// </summary>
-        private IndexedMember<BandolierType, string, BandolierType, int> _bandolier;
+        private readonly IndexedMember<BandolierType, string, BandolierType, int> _bandolier;
 
         /// <summary>
         /// Fear debuff if the target has one
@@ -1676,7 +1676,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Ability with this name or on this button # ready?
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
-        private IndexedMember<TimeStampType, int, TimeStampType, string> _abilityTimer;
+        private readonly IndexedMember<TimeStampType, int, TimeStampType, string> _abilityTimer;
 
         /// <summary>
         /// TODO: new member

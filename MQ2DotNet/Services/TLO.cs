@@ -169,7 +169,7 @@ namespace MQ2DotNet.Services
         /// If the string is one of these values, the resulting bool is false. Otherwise, it is true.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-bool/
         /// </summary>
-        //private IndexedTLO<BoolType> _bool;
+        //private readonly IndexedTLO<BoolType> _bool;
 
         /// <summary>
         /// Access to objects of type corpse, which is the currently active corpse (ie. the one you are looting).
@@ -449,7 +449,7 @@ namespace MQ2DotNet.Services
         /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-float/
         /// </summary>
-        //private IndexedTLO<FloatType> _float;
+        //private readonly IndexedTLO<FloatType> _float;
 
         /// <summary>
         /// The FrameLimiter TLO provides access to the frame limiter feature
@@ -595,7 +595,7 @@ namespace MQ2DotNet.Services
         /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-int/
         /// </summary>
-        //private IndexedTLO<IntType> _int;
+        //private readonly IndexedTLO<IntType> _int;
 
         /// <summary>
         /// Gives access to the ground item that is previously targeted using /itemtarget IE <see cref="MQ2API.DataTypes.GroundType.DoTarget"/>.
@@ -1096,7 +1096,7 @@ namespace MQ2DotNet.Services
         /// Used to get information on data types.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-type/
         /// </summary>
-        private IndexedTLO<TypeType> _type;
+        private readonly IndexedTLO<TypeType> _type;
 
         /// <summary>
         /// Used to get information on data types.

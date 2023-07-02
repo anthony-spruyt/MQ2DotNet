@@ -228,7 +228,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Does this spell stack with your current buffs (duration is in ticks)
         /// </summary>
-        private IndexedMember<BoolType, string> _stacks;
+        private readonly IndexedMember<BoolType, string> _stacks;
 
         /// <summary>
         /// Does this spell stack with your current buffs?
@@ -254,7 +254,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Does this spell stack with your pet's current buffs (duration is in ticks)
         /// </summary>
-        private IndexedMember<BoolType, string> _stacksPet;
+        private readonly IndexedMember<BoolType, string> _stacksPet;
 
         /// <summary>
         /// Does this spell stack with your pet's current buffs?
@@ -280,7 +280,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// - will stack
         /// - new stack with
         /// </summary>
-        private IndexedMember<BoolType, string> _stacksWith;
+        private readonly IndexedMember<BoolType, string> _stacksWith;
 
         /// <summary>
         /// Does this spell stack with another spell?
@@ -295,14 +295,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Uses cached buffs to see if the spell will stack on a spawn by Id. Not recommended.
         /// </summary>
-        private IndexedMember<BoolType, int> _stacksSpawn;
+        private readonly IndexedMember<BoolType, int> _stacksSpawn;
 
         /// <summary>
         /// Uses cached buffs to see if the spell will stack on a spawn by Id. Not recommended.
         /// </summary>
         /// <param name="spawnId"></param>
         /// <returns></returns>
-        bool StacksSpawn(int spawnId) => _stacksSpawn[spawnId];
+        public bool StacksSpawn(int spawnId) => _stacksSpawn[spawnId];
 
         /// <summary>
         /// Will this spell stack on your target?
@@ -351,7 +351,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Text of the nth restriction (1 based) on the spell
         /// </summary>
-        private IndexedStringMember<int> _restrictions;
+        private readonly IndexedStringMember<int> _restrictions;
 
         /// <summary>
         /// Text of the nth restriction (1 based) on the spell
@@ -388,7 +388,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// e.g. for a nuke that says Slot 1: Decrease HP by 1000
         /// Base[1] = -1000
         /// </summary>
-        private IndexedMember<Int64Type, int> _base;
+        private readonly IndexedMember<Int64Type, int> _base;
 
         /// <summary>
         /// Base value of the nth spell effect slot, 1 based
@@ -402,7 +402,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Base2 value of the nth spell effect slot, 1 based
         /// </summary>
-        private IndexedMember<Int64Type, int> _base2;
+        private readonly IndexedMember<Int64Type, int> _base2;
 
         /// <summary>
         /// Base2 value of the nth spell effect slot, 1 based
@@ -414,7 +414,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Max value of the nth spell effect slot, 1 based
         /// </summary>
-        private IndexedMember<Int64Type, int> _max;
+        private readonly IndexedMember<Int64Type, int> _max;
 
         /// <summary>
         /// Max value of the nth spell effect slot, 1 based
@@ -426,7 +426,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Calc value of the nth spell effect slot, 1 based
         /// </summary>
-        private IndexedMember<IntType, int> _calc;
+        private readonly IndexedMember<IntType, int> _calc;
 
         /// <summary>
         /// Calc value of the nth spell effect slot, 1 based
@@ -438,7 +438,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Attrib value of the nth spell effect slot, 1 based
         /// </summary>
-        private IndexedMember<IntType, int> _attrib;
+        private readonly IndexedMember<IntType, int> _attrib;
 
         /// <summary>
         /// Attrib value of the nth spell effect slot, 1 based
@@ -476,7 +476,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Item ID of the nth required reagent (valid indexes are 1 - 4)
         /// </summary>
-        private IndexedMember<IntType, int> _reagentID;
+        private readonly IndexedMember<IntType, int> _reagentID;
 
         /// <summary>
         /// Item ID of the nth required reagent (valid indexes are 1 - 4)
@@ -488,7 +488,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Item ID of a non-expended reagent. 1 based index
         /// </summary>
-        private IndexedMember<IntType, int> _noExpendReagentID;
+        private readonly IndexedMember<IntType, int> _noExpendReagentID;
 
         /// <summary>
         /// Item ID of a non-expended reagent. 1 based index
@@ -500,7 +500,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Quantity of the nth required reagent (valid indexes are 1 - 4)
         /// </summary>
-        private IndexedMember<IntType, int> _reagentCount;
+        private readonly IndexedMember<IntType, int> _reagentCount;
 
         /// <summary>
         /// Quantity of the nth required reagent (valid indexes are 1 - 4)
@@ -629,7 +629,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Does this spell have a given SPA?
         /// </summary>
-        private IndexedMember<BoolType, int> _hasSPA;
+        private readonly IndexedMember<BoolType, int> _hasSPA;
 
         /// <summary>
         /// Does this spell have a given SPA?
@@ -641,7 +641,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: What is SpellType.Trigger
         /// </summary>
-        private IndexedMember<SpellType, int> _trigger;
+        private readonly IndexedMember<SpellType, int> _trigger;
 
         /// <summary>
         /// TODO: What is SpellType.Trigger
@@ -673,7 +673,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: new indexed member
         /// </summary>
-        private IndexedStringMember<string> _link;
+        private readonly IndexedStringMember<string> _link;
 
         /// <summary>
         /// TODO: what is this?

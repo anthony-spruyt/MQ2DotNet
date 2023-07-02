@@ -48,7 +48,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TODO: What is this?
         /// Looks like it is base 1 index from the MQ2 client source.
         /// </summary>
-        private IndexedMember<StringType, int> _items;
+        private readonly IndexedMember<StringType, int> _items;
 
         /// <summary>
         /// TODO: What is this?

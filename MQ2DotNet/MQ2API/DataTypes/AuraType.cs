@@ -27,7 +27,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Cast to <see cref="uint"/> to get the value.
         /// Not documented at https://docs.macroquest.org/reference/data-types/datatype-auratype/
         /// </summary>
-        private IndexedMember<IntType, string> _find;
+        private readonly IndexedMember<IntType, string> _find;
 
         /// <summary>
         /// Returns the position of the index if found within the aura's name.

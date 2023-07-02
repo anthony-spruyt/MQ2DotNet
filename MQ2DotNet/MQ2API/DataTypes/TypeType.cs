@@ -31,7 +31,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Member internal ID number based on name (will be a number from 1 to N)
         /// Member[name]
         /// </summary>
-        private IndexedStringMember<int, IntType, string> _member;
+        private readonly IndexedStringMember<int, IntType, string> _member;
 
         /// <summary>
         /// Member name based on an internal ID number (based on 1 through N, not all values will be used).

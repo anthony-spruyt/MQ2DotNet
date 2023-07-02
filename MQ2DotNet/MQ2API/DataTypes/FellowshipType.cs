@@ -45,7 +45,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Member data by name or #
         /// </summary>
-        private IndexedMember<FellowshipMemberType, string, FellowshipMemberType, int> _member;
+        private readonly IndexedMember<FellowshipMemberType, string, FellowshipMemberType, int> _member;
 
         /// <summary>
         /// Time left on current campfire.
@@ -81,6 +81,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Is sharing by #
         /// </summary>
-        private IndexedMember<BoolType, int> _sharing;
+        private readonly IndexedMember<BoolType, int> _sharing;
     }
 }

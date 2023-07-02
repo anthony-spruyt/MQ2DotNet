@@ -185,7 +185,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// If the item is a container, the item in the nth slot (1 based)
         /// Item[N]
         /// </summary>
-        private IndexedMember<ItemType, int> _item;
+        private readonly IndexedMember<ItemType, int> _item;
 
         /// <summary>
         /// If the item is a container, the item in the nth slot (1 based)
@@ -252,7 +252,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Can item be worn in invslot with this name? (worn slots only)
         /// WornSlot[name]
         /// </summary>
-        private IndexedMember<BoolType, string, InvSlotType, int> _wornSlot;
+        private readonly IndexedMember<BoolType, string, InvSlotType, int> _wornSlot;
 
         /// <summary>
         /// Can item be worn in invslot with this name? (worn slots only)
@@ -417,7 +417,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Class that can use the item, by number (1 - Classes), or by class name or 3 letter code
         /// TODO: see if we can use <see cref="Class"/> here to improve usage.
         /// </summary>
-        private IndexedMember<ClassType, int, ClassType, string> _class;
+        private readonly IndexedMember<ClassType, int, ClassType, string> _class;
 
         /// <summary>
         /// TODO: doco description and source doesnt look like it matches.
@@ -467,7 +467,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns the Nth long race name of the listed races on an item. Items suitable for ALL races will effectively have all 15 races listed.
         /// Race[N]
         /// </summary>
-        private IndexedMember<RaceType, int, RaceType, string> _race;
+        private readonly IndexedMember<RaceType, int, RaceType, string> _race;
 
         /// <summary>
         /// Returns the Nth long race name of the listed races on an item. Items suitable for ALL races will effectively have all 15 races listed.
@@ -513,7 +513,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Deity that can use the item, by number (1 - Deities), or by name. Returns null if there are no restrictions
         /// TODO: look at adding in an enum here.
         /// </summary>
-        private IndexedMember<DeityType, int, DeityType, string> _deity;
+        private readonly IndexedMember<DeityType, int, DeityType, string> _deity;
 
         /// <summary>
         /// Returns the Nth deity of the listed deities on an item. Items with no deity restrictions will return NULL for all values of N.
@@ -732,7 +732,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Augment slots on the item (0 - 5).
         /// TODO: native MQ client has comment which might mean this is broken? // FIXME: ItemIndex
         /// </summary>
-        private IndexedMember<AugType, int> _augSlot;
+        private readonly IndexedMember<AugType, int> _augSlot;
 
         /// <summary>
         /// Retrieve the augment in the specified slot number.

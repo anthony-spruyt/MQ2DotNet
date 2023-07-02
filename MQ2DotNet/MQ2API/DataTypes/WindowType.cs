@@ -347,7 +347,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TabBox: Looks up the Page window that matches the provided index (base 1) or tab text.
         /// Tab [#/Name]
         /// </summary>
-        private IndexedMember<WindowType, string, WindowType, int> _tab;
+        private readonly IndexedMember<WindowType, string, WindowType, int> _tab;
 
         /// <summary>
         /// TabBox: Looks up the Page window that matches the provided tab text.
