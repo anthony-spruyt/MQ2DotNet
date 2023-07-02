@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an augmentation slot on an item.
-    /// Last Verified: 2023-06-25
+    /// Describes data about an augmentation slot in an item.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-augtype/
     /// </summary>
     [PublicAPI]
     [MQ2Type("augtype")]
@@ -15,22 +16,22 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Slot number of the augment on the item
+        /// Index of the augment slot.
         /// </summary>
         public uint? Slot => GetMember<IntType>("Slot");
 
         /// <summary>
-        /// Type of the augmentation
+        /// Type of augment slot.
         /// </summary>
         public uint? Type => GetMember<IntType>("Type");
 
         /// <summary>
-        /// TODO: What does AugType.Visible mean?
+        /// True if this slot is visible to the user.
         /// </summary>
         public bool Visible => GetMember<BoolType>("Visible");
 
         /// <summary>
-        /// TODO: What does AugType.Infusable mean?
+        /// True if this is a hidden energeian power source slot.
         /// </summary>
         public bool Infusable => GetMember<BoolType>("Infusable");
 
@@ -40,12 +41,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Empty => GetMember<BoolType>("Empty");
 
         /// <summary>
-        /// Name of the augmentation in the slot
+        /// The name of the item socketed in this slot, if any.
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// Item in the augmentation slot
+        /// The item socketed in this slot, if any.
         /// </summary>
         public ItemType Item => GetMember<ItemType>("Item");
 

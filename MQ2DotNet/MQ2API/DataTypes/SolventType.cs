@@ -4,7 +4,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for a solvent.
-    /// Last Verified: 2023-06-27
+    /// Last Verified: 2023-07-03
+    /// Not documented at https://docs.macroquest.org
     /// </summary>
     [PublicAPI]
     [MQ2Type("solventtype")]

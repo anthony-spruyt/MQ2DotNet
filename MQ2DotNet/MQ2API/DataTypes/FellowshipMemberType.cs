@@ -4,8 +4,9 @@ using System;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a member of a fellowship.
-    /// Last Verified: 2023-06-25
+    /// Contains all the data related to fellowship members.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-fellowshipmember/
     /// </summary>
     [PublicAPI]
     [MQ2Type("fellowshipmember")]
@@ -16,33 +17,33 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Zone the member is currently in
+        /// Zone information for the member's zone.
         /// </summary>
         public ZoneType Zone => GetMember<ZoneType>("Zone");
 
         /// <summary>
-        /// Member's level
+        /// Member's level.
         /// </summary>
         public uint? Level => GetMember<IntType>("Level");
 
         /// <summary>
-        /// Member's class
+        /// Member's class.
         /// </summary>
         public ClassType Class => GetMember<ClassType>("Class");
 
         /// <summary>
         /// How long since the member was last online.
-        /// Stores data in the <see cref="MQ2VarPtr.Dword"/> field.
         /// </summary>
+        /// <remarks>Stores data in the <see cref="MQ2VarPtr.Dword"/> field.</remarks>
         public TimeSpan? LastOn => GetMember<TicksType>("LastOn");
 
         /// <summary>
-        /// Member's name
+        /// Player name.
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// TRUE if member has exp sharing enabled
+        /// TRUE if member has exp sharing enabled.
         /// </summary>
         public bool Sharing => GetMember<BoolType>("Sharing");
     }
