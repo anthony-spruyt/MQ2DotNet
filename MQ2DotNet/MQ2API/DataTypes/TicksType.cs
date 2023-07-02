@@ -4,8 +4,10 @@ using JetBrains.Annotations;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a number of in game ticks.
-    /// Last Verified: 2023-06-28
+    /// Represents a count of "ticks". Ticks are units of 6 seconds that are used to represent certain measurements of time in EverQuest.
+    /// This is another data type that is a mess, it uses different members in VarPtr and also does not always store it as 6 second units.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-ticks/
     /// </summary>
     [PublicAPI]
     [MQ2Type("ticks")]
@@ -15,53 +17,53 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
         }
 
-        /// <summary>
-        /// The hours component of "hh:mm:ss"
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public uint? Hours => GetMember<IntType>("Hours");
-
-        /// <summary>
-        /// The minutes component of "hh:mm:ss"
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public uint? Minutes => GetMember<IntType>("Minutes");
-
-        /// <summary>
-        /// The seconds component of "hh:mm:ss"
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public uint? Seconds => GetMember<IntType>("Seconds");
-
-        /// <summary>
-        /// The total time in "hh:mm:ss"
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public string TimeHMS => GetMember<StringType>("TimeHMS");
-
-        /// <summary>
-        /// The total time in "mm:ss"
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public string Time => GetMember<StringType>("Time");
-
-        /// <summary>
-        /// The total number of minutes
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public uint? TotalMinutes => GetMember<IntType>("TotalMinutes");
-
-        /// <summary>
-        /// The total number of seconds
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public uint? TotalSeconds => GetMember<IntType>("TotalSeconds");
-
-        /// <summary>
-        /// The number of ticks
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public uint? Ticks => GetMember<IntType>("Ticks");
+        ///// <summary>
+        ///// The hours component of "hh:mm:ss"
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public uint? Hours => GetMember<IntType>("Hours");
+        //
+        ///// <summary>
+        ///// The minutes component of "hh:mm:ss"
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public uint? Minutes => GetMember<IntType>("Minutes");
+        //
+        ///// <summary>
+        ///// The seconds component of "hh:mm:ss"
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public uint? Seconds => GetMember<IntType>("Seconds");
+        //
+        ///// <summary>
+        ///// The total time in "hh:mm:ss"
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public string TimeHMS => GetMember<StringType>("TimeHMS");
+        //
+        ///// <summary>
+        ///// The total time in "mm:ss"
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public string Time => GetMember<StringType>("Time");
+        //
+        ///// <summary>
+        ///// The total number of minutes
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public uint? TotalMinutes => GetMember<IntType>("TotalMinutes");
+        //
+        ///// <summary>
+        ///// The total number of seconds
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public uint? TotalSeconds => GetMember<IntType>("TotalSeconds");
+        //
+        ///// <summary>
+        ///// The number of ticks
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public uint? Ticks => GetMember<IntType>("Ticks");
 
         /// <summary>
         /// Implicit conversion to TimeSpan

@@ -4,7 +4,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for an item in a bandolier set.
-    /// Last Verified: 2023-06-25
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-bandolier/#bandolieritem-datatype
     /// </summary>
     [PublicAPI]
     [MQ2Type("bandolieritem")]
@@ -15,18 +16,23 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Icon ID of the item
+        /// Returns the icon id for the item.
         /// </summary>
         public uint? IconID => GetMember<IntType>("IconID");
 
         /// <summary>
-        /// Item ID
+        /// Returns the item id for the item.
         /// </summary>
         public uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
-        /// Name of the item
+        /// Returns the name of the item.
         /// </summary>
         public string Name => GetMember<StringType>("Name");
+
+        public override string ToString()
+        {
+            return OriginalToString();
+        }
     }
 }

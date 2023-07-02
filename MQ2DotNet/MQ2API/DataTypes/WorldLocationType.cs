@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a world location.
-    /// Last Verified: 2023-06-28
+    /// Provides access to world locations such as a character's bound location.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-worldlocation/
     /// </summary>
     /// <remarks>This type is only used for character's bound locations, VarPtr.Dword is an index in CHARINFO2::BoundLocations</remarks>
     [PublicAPI]
@@ -16,12 +17,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Zone ID
+        /// The location's ID (Zone ID)
         /// </summary>
         public uint? ID => GetMember<IntType>("ID");
-        
+
         /// <summary>
-        /// Zone information
+        /// Access to the zone data.
         /// </summary>
         public ZoneType Zone => GetMember<ZoneType>("Zone");
         
@@ -39,9 +40,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Z coordinate (Upward-positive)
         /// </summary>
         public float? Z => GetMember<FloatType>("Z");
-        
+
         /// <summary>
-        /// Direction facing
+        /// At the point of binding, what direction was the character facing.
         /// </summary>
         public float? Heading => GetMember<FloatType>("Heading");
     }

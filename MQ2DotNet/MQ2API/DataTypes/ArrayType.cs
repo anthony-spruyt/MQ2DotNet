@@ -3,8 +3,10 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 array type. Not well supported.
-    /// Last Verified: 2023-06-25
+    /// Data related to arrays. Not well supported.
+    /// Note: Array indexing starts at 1.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-array/
     /// </summary>
     [PublicAPI]
     [MQ2Type("array")]
@@ -17,6 +19,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? Dimensions => GetMember<IntType>("Dimensions");
 
         public uint? Size => GetMember<IntType>("Size");
+
+        // There is also a Size[ N ]	Total number of elements stored in the N th dimension of the array version. Wont bother with this here.
 
         public override string ToString()
         {

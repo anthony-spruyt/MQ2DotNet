@@ -5,8 +5,9 @@ using System.Drawing;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a colour.
-    /// Last Verified: 2023-06-25
+    /// Represents a color
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-argb/
     /// </summary>
     [PublicAPI]
     [MQ2Type("argb")]
@@ -17,7 +18,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Implicit conversion to a .NET colour type
+        /// Implicit conversion to a .NET colour type.
+        /// TODO: Test this cast.
         /// </summary>
         /// <param name="typeVar"></param>
         public static implicit operator Color?(ArgbType typeVar)
@@ -37,6 +39,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
             {
                 throw new InvalidCastException($"Failed to cast from type {nameof(ArgbType)} to {nameof(Color)}", ex);
             }
+        }
+
+        /// <summary>
+        /// The hex value of the integer formed by the ARGB.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

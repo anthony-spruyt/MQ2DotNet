@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a byte.
-    /// Last Verified: 2023-06-25
+    /// Represents an 8 bit integer, with values randing from 0 to 255. This is a pure DataType and has no members.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-byte/
     /// </summary>
     [PublicAPI]
     [MQ2Type("byte")]

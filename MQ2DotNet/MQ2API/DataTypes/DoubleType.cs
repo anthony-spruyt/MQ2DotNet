@@ -3,8 +3,12 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a double precision float.
-    /// Last Verified: 2023-06-25
+    /// Represents a double precision (64-bit) floating point number.
+    /// A floating-point number is one which has a decimal component(e.g. 1.01).
+    /// Members of this DataType generally manipulate the number's precision (i.e. how many decimal places).
+    /// They all round correctly with the exception of int.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-double/
     /// </summary>
     [PublicAPI]
     [MQ2Type("double")]

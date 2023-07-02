@@ -5,8 +5,9 @@ using MQ2DotNet.EQ;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a 32 bit integer. <- hah if only this was true.It is used as int, uint, long and others, big mess this class internally along with the time related data types.
-    /// Last Verified: 2023-06-26
+    /// Represents a 32-bit integer. Can hold values from -2,147,483,648 to 2,147,483,647. <- hah if only this was true. It is used as int, uint, long and others, big mess this class internally along with the time related data types.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-int/
     /// </summary>
     [PublicAPI]
     [MQ2Type("int")]

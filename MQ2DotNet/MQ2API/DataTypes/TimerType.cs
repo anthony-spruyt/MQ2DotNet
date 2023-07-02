@@ -4,8 +4,9 @@ using System;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a timer.
-    /// Last Verified: 2023-06-28
+    /// A timer data type is set in tenths of one second and counts down to zero; starting immediately after being set.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-timer/
     /// </summary>
     [PublicAPI]
     [MQ2Type("timer")]
@@ -40,5 +41,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Original value of the timer in 100ms, from when the variable was first created
         /// </summary>
         public uint? OriginalValue => GetMember<IntType>("OriginalValue");
+
+        /// <summary>
+        /// Same as <see cref="Value"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

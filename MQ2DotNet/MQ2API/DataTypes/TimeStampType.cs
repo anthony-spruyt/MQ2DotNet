@@ -4,8 +4,10 @@ using JetBrains.Annotations;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a timestamp.
-    /// Last Verified: 2023-06-28
+    /// A timestamp represented in milliseconds.
+    /// This type is also a mess and uses different VarPtr members.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-timestamp/
     /// </summary>
     [PublicAPI]
     [MQ2Type("timestamp")]
@@ -15,66 +17,65 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
         }
         
-        /// <summary>
-        /// The hours component of "hh:mm:ss"
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public long? Hours => GetMember<Int64Type>("Hours");
-
-        /// <summary>
-        /// The minutes component of "hh:mm:ss"
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public long? Minutes => GetMember<Int64Type>("Minutes");
-
-        /// <summary>
-        /// The seconds component of "hh:mm:ss"
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public long? Seconds => GetMember<Int64Type>("Seconds");
-
-        /// <summary>
-        /// The total time in "hh:mm:ss"
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        // ReSharper disable once InconsistentNaming
-        public string TimeHMS => GetMember<StringType>("TimeHMS");
-
-        /// <summary>
-        /// The total time in "mm:ss"
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public string Time => GetMember<StringType>("Time");
-
-        /// <summary>
-        /// The total number of minutes
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public long? TotalMinutes => GetMember<Int64Type>("TotalMinutes");
-
-        /// <summary>
-        /// The total number of seconds
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public long? TotalSeconds => GetMember<Int64Type>("TotalSeconds");
-
-        /// <summary>
-        /// Number of milliseconds
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public long? Raw => GetMember<Int64Type>("Raw");
-
-        /// <summary>
-        /// Number of seconds
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public float? Float => GetMember<FloatType>("Float");
-
-        /// <summary>
-        /// Equivalent number of ticks
-        /// </summary>
-        [Obsolete("Use conversion to TimeSpan")]
-        public long? Ticks => GetMember<Int64Type>("Ticks");
+        ///// <summary>
+        ///// The hours component of "hh:mm:ss"
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public long? Hours => GetMember<Int64Type>("Hours");
+        //
+        ///// <summary>
+        ///// The minutes component of "hh:mm:ss"
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public long? Minutes => GetMember<Int64Type>("Minutes");
+        //
+        ///// <summary>
+        ///// The seconds component of "hh:mm:ss"
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public long? Seconds => GetMember<Int64Type>("Seconds");
+        //
+        ///// <summary>
+        ///// The total time in "hh:mm:ss"
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public string TimeHMS => GetMember<StringType>("TimeHMS");
+        //
+        ///// <summary>
+        ///// The total time in "mm:ss"
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public string Time => GetMember<StringType>("Time");
+        //
+        ///// <summary>
+        ///// The total number of minutes
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public long? TotalMinutes => GetMember<Int64Type>("TotalMinutes");
+        //
+        ///// <summary>
+        ///// The total number of seconds
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public long? TotalSeconds => GetMember<Int64Type>("TotalSeconds");
+        //
+        ///// <summary>
+        ///// Number of milliseconds
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public long? Raw => GetMember<Int64Type>("Raw");
+        //
+        ///// <summary>
+        ///// Number of seconds
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public float? Float => GetMember<FloatType>("Float");
+        //
+        ///// <summary>
+        ///// Equivalent number of ticks
+        ///// </summary>
+        //[Obsolete("Use conversion to TimeSpan")]
+        //public long? Ticks => GetMember<Int64Type>("Ticks");
         
         /// <summary>
         /// Implicit conversion to TimeSpan

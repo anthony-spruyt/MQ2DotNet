@@ -4,8 +4,9 @@ using System;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a 64 bit integer.
-    /// Last Verified: 2023-06-26
+    /// Represents a 64-bit integer. Can hold values from -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-int64/
     /// </summary>
     [PublicAPI]
     [MQ2Type("int64")]

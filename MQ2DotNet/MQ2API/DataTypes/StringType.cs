@@ -7,8 +7,9 @@ using System.Runtime.InteropServices;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a string.
-    /// Last Verified: 2023-06-28
+    /// A string is an array of characters. In MQ2 there is no single character datatype, so any variable or expression that contains text is considered a string.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-string/
     /// </summary>
     [PublicAPI]
     [MQ2Type("string")]
