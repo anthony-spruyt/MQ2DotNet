@@ -4,8 +4,9 @@ using System;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for information about the currently running macro.
-    /// Last Verified: 2023-06-27
+    /// The Macro DataType deals with the macro currently running, and nothing else.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-macro/
     /// </summary>
     [PublicAPI]
     [MQ2Type("macro")]
@@ -19,75 +20,99 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Prints undeclared variables to chat
+        /// List all undeclared variables. Outputs to chat.
         /// </summary>
         public void Undeclared() => GetMember<MQ2DataType>("Undeclared");
 
         /// <summary>
-        /// Name of the currently running macro including extension e.g. kissassist.mac
+        /// The name of the macro currently running e.g. kissassist.mac
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-        
+
         /// <summary>
-        /// Time in milliseconds that the macro has been running for
+        /// How long the macro has been running.
+        /// Doco states seconds, but source looks like milliseconds.
         /// </summary>
         public TimeSpan? RunTime => GetMember<Int64Type>("RunTime");
         
         /// <summary>
-        /// Macro currently paused?
+        /// NULL if no macro running, FALSE if mqpause is off, TRUE if mqpause is on
         /// </summary>
-        public bool Paused => GetMember<BoolType>("Paused");
-        
+        public bool? Paused => GetMember<BoolType>("Paused");
+
         /// <summary>
-        /// Value returned by the last subroutine call
+        /// The value that was returned by the last completed subroutine
         /// </summary>
         public string Return => GetMember<StringType>("Return");
 
         /// <summary>
-        /// Is the given name a Top Level Object?
+        /// True if the provided parameter an existing TLO.
         /// Can/Should only be used it there is no active macro.
         /// </summary>
         private IndexedMember<BoolType> _isTLO;
 
         /// <summary>
-        /// Is the given name a variable declared with outer scope?
+        /// True if the provided parameter an existing TLO.
+        /// Can/Should only be used it there is no active macro.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool IsTLO(string name) => (bool)_isTLO[name];
+
+        /// <summary>
+        /// True if the provided parameter is a defined outer variable.
         /// Can/Should only be used it there is no active macro.
         /// </summary>
         private IndexedMember<BoolType> _isOuterVariable;
+
+        /// <summary>
+        /// True if the provided parameter is a defined outer variable.
+        /// Can/Should only be used it there is no active macro.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool IsOuterVar(string name) => (bool)_isOuterVariable[name];
         
         /// <summary>
         /// Stack depth of the currently executing macro
         /// </summary>
         public uint? StackSize => GetMember<IntType>("StackSize");
-        
+
         /// <summary>
-        /// Number of parameters supplied to the currently executing macro
+        /// The number of parameters that were passed to the current subroutine
         /// </summary>
         public uint? Params => GetMember<IntType>("Params");
-        
+
         /// <summary>
-        /// Line the currently executing macro is on
+        /// The current line number of the macro being processed
         /// </summary>
         public uint? CurLine => GetMember<IntType>("CurLine");
 
         /// <summary>
-        /// Subroutine currently being executed, including arguments e.g. "MySub(string arg1)"
+        /// The current subroutine
         /// </summary>
         public string CurSub => GetMember<StringType>("CurSub");
 
         /// <summary>
-        /// Current command to be run by the executed macro
+        /// List the current line number, macro name, and code of the macro being processed
         /// </summary>
         public string CurCommand => GetMember<StringType>("CurCommand");
-        
+
         /// <summary>
-        /// Memory usage in bytes of the currently executing macro
+        /// How much memory the macro is using (bytes).
         /// </summary>
         public uint? MemUse => GetMember<IntType>("MemUse");
 
         /// <summary>
-        /// TODO: new member
+        /// Returns the value given the name of Macro variable.
         /// </summary>
         private IndexedMember<MQ2DataType> _variable;
+
+        /// <summary>
+        /// Returns the value given the name of Macro variable.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public MQ2DataType GetVariable(string name) => _variable[name];
     }
 }

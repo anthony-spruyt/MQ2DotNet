@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a member of a group.
-    /// Last Verified: 2023-06-26
+    /// Contains data on a specific group member.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-groupmember/
     /// </summary>
     [PublicAPI]
     [MQ2Type("groupmember")]
@@ -56,7 +57,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool MasterLooter => GetMember<BoolType>("MasterLooter");
 
         /// <summary>
-        /// TRUE if the member is designated as the Puller role
+        /// TRUE if the member is designated as the group's Puller, FALSE otherwise
         /// </summary>
         public bool Puller => GetMember<BoolType>("Puller");
 
@@ -71,7 +72,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? PctAggro => GetMember<IntType>("PctAggro");
 
         /// <summary>
-        /// Index (0 based) of the member in the group
+        /// Which number in the group the member is (base 0)
         /// </summary>
         public uint? Index => GetMember<IntType>("Index");
 
@@ -89,5 +90,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TRUE if the member is online but in another zone and FALSE if online and in same zone as you
         /// </summary>
         public bool OtherZone => GetMember<BoolType>("OtherZone");
+
+        /// <summary>
+        /// Same as <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

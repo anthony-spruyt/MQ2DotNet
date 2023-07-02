@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a heading.
-    /// Last Verified: 2023-06-26
+    /// Represents a direction on a compass.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-heading/
     /// </summary>
     [PublicAPI]
     [MQ2Type("heading")]
@@ -25,7 +26,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public float? Degrees => GetMember<FloatType>("Degrees");
 
         /// <summary>
-        /// Heading in degrees, counter clockwise from north. N = 0, W = 90, S = 180, E = 270
+        /// Heading in degrees counter-clockwise (the way the rest of MQ2 and EQ uses it) from north. N = 0, W = 90, S = 180, E = 270
         /// </summary>
         public float? DegreesCCW => GetMember<FloatType>("DegreesCCW");
 
@@ -53,6 +54,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
             // Everything else...
             return typeVar?.VarPtr.Float;
+        }
+
+        /// <summary>
+        /// Same as <see cref="ShortName"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

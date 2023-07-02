@@ -3,8 +3,8 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a mercenary.
-    /// Last Verified: 2023-07-01
+    /// This is the type used for mercenaries.
+    /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-mercenary/
     /// </summary>
     [PublicAPI]
@@ -16,10 +16,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Number of unspent mercenary AA points
+        /// AA Points spent on mercenary abilities
         /// </summary>
         public uint? AAPoints => GetMember<IntType>("AAPoints");
-        
+
         /// <summary>
         /// Current stance of the mercenary e.g. Balanced
         /// TODO: map to an enum
@@ -27,7 +27,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public string Stance => GetMember<StringType>("Stance");
 
         /// <summary>
-        /// Current State of the mercenary
+        /// Current state of the mercenary (returns "DEAD","SUSPENDED","ACTIVE", or "UNKNOWN")
         /// </summary>
         public new string State => GetMember<StringType>("State");
 

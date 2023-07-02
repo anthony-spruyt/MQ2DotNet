@@ -3,12 +3,13 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for general information about MQ2.
-    /// Last Verified: 2023-06-27
+    /// Data types related to the current MacroQuest2 session. These also inherit from the EverQuest Type.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-macroquest/
     /// </summary>
     [PublicAPI]
     [MQ2Type("macroquest")]
-    public class MacroQuestType : MQ2DataType
+    public class MacroQuestType : EverQuestType
     {
         internal MacroQuestType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -37,17 +38,18 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public string BuildDate => GetMember<StringType>("BuildDate");
 
         /// <summary>
-        /// Build number
+        /// The build (client target) for MQ2Main.dll (1 - Live, 2 - Test, 3 - Beta, 4 - Emu)
         /// </summary>
         public uint? Build => GetMember<IntType>("Build");
 
         /// <summary>
-        /// TODO: new member
+        /// The build (client target) name for MQ2Main.dll (Live, Test, Beta, Emu)
         /// </summary>
         public string BuildName => GetMember<StringType>("BuildName");
 
         /// <summary>
-        /// Gets the path by string index.
+        /// Directory that Macroquest.exe launched from. When passed root/config/crashdumps/logs/mqini/macros/plugins/resources, returns the respective path
+        /// Path[Option]
         /// 
         /// Index values:
         /// - root
@@ -62,17 +64,43 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private IndexedStringMember<string> _path;
 
         /// <summary>
-        /// Version number of MQ2Main.dll
+        /// Directory that Macroquest.exe launched from. When passed root/config/crashdumps/logs/mqini/macros/plugins/resources, returns the respective path
+        /// Path[Option]
+        /// 
+        /// Index values:
+        /// - root
+        /// - config
+        /// - crashdumps
+        /// - logs
+        /// - mqini
+        /// - macros
+        /// - plugins
+        /// - resources
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public string GetPath(string options) => _path[options];
+        public string PathRoot => _path["root"];
+        public string PathConfig => _path["config"];
+        public string PathCrashDumps => _path["crashdumps"];
+        public string PathLogs => _path["logs"];
+        public string PathMQIni => _path["mqini"];
+        public string PathMacros => _path["macros"];
+        public string PathPlugins => _path["plugins"];
+        public string PathResources => _path["resources"];
+
+        /// <summary>
+        /// The full version of MQ2Main.dll
         /// </summary>
         public string Version => GetMember<StringType>("Version");
-        
+
         /// <summary>
-        /// Internal name of build e.g. RedGuides
+        /// The internal name from MQ2Main.dll ("Next")
         /// </summary>
         public string InternalName => GetMember<StringType>("InternalName");
 
         /// <summary>
-        /// Parser version.
+        /// Which parser engine is currently active
         /// </summary>
         public uint? Parser => GetMember<IntType>("Parser");
 

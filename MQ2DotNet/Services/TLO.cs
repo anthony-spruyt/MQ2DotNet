@@ -37,8 +37,10 @@ namespace MQ2DotNet.Services
             _findItemCount = new IndexedTLO<IntType, string, IntType, int>(this, "FindItemCount");
             //_float = new IndexedTLO<FloatType>(this, "Float");
             _groundItemCount = new IndexedTLO<IntType>(this, "GroundItemCount");
-
-
+            _heading = new IndexedTLO<HeadingType, string>(this, "Heading");
+            _illusion = new IndexedTLO<KeyRingItemType, string, KeyRingItemType, int>(this, "Illusion");
+            _lastSpawn = new IndexedTLO<SpawnType, int>(this, "LastSpawn");
+            _lineOfSight = new IndexedTLO<BoolType>(this, "LineOfSight");
 
             //TODO below
 
@@ -48,10 +50,9 @@ namespace MQ2DotNet.Services
 
 
 
-            Heading = new IndexedTLO<HeadingType, string>(this, "");
-            Illusion = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Illusion");
+
+
             InvSlot = new IndexedTLO<InvSlotType, string, InvSlotType, int>(this, "InvSlot");
-            LineOfSight = new IndexedTLO<BoolType>(this, "LineOfSight");
             Mount = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Mount");
             NearestSpawn = new IndexedTLO<SpawnType>(this, "NearestSpawn");
             Plugin = new IndexedTLO<PluginType, string, PluginType, int>(this, "Plugin");
@@ -63,7 +64,6 @@ namespace MQ2DotNet.Services
             Task = new IndexedTLO<TaskType, string, TaskType, int>(this, "Task");
             Window = new IndexedTLO<WindowType>(this, "Window");
             Zone = new IndexedTLO<ZoneType>(this, "Zone");
-            LastSpawn = new IndexedTLO<SpawnType, int>(this, "LastSpawn");
         }
 
         /// <summary>
@@ -270,14 +270,11 @@ namespace MQ2DotNet.Services
             get
             {
                 var count = (int?)FamiliarKeyRing?.Count ?? 0;
-                List<KeyRingItemType> items = new List<KeyRingItemType>(count);
 
                 for (int i = 0; i < count; i++)
                 {
-                    items.Add(GetFamiliarKeyRingItem(i + 1));
+                    yield return GetFamiliarKeyRingItem(i + 1);
                 }
-
-                return items;
             }
         }
 
@@ -520,26 +517,172 @@ namespace MQ2DotNet.Services
         /// </summary>
         public GroupType Group => GetTLO<GroupType>("Group");
 
+        /// <summary>
+        /// Object that refers to the directional heading to of a location or direction.
+        /// 
+        /// Creates a heading object using degrees (clockwise)
+        /// Heading[#]
+        /// 
+        /// Creates a heading object using the heading to this y,x location
+        /// Heading[**y,x]**
+        /// 
+        /// Same as above, just an alternate method
+        /// Heading[**N,W]**
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-heading/
+        /// </summary>
+        private IndexedTLO<HeadingType, string> _heading;
 
+        /// <summary>
+        /// Creates a heading object using the heading to this y,x location
+        /// Heading[**y,x]**
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-heading/
+        /// </summary>
+        /// <param name="y"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public HeadingType GetHeading(float y, float x) => _heading[$"{y},{x}"];
 
+        // Next TLO is ${If[]} we are not supporting it here
+        // Doco: The If TLO is used to provide inline condition expressions for macros. It is not recommended for use with Lua.
 
+        /// <summary>
+        /// Used to get information about items on your illusions keyring.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-illusion/
+        /// </summary>
+        public IndexedTLO<KeyRingItemType, string, KeyRingItemType, int> _illusion;
 
+        /// <summary>
+        /// Access to the illusion keyring.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-illusion/
+        /// </summary>
+        public KeyRingType IllusionKeyRing => GetTLO<KeyRingType>("Illusion");
 
+        /// <summary>
+        /// Retrieves the item in your illusion keyring by index (base 1).
+        /// Illusion[N]
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-illusion/
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public KeyRingItemType GetIllusionKeyRingItem(int index) => _illusion[index];
 
+        /// <summary>
+        /// Retrieve the item in your illusion keyring by name. A = can be prepended for an exact match.
+        /// Illusion[name]
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-illusion/
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public KeyRingItemType GetIllusionKeyRingItem(string name) => _illusion[name];
 
+        /// <summary>
+        /// Illusions on the illusion keyring.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-illusion/
+        /// </summary>
+        public IEnumerable<KeyRingItemType> Illusions
+        {
+            get
+            {
+                var count = (int?)IllusionKeyRing?.Count ?? 0;
 
+                for (int i = 0; i < count; i++)
+                {
+                    yield return GetIllusionKeyRingItem(i + 1);
+                }
+            }
+        }
 
+        // Next TLO is "Ini" we are not supporting it here
+        // Make use of .net configuration
 
+        /// <summary>
+        /// No point exposing this.
+        /// 
+        /// Object that creates an integer from n.
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-int/
+        /// </summary>
+        //private IndexedTLO<IntType> _int;
 
+        /// <summary>
+        /// Gives access to the ground item that is previously targeted using /itemtarget IE <see cref="MQ2API.DataTypes.GroundType.DoTarget"/>.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-itemtarget/
+        /// </summary>
+        public GroundType ItemTarget => GetTLO<GroundType>("ItemTarget");
 
+        /// <summary>
+        /// Information about the spawns that have occurred since you entered the zone.
+        /// When you enter a zone you dont know the spawn order of anything already there, just anything that spawns while you are in the zone.
+        ///
+        /// The useful thing about ${LastSpawn[-1]} is just being able to get the first spawn in the list which you might use in conjunction with other spawn members to go through the entire spawn list in a loop.
+        /// 
+        /// The nth latest spawn (chronological order)
+        /// LastSpawn[**n]**
+        /// 
+        /// The nth oldest spawn (chronological order)
+        /// LastSpawn[-n**]**
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-lastspawn/
+        /// </summary>
+        private IndexedTLO<SpawnType, int> _lastSpawn;
 
+        /// <summary>
+        /// Information about the spawns that have occurred since you entered the zone.
+        /// When you enter a zone you dont know the spawn order of anything already there, just anything that spawns while you are in the zone.
+        ///
+        /// The useful thing about ${LastSpawn[-1]} is just being able to get the first spawn in the list which you might use in conjunction with other spawn members to go through the entire spawn list in a loop.
+        /// 
+        /// The nth latest spawn (chronological order)
+        /// LastSpawn[**n]**
+        /// 
+        /// The nth oldest spawn (chronological order)
+        /// LastSpawn[-n**]**
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-lastspawn/
+        /// </summary>
+        /// <param name="nth"></param>
+        /// <returns></returns>
+        public SpawnType GetLastSpawn(int nth) => _lastSpawn[nth];
 
+        /// <summary>
+        /// Object that is used to check if there is Line of Sight between two locations.
+        /// Note: For ISXEQ all 6 parameters are required and will return NULL otherwise
+        /// 
+        /// LineOfSight[**y,x,z:y,x,z]**
+        /// LineOfSight[**y,x,z,y,x,z]** (For ISXEQ)
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-lineofsight/
+        /// </summary>
+        private IndexedTLO<BoolType> _lineOfSight;
 
+        /// <summary>
+        /// Check if there is Line of Sight between two locations.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-lineofsight/
+        /// </summary>
+        /// <param name="y1"></param>
+        /// <param name="x1"></param>
+        /// <param name="z1"></param>
+        /// <param name="y2"></param>
+        /// <param name="x2"></param>
+        /// <param name="z2"></param>
+        /// <returns></returns>
+        public bool IsInLineOfSight(int y1, int x1, int z1, int y2, int x2, int z2) => (bool)_lineOfSight[$"{y1},{x1},{z1}:{y2},{x2},{z2}"];
 
+        /// <summary>
+        /// Returns an object related to the macro that is currently running.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-macro/
+        /// </summary>
+        public MacroType Macro => GetTLO<MacroType>("Macro");
 
+        /// <summary>
+        /// Creates an object related to MacroQuest information.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-macroquest/
+        /// </summary>
+        public MacroQuestType MacroQuest => GetTLO<MacroQuestType>("MacroQuest");
 
-
-        //TODO below
+        // Skip Math TLO, we have much better here in .net
 
         /// <summary>
         /// Character object which allows you to get properties of you as a character.
@@ -547,7 +690,24 @@ namespace MQ2DotNet.Services
         /// </summary>
         public CharacterType Me => GetTLO<CharacterType>("Me");
 
-        
+        /// <summary>
+        /// Object used to get information about your mercenary.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-mercenary/
+        /// </summary>
+        public MercenaryType Mercenary => GetTLO<MercenaryType>("Mercenary");
+
+        /// <summary>
+        /// Object that interacts with the currently active merchant.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-merchant/
+        /// </summary>
+        public MerchantType Merchant => GetTLO<MerchantType>("Merchant");
+
+
+
+
+        //TODO below
+
+
         /// <summary>
         /// Your target
         /// </summary>
@@ -559,29 +719,9 @@ namespace MQ2DotNet.Services
         public SwitchType Switch => GetTLO<SwitchType>("Switch");
         
         /// <summary>
-        /// Your mercenary
-        /// </summary>
-        public MercenaryType Mercenary => GetTLO<MercenaryType>("Mercenary");
-        
-        /// <summary>
         /// Your pet
         /// </summary>
         public PetType Pet => GetTLO<PetType>("Pet");
-        
-        /// <summary>
-        /// Merchant that is currently open
-        /// </summary>
-        public MerchantType Merchant => GetTLO<MerchantType>("Merchant");
-        
-        /// <summary>
-        /// Macro that is running
-        /// </summary>
-        public MacroType Macro => GetTLO<MacroType>("Macro");
-        
-        /// <summary>
-        /// <see cref="MacroQuestType"/> instance
-        /// </summary>
-        public MacroQuestType MacroQuest => GetTLO<MacroQuestType>("MacroQuest");
         
         /// <summary>
         /// TODO: What does SelectedItem give?
@@ -599,11 +739,6 @@ namespace MQ2DotNet.Services
         public SpawnType NamingSpawn => GetTLO<SpawnType>("NamingSpawn");
         
         /// <summary>
-        /// Your current item target
-        /// </summary>
-        public SpawnType ItemTarget => GetTLO<SpawnType>("ItemTarget");
-        
-        /// <summary>
         /// Point merchnat that is currently open
         /// </summary>
         public PointMerchantType PointMerchant => GetTLO<PointMerchantType>("PointMerchant");
@@ -612,13 +747,6 @@ namespace MQ2DotNet.Services
         /// Zone you are currently in
         /// </summary>
         public CurrentZoneType CurrentZone => GetTLO<CurrentZoneType>("Zone");
-        
-        /// <summary>
-        /// Heading to a location in y,x format.
-        /// TODO: I think this is incorrect and shoud be an IndexedTLO so converted it but havent tested yet...
-        /// </summary>
-        //public HeadingType Heading => GetTLO<HeadingType>("Heading");
-        public IndexedTLO<HeadingType, string> Heading { get; }
         
         /// <summary>
         /// First spawn that matches a search string
@@ -639,11 +767,6 @@ namespace MQ2DotNet.Services
         /// Zone by ID or short name. For current zone, use <see cref="CurrentZone"/>
         /// </summary>
         public IndexedTLO<ZoneType> Zone { get; }
-        
-        /// <summary>
-        /// Spawn by position in the list, from the end for negative numbers
-        /// </summary>
-        public IndexedTLO<SpawnType, int> LastSpawn { get; }
         
         /// <summary>
         /// Nth nearest spawn that matches a search e.g. "2,npc" for the 2nd closest NPC
@@ -680,11 +803,6 @@ namespace MQ2DotNet.Services
         public IndexedTLO<SkillType, string, SkillType, int> Skill { get; }
         
         /// <summary>
-        /// Is there line of sight between two locations, in the format "y,x,z:y,x,z"
-        /// </summary>
-        public IndexedTLO<BoolType> LineOfSight { get; }
-        
-        /// <summary>
         /// Task by name or position in window (1 based)
         /// </summary>
         public IndexedTLO<TaskType, string, TaskType, int> Task { get; }
@@ -693,11 +811,6 @@ namespace MQ2DotNet.Services
         /// Mount (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
         /// </summary>
         public IndexedTLO<KeyRingType, string, KeyRingType, int> Mount { get; }
-        
-        /// <summary>
-        /// Illusion (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
-        /// </summary>
-        public IndexedTLO<KeyRingType, string, KeyRingType, int> Illusion { get; }
         
         /// <summary>
         /// Requires EXPANSION_LEVEL_TOL
