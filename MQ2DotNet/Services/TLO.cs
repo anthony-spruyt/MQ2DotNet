@@ -36,6 +36,9 @@ namespace MQ2DotNet.Services
             _findItemBankCount = new IndexedTLO<IntType, string, IntType, int>(this, "FindItemBankCount");
             _findItemCount = new IndexedTLO<IntType, string, IntType, int>(this, "FindItemCount");
             //_float = new IndexedTLO<FloatType>(this, "Float");
+            _groundItemCount = new IndexedTLO<IntType>(this, "GroundItemCount");
+
+
 
             //TODO below
 
@@ -44,8 +47,7 @@ namespace MQ2DotNet.Services
 
 
 
-            GroundItem = new IndexedTLO<GroundType>(this, "GroundItem");
-            GroundItemCount = new IndexedTLO<IntType>(this, "GroundItemCount");
+
             Heading = new IndexedTLO<HeadingType, string>(this, "");
             Illusion = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Illusion");
             InvSlot = new IndexedTLO<InvSlotType, string, InvSlotType, int>(this, "InvSlot");
@@ -473,7 +475,50 @@ namespace MQ2DotNet.Services
         /// </summary>
         public FriendsType Friends => GetTLO<FriendsType>("Friends");
 
+        /// <summary>
+        /// A time object indicating EQ Game Time.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-gametime/
+        /// </summary>
+        public DateTime? GameTime => GetTLO<TimeType>("GameTime");
 
+        /// <summary>
+        /// Object which references the ground spawn item you have targeted or the closest if none is targeted, if any in zone.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-ground/
+        /// </summary>
+        public GroundType Ground => GetTLO<GroundType>("Ground");
+
+        /// <summary>
+        /// Access to all Groundspawn item count information.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-grounditemcount/
+        /// </summary>
+        private IndexedTLO<IntType> _groundItemCount { get; }
+
+        /// <summary>
+        /// Access to all Groundspawn item count information.
+        /// 
+        /// /echo There are ${GroundItemCount[apple]} Apples on the ground.
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-grounditemcount/
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public int? GetGroundItemCount(string name) => _groundItemCount[name];
+
+        /// <summary>
+        /// Access to all Groundspawn item count information.
+        /// 
+        /// /echo There are ${GroundItemCount} items on the ground in this zone.
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-grounditemcount/
+        /// </summary>
+        /// <returns></returns>
+        public int? GroundItemCount => _groundItemCount[""];
+
+        /// <summary>
+        /// Access to all group-related information.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-group/
+        /// </summary>
+        public GroupType Group => GetTLO<GroupType>("Group");
 
 
 
@@ -539,16 +584,6 @@ namespace MQ2DotNet.Services
         public MacroQuestType MacroQuest => GetTLO<MacroQuestType>("MacroQuest");
         
         /// <summary>
-        /// <see cref="GroupType"/> instance
-        /// </summary>
-        public GroupType Group => GetTLO<GroupType>("Group");
-        
-        /// <summary>
-        /// Current in game time
-        /// </summary>
-        public TimeType GameTime => GetTLO<TimeType>("GameTime");
-        
-        /// <summary>
         /// TODO: What does SelectedItem give?
         /// </summary>
         public ItemType SelectedItem => GetTLO<ItemType>("SelectedItem");
@@ -594,16 +629,6 @@ namespace MQ2DotNet.Services
         /// Spell by name or ID
         /// </summary>
         public IndexedTLO<SpellType, string, SpellType, int> Spell { get; }
-        
-        /// <summary>
-        /// Ground item by name (partial match), or your current ground target if an empty index is supplied
-        /// </summary>
-        public IndexedTLO<GroundType> GroundItem { get; }
-        
-        /// <summary>
-        /// Number of ground items by name (partial match), or total number of ground items if an empty index is supplied
-        /// </summary>
-        public IndexedTLO<IntType> GroundItemCount { get; }
         
         /// <summary>
         /// Window by name

@@ -4,8 +4,9 @@ using System;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a time.
-    /// Last Verified: 2023-06-28
+    /// Represents a unit of clock time.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-time/
     /// </summary>
     [PublicAPI]
     [MQ2Type("time")]
@@ -14,27 +15,27 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal TimeType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
         }
-        
+
         /// <summary>
-        /// Hours since midnight
+        /// Hour (0-23)
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public uint? Hour => GetMember<IntType>("Hour");
         
         /// <summary>
-        /// Hour in 24h time
+        /// Hour (0-11)
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public string Hour12 => GetMember<StringType>("Hour12");
-        
+
         /// <summary>
-        /// Minutes after the hour
+        /// Minute (0-59)
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public int? Minute => GetMember<IntType>("Minute");
-        
+
         /// <summary>
-        /// Seconds after the minute
+        /// Second (0-59)
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public int? Second => GetMember<IntType>("Second");
@@ -46,19 +47,19 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public int? Millisecond => GetMember<IntType>("Millisecond");
 
         /// <summary>
-        /// Day of the week (0 = Sunday)
+        /// Day of the week (1=sunday to 7=saturday)
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public uint? DayOfWeek => GetMember<IntType>("DayOfWeek");
-        
+
         /// <summary>
         /// Day of the month
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public uint? Day => GetMember<IntType>("Day");
-        
+
         /// <summary>
-        /// Month of the year
+        /// Month of the year (1-12)
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public uint? Month => GetMember<IntType>("Month");
@@ -68,31 +69,31 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public int? Year => GetMember<IntType>("Year");
-        
+
         /// <summary>
-        /// Time in "HH:mm:ss" format (24h time)
+        /// Time in 12-hour format (HH:MM:SS)
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public string Time12 => GetMember<StringType>("Time12");
-        
+
         /// <summary>
-        /// Time in "hh:mm:ss" format (12h time)
+        /// Time in 24-hour format (HH:MM:SS)
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public string Time24 => GetMember<StringType>("Time24");
-        
+
         /// <summary>
-        /// Date in "dd/MM/yyyy" format
+        /// Date in the format MM/DD/YYYY
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public string Date => GetMember<StringType>("Date");
-        
+
         /// <summary>
-        /// Before 7AM or after 9PM ?!
+        /// Gives true if the current hour is considered "night" in EQ (7:00pm-6:59am)
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public bool Night => GetMember<BoolType>("Night");
-        
+
         /// <summary>
         /// Number of seconds since midnight
         /// </summary>
@@ -135,6 +136,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
                 (DateTime?)null :
                 DateTimeOffset.FromUnixTimeMilliseconds(timeType.MillisecondsSinceEpoch.Value).DateTime;
 #pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        /// <summary>
+        /// Same as <see cref="Time24"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

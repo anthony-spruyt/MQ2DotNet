@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a ground object.
-    /// Last Verified: 2023-06-28
+    /// Represents a ground item.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-ground/
     /// </summary>
     [PublicAPI]
     [MQ2Type("ground")]
@@ -28,7 +30,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Pick up the item (must be within 20 units of it)
+        /// Picks up the ground spawn (must be within 20 units of it)
         /// </summary>
         /// <returns></returns>
         public bool Grab() => GetMember<BoolType>("Grab");
@@ -98,9 +100,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Internal name
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-        
+
         /// <summary>
-        /// Display name as it appears on MQ2Map
+        /// Displays name of the grounspawn
         /// </summary>
         public string DisplayName => GetMember<StringType>("DisplayName");
 
@@ -109,9 +111,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// This can also be casted to a <see cref="float"/>
         /// </summary>
         public HeadingType Heading => GetMember<HeadingType>("Heading");
-        
+
         /// <summary>
-        /// 2D distance from character to the ground item in the XY plane
+        /// Distance from player to ground item
         /// </summary>
         public float? Distance => GetMember<FloatType>("Distance");
         
@@ -134,27 +136,51 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// First ground spawn in the linked list
         /// </summary>
+        [JsonIgnore]
         public GroundType First => GetMember<GroundType>("First");
 
         /// <summary>
         /// Last ground spawn in the linked list
         /// </summary>
+        [JsonIgnore]
         public GroundType Last => GetMember<GroundType>("Last");
 
         /// <summary>
         /// Next ground spawn
         /// </summary>
+        [JsonIgnore]
         public GroundType Next => GetMember<GroundType>("Next");
 
         /// <summary>
         /// Previous ground spawn
         /// </summary>
+        [JsonIgnore]
         public GroundType Prev => GetMember<GroundType>("Prev");
 
         /// <summary>
         /// Get a ground spawn by ID or by name.
         /// </summary>
         private IndexedMember<GroundType, int, GroundType, string> _search;
+
+        /// <summary>
+        /// Get a ground spawn by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public GroundType Search(string name) => _search[name];
+
+        /// <summary>
+        /// Get a ground spawn by ID.
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        public GroundType Search(int itemID) => _search[itemID];
+
+        /// <summary>
+        /// The closest ground spawn, if any.
+        /// </summary>
+        /// <returns></returns>
+        public GroundType Closest => _search[""];
 
         /// <summary>
         /// Get a ground spawn by name.
@@ -169,5 +195,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="id"></param>
         /// <returns></returns>
         public GroundType GetGroundSpawn(int id) => _search[id];
+
+        /// <summary>
+        /// Same as <see cref="ID"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }
