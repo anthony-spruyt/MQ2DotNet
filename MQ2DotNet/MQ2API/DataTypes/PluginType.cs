@@ -3,24 +3,27 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a plugin.
-    /// Last Verified: 2023-06-27
+    /// Data for the specified plugin.
+    /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-plugin/
     /// </summary>
     [PublicAPI]
     [MQ2Type("plugin")]
     public class PluginType : MQ2DataType
     {
+        public const int MAX_PLUGINS = 100;
+
         internal PluginType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
         }
 
         /// <summary>
-        /// Plugin's name e.g. mq2cast
+        /// Name of the plugin.
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// Plugin's version as exported by the PLUGIN_VERSION macro
+        /// Version number of the plugin.
         /// </summary>
         public float? Version => GetMember<FloatType>("Version");
 
@@ -28,5 +31,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Is the plugin loaded?
         /// </summary>
         public bool IsLoaded => GetMember<BoolType>("IsLoaded");
+
+        /// <summary>
+        /// Same as <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a member of a raid.
-    /// Last Verified: 2023-06-27
+    /// Data related to the specified raid member.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-raidmember/
     /// </summary>
     [PublicAPI]
     [MQ2Type("raidmember")]
@@ -53,5 +54,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Raid member's class (works without being in zone)
         /// </summary>
         public ClassType Class => GetMember<ClassType>("Class");
+
+        /// <summary>
+        /// Same as <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

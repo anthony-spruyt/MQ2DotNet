@@ -5,8 +5,9 @@ using System.Collections.Generic;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a raid.
-    /// Last Verified: 2023-06-27
+    /// Contains data on the current raid.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-raid/
     /// </summary>
     [PublicAPI]
     [MQ2Type("raid")]
@@ -25,14 +26,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Locked => GetMember<BoolType>("Locked");
 
         /// <summary>
-        /// Invited to raid?
+        /// Have I been invited to the raid?
         /// </summary>
         public bool Invited => GetMember<BoolType>("Invited");
 
         /// <summary>
         /// Raid member by name or number (1 based)
         /// </summary>
-        private IndexedMember<RaidMemberType, string, RaidMemberType, int> _member;
+        private readonly IndexedMember<RaidMemberType, string, RaidMemberType, int> _member;
 
         /// <summary>
         /// Get raid member by name.
@@ -115,9 +116,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? Looters => GetMember<IntType>("Looters");
 
         /// <summary>
-        /// Specified looter name by 1 based index/number (1 - <see cref="Looters"/>).
+        /// Specified looter name by number (base 1) (1 - <see cref="Looters"/>).
         /// </summary>
-        private IndexedStringMember<int> _looter;
+        private readonly IndexedStringMember<int> _looter;
 
         /// <summary>
         /// Get a raid looter name by index.
@@ -169,7 +170,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Raid mark NPC
         /// </summary>
-        private IndexedMember<RaidMemberType, int, RaidMemberType, string> _markNPC;
+        private readonly IndexedMember<RaidMemberType, int, RaidMemberType, string> _markNPC;
 
         /// <summary>
         /// Get raid mark NPC by name.

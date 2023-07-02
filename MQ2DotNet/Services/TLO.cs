@@ -43,6 +43,11 @@ namespace MQ2DotNet.Services
             _lineOfSight = new IndexedTLO<BoolType>(this, "LineOfSight");
             _mount = new IndexedTLO<KeyRingItemType, string, KeyRingItemType, int>(this, "Mount");
             _nearestSpawn = new IndexedTLO<SpawnType, int, SpawnType, string>(this, "NearestSpawn");
+            _plugin = new IndexedTLO<PluginType, string, PluginType, int>(this, "Plugin");
+            _skill = new IndexedTLO<SkillType, string, SkillType, int>(this, "Skill");
+            _spawn = new IndexedTLO<SpawnType, string, SpawnType, int>(this, "Spawn");
+            _spawnCount = new IndexedTLO<IntType>(this, "SpawnCount");
+            _spell = new IndexedTLO<SpellType, string, SpellType, int>(this, "Spell");
 
             //TODO below
 
@@ -55,11 +60,6 @@ namespace MQ2DotNet.Services
 
 
             InvSlot = new IndexedTLO<InvSlotType, string, InvSlotType, int>(this, "InvSlot");
-            Plugin = new IndexedTLO<PluginType, string, PluginType, int>(this, "Plugin");
-            Skill = new IndexedTLO<SkillType, string, SkillType, int>(this, "Skill");
-            Spawn = new IndexedTLO<SpawnType>(this, "Spawn");
-            SpawnCount = new IndexedTLO<IntType>(this, "SpawnCount");
-            Spell = new IndexedTLO<SpellType, string, SpellType, int>(this, "Spell");
             SubDefined = new IndexedTLO<BoolType>(this, "SubDefined");
             Task = new IndexedTLO<TaskType, string, TaskType, int>(this, "Task");
             Window = new IndexedTLO<WindowType>(this, "Window");
@@ -551,7 +551,7 @@ namespace MQ2DotNet.Services
         /// Used to get information about items on your illusions keyring.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-illusion/
         /// </summary>
-        public IndexedTLO<KeyRingItemType, string, KeyRingItemType, int> _illusion;
+        private readonly IndexedTLO<KeyRingItemType, string, KeyRingItemType, int> _illusion;
 
         /// <summary>
         /// Access to the illusion keyring.
@@ -706,7 +706,7 @@ namespace MQ2DotNet.Services
         /// Used to get information about items on your Mount keyring.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-mount/
         /// </summary>
-        public IndexedTLO<KeyRingItemType, string, KeyRingItemType, int> _mount;
+        private readonly IndexedTLO<KeyRingItemType, string, KeyRingItemType, int> _mount;
 
         /// <summary>
         /// Access to the Mount keyring.
@@ -804,6 +804,242 @@ namespace MQ2DotNet.Services
         /// </summary>
         public PetType Pet => GetTLO<PetType>("Pet");
 
+        /// <summary>
+        /// Object that has access to members that provide information on a plugin.
+        /// 
+        /// Finds plugin by name, uses full name match, case insensitive.
+        /// Plugin[name]
+        /// 
+        /// Plugin by index, starting with 1 and stopping whenever the list runs out of plugins.
+        /// Plugin[N]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-plugin/
+        /// </summary>
+        private readonly IndexedTLO<PluginType, string, PluginType, int> _plugin;
+
+        /// <summary>
+        /// Finds plugin by name, uses full name match, case insensitive.
+        /// Plugin[name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-plugin/
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public PluginType GetPlugin(string name) => _plugin[name];
+
+        /// <summary>
+        /// Plugin by index, starting with 1 and stopping whenever the list runs out of plugins.
+        /// Plugin[N]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-plugin/
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public PluginType GetPlugin(int index) => _plugin[index];
+
+        public IEnumerable<PluginType> Plugins
+        {
+            get
+            {
+                var index = 1;
+
+                while(index <= PluginType.MAX_PLUGINS)
+                {
+                    var plugin = _plugin[index];
+
+                    if (plugin != null)
+                    {
+                        index++;
+                        yield return plugin;
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Object that has access to members that provide information on your raid.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-raid/
+        /// </summary>
+        public RaidType Raid => GetTLO<RaidType>("Raid");
+
+        // Next is TLO Range which we are not interested in since no use of it here.
+
+        // Next is TLO Select which we are not interested in since no use of it here.
+
+        /// <summary>
+        /// Used to return information on the object that is selected in your own inventory while using a merchant.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-selecteditem/
+        /// </summary>
+        public ItemType SelectedItem => GetTLO<ItemType>("SelectedItem");
+
+        /// <summary>
+        /// Object used to get information on your character's skills.
+        /// 
+        /// Retrieve skill by name
+        /// Skill[name]
+        /// 
+        /// Retrieve skill by number (base 1)
+        /// Skill[N]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-skill/
+        /// </summary>
+        private readonly IndexedTLO<SkillType, string, SkillType, int> _skill;
+
+        /// <summary>
+        /// Retrieve skill by number (base 1)
+        /// Skill[N]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-skill/
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public SkillType GetSkill(int index) => _skill[index];
+
+        /// <summary>
+        /// Retrieve skill by name
+        /// Skill[name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-skill/
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public SkillType GetSkill(string name) => _skill[name];
+
+        /// <summary>
+        /// All skills.
+        /// </summary>
+        public IEnumerable<SkillType> Skills
+        {
+            get
+            {
+                var index = 1;
+
+                while (index <= SkillType.MAX_SKILLS)
+                {
+                    var skill = _skill[index];
+
+                    if (skill != null)
+                    {
+                        index++;
+                        yield return skill;
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Object used to get information on a specific spawn. Uses the filters under Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/
+        /// 
+        /// Spawn matching ID N.
+        /// Spawn[N]
+        /// 
+        /// Any spawns matching search string. See Spawn Search.
+        /// Spawn[search string]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-spawn/
+        /// </summary>
+        private readonly IndexedTLO<SpawnType, string, SpawnType, int> _spawn;
+
+        /// <summary>
+        /// Spawn matching ID N.
+        /// Spawn[N]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-spawn/
+        /// </summary>
+        /// <param name="spawnID"></param>
+        /// <returns></returns>
+        public SpawnType GetSpawn(int spawnID) => _spawn[spawnID];
+
+        /// <summary>
+        /// Any spawns matching search string. See Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/
+        /// Spawn[search string]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-spawn/
+        /// </summary>
+        /// <param name="search">See Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/</param>
+        /// <returns></returns>
+        public SpawnType GetSpawn(string search) => _spawn[search];
+
+        /// <summary>
+        /// Object used to count spawns based on a set of queries. Uses the filters under Spawn Search.
+        /// 
+        /// Total number of spawns in current zone
+        /// SpawnCount
+        /// 
+        /// Total number of spawns in current zone matching the search string. See Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/
+        /// SpawnCount[search string]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-spawncount/
+        /// </summary>
+        private readonly IndexedTLO<IntType> _spawnCount;
+
+        /// <summary>
+        /// Total number of spawns in current zone
+        /// SpawnCount
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-spawncount/
+        /// </summary>
+        public uint? SpawnCount => (uint?)_spawnCount[""];
+
+        /// <summary>
+        /// Total number of spawns in current zone matching the search string. See Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/
+        /// SpawnCount[search string]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-spawncount/
+        /// </summary>
+        /// <param name="search">See Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/</param>
+        /// <returns></returns>
+        public uint? GetSpawnCount(string search) => (uint?)_spawnCount[search];
+
+        /// <summary>
+        /// Object used to return information on a spell by name or by ID.
+        /// 
+        /// Find spell by ID
+        /// Spell[N]
+        /// 
+        /// Find spell by name
+        /// Spell[name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-spell/
+        /// </summary>
+        private readonly IndexedTLO<SpellType, string, SpellType, int> _spell;
+
+        /// <summary>
+        /// Find spell by ID
+        /// Spell[N]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-spell/
+        /// </summary>
+        /// <param name="spellID"></param>
+        /// <returns></returns>
+        public SpellType GetSpell(int spellID) => _spell[spellID];
+
+        /// <summary>
+        /// Find spell by name
+        /// Spell[name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-spell/
+        /// </summary>
+        /// <param name="spellName"></param>
+        /// <returns></returns>
+        public SpellType GetSpell(string spellName) => _spell[spellName];
+
+        /// <summary>
+        /// Object used when you want to find information on targetted doors or switches such as the portals in PoK.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-switch/
+        /// </summary>
+        public SwitchType Switch => GetTLO<SwitchType>("Switch");
+
+
+
         //TODO below
 
 
@@ -811,21 +1047,6 @@ namespace MQ2DotNet.Services
         /// Your target
         /// </summary>
         public TargetType Target => GetTLO<TargetType>("Target");
-        
-        /// <summary>
-        /// Your current door target
-        /// </summary>
-        public SwitchType Switch => GetTLO<SwitchType>("Switch");
-        
-        /// <summary>
-        /// TODO: What does SelectedItem give?
-        /// </summary>
-        public ItemType SelectedItem => GetTLO<ItemType>("SelectedItem");
-        
-        /// <summary>
-        /// <see cref="RaidType"/> instance
-        /// </summary>
-        public RaidType Raid => GetTLO<RaidType>("Raid");
         
         /// <summary>
         /// Spawn whose name is currently being drawn
@@ -841,32 +1062,17 @@ namespace MQ2DotNet.Services
         /// Zone you are currently in
         /// </summary>
         public CurrentZoneType CurrentZone => GetTLO<CurrentZoneType>("Zone");
-        
-        /// <summary>
-        /// First spawn that matches a search string
-        /// </summary>
-        public IndexedTLO<SpawnType> Spawn;
-        
-        /// <summary>
-        /// Spell by name or ID
-        /// </summary>
-        public IndexedTLO<SpellType, string, SpellType, int> Spell;
-        
+
         /// <summary>
         /// Window by name
         /// </summary>
-        public IndexedTLO<WindowType> Window;
-        
+        private readonly IndexedTLO<WindowType> Window;
+
         /// <summary>
         /// Zone by ID or short name. For current zone, use <see cref="CurrentZone"/>
         /// </summary>
-        public IndexedTLO<ZoneType> Zone;
-        
-        /// <summary>
-        /// Total number of spawns that match a search
-        /// </summary>
-        public IndexedTLO<IntType> SpawnCount;
-        
+        private readonly IndexedTLO<ZoneType> Zone;
+
         /// <summary>
         /// An inventory slot by name or number
         /// </summary>
@@ -879,38 +1085,28 @@ namespace MQ2DotNet.Services
         /// 6000-6080 merchant window
         /// 7000-7080 bazaar window
         /// 8000-8031 inspect window</remarks>
-        public IndexedTLO<InvSlotType, string, InvSlotType, int> InvSlot;
-        
-        /// <summary>
-        /// Plugin by name or number
-        /// </summary>
-        public IndexedTLO<PluginType, string, PluginType, int> Plugin;
-        
-        /// <summary>
-        /// Skill by name or number
-        /// </summary>
-        public IndexedTLO<SkillType, string, SkillType, int> Skill;
-        
+        private readonly IndexedTLO<InvSlotType, string, InvSlotType, int> InvSlot;
+
         /// <summary>
         /// Task by name or position in window (1 based)
         /// </summary>
-        public IndexedTLO<TaskType, string, TaskType, int> Task;
-        
+        private readonly IndexedTLO<TaskType, string, TaskType, int> Task;
+
         /// <summary>
         /// Requires EXPANSION_LEVEL_TOL
         /// TeleportationItem (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
         /// </summary>
-        public IndexedTLO<KeyRingType, string, KeyRingType, int> TeleportationItem;
+        private readonly IndexedTLO<KeyRingType, string, KeyRingType, int> TeleportationItem;
         
         /// <summary>
         /// Currently open context menu
         /// </summary>
         public MenuType Menu => GetTLO<MenuType>("Menu");
-        
+
         /// <summary>
         /// Is a sub with the given name defined?
         /// </summary>
-        public IndexedTLO<BoolType> SubDefined;
+        private readonly IndexedTLO<BoolType> SubDefined;
         
         /// <summary>
         /// Dependency on MQ2Cast.

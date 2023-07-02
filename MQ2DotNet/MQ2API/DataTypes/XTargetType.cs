@@ -34,10 +34,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Your percentage aggro on the spawn
         /// </summary>
         public uint? PctAggro => GetMember<IntType>("PctAggro");
-        
+
         /// <summary>
         /// Spawn in the XTarget slot
         /// </summary>
-        public SpawnType GetSpawn(TLO tlo) => tlo.Spawn["id " + ID];
+        public SpawnType GetSpawn(TLO tlo) => tlo.GetSpawn($"id {ID}");
     }
 }

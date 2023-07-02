@@ -4,13 +4,16 @@ using System;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a skill.
-    /// Last Verified: 2023-06-27
+    /// Data related to a particular skill.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-skill/
     /// </summary>
     [PublicAPI]
     [MQ2Type("skill")]
     public class SkillType : MQ2DataType
     {
+        public const int MAX_SKILLS = 300;
+
         internal SkillType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
         }
@@ -24,9 +27,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Skill number
         /// </summary>
         public uint? ID => GetMember<IntType>("ID");
-        
+
         /// <summary>
-        /// Reuse time for the ability in milliseconds (not time remaining)
+        /// Reuse timer for the ability in milliseconds (not time remaining)
         /// </summary>
         public TimeSpan? ReuseTime => GetMember<IntType>("ReuseTime");
         
@@ -39,11 +42,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Skill cap based on your current level and class
         /// </summary>
         public uint? SkillCap => GetMember<IntType>("SkillCap");
-        
+
         /// <summary>
-        /// TODO: Is this the common timer number (shared by other skills, but not the same as AA timers)
+        /// Returns TRUE if the skill uses the kick/bash/slam/backstab/frenzy timer
         /// </summary>
-        public uint? AltTimer => GetMember<IntType>("AltTimer");
+        public bool AltTimer => (uint?)GetMember<IntType>("AltTimer") > 0;
         
         /// <summary>
         /// Returns TRUE if the skill has been activated
@@ -54,5 +57,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Skill has /autoskill on?
         /// </summary>
         public bool Auto => GetMember<BoolType>("Auto");
+
+        /// <summary>
+        /// Same as <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }
