@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for an aura.
-    /// Last Verified: 2023-06-25
+    /// Describes an aura.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-auratype/
     /// </summary>
     [PublicAPI]
     [MQ2Type("auratype")]
@@ -16,6 +17,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
+        /// ID of the Aura.
         /// Appears to be the slot the aura is in. 1 based
         /// </summary>
         public uint? ID => GetMember<IntType>("ID");
@@ -23,16 +25,25 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns the position of the index if found within the aura's name.
         /// Cast to <see cref="uint"/> to get the value.
+        /// Not documented at https://docs.macroquest.org/reference/data-types/datatype-auratype/
         /// </summary>
         private IndexedMember<IntType, string> _find;
 
         /// <summary>
-        /// Name of the aura
+        /// Returns the position of the index if found within the aura's name.
+        /// Not documented at https://docs.macroquest.org/reference/data-types/datatype-auratype/
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public uint? GetIndex(string name) => (uint?)_find[name];
+
+        /// <summary>
+        /// Name of the aura.
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
         /// <summary>
-        /// Spawn ID of the caster
+        /// Spawn ID of the caster / ID of the spawn that emits aura.
         /// </summary>
         public uint? SpawnID => GetMember<IntType>("SpawnID");
 
