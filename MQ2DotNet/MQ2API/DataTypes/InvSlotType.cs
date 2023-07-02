@@ -13,8 +13,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
     // 8000-8031 inspect window
 
     /// <summary>
-    /// MQ2 type for an inventory slot.
-    /// Last Verified: 2023-06-26
+    /// Data related to an inventory slot.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-invslot/
     /// </summary>
     [PublicAPI]
     [MQ2Type("invslot")]
@@ -48,5 +49,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// For inventory slots not inside packs, the slot name, otherwise NULL
         /// </summary>
         public string Name => GetMember<StringType>("Name");
+
+        /// <summary>
+        /// Same as <see cref="ID"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

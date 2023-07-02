@@ -52,19 +52,9 @@ namespace MQ2DotNet.Services
             _type = new IndexedTLO<TypeType>(this, "Type");
             _window = new IndexedTLO<WindowType>(this, "Window");
             _zone = new IndexedTLO<ZoneType, string, ZoneType, int>(this, "Zone");
-
-            //TODO below
-
-
-
-
-
-
-
-
-
-            InvSlot = new IndexedTLO<InvSlotType, string, InvSlotType, int>(this, "InvSlot");
-            SubDefined = new IndexedTLO<BoolType>(this, "SubDefined");
+            _teleportationItem = new IndexedTLO<KeyRingItemType, string, KeyRingItemType, int>(this, "TeleportationItem");
+            _subDefined = new IndexedTLO<BoolType>(this, "SubDefined");
+            _invSlot = new IndexedTLO<InvSlotType, string, InvSlotType, int>(this, "InvSlot");
         }
 
         /// <summary>
@@ -1174,63 +1164,128 @@ namespace MQ2DotNet.Services
         /// <returns></returns>
         public ZoneType GetZone(string shortName) => _zone[shortName];
 
-
-        //TODO below
-
-
-
-
-
-
-
-
-
-
-
-
-
         /// <summary>
-        /// Spawn whose name is currently being drawn
+        /// Used to get information about items on your Teleportation Item keyring.
+        /// Not documented at https://docs.macroquest.org
         /// </summary>
-        public SpawnType NamingSpawn => GetTLO<SpawnType>("NamingSpawn");
-        
+        private readonly IndexedTLO<KeyRingItemType, string, KeyRingItemType, int> _teleportationItem;
+
         /// <summary>
-        /// Point merchnat that is currently open
+        /// Requires EXPANSION_LEVEL_TOL
+        /// Access to the Teleportation Item keyring.
+        /// Not documented at https://docs.macroquest.org
+        /// </summary>
+        public KeyRingType TeleportationItemKeyRing => GetTLO<KeyRingType>("TeleportationItem");
+
+        /// <summary>
+        /// Retrieves the item in your teleportation item keyring by index (base 1).
+        /// TeleportationItem[N]
+        /// Not documented at https://docs.macroquest.org
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public KeyRingItemType GetTeleportationItemKeyRingItem(int index) => _teleportationItem[index];
+
+        /// <summary>
+        /// Retrieve the item in your teleportation item keyring by name. A = can be prepended for an exact match.
+        /// TeleportationItem[name]
+        /// Not documented at https://docs.macroquest.org
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public KeyRingItemType GetTeleportationItemKeyRingItem(string name) => _teleportationItem[name];
+
+        /// <summary>
+        /// Teleportation item on the teleportation item keyring.
+        /// Not documented at https://docs.macroquest.org
+        /// </summary>
+        public IEnumerable<KeyRingItemType> TeleportationItems
+        {
+            get
+            {
+                var count = (int?)TeleportationItemKeyRing?.Count ?? 0;
+
+                for (int i = 0; i < count; i++)
+                {
+                    yield return GetTeleportationItemKeyRingItem(i + 1);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the currently selected switch, if any.
+        /// Not documented at https://docs.macroquest.org
+        /// </summary>
+        public SwitchType SwitchTarget => GetTLO<SwitchType>("SwitchTarget");
+
+        /// <summary>
+        /// Is a sub with the given name defined?
+        /// Not documented at https://docs.macroquest.org
+        /// </summary>
+        private readonly IndexedTLO<BoolType> _subDefined;
+
+        /// <summary>
+        /// Is a sub with the given name defined?
+        /// Not documented at https://docs.macroquest.org
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool IsSubDefined(string name) => _subDefined[name];
+
+        /// <summary>
+        /// Point merchant that is currently open.
+        /// Not documented at https://docs.macroquest.org
         /// </summary>
         public PointMerchantType PointMerchant => GetTLO<PointMerchantType>("PointMerchant");
 
         /// <summary>
-        /// An inventory slot by name or number
-        /// </summary>
-        /// <remarks>Valid slot numbers are:
-        /// 2000-2015 bank window
-        /// 2500-2503 shared bank
-        /// 5000-5031 loot window
-        /// 3000-3015 trade window (including npc) 3000-3007 are your slots, 3008-3015 are other character's slots
-        /// 4000-4010 world container window
-        /// 6000-6080 merchant window
-        /// 7000-7080 bazaar window
-        /// 8000-8031 inspect window</remarks>
-        private readonly IndexedTLO<InvSlotType, string, InvSlotType, int> InvSlot;
-
-        /// <summary>
-        /// Requires EXPANSION_LEVEL_TOL
-        /// TeleportationItem (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
-        /// </summary>
-        private readonly IndexedTLO<KeyRingType, string, KeyRingType, int> TeleportationItem;
-        
-        /// <summary>
-        /// Currently open context menu
+        /// Currently open context menu.
+        /// Not documented at https://docs.macroquest.org
         /// </summary>
         public MenuType Menu => GetTLO<MenuType>("Menu");
 
         /// <summary>
-        /// Is a sub with the given name defined?
+        /// An inventory slot by name or number.
+        /// Valid slot numbers are:
+        /// - 2000-2015 bank window
+        /// - 2500-2503 shared bank
+        /// - 5000-5031 loot window
+        /// - 3000-3015 trade window (including npc) 3000-3007 are your slots, 3008-3015 are other character's slots
+        /// - 4000-4010 world container window
+        /// - 6000-6080 merchant window
+        /// - 7000-7080 bazaar window
+        /// - 8000-8031 inspect window
+        /// Not documented at https://docs.macroquest.org
         /// </summary>
-        private readonly IndexedTLO<BoolType> SubDefined;
-        
+        private readonly IndexedTLO<InvSlotType, string, InvSlotType, int> _invSlot;
+
+        /// <summary>
+        /// An inventory slot by name.
+        /// Not documented at https://docs.macroquest.org
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public InvSlotType GetInvSlot(string name) => _invSlot[name];
+
+        /// <summary>
+        /// An inventory slot by number.
+        /// Not documented at https://docs.macroquest.org
+        /// </summary>
+        /// <param name="slotNumber">Valid slot numbers are:
+        /// - 2000-2015 bank window
+        /// - 2500-2503 shared bank
+        /// - 5000-5031 loot window
+        /// - 3000-3015 trade window (including npc) 3000-3007 are your slots, 3008-3015 are other character's slots
+        /// - 4000-4010 world container window
+        /// - 6000-6080 merchant window
+        /// - 7000-7080 bazaar window
+        /// - 8000-8031 inspect window</param>
+        /// <returns></returns>
+        public InvSlotType GetInvSlot(int slotNumber) => _invSlot[slotNumber];
+
         /// <summary>
         /// Dependency on MQ2Cast.
+        /// TODO: Update to latest spec.
         /// </summary>
         public CastType Cast => GetTLO<CastType>("Cast");
 
