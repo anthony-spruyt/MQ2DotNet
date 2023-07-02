@@ -10,7 +10,7 @@ namespace MQ2DotNet.Services
 {
     /// <summary>
     /// Provides access to all top level objects.
-    /// Last Verified: 2023-07-01 WIP...
+    /// Last Verified: 2023-07-02 WIP...
     /// https://docs.macroquest.org/reference/top-level-objects/
     /// </summary>
     [PublicAPI]
@@ -28,9 +28,14 @@ namespace MQ2DotNet.Services
             _alert = new IndexedTLO<AlertType, int, StringType, string>(this, "Alert");
             _alias = new IndexedTLO<BoolType>(this, "Alias");
             _altAbility = new IndexedTLO<AltAbilityType, int, AltAbilityType, string>(this, "AltAbility");
-            _bool = new IndexedTLO<BoolType>(this, "Bool");
+            //_bool = new IndexedTLO<BoolType>(this, "Bool");
             _defined = new IndexedTLO<BoolType>(this, "Defined");
             _familiar = new IndexedTLO<KeyRingItemType, string, KeyRingItemType, int>(this, "Familiar");
+            _findItem = new IndexedTLO<ItemType, string, ItemType, int>(this, "FindItem");
+            _findItemBank = new IndexedTLO<ItemType, string, ItemType, int>(this, "FindItemBank");
+            _findItemBankCount = new IndexedTLO<IntType, string, IntType, int>(this, "FindItemBankCount");
+            _findItemCount = new IndexedTLO<IntType, string, IntType, int>(this, "FindItemCount");
+            //_float = new IndexedTLO<FloatType>(this, "Float");
 
             //TODO below
 
@@ -38,10 +43,7 @@ namespace MQ2DotNet.Services
 
 
 
-            FindItem = new IndexedTLO<ItemType>(this, "FindItem");
-            FindItemBank = new IndexedTLO<ItemType>(this, "FindItemBank");
-            FindItemBankCount = new IndexedTLO<IntType>(this, "FindItemBankCount");
-            FindItemCount = new IndexedTLO<IntType>(this, "FindItemCount");
+
             GroundItem = new IndexedTLO<GroundType>(this, "GroundItem");
             GroundItemCount = new IndexedTLO<IntType>(this, "GroundItemCount");
             Heading = new IndexedTLO<HeadingType, string>(this, "");
@@ -140,8 +142,10 @@ namespace MQ2DotNet.Services
 
         /// <summary>
         /// Danger: The AltAbility TLO should not be used except for when experimenting with data. If you've already purchased the AA, use <see cref="CharacterType._altAbility"/>, which is tailored to your character and is much faster.
+        /// 
         /// Look up an AltAbility by its altability id
         /// AltAbility[ Number ]
+        /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-altability/#forms
         /// </summary>
         /// <param name="altabilityID"></param>
@@ -150,8 +154,10 @@ namespace MQ2DotNet.Services
 
         /// <summary>
         /// Danger: The AltAbility TLO should not be used except for when experimenting with data. If you've already purchased the AA, use <see cref="CharacterType._altAbility"/>, which is tailored to your character and is much faster.
+        /// 
         /// Look up an AltAbility by its name
         /// AltAbility[ Name ]
+        /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-altability/#forms
         /// </summary>
         /// <param name="name"></param>
@@ -170,7 +176,7 @@ namespace MQ2DotNet.Services
         /// If the string is one of these values, the resulting bool is false. Otherwise, it is true.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-bool/
         /// </summary>
-        private IndexedTLO<BoolType> _bool;
+        //private IndexedTLO<BoolType> _bool;
 
         /// <summary>
         /// Access to objects of type corpse, which is the currently active corpse (ie. the one you are looting).
@@ -273,18 +279,222 @@ namespace MQ2DotNet.Services
             }
         }
 
+        /// <summary>
+        /// A TLO used to find an item on your character, corpse, or a merchant by partial or exact name match. See examples below.
+        /// 
+        /// Search for an item using the given item id, or partial name match. Will search character inventory and any items stored in key rings (illusion, mount, etc).
+        /// FindItem[name/id]
+        /// 
+        /// Search for an item using exact name match (case insensitive). Will search character inventory and any items stored in key rings (illusion, mount, etc).
+        /// FindItem[=name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditem/
+        /// </summary>
+        private IndexedTLO<ItemType, string, ItemType, int> _findItem;
+
+        /// <summary>
+        /// A TLO used to find an item on your character, corpse, or a merchant by partial or exact name match. See examples below.
+        /// 
+        /// Search for an item using a partial name match. Will search character inventory and any items stored in key rings (illusion, mount, etc).
+        /// FindItem[name]
+        /// 
+        /// Search for an item using exact name match (case insensitive). Will search character inventory and any items stored in key rings (illusion, mount, etc).
+        /// FindItem[=name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditem/
+        /// </summary>
+        /// <param name="name">The name to match. No need to prefix with "=" for exact match, set the partialMatch param to false.</param>
+        /// <param name="partialMatch">Optional partial match parameter. Default is true. If false an exact case insensitive match is required.</param>
+        /// <returns></returns>
+        public ItemType FindItem(string name, bool partialMatch = true) => _findItem[partialMatch ? name : $"={name}"];
+
+        /// <summary>
+        /// A TLO used to find an item on your character, corpse, or a merchant by partial or exact name match. See examples below.
+        /// 
+        /// Search for an item using the given item id. Will search character inventory and any items stored in key rings (illusion, mount, etc).
+        /// FindItem[id]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditem/
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        public ItemType FindItem(int itemID) => _findItem[itemID];
+
+        /// <summary>
+        /// A TLO used to find an item in your bank by partial or exact name match. See examples below.
+        /// Of note: The FindItemBank with ItemSlot REQUIRES that bank item containers be open to function correctly.
+        /// Due to potential exploits the command will not work if the bank containers are closed.
+        /// This is in contrast to FindItem functionality with character containers, where ItemSlot was designed to allow inventory management without opening containers.
+        /// 
+        /// Search for an item in your bank using the given item id, or partial name match.
+        /// FindItemBank[name/id]
+        ///  
+        /// Search for an item in your bank using exact name match (case insensitive).
+        /// FindItemBank[=name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditembank/
+        /// </summary>
+        private IndexedTLO<ItemType, string, ItemType, int> _findItemBank;
+
+        /// <summary>
+        /// A TLO used to find an item in your bank by partial or exact name match. See examples below.
+        /// Of note: The FindItemBank with ItemSlot REQUIRES that bank item containers be open to function correctly.
+        /// Due to potential exploits the command will not work if the bank containers are closed.
+        /// This is in contrast to FindItem functionality with character containers, where ItemSlot was designed to allow inventory management without opening containers.
+        /// 
+        /// Search for an item in your bank using the given partial name match.
+        /// FindItemBank[name]
+        ///  
+        /// Search for an item in your bank using exact name match (case insensitive).
+        /// FindItemBank[=name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditembank/
+        /// </summary>
+        /// <param name="name">The name to match. No need to prefix with "=" for exact match, set the partialMatch param to false.</param>
+        /// <param name="partialMatch">Optional partial match parameter. Default is true. If false an exact case insensitive match is required.</param>
+        /// <returns></returns>
+        public ItemType FindItemBank(string name, bool partialMatch = true) => _findItemBank[partialMatch ? name : $"={name}"];
+
+        /// <summary>
+        /// A TLO used to find an item in your bank by partial or exact name match. See examples below.
+        /// Of note: The FindItemBank with ItemSlot REQUIRES that bank item containers be open to function correctly.
+        /// Due to potential exploits the command will not work if the bank containers are closed.
+        /// This is in contrast to FindItem functionality with character containers, where ItemSlot was designed to allow inventory management without opening containers.
+        /// 
+        /// Search for an item in your bank using the given item id.
+        /// FindItemBank[id]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditembank/
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        public ItemType FindItemBank(int itemID) => _findItemBank[itemID];
+
+        /// <summary>
+        /// A TLO used to find a count of items in your bank by partial or exact name match. See examples below.
+        /// 
+        /// Counts the items in your bank using the given item id, or partial name match.
+        /// FindItemBankCount[name/id]
+        /// 
+        /// Counts the items in your bank using exact name match (case insensitive).
+        /// FindItemBankCount[=name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditembankcount/
+        /// </summary>
+        private IndexedTLO<IntType, string, IntType, int> _findItemBankCount;
+
+        /// <summary>
+        /// A TLO used to find a count of items in your bank by partial or exact name match. See examples below.
+        /// 
+        /// Counts the items in your bank using partial name match.
+        /// FindItemBankCount[name]
+        /// 
+        /// Counts the items in your bank using exact name match (case insensitive).
+        /// FindItemBankCount[=name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditembankcount/
+        /// </summary>
+        /// <param name="name">The name to match. No need to prefix with "=" for exact match, set the partialMatch param to false.</param>
+        /// <param name="partialMatch">Optional partial match parameter. Default is true. If false an exact case insensitive match is required.</param>
+        /// <returns></returns>
+        public uint? FindItemBankCount(string name, bool partialMatch = true) => (uint?)_findItemBankCount[partialMatch ? name : $"={name}"];
+
+        /// <summary>
+        /// A TLO used to find a count of items in your bank by partial or exact name match. See examples below.
+        /// 
+        /// Counts the items in your bank using the given item id.
+        /// FindItemBankCount[id]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditembankcount/
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        public uint? FindItemBankCount(int itemID) => (uint?)_findItemBankCount[itemID];
+
+        /// <summary>
+        /// A TLO used to find a count of items on your character, corpse, or a merchant by partial or exact name match. See examples below.
+        /// 
+        /// Counts the items using the given item id, or partial name match. Will search character inventory and any items stored in key rings (illusion, mount, etc).
+        /// FindItemCount[name/id]
+        /// 
+        /// Counts the items using exact name match (case insensitive). Will search character inventory and any items stored in key rings (illusion, mount, etc).
+        /// FindItemCount[=name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditemcount/
+        /// </summary>
+        private IndexedTLO<IntType, string, IntType, int> _findItemCount;
+
+        /// <summary>
+        /// A TLO used to find a count of items on your character, corpse, or a merchant by partial or exact name match. See examples below.
+        /// 
+        /// Counts the items using partial name match. Will search character inventory and any items stored in key rings (illusion, mount, etc).
+        /// FindItemCount[name]
+        /// 
+        /// Counts the items using exact name match (case insensitive). Will search character inventory and any items stored in key rings (illusion, mount, etc).
+        /// FindItemCount[=name]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditemcount/
+        /// </summary>
+        /// <param name="name">The name to match. No need to prefix with "=" for exact match, set the partialMatch param to false.</param>
+        /// <param name="partialMatch">Optional partial match parameter. Default is true. If false an exact case insensitive match is required.</param>
+        /// <returns></returns>
+        public uint? FindItemCount(string name, bool partialMatch = true) => (uint?)_findItemCount[partialMatch ? name : $"={name}"];
+
+        /// <summary>
+        /// A TLO used to find a count of items on your character, corpse, or a merchant by partial or exact name match. See examples below.
+        /// 
+        /// Counts the items using the given item id. Will search character inventory and any items stored in key rings (illusion, mount, etc).
+        /// FindItemCount[id]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditemcount/
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        public uint? FindItemCount(int itemID) => (uint?)_findItemCount[itemID];
+
+        /// <summary>
+        /// No point exposing this.
+        /// 
+        /// Creates a float object from n.
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-float/
+        /// </summary>
+        //private IndexedTLO<FloatType> _float;
+
+        /// <summary>
+        /// The FrameLimiter TLO provides access to the frame limiter feature
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-framelimiter/
+        /// </summary>
+        public FrameLimiterType FrameLimiter => GetTLO<FrameLimiterType>("FrameLimiter");
+
+        /// <summary>
+        /// Grants access to your friends list.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-friends/
+        /// </summary>
+        public FriendsType Friends => GetTLO<FriendsType>("Friends");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //TODO below
-
-
-
-
-
-
-
-
-
-
-
 
         /// <summary>
         /// Character object which allows you to get properties of you as a character.
@@ -359,11 +569,6 @@ namespace MQ2DotNet.Services
         public SpawnType ItemTarget => GetTLO<SpawnType>("ItemTarget");
         
         /// <summary>
-        /// <see cref="FriendsType"/> instance
-        /// </summary>
-        public FriendsType Friends => GetTLO<FriendsType>("Friends");
-        
-        /// <summary>
         /// Point merchnat that is currently open
         /// </summary>
         public PointMerchantType PointMerchant => GetTLO<PointMerchantType>("PointMerchant");
@@ -426,26 +631,6 @@ namespace MQ2DotNet.Services
         public IndexedTLO<IntType> SpawnCount { get; }
         
         /// <summary>
-        /// Item by name, partial match unless it begins with an = e.g. "=Water Flask"
-        /// </summary>
-        public IndexedTLO<ItemType> FindItem { get; }
-        
-        /// <summary>
-        /// An item in your bank, partial match unless it begins with an = e.g. "=Water Flask"
-        /// </summary>
-        public IndexedTLO<ItemType> FindItemBank { get; }
-        
-        /// <summary>
-        /// Total number of an item you have, partial match unless it begins with an = e.g. "=Water Flask"
-        /// </summary>
-        public IndexedTLO<IntType> FindItemCount { get; }
-        
-        /// <summary>
-        /// Total number of an item you have in your bank, partial match unless it begins with an = e.g. "=Water Flask"
-        /// </summary>
-        public IndexedTLO<IntType> FindItemBankCount { get; }
-        
-        /// <summary>
         /// An inventory slot by name or number
         /// </summary>
         /// <remarks>Valid slot numbers are:
@@ -494,11 +679,6 @@ namespace MQ2DotNet.Services
         /// TeleportationItem (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
         /// </summary>
         public IndexedTLO<KeyRingType, string, KeyRingType, int> TeleportationItem { get; }
-        
-        /// <summary>
-        /// Is an alias set for a command, including the slash e.g. Alias["/chaseon"]
-        /// </summary>
-        public IndexedTLO<BoolType> Alias { get; }
         
         /// <summary>
         /// Currently open context menu
