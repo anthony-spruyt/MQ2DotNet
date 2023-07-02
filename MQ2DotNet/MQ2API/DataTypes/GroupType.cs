@@ -26,7 +26,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The group member of your group identified by Name.
         /// Member[ Name ]
         /// </summary>
-        private IndexedMember<GroupMemberType, string, GroupMemberType, int> _member;
+        private readonly IndexedMember<GroupMemberType, string, GroupMemberType, int> _member;
 
         /// <summary>
         /// The group member of your group identified by Name.
@@ -143,7 +143,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// 
         /// Resulting value is stored in <see cref="MQ2VarPtr.Dword"/> so cast to <see cref="uint"/>.
         /// </summary>
-        private IndexedMember<IntType, int> _injured;
+        private readonly IndexedMember<IntType, int> _injured;
 
         /// <summary>
         /// The numbers of people in the group that has an hp percent lower than #.
@@ -159,7 +159,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// 
         /// Resulting value is stored in <see cref="MQ2VarPtr.Dword"/> so cast to <see cref="uint"/>.
         /// </summary>
-        private IndexedMember<IntType, int> _lowMana;
+        private readonly IndexedMember<IntType, int> _lowMana;
 
         /// <summary>
         /// The number of people in the group that have a mana percent lower than #.

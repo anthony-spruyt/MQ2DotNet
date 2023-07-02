@@ -41,6 +41,8 @@ namespace MQ2DotNet.Services
             _illusion = new IndexedTLO<KeyRingItemType, string, KeyRingItemType, int>(this, "Illusion");
             _lastSpawn = new IndexedTLO<SpawnType, int>(this, "LastSpawn");
             _lineOfSight = new IndexedTLO<BoolType>(this, "LineOfSight");
+            _mount = new IndexedTLO<KeyRingItemType, string, KeyRingItemType, int>(this, "Mount");
+            _nearestSpawn = new IndexedTLO<SpawnType, int, SpawnType, string>(this, "NearestSpawn");
 
             //TODO below
 
@@ -53,8 +55,6 @@ namespace MQ2DotNet.Services
 
 
             InvSlot = new IndexedTLO<InvSlotType, string, InvSlotType, int>(this, "InvSlot");
-            Mount = new IndexedTLO<KeyRingType, string, KeyRingType, int>(this, "Mount");
-            NearestSpawn = new IndexedTLO<SpawnType>(this, "NearestSpawn");
             Plugin = new IndexedTLO<PluginType, string, PluginType, int>(this, "Plugin");
             Skill = new IndexedTLO<SkillType, string, SkillType, int>(this, "Skill");
             Spawn = new IndexedTLO<SpawnType>(this, "Spawn");
@@ -84,7 +84,7 @@ namespace MQ2DotNet.Services
         /// Provides access to spawn search filter criteria in alerts. Alerts are created using /alert.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/
         /// </summary>
-        private IndexedTLO<AlertType, int, StringType, string> _alert;
+        private readonly IndexedTLO<AlertType, int, StringType, string> _alert;
 
         /// <summary>
         /// List of all alert IDs in use.
@@ -126,7 +126,7 @@ namespace MQ2DotNet.Services
         /// Provides a way to query whether a given alias exists. See /alias.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-alias/
         /// </summary>
-        private IndexedTLO<BoolType> _alias;
+        private readonly IndexedTLO<BoolType> _alias;
 
         /// <summary>
         /// Returns bool indicating if named aliase exists
@@ -140,7 +140,7 @@ namespace MQ2DotNet.Services
         /// <summary>
         /// Danger: The AltAbility TLO should not be used except for when experimenting with data. If you've already purchased the AA, use <see cref="CharacterType._altAbility"/>, which is tailored to your character and is much faster.
         /// </summary>
-        private IndexedTLO<AltAbilityType, int, AltAbilityType, string> _altAbility;
+        private readonly IndexedTLO<AltAbilityType, int, AltAbilityType, string> _altAbility;
 
         /// <summary>
         /// Danger: The AltAbility TLO should not be used except for when experimenting with data. If you've already purchased the AA, use <see cref="CharacterType._altAbility"/>, which is tailored to your character and is much faster.
@@ -196,7 +196,7 @@ namespace MQ2DotNet.Services
         /// Determines whether a variable, array, or timer with this name exists. The variable, array or timer must not be enclosed with ${}.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-defined/
         /// </summary>
-        private IndexedTLO<BoolType> _defined;
+        private readonly IndexedTLO<BoolType> _defined;
 
         /// <summary>
         /// Determines whether a variable, array, or timer with this name exists. The variable, array or timer must not be enclosed with ${}.
@@ -235,7 +235,7 @@ namespace MQ2DotNet.Services
         /// Used to get information about items on your familiars keyring.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-familiar/
         /// </summary>
-        private IndexedTLO<KeyRingItemType, string, KeyRingItemType, int> _familiar;
+        private readonly IndexedTLO<KeyRingItemType, string, KeyRingItemType, int> _familiar;
 
         /// <summary>
         /// Access to the familiar keyring.
@@ -289,7 +289,7 @@ namespace MQ2DotNet.Services
         /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditem/
         /// </summary>
-        private IndexedTLO<ItemType, string, ItemType, int> _findItem;
+        private readonly IndexedTLO<ItemType, string, ItemType, int> _findItem;
 
         /// <summary>
         /// A TLO used to find an item on your character, corpse, or a merchant by partial or exact name match. See examples below.
@@ -333,7 +333,7 @@ namespace MQ2DotNet.Services
         /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditembank/
         /// </summary>
-        private IndexedTLO<ItemType, string, ItemType, int> _findItemBank;
+        private readonly IndexedTLO<ItemType, string, ItemType, int> _findItemBank;
 
         /// <summary>
         /// A TLO used to find an item in your bank by partial or exact name match. See examples below.
@@ -380,7 +380,7 @@ namespace MQ2DotNet.Services
         /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditembankcount/
         /// </summary>
-        private IndexedTLO<IntType, string, IntType, int> _findItemBankCount;
+        private readonly IndexedTLO<IntType, string, IntType, int> _findItemBankCount;
 
         /// <summary>
         /// A TLO used to find a count of items in your bank by partial or exact name match. See examples below.
@@ -421,7 +421,7 @@ namespace MQ2DotNet.Services
         /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-finditemcount/
         /// </summary>
-        private IndexedTLO<IntType, string, IntType, int> _findItemCount;
+        private readonly IndexedTLO<IntType, string, IntType, int> _findItemCount;
 
         /// <summary>
         /// A TLO used to find a count of items on your character, corpse, or a merchant by partial or exact name match. See examples below.
@@ -488,7 +488,7 @@ namespace MQ2DotNet.Services
         /// Access to all Groundspawn item count information.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-grounditemcount/
         /// </summary>
-        private IndexedTLO<IntType> _groundItemCount { get; }
+        private readonly IndexedTLO<IntType> _groundItemCount;
 
         /// <summary>
         /// Access to all Groundspawn item count information.
@@ -531,7 +531,7 @@ namespace MQ2DotNet.Services
         /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-heading/
         /// </summary>
-        private IndexedTLO<HeadingType, string> _heading;
+        private readonly IndexedTLO<HeadingType, string> _heading;
 
         /// <summary>
         /// Creates a heading object using the heading to this y,x location
@@ -626,7 +626,7 @@ namespace MQ2DotNet.Services
         /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-lastspawn/
         /// </summary>
-        private IndexedTLO<SpawnType, int> _lastSpawn;
+        private readonly IndexedTLO<SpawnType, int> _lastSpawn;
 
         /// <summary>
         /// Information about the spawns that have occurred since you entered the zone.
@@ -655,7 +655,7 @@ namespace MQ2DotNet.Services
         /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-lineofsight/
         /// </summary>
-        private IndexedTLO<BoolType> _lineOfSight;
+        private readonly IndexedTLO<BoolType> _lineOfSight;
 
         /// <summary>
         /// Check if there is Line of Sight between two locations.
@@ -702,8 +702,107 @@ namespace MQ2DotNet.Services
         /// </summary>
         public MerchantType Merchant => GetTLO<MerchantType>("Merchant");
 
+        /// <summary>
+        /// Used to get information about items on your Mount keyring.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-mount/
+        /// </summary>
+        public IndexedTLO<KeyRingItemType, string, KeyRingItemType, int> _mount;
 
+        /// <summary>
+        /// Access to the Mount keyring.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-mount/
+        /// </summary>
+        public KeyRingType MountKeyRing => GetTLO<KeyRingType>("Mount");
 
+        /// <summary>
+        /// Retrieves the item in your mount keyring by index (base 1).
+        /// Mount[N]
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-mount/
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public KeyRingItemType GetMountKeyRingItem(int index) => _mount[index];
+
+        /// <summary>
+        /// Retrieve the item in your mount keyring by name. A = can be prepended for an exact match.
+        /// Mount[name]
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-mount/
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public KeyRingItemType GetMountKeyRingItem(string name) => _mount[name];
+
+        /// <summary>
+        /// Mounts on the mount keyring.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-mount/
+        /// </summary>
+        public IEnumerable<KeyRingItemType> Mounts
+        {
+            get
+            {
+                var count = (int?)MountKeyRing?.Count ?? 0;
+
+                for (int i = 0; i < count; i++)
+                {
+                    yield return GetMountKeyRingItem(i + 1);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Object that is used in finding spawns nearest to you.
+        /// 
+        /// The Nth nearest spawn
+        /// NearestSpawn[N]
+        /// 
+        /// The nearest spawn matching this search string (see Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/).
+        /// NearestSpawn[search]
+        /// 
+        /// The Nth nearest spawn matching this search string (see Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/).
+        /// NearestSpawn[N,search]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-nearestspawn/
+        /// </summary>
+        private readonly IndexedTLO<SpawnType, int, SpawnType, string> _nearestSpawn;
+
+        /// <summary>
+        /// The Nth nearest spawn (base 1)
+        /// NearestSpawn[N]
+        /// 
+        /// n = 1 will always be yourself.
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-nearestspawn/
+        /// </summary>
+        /// <param name="nth">The base 1 index.</param>
+        /// <returns></returns>
+        public SpawnType GetNearestSpawn(int nth) => _nearestSpawn[nth];
+
+        /// <summary>
+        /// The nearest spawn matching this search string (see Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/).
+        /// NearestSpawn[search]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-nearestspawn/
+        /// </summary>
+        /// <param name="search">Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/</param>
+        /// <returns></returns>
+        public SpawnType GetNearestSpawn(string search) => _nearestSpawn[search];
+
+        /// <summary>
+        /// The Nth nearest spawn matching this search string (see Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/).
+        /// NearestSpawn[N,search]
+        /// 
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-nearestspawn/
+        /// </summary>
+        /// <param name="nth">The base 1 index.</param>
+        /// <param name="search">Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/</param>
+        /// <returns></returns>
+        public SpawnType GetNearestSpawn(int nth, string search) => _nearestSpawn[$"{nth},{search}"];
+
+        /// <summary>
+        /// Pet object which allows you to get properties of your pet.
+        /// https://docs.macroquest.org/reference/top-level-objects/tlo-pet/
+        /// </summary>
+        public PetType Pet => GetTLO<PetType>("Pet");
 
         //TODO below
 
@@ -717,11 +816,6 @@ namespace MQ2DotNet.Services
         /// Your current door target
         /// </summary>
         public SwitchType Switch => GetTLO<SwitchType>("Switch");
-        
-        /// <summary>
-        /// Your pet
-        /// </summary>
-        public PetType Pet => GetTLO<PetType>("Pet");
         
         /// <summary>
         /// TODO: What does SelectedItem give?
@@ -751,32 +845,27 @@ namespace MQ2DotNet.Services
         /// <summary>
         /// First spawn that matches a search string
         /// </summary>
-        public IndexedTLO<SpawnType> Spawn { get; }
+        public IndexedTLO<SpawnType> Spawn;
         
         /// <summary>
         /// Spell by name or ID
         /// </summary>
-        public IndexedTLO<SpellType, string, SpellType, int> Spell { get; }
+        public IndexedTLO<SpellType, string, SpellType, int> Spell;
         
         /// <summary>
         /// Window by name
         /// </summary>
-        public IndexedTLO<WindowType> Window { get; }
+        public IndexedTLO<WindowType> Window;
         
         /// <summary>
         /// Zone by ID or short name. For current zone, use <see cref="CurrentZone"/>
         /// </summary>
-        public IndexedTLO<ZoneType> Zone { get; }
-        
-        /// <summary>
-        /// Nth nearest spawn that matches a search e.g. "2,npc" for the 2nd closest NPC
-        /// </summary>
-        public IndexedTLO<SpawnType> NearestSpawn { get; }
+        public IndexedTLO<ZoneType> Zone;
         
         /// <summary>
         /// Total number of spawns that match a search
         /// </summary>
-        public IndexedTLO<IntType> SpawnCount { get; }
+        public IndexedTLO<IntType> SpawnCount;
         
         /// <summary>
         /// An inventory slot by name or number
@@ -790,33 +879,28 @@ namespace MQ2DotNet.Services
         /// 6000-6080 merchant window
         /// 7000-7080 bazaar window
         /// 8000-8031 inspect window</remarks>
-        public IndexedTLO<InvSlotType, string, InvSlotType, int> InvSlot { get; }
+        public IndexedTLO<InvSlotType, string, InvSlotType, int> InvSlot;
         
         /// <summary>
         /// Plugin by name or number
         /// </summary>
-        public IndexedTLO<PluginType, string, PluginType, int> Plugin { get; }
+        public IndexedTLO<PluginType, string, PluginType, int> Plugin;
         
         /// <summary>
         /// Skill by name or number
         /// </summary>
-        public IndexedTLO<SkillType, string, SkillType, int> Skill { get; }
+        public IndexedTLO<SkillType, string, SkillType, int> Skill;
         
         /// <summary>
         /// Task by name or position in window (1 based)
         /// </summary>
-        public IndexedTLO<TaskType, string, TaskType, int> Task { get; }
-        
-        /// <summary>
-        /// Mount (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
-        /// </summary>
-        public IndexedTLO<KeyRingType, string, KeyRingType, int> Mount { get; }
+        public IndexedTLO<TaskType, string, TaskType, int> Task;
         
         /// <summary>
         /// Requires EXPANSION_LEVEL_TOL
         /// TeleportationItem (on keyring) by name or position in window (1 based). Name is partial match unless it begins with =
         /// </summary>
-        public IndexedTLO<KeyRingType, string, KeyRingType, int> TeleportationItem { get; }
+        public IndexedTLO<KeyRingType, string, KeyRingType, int> TeleportationItem;
         
         /// <summary>
         /// Currently open context menu
@@ -826,7 +910,7 @@ namespace MQ2DotNet.Services
         /// <summary>
         /// Is a sub with the given name defined?
         /// </summary>
-        public IndexedTLO<BoolType> SubDefined { get; }
+        public IndexedTLO<BoolType> SubDefined;
         
         /// <summary>
         /// Dependency on MQ2Cast.

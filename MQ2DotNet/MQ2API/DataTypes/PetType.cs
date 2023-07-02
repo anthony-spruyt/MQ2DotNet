@@ -7,13 +7,16 @@ using System.Text.Json.Serialization;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a pet.
-    /// Last Verified: 2023-06-27
+    /// Pet object.
+    /// Last Verified: 2023-07-02
+    /// https://docs.macroquest.org/reference/data-types/datatype-pet/
     /// </summary>
     [PublicAPI]
     [MQ2Type("pet")]
-    public class PetType : MQ2DataType
+    public class PetType : SpawnType
     {
+        public const int MAX_PET_BUFFS = 100;
+
         internal PetType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             _buff = new IndexedMember<PetBuffType, int, IntType, string>(this, "Buff");
@@ -22,47 +25,57 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// A buff on your pet index (1 based), or the index of a buff on your pet by name.
+        /// Returns the slot number (base 1) for buffname
+        /// Buff[buffname]
+        /// 
+        /// The buff at the given slot (base 1)
+        /// Buff[slot]
+        /// 
         /// Cast the to <see cref="uint"/> when searching by buff name since the returned index of the buff is stored in the <see cref="MQ2VarPtr.Dword"/> property.
         /// </summary>
-        private IndexedMember<PetBuffType, int, IntType, string> _buff;
+        private readonly IndexedMember<PetBuffType, int, IntType, string> _buff;
 
         /// <summary>
-        /// Find the 1 based index of a pet buff by name.
+        /// Returns the slot number (base 1) for buffname.
         /// </summary>
-        /// <param name="name">The name of the buff.</param>
-        /// <returns>The 1 based index of the pet buff.</returns>
-        public uint? GetPetBuff(string name) => _buff[name];
+        /// <param name="buffName">The name of the buff.</param>
+        /// <returns>The base 1 index of the pet buff.</returns>
+        public uint? GetPetBuff(string buffName) => _buff[buffName];
 
         /// <summary>
-        /// Get a buff on your pet by index.
+        /// The buff at the given slot (base 1).
         /// </summary>
-        /// <param name="index">The 1 based index.</param>
+        /// <param name="slot">The base 1 slot.</param>
         /// <returns>The pet buff.</returns>
-        public PetBuffType GetPetBuff(int index) => _buff[index];
+        public PetBuffType GetPetBuff(int slot) => _buff[slot];
 
         /// <summary>
-        /// Remaining duration on a pet's buff, by spell name or index (1 based).
+        /// Buff time remaining for pet buff buffname in miliseconds
+        /// BuffDuration[buffname]
+        /// 
+        /// Buff time remaining for pet buff in slot slot (base 1) in miliseconds
+        /// BuffDuration[slot]
+        /// 
         /// Cast the result to <see cref="TimeSpan"/>.
         /// </summary>
-        private IndexedMember<TimeStampType, int, TimeStampType, string> _buffDuration;
+        private readonly IndexedMember<TimeStampType, int, TimeStampType, string> _buffDuration;
 
         /// <summary>
         /// Get the remaining duration of a pet buff.
         /// </summary>
-        /// <param name="index">The 1 based index.</param>
+        /// <param name="slot">The base 1 slot.</param>
         /// <returns>The remaining duration of the buff.</returns>
-        public TimeSpan? GetPetBuffDuration(int index) => _buffDuration[index];
+        public TimeSpan? GetPetBuffDuration(int slot) => _buffDuration[slot];
 
         /// <summary>
         /// Get the remaining duration of a pet buff.
         /// </summary>
-        /// <param name="name">The name of the pet buff</param>
+        /// <param name="buffName">The name of the pet buff</param>
         /// <returns>The remaining duration of the buff.</returns>
-        public TimeSpan? GetPetBuffDuration(string name) => _buffDuration[name];
+        public TimeSpan? GetPetBuffDuration(string buffName) => _buffDuration[buffName];
 
         /// <summary>
-        /// Is pet in combat?
+        /// Combat state
         /// </summary>
         public bool Combat => GetMember<BoolType>("Combat");
         
@@ -80,9 +93,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Is ReGroup enabled?
         /// </summary>
         public bool ReGroup => GetMember<BoolType>("ReGroup");
-        
+
         /// <summary>
-        /// Current stance, either "FOLLOW" or "GUARD"
+        /// Returns the pet's current stance, (e.g. FOLLOW, GUARD)
         /// </summary>
         public PetStance? Stance => GetMember<StringType>("Stance");
         
@@ -92,7 +105,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Stop => GetMember<BoolType>("Stop");
 
         /// <summary>
-        /// Pet's target
+        /// Returns the pet's current target.
         /// </summary>
 
         [JsonIgnore]
@@ -104,21 +117,21 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool Taunt => GetMember<BoolType>("Taunt");
 
         /// <summary>
-        /// TODO: new member
+        /// Focus state
         /// </summary>
         public bool Focus => GetMember<BoolType>("Focus");
 
         /// <summary>
-        /// TODO: new member
+        /// Online doco has no info on it, just that it exists.
         /// </summary>
-        private IndexedMember<BuffType> _findBuff;
+        private readonly IndexedMember<BuffType> _findBuff;
 
         /// <summary>
         /// Get a buff by name if on the pet.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="buffName"></param>
         /// <returns></returns>
-        public BuffType GetBuff(string name) => _findBuff[name];
+        public BuffType FindBuff2(string buffName) => _findBuff[buffName];
 
         /// <summary>
         /// All the current pet buffs.
@@ -127,25 +140,23 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var items = new List<PetBuffType>();
                 var index = 1;
 
-                while (true)
+                while (index <= MAX_PET_BUFFS)
                 {
                     var item = GetPetBuff(index);
 
-                    if (item != null && index <= 100)
+                    if (item != null)
                     {
-                        items.Add(item);
                         index++;
+
+                        yield return item;
                     }
                     else
                     {
                         break;
                     }
                 }
-
-                return items;
             }
         }
     }

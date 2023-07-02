@@ -49,7 +49,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// True if the provided parameter an existing TLO.
         /// Can/Should only be used it there is no active macro.
         /// </summary>
-        private IndexedMember<BoolType> _isTLO;
+        private readonly IndexedMember<BoolType> _isTLO;
 
         /// <summary>
         /// True if the provided parameter an existing TLO.
@@ -63,7 +63,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// True if the provided parameter is a defined outer variable.
         /// Can/Should only be used it there is no active macro.
         /// </summary>
-        private IndexedMember<BoolType> _isOuterVariable;
+        private readonly IndexedMember<BoolType> _isOuterVariable;
 
         /// <summary>
         /// True if the provided parameter is a defined outer variable.
@@ -106,7 +106,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns the value given the name of Macro variable.
         /// </summary>
-        private IndexedMember<MQ2DataType> _variable;
+        private readonly IndexedMember<MQ2DataType> _variable;
 
         /// <summary>
         /// Returns the value given the name of Macro variable.

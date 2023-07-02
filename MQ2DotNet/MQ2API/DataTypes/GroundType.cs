@@ -160,7 +160,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Get a ground spawn by ID or by name.
         /// </summary>
-        private IndexedMember<GroundType, int, GroundType, string> _search;
+        private readonly IndexedMember<GroundType, int, GroundType, string> _search;
 
         /// <summary>
         /// Get a ground spawn by name.

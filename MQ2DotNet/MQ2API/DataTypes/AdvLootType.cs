@@ -28,7 +28,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns an item from the personal loot list
         /// </summary>
-        private IndexedMember<AdvLootItemType, int> _pList;
+        private readonly IndexedMember<AdvLootItemType, int> _pList;
 
         /// <summary>
         /// Inspect the item at the specified index in the personal loot list.
@@ -63,7 +63,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Inspect the item at the specified index in the shared loot list.
         /// SList[ Index ]
         /// </summary>
-        private IndexedMember<AdvLootItemType, int> _sList;
+        private readonly IndexedMember<AdvLootItemType, int> _sList;
 
         /// <summary>
         /// Inspect the item at the specified index in the shared loot list.
@@ -108,7 +108,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Inspect the loot filter for a given ItemID.
         /// Filter[ ItemID ]
         /// </summary>
-        private IndexedMember<ItemFilterDataType, int> _filter;
+        private readonly IndexedMember<ItemFilterDataType, int> _filter;
 
         /// <summary>
         /// Inspect the loot filter for a given ItemID.

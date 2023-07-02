@@ -801,7 +801,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Seems broken and useless even if it wasn't
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public bool bShowHelm => GetMember<BoolType>("bShowHelm");
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// Returns weird numbers
@@ -957,7 +959,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// This looks very similar to <see cref="_cachedBuff"/>. A more basic implementation/sub functionality of it.
         /// </summary>
-        public IndexedMember<CachedBuffType, int, CachedBuffType, string> _buff;
+        private IndexedMember<CachedBuffType, int, CachedBuffType, string> _buff;
 
         /// <summary>
         /// Get a cached buff by name.

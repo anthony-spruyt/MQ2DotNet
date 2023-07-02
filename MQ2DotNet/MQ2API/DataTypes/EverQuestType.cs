@@ -98,7 +98,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns TRUE if channelname is joined
         /// ChatChannel[channelname]
         /// </summary>
-        private IndexedStringMember<int, BoolType, string> _chatChannel;
+        private readonly IndexedStringMember<int, BoolType, string> _chatChannel;
 
         /// <summary>
         /// Returns the name of chat channel #
@@ -181,7 +181,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: new member + confirm as it doesnt follow the usual pattern and templates <seealso cref="ScreenMode"/>
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         public uint? xScreenMode => GetMember<IntType>("xScreenMode");
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// Returns the screenmode as an integer, 2 is Normal and 3 is No Windows
@@ -218,7 +220,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Character in the character select list by name or position (1 based)
         /// </summary>
-        private IndexedMember<CharSelectListType, string, CharSelectListType, int> _charSelectList;
+        private readonly IndexedMember<CharSelectListType, string, CharSelectListType, int> _charSelectList;
 
         /// <summary>
         /// Character in the character select list by position (1 based)
@@ -277,7 +279,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Is the given location, in yxz format separated by spaces, a valid location in the current zone?
         /// </summary>
-        private IndexedMember<BoolType, string> _validLoc;
+        private readonly IndexedMember<BoolType, string> _validLoc;
 
         /// <summary>
         /// Returns true if the given coordinates are valid.

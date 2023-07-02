@@ -22,7 +22,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of a friend by index (1 based) or true/false if a name is on your friend list
         /// </summary>
-        private IndexedStringMember<int, BoolType, string> _friend;
+        private readonly IndexedStringMember<int, BoolType, string> _friend;
 
         /// <summary>
         /// Returns the name of friend list member # (base 1)

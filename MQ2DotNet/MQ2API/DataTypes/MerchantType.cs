@@ -63,7 +63,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Find an item by partial name on the merchant's list. Prefix with "=" for an exact match.
         /// Item[name]
         /// </summary>
-        private IndexedMember<ItemType, int, ItemType, string> _item;
+        private readonly IndexedMember<ItemType, int, ItemType, string> _item;
 
         /// <summary>
         /// Item number # on the merchant's list (1 based).
@@ -81,6 +81,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="partialMatch">Optional partial match parameter. Default is true. If false an exact case insensitive match is required.</param>
         public ItemType GetItem(string itemName, bool partialMatch = true) => _item[partialMatch ? itemName : $"={itemName}"];
 
+        /// <summary>
+        /// All of the merchant items.
+        /// </summary>
         public IEnumerable<ItemType> Stock
         {
             get

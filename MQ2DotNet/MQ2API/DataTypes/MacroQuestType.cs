@@ -61,7 +61,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// - plugins
         /// - resources
         /// </summary>
-        private IndexedStringMember<string> _path;
+        private readonly IndexedStringMember<string> _path;
 
         /// <summary>
         /// Directory that Macroquest.exe launched from. When passed root/config/crashdumps/logs/mqini/macros/plugins/resources, returns the respective path
