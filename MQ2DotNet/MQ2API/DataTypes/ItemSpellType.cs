@@ -3,8 +3,9 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a spell effect on an item.
-    /// Last Verified: 2023-06-27
+    /// Represents a spell effect on an item.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-itemspell/
     /// </summary>
     [PublicAPI]
     [MQ2Type("itemspell")]
@@ -15,72 +16,74 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// TODO: What is this?
+        /// ID of the Spell.
         /// </summary>
         public uint? SpellID => GetMember<IntType>("SpellID");
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// Level required for the spell to be usable.
         /// </summary>
         public uint? RequiredLevel => GetMember<IntType>("RequiredLevel");
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// The type of item spell effect.
         /// </summary>
         public uint? EffectType => GetMember<IntType>("EffectType");
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// Effective level that is used to cast the spell.
         /// </summary>
         public uint? EffectiveCasterLevel => GetMember<IntType>("EffectiveCasterLevel");
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// The maximum number of charges supported by this spell.
         /// </summary>
         public uint? MaxCharges => GetMember<IntType>("MaxCharges");
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// Spell cast time.
+        /// TODO: determine the unit type (milliseconds, seconds etc.)
         /// </summary>
         public uint? CastTime => GetMember<IntType>("CastTime");
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// Timer ID of the spell.
+        /// TODO: determine the unit type (milliseconds, seconds etc.)
         /// </summary>
         public uint? TimerID => GetMember<IntType>("TimerID");
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// Recast type of the spell.
         /// </summary>
         public uint? RecastType => GetMember<IntType>("RecastType");
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// Combat effect proc rate.
         /// </summary>
         public uint? ProcRate => GetMember<IntType>("ProcRate");
-        
+
         /// <summary>
-        /// Same as <see cref="OtherName"/>
+        /// Overrides the normal spell name string, if set. Same as <see cref="OtherName"/>
         /// </summary>
         public string OverrideName => OtherName;
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// Overrides the normal spell name string, if set. Same as <see cref="OverrideName"/>
         /// </summary>
         public string OtherName => GetMember<StringType>("OtherName");
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// TODO: What is this? Not in the online doco at https://docs.macroquest.org/reference/data-types/datatype-itemspell/#members.
         /// </summary>
         public uint? OtherID => GetMember<IntType>("OtherID");
-        
+
         /// <summary>
-        /// TODO: What is this?
+        /// Overrides the normal spell description string, if set.
         /// </summary>
         public string OverrideDescription => GetMember<StringType>("OverrideDescription");
 
         /// <summary>
-        /// The spell
+        /// The spell.
         /// </summary>
         public SpellType Spell => GetMember<SpellType>("Spell");
     }

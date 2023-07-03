@@ -6,8 +6,9 @@ using JetBrains.Annotations;
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
-    /// MQ2 type for a spell.
-    /// Last Verified: 2023-07-01
+    /// This is the type used for spell information.
+    /// Last Verified: 2023-07-03
+    /// https://docs.macroquest.org/reference/data-types/datatype-spell/
     /// </summary>
     [PublicAPI]
     [MQ2Type("spell")]
@@ -36,18 +37,18 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// TODO: new method
+        /// Opens the spell display window for this spell.
         /// </summary>
         /// <param name="spellNameOverride"></param>
         public void Inspect(string spellNameOverride) => GetMember<MQ2DataType>("Inspect", spellNameOverride);
 
         /// <summary>
-        /// TODO: new method
+        /// Opens the spell display window for this spell.
         /// </summary>
         public void Inspect() => GetMember<MQ2DataType>("Inspect");
 
         /// <summary>
-        /// Spell ID
+        /// Spell ID.
         /// </summary>
         public uint? ID => GetMember<IntType>("ID");
         
@@ -62,7 +63,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public int? Level => GetMember<IntType>("Level");
         
         /// <summary>
-        /// Mana cost (unadjusted)
+        /// Mana cost (unadjusted).
         /// </summary>
         public int? Mana => GetMember<IntType>("Mana");
         
@@ -77,7 +78,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public float? Range => GetMember<FloatType>("Range");
         
         /// <summary>
-        /// AE range (group spells use this for their range)
+        /// AE range (group spells use this for their range).
         /// </summary>
         public float? AERange => GetMember<FloatType>("AERange");
         
@@ -87,12 +88,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public float? PushBack => GetMember<FloatType>("PushBack");
         
         /// <summary>
-        /// Cast time (unadjusted)
+        /// Cast time (unadjusted).
         /// </summary>
         public TimeSpan? CastTime => GetMember<TimeStampType>("CastTime");
         
         /// <summary>
-        /// Time to recover after fizzle
+        /// Time to recover after fizzle.
         /// </summary>
         public TimeSpan? RecoveryTime => FizzleTime;
         
@@ -107,7 +108,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public TimeSpan? RecastTime => GetMember<TimeStampType>("RecastTime");
 
         /// <summary>
-        /// One of Chromatic, Corruption, Cold, Disease, Fire, Magic, Poison, Unknown, Unresistable, Prismatic, Physical
+        /// ResistType will be one of the following:
+        /// - Chromatic
+        /// - Corruption
+        /// - Cold
+        /// - Disease
+        /// - Fire
+        /// - Magic
+        /// - Poison
+        /// - Unresistable
+        /// - Prismatic
+        /// - Unknown
         /// TODO: convert to enum
         /// </summary>
         public string ResistType => GetMember<StringType>("ResistType");
@@ -119,7 +130,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public string Type => GetMember<StringType>("SpellType");
 
         /// <summary>
-        /// TODO: convert to enum
         /// Target type:
         /// {Target_AE_No_Players_Pets}
         /// {Single Friendly (or Target's Target}
@@ -160,17 +170,23 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// {Line of Sight}
         /// {None}
         /// {Unknown}
+        /// TODO: convert to enum
         /// </summary>
         public string TargetType => GetMember<StringType>("TargetType");
-        
+
         /// <summary>
+        /// Skill will be one of the following:
+        /// - Abjuration
+        /// - Alteration
+        /// - Conjuration
+        /// - Divination
+        /// - Evocation
         /// TODO: map to enum
-        /// Casting school, one of Abjuration, Alteration, Conjuration, Divination, Evocation
         /// </summary>
         public string Skill => GetMember<StringType>("Skill");
         
         /// <summary>
-        /// Adjusted cast time
+        /// Adjusted cast time.
         /// </summary>
         public TimeSpan? MyCastTime => GetMember<TimeStampType>("MyCastTime");
 
@@ -195,50 +211,52 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public string CastByMe => GetMember<StringType>("CastByMe");
         
         /// <summary>
-        /// Message when someone else casts the spell
+        /// Message when someone else casts the spell.
         /// </summary>
         public string CastByOther => GetMember<StringType>("CastByOther");
-        
+
         /// <summary>
-        /// Message when the spell lands on you
+        /// Message when cast on yourself.
         /// </summary>
         public string CastOnYou => GetMember<StringType>("CastOnYou");
-        
+
         /// <summary>
-        /// Message when the spawn lands on someone else
+        /// Message when cast on others.
         /// </summary>
         public string CastOnAnother => GetMember<StringType>("CastOnAnother");
-        
+
         /// <summary>
-        /// Message when the spell wears off
+        /// The "wear off" message.
         /// </summary>
         public string WearOff => GetMember<StringType>("WearOff");
-        
+
         /// <summary>
+        /// The resist counter. Will be one of "Disease", "Poison", "Curse" or "Corruption".
         /// TODO: map to enum
-        /// The resist counter. Will be one of "Disease", "Poison", "Curse" or "Corruption"
         /// </summary>
         public string CounterType => GetMember<StringType>("CounterType");
         
         /// <summary>
-        /// The number of counters that the spell adds
+        /// The number of counters that the spell adds.
         /// </summary>
         public long? CounterNumber => GetMember<Int64Type>("CounterNumber");
 
         /// <summary>
-        /// Does this spell stack with your current buffs (duration is in ticks)
+        /// Does the selected spell stack with your current buffs (duration is in ticks)?
+        /// Stacks[ duration ]
         /// </summary>
         private readonly IndexedMember<BoolType, string> _stacks;
 
         /// <summary>
-        /// Does this spell stack with your current buffs?
+        /// Does the selected spell stack with your current buffs (duration is in ticks)?
+        /// Stacks[ duration ]
         /// </summary>
         /// <param name="duration"></param>
         /// <returns></returns>
         public bool Stacks(TimeSpan duration) => _stacks[duration.Ticks.ToString()];
 
         /// <summary>
-        /// Does this spell stack with your current buffs?
+        /// Does the selected spell stack with your current buffs?
         /// </summary>
         /// <returns></returns>
         public bool Stacks() => _stacks["0"];
@@ -252,19 +270,21 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool WillLand => (int)GetMember<IntType>("WillLand") > 0;
 
         /// <summary>
-        /// Does this spell stack with your pet's current buffs (duration is in ticks)
+        /// Does the selected spell stack with your pet's current buffs (duration is in ticks)?
+        /// StacksPet[ duration ]
         /// </summary>
         private readonly IndexedMember<BoolType, string> _stacksPet;
 
         /// <summary>
-        /// Does this spell stack with your pet's current buffs?
+        /// Does the selected spell stack with your pet's current buffs (duration is in ticks)?
+        /// StacksPet[ duration ]
         /// </summary>
         /// <param name="duration"></param>
         /// <returns></returns>
         public bool StacksPet(TimeSpan duration) => _stacksPet[duration.Ticks.ToString()];
 
         /// <summary>
-        /// Does this spell stack with your pet's current buffs?
+        /// Does the selected spell stack with your pet's current buffs?
         /// </summary>
         /// <returns></returns>
         public bool StacksPet() => _stacksPet["0"];
@@ -276,15 +296,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Does this spell stack with another spell?
-        /// Also know as
+        /// Also known as
         /// - will stack
         /// - new stack with
         /// </summary>
         private readonly IndexedMember<BoolType, string> _stacksWith;
 
         /// <summary>
-        /// Does this spell stack with another spell?
-        /// Also know as
+        /// Does the selected spell stack with the specific spell name? DOES NOT work with AAs.
+        /// Also known as
         /// - will stack
         /// - new stack with
         /// </summary>
@@ -305,7 +325,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool StacksSpawn(int spawnId) => _stacksSpawn[spawnId];
 
         /// <summary>
-        /// Will this spell stack on your target?
+        /// Does the selected spell stack with your target's current buffs?
         /// </summary>
         public bool StacksTarget => GetMember<BoolType>("StacksTarget");
 
@@ -325,26 +345,24 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public long? MaxLevel => GetMember<Int64Type>("MaxLevel");
 
         /// <summary>
-        /// Category of the spell e.g. Direct Damage, Heals, Unknown
-        /// First level of the menu when you right click a gem
+        /// Name of the category the spell belongs to (e.g. HP Buffs, Direct Damage, Heals, Unknown).
         /// TODO: map to an enum
         /// </summary>
         public string Category => GetMember<StringType>("Category");
 
         /// <summary>
-        /// TODO: new member
+        /// Numeric ID of the category this spell belongs to.
         /// </summary>
         public uint? CategoryID => GetMember<IntType>("CategoryID");
 
         /// <summary>
-        /// Subcategory of the spell e.g. Combat Innates, Damage Shield
-        /// Second level of the menu when you right click a gem
+        /// Name of the subcategory this spell belongs to (e.g. "Shielding").
         /// TODO: map to enum
         /// </summary>
         public string Subcategory => GetMember<StringType>("Subcategory");
 
         /// <summary>
-        /// TODO: new member
+        /// Numeric Id of the subcategory this spell belongs to.
         /// </summary>
         public uint? SubcategoryID => GetMember<IntType>("SubcategoryID");
 
@@ -360,6 +378,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <returns></returns>
         public string GetRestriction(int index) => _restrictions[index];
 
+        private bool TryGetRestriction(int index, out string restriction)
+        {
+            const string stop = "Unknown";
+            restriction = GetRestriction(index);
+
+            return !string.IsNullOrEmpty(restriction) && string.Compare(restriction, stop, true) != 0;
+        }
+
         /// <summary>
         /// All spell restrictions.
         /// </summary>
@@ -367,19 +393,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                List<string> items = new List<string>();
                 var index = 1;
-                var item = GetRestriction(index);
-                const string stop = "Unknown";
 
-                while (!string.IsNullOrWhiteSpace(item) && string.Compare(item, stop, true) != 0 && index < MAX_RESTRICTIONS)
+                while (TryGetRestriction(index, out string restriction) && index < MAX_RESTRICTIONS)
                 {
-                    items.Add(item);
                     index++;
-                    item = GetRestriction(index);
-                }
 
-                return items;
+                    yield return restriction;
+                }
             }
         }
 
@@ -527,12 +548,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool CanMGB => GetMember<BoolType>("CanMGB");
 
         /// <summary>
-        /// Is this spell a skill?
+        /// is this spell a skill?
         /// </summary>
         public bool IsSkill => GetMember<BoolType>("IsSkill");
 
         /// <summary>
-        /// TODO: From spellbook or can be clicked off?
+        /// Whether a spell can be deleted from the spell book.
         /// </summary>
         public bool Deletable => GetMember<BoolType>("Deletable");
 
@@ -542,12 +563,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? BookIcon => GetMember<IntType>("BookIcon");
 
         /// <summary>
-        /// <see cref="BookIcon"/>
+        /// Numeric ID of the Icon used to represent the spell.
         /// </summary>
         public uint? SpellIcon => BookIcon;
 
         /// <summary>
-        /// <see cref="BookIcon"/>
+        /// Icon number of the spell. Example ${Spell[blah].GemIcon}.
         /// </summary>
         public uint? GemIcon => BookIcon;
 
@@ -602,7 +623,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool IsActiveAA => GetMember<BoolType>("IsActiveAA");
 
         /// <summary>
-        /// TODO: what is this?
+        /// TODO: what is this? Online doco states it is "Appears to be max distance" but from the MQ client source we can see it is of zone type.
         /// </summary>
         public ZoneType Location => GetMember<ZoneType>("Location");
 
@@ -617,7 +638,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? DurationValue1 => GetMember<IntType>("DurationValue1");
 
         /// <summary>
-        /// TODO: new member
+        /// No info in online doco for this member.
         /// </summary>
         public bool StacksWithDiscs => GetMember<BoolType>("StacksWithDiscs");
 
@@ -651,12 +672,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public SpellType GetTrigger(int index) => _trigger[index];
 
         /// <summary>
-        /// TODO: new member
+        /// Percentage of slow, example of use ${Target.Slowed.SlowPct} or ${Spell[Slowing Helix].SlowPct}
         /// </summary>
         public int? SlowPct => GetMember<IntType>("SlowPct");
 
         /// <summary>
-        /// TODO: new member
+        /// Percentage of haste, example of use ${Me.Hasted.HastePct} or ${Spell[Speed of Milyex].HastePct}.
         /// </summary>
         public int? HastePct => GetMember<IntType>("HastePct");
 
@@ -666,26 +687,37 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public int? BaseEffectsFocusCap => GetMember<IntType>("BaseEffectsFocusCap");
 
         /// <summary>
-        /// TODO: new member
+        /// Whether a spell can be dispelled.
         /// </summary>
         public bool Dispellable => GetMember<BoolType>("Dispellable");
 
         /// <summary>
-        /// TODO: new indexed member
+        /// Generate a clickable spell link. text is optional and overrides the text of the link.
+        /// Link[ text ]
         /// </summary>
         private readonly IndexedStringMember<string> _link;
 
         /// <summary>
-        /// TODO: what is this?
+        /// Generate a clickable spell link. Text is optional and overrides the text of the link.
+        /// Link[ text ]
         /// </summary>
         /// <param name="spellNameOverride"></param>
         /// <returns></returns>
         public string GetLink(string spellNameOverride) => _link[spellNameOverride];
 
         /// <summary>
-        /// TODO: what is this?
+        /// Generate a clickable spell link.
         /// </summary>
         /// <returns></returns>
         public string GetLink() => _link[""];
+
+        /// <summary>
+        /// Same as <see cref="Name"/>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }
