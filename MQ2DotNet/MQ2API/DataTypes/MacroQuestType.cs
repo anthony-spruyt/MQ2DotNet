@@ -9,7 +9,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [PublicAPI]
     [MQ2Type("macroquest")]
-    public class MacroQuestType : EverQuestType
+    public class MacroQuestType : MQ2DataType//EverQuestType inheritence is an issue in this implementation.
     {
         internal MacroQuestType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {

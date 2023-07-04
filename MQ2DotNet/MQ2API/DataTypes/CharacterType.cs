@@ -1,19 +1,29 @@
 ﻿using JetBrains.Annotations;
 using MQ2DotNet.EQ;
+using MQ2DotNet.Services;
 using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// TODO: Update members and methods according to doco and implement indexed member wrapper methods and properties.
-    /// MQ2 type for the local player character.
+    /// This data type contains all the information about your character.
     /// Last Verified: 2023-06-30
     /// https://docs.macroquest.org/reference/data-types/datatype-character/
     /// </summary>
     [PublicAPI]
     [MQ2Type("character")]
-    public class CharacterType : MQ2DataType
+    public class CharacterType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {
+        public const int NUM_INV_SLOTS = 35;
+        public const int NUM_COMBAT_ABILITIES = 300;
+        public const int AA_CHAR_MAX_REAL = 300;
+        public const int NUM_SKILLS = 100;
+        public const int NUM_BOOK_SLOTS = 1120;
+
         internal CharacterType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             _blockedPetBuff = new IndexedMember<SpellType, int>(this, "BlockedPetBuff");
@@ -178,15 +188,67 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<SpellType, int> _blockedPetBuff;
 
         /// <summary>
+        /// Blocked pet buff by index, valid index are 1 - 40
+        /// In the MQ client this looks to be the same as <see cref="_blockedBuff"/>
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public SpellType GetBlockedPetBuff(int index) => _blockedPetBuff[index];
+
+        /// <summary>
         /// Blocked buff by index, valid index are 1 - 40
         /// In the MQ client this looks to be the same as <see cref="_blockedPetBuff"/>
         /// </summary>
         private readonly IndexedMember<SpellType, int> _blockedBuff;
 
         /// <summary>
-        /// Buff by name or slot number
+        /// Blocked buff by index, valid index are 1 - 40
+        /// In the MQ client this looks to be the same as <see cref="_blockedPetBuff"/>
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public SpellType GetBlockedBuff(int index) => _blockedBuff[index];
+
+        /// <summary>
+        /// The buff with this name.
+        /// Buff[ name ]
+        /// 	
+        /// The buff in this slot #
+        /// Buff[ # ]
         /// </summary>
         private readonly IndexedMember<BuffType, string, BuffType, int> _buff;
+
+        /// <summary>
+        /// The buff with this name.
+        /// Buff[ name ]
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public BuffType GetBuff(string name) => _buff[name];
+
+        /// <summary>
+        /// The buff in this slot #
+        /// Buff[ # ]
+        /// </summary>
+        /// <param name="slotNumber"></param>
+        /// <returns></returns>
+        public BuffType GetBuff(int slotNumber) => _buff[slotNumber];
+
+        /// <summary>
+        /// All buffs. Based on <see cref="GetBuff(int)"/>
+        /// </summary>
+        public IEnumerable<BuffType> Buffs
+        {
+            get
+            {
+                var count = CountBuffs ?? 0;
+
+                for (int i = 0; i < count; i++)
+                {
+                    yield return GetBuff(i + 1);
+                }
+            }
+        }
 
         /// <summary>
         /// Song (short buff) by name or slot number
@@ -194,9 +256,48 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<BuffType, string, BuffType, int> _song;
 
         /// <summary>
-        /// TODO: new member
+        /// The song with this name.
+        /// Buff[ name ]
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public BuffType GetSong(string name) => _song[name];
+
+        /// <summary>
+        /// The song in this slot #
+        /// Buff[ # ]
+        /// </summary>
+        /// <param name="slotNumber"></param>
+        /// <returns></returns>
+        public BuffType GetSong(int slotNumber) => _song[slotNumber];
+
+        /// <summary>
+        /// All songs. Based on <see cref="GetSong(int)"/>
+        /// </summary>
+        public IEnumerable<BuffType> Songs
+        {
+            get
+            {
+                var count = CountSongs ?? 0;
+
+                for (int i = 0; i < count; i++)
+                {
+                    yield return GetSong(i + 1);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Not documented in online doco.
         /// </summary>
         private readonly IndexedMember<BuffType, string> _findBuff;
+
+        /// <summary>
+        /// Not documented in online doco.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public BuffType FindBuff(string predicate) => _findBuff[predicate];
 
         /// <summary>
         /// Hit point bonus from gear and spells
@@ -414,18 +515,100 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// An item from your inventory by slot name or number
+        /// https://docs.macroquest.org/reference/general/slot-names/. 
+        /// NOTE SLOT NAMES SEEMS DATED. Source shows 35 - doco shows 32
         /// </summary>
         private readonly IndexedMember<ItemType, string, ItemType, int> _inventory;
 
         /// <summary>
+        /// Item in this slot #
+        /// Inventory[ # ]
+        /// </summary>
+        /// <param name="slotNumber"></param>
+        /// <returns></returns>
+        public ItemType GetInvetoryItem(int slotNumber) => _inventory[slotNumber];
+
+        /// <summary>
+        /// Item in this slotname (inventory slots only).
+        /// Inventory[ slotname ]
+        /// </summary>
+        /// <param name="slotName">See slot names - https://docs.macroquest.org/reference/general/slot-names/</param>
+        /// <returns></returns>
+        public ItemType GetInvetoryItem(string slotName) => _inventory[slotName];
+
+        /// <summary>
+        /// All equipment and top level inventory. Does not flatten content of containers.
+        /// </summary>
+        public IEnumerable<ItemType> Inventory
+        {
+            get
+            {
+                for (int i = 0; i < NUM_INV_SLOTS; i++)
+                {
+                    yield return GetInvetoryItem(i);
+                }
+            }
+        }
+
+        /// <summary>
         /// Item in this bankslot #
+        /// Bank [ # ]
+        /// https://docs.macroquest.org/reference/general/slot-names/#bank-slots
         /// </summary>
         private readonly IndexedMember<ItemType, int> _bank;
 
         /// <summary>
-        /// TODO: new member
+        /// Item in this bankslot #
+        /// Bank [ # ]
+        /// 
+        /// From the source it looks like the range is base 1 and from 1 to the amount of slots depending on the expansions owned/active.
+        /// 
+        /// https://docs.macroquest.org/reference/general/slot-names/#bank-slots
+        /// </summary>
+        /// <param name="slotNumber"></param>
+        /// <returns></returns>
+        public ItemType GetBankItem(int slotNumber) => _bank[slotNumber];
+
+        public IEnumerable<ItemType> Bank
+        {
+            get
+            {
+                var bankSlots = HaveExpansion("Prophecy of Ro") ? 24 : 16;
+
+                for (int i = 0; i < bankSlots; i++)
+                {
+                    yield return GetBankItem(i + 1);
+                }
+            }
+        }
+
+        /// <summary>
+        /// TODO: new member, online doco has no info for this member.
         /// </summary>
         private readonly IndexedMember<ItemType, int> _sharedBank;
+
+        /// <summary>
+        /// TODO: new member, online doco has no info for this member.
+        /// 
+        /// From the source it looks like the range is base 1 and from 1 to the amount of slots depending on the expansions owned/active.
+        /// 
+        /// </summary>
+        /// <param name="slotNumber"></param>
+        /// <returns></returns>
+        public ItemType GetSharedBankItem(int slotNumber) => _sharedBank[slotNumber];
+
+        public IEnumerable<ItemType> SharedBank
+        {
+            get
+            {
+                var sharedBankSlots = HaveExpansion("The Burning Lands") ? 6 : HaveExpansion("Call of the Forsaken") ? 4 : 2;
+
+                for (int i = 0; i < sharedBankSlots; i++)
+                {
+                    yield return GetSharedBankItem(i + 1);
+                }
+            }
+        }
 
         /// <summary>
         /// Platinum in your shared bank
@@ -565,10 +748,52 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<SpellType, int, IntType, string> _gem;
 
         /// <summary>
+        /// The spell in this gem slot #
+        /// </summary>
+        /// <param name="gemSlot">The base 1 gem slot number.</param>
+        /// <returns></returns>
+        public SpellType GetGem(int gemSlot) => _gem[gemSlot];
+
+        /// <summary>
+        /// Returns the slot # with the spell name
+        /// </summary>
+        /// <param name="spellName"></param>
+        /// <returns></returns>
+        public uint? GetGem(string spellName) => (uint?)_gem[spellName];
+
+        public IEnumerable<GemInfo> Gems
+        {
+            get
+            {
+                var count = NumGems ?? 0;
+
+                for (int i = 0; i < count; i++)
+                {
+                    yield return new GemInfo(i + 1, this);
+                }
+            }
+        }
+
+        /// <summary>
         /// Language skill by name or number.
         /// Cast to <see cref="uint"/> to get the value.
         /// </summary>
         private readonly IndexedMember<IntType, int, IntType, string> _languageSkill;
+
+        /// <summary>
+        /// No info available on the number. Index is base 1.
+        /// Range is [1:27]
+        /// </summary>
+        /// <param name="index">The base 1 index</param>
+        /// <returns></returns>
+        public uint? GetLanguageSkill(int index) => _languageSkill[index];
+
+        /// <summary>
+        /// Your skill in language
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public uint? GetLanguageSkill(string name) => _languageSkill[name];
 
         /// <summary>
         /// Combat ability spell by number, or number by name.
@@ -577,15 +802,78 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<SpellType, int, IntType, string> _combatAbility;
 
         /// <summary>
+        /// The Combat Ability in your list by number (not the same as anyone else's list!)
+        /// Range[1,300]
+        /// </summary>
+        /// <param name="number">Range[1,300]</param>
+        /// <returns></returns>
+        public SpellType GetCombatAbility(int number) => _combatAbility[number];
+
+        /// <summary>
+        /// The number of the Combat ability name in your list (not the same as anyone else's list!)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public uint? GetCombatAbilityNumber(string name) => (uint?)_combatAbility[name];
+
+        public IEnumerable<CombatAbilityInfo> CombatAbilities
+        {
+            get
+            {
+                var items = new List<CombatAbilityInfo>(300);
+
+                for (int i = 0; i < NUM_COMBAT_ABILITIES; i++)
+                {
+                    var item = new CombatAbilityInfo(i + 1, this);
+
+                    if (item.Ability != null)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        /// <summary>
         /// Combat ability reuse time remaining by name or number.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int"/>.
         /// </summary>
         private readonly IndexedMember<TicksType, int, TicksType, string> _combatAbilityTimer;
 
         /// <summary>
+        /// The time remaining before the Combat Ability is usable
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public TimeSpan? GetCombatAbilityTimer(int number) => _combatAbilityTimer[number];
+
+        /// <summary>
+        /// The time remaining before the Combat Ability is usable
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public TimeSpan? GetCombatAbilityTimer(string name) => _combatAbilityTimer[name];
+
+        /// <summary>
         /// Combat ability ready by name or number.
         /// </summary>
         private readonly IndexedMember<BoolType, int, BoolType, string> _combatAbilityReady;
+
+        /// <summary>
+        /// Is this Combat Ability ready?
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public bool GetCombatAbilityReady(int number) => _combatAbilityReady[number];
+
+        /// <summary>
+        /// Is this Combat Ability ready?
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool GetCombatAbilityReady(string name) => _combatAbilityReady[name];
 
         /// <summary>
         /// Returns a spell if melee discipline is active.
@@ -608,10 +896,24 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? Thirst => GetMember<IntType>("Thirst");
 
         /// <summary>
-        /// Alt ability reuse time remaining by name or number.
+        /// Alt ability reuse time remaining by name or ID.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
         private readonly IndexedMember<TimeStampType, int, TimeStampType, string> _altAbilityTimer;
+
+        /// <summary>
+        /// Alt ability reuse time remaining by ID.
+        /// </summary>
+        /// <param name="altAbilityID"></param>
+        /// <returns></returns>
+        public TimeSpan? GetAltAbilityTimer(int altAbilityID) => _altAbilityTimer[altAbilityID];
+
+        /// <summary>
+        /// Alt ability reuse time remaining by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public TimeSpan? GetAltAbilityTimer(string name) => _altAbilityTimer[name];
 
         /// <summary>
         /// Alt ability ready by name or number
@@ -619,39 +921,177 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<BoolType, int, BoolType, string> _altAbilityReady;
 
         /// <summary>
-        /// Returns an alt ability by name or number
+        /// Alt ability ready by ID.
+        /// </summary>
+        /// <param name="altAbilityID"></param>
+        /// <returns></returns>
+        public bool GetAltAbilityReady(int altAbilityID) => _altAbilityReady[altAbilityID];
+
+        /// <summary>
+        /// Alt ability ready by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool GetAltAbilityReady(string name) => _altAbilityReady[name];
+
+        /// <summary>
+        /// Returns an alt ability by name or number.
         /// </summary>
         private readonly IndexedMember<AltAbilityType, int, AltAbilityType, string> _altAbility;
 
         /// <summary>
-        /// Skill level by name or number.
+        /// Returns an alt ability by ID.
+        /// </summary>
+        /// <param name="altAbilityID"></param>
+        /// <returns></returns>
+        public AltAbilityType GetAltAbility(int altAbilityID) => _altAbility[altAbilityID];
+
+        /// <summary>
+        /// Returns an alt ability by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public AltAbilityType GetAltAbility(string name) => _altAbility[name];
+
+        public IEnumerable<AltAbilityInfo> AltAbilities
+        {
+            get
+            {
+                var items = new List<AltAbilityInfo>(AA_CHAR_MAX_REAL);
+
+                for (int i = 0; i < AA_CHAR_MAX_REAL; i++)
+                {
+                    var item = new AltAbilityInfo(i, this);
+
+                    if (item.ID != null)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// Skill level by name or number (base 1).
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
         private readonly IndexedMember<IntType, string, IntType, int> _skill;
 
         /// <summary>
-        /// Skill base level by name or number.
+        /// Skill level by number (base 1).
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public uint? GetSkillLevel(int index) => (uint?)_skill[index];
+
+        /// <summary>
+        /// Skill level by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public uint? GetSkillLevel(string name) => (uint?)_skill[name];
+
+        /// <summary>
+        /// Skill base level by name or number (base 1).
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
         private readonly IndexedMember<IntType, string, IntType, int> _skillBase;
 
         /// <summary>
-        /// Skill cap by name or number.
+        /// Skill base level by number (base 1).
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public uint? GetSkillBase(int index) => (uint?)_skillBase[index];
+
+        /// <summary>
+        /// Skill base level by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public uint? GetSkillBase(string name) => (uint?)_skillBase[name];
+
+        /// <summary>
+        /// Skill cap by name or number (base 1).
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
         private readonly IndexedMember<IntType, string, IntType, int> _skillCap;
 
         /// <summary>
-        /// The doability button number that the skill name is on, or the skill name assigned to a doability button.
+        /// Skill cap by number (base 1).
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public uint? GetSkillCap(int index) => (uint?)_skillCap[index];
+
+        /// <summary>
+        /// Skill cap by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public uint? GetSkillCap(string name) => (uint?)_skillCap[name];
+
+        public IEnumerable<SkillInfo> Skills
+        {
+            get
+            {
+                var items = new List<SkillInfo>(NUM_SKILLS);
+
+                for (int i = 0; i < NUM_SKILLS; i++)
+                {
+                    var item = new SkillInfo(i + 1, this);
+
+                    if (item.Level > 0)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// The ability ID for a skill name, or the skill name for the ability ID.
         /// If a string index was provided then cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/>.
         /// If an int index was provided then the result is a <see cref="string"/>.
         /// </summary>
         private readonly IndexedStringMember<int, IntType, string> _ability;
 
         /// <summary>
-        /// Ability with this name or on this button # ready?.
+        /// Get an ability ID.
+        /// </summary>
+        /// <param name="skillName"></param>
+        /// <returns></returns>
+        public uint? GetAbilityID(string skillName) => _ability[skillName];
+
+        /// <summary>
+        ///  Get an ability name.
+        /// </summary>
+        /// <param name="abilityID"></param>
+        /// <returns></returns>
+        public string GetAbilityName(int abilityID) => _ability[abilityID];
+
+        /// <summary>
+        /// Ability with this name or on this ID ready?
         /// </summary>
         private readonly IndexedMember<BoolType, int, BoolType, string> _abilityReady;
+
+        /// <summary>
+        /// Ability with this name ready?
+        /// </summary>
+        /// <param name="skillName"></param>
+        /// <returns></returns>
+        public bool GetAbilityReady(string skillName) => _abilityReady[skillName];
+
+        /// <summary>
+        /// Ability with this ID ready?
+        /// </summary>
+        /// <param name="abilityID"></param>
+        /// <returns></returns>
+        public bool GetAbilityReady(int abilityID) => _abilityReady[abilityID];
 
         /// <summary>
         /// Ranged attack ready?
@@ -671,9 +1111,64 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<SpellType, int, IntType, string> _book;
 
         /// <summary>
-        /// TODO: new member
+        /// Get the spell in your spellbook at a specific slot (base 1).
+        /// </summary>
+        /// <param name="slot">The base 1 slot.</param>
+        /// <returns></returns>
+        public SpellType GetSpellbookSpellBySlot(int slot) => _book[slot];
+
+        /// <summary>
+        /// Get a spellbook slot number for a spell by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>The base 1 slot number.</returns>
+        public uint? GetSpellbookSlot(string name) => _book[name];
+
+        public IDictionary<int, SpellType> SpellBook
+        {
+            get
+            {
+                var canCast = Spawn?.Class?.CanCast ?? false;
+
+                if (canCast)
+                {
+                    var items = new Dictionary<int, SpellType>(NUM_BOOK_SLOTS);
+
+                    for (int i = 0; i < NUM_BOOK_SLOTS; i++)
+                    {
+                        var item = GetSpellbookSpellBySlot(i + 1);
+
+                        if (item != null)
+                        {
+                            items.Add(i, item);
+                        }
+                    }
+
+                    return items;
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Spell in your spellbook by spell ID or by name.
         /// </summary>
         private readonly IndexedMember<SpellType, int, SpellType, string> _spell;
+
+        /// <summary>
+        /// Spell in your spellbook by spell ID.
+        /// </summary>
+        /// <param name="spellID"></param>
+        /// <returns></returns>
+        public SpellType GetSpellbookSpellBySpellID(int spellID) => _spell[spellID];
+
+        /// <summary>
+        /// Spell in your spellbook by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public SpellType GetSpellbookSpellByName(string name) => _spell[name];
 
         /// <summary>
         /// Is an item ready to cast?
@@ -681,20 +1176,62 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<BoolType, int, BoolType, string> _itemReady;
 
         /// <summary>
+        /// Is an item ready to cast?
+        /// </summary>
+        /// <param name="itemID"></param>
+        /// <returns></returns>
+        public bool IsItemReady(int itemID) => _itemReady[itemID];
+
+        /// <summary>
+        /// Is an item ready to cast?
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool IsItemReady(string name) => _itemReady[name];
+
+        /// <summary>
         /// True if you're currently playing a bard song
         /// </summary>
         public bool BardSongPlaying => GetMember<BoolType>("BardSongPlaying");
 
         /// <summary>
-        /// Indiciates if a spell is ready, by spell name or gem number
+        /// Indicates if a spell is ready, by spell name or gem number.
         /// </summary>
         private readonly IndexedMember<BoolType, int, BoolType, string> _spellReady;
 
         /// <summary>
-        /// A buff on your pet by slot number, or a slot number by buff name.
+        /// Indicates if a spell is ready.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool IsSpellReady(string name) => _spellReady[name];
+
+        /// <summary>
+        /// Indicates if a spell is ready.
+        /// </summary>
+        /// <param name="gemNumber">The base 1 gem number.</param>
+        /// <returns></returns>
+        public bool IsSpellReady(int gemNumber) => _spellReady[gemNumber];
+
+        /// <summary>
+        /// A buff on your pet by slot number (base 1), or a slot number by buff name.
         /// If a string index was provided then cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
         private readonly IndexedMember<SpellType, int, IntType, string> _petBuff;
+
+        /// <summary>
+        /// Get a pet buff slot number by buff name.
+        /// </summary>
+        /// <param name="buffName"></param>
+        /// <returns></returns>
+        public uint? GetPetBuffSlot(string buffName) => (uint?)_petBuff[buffName];
+
+        /// <summary>
+        /// Get a buff on your pet by slot number (base 1).
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public SpellType GetPetBuff(int slot) => _petBuff[slot];
 
         /// <summary>
         /// Stunned?
@@ -727,6 +1264,24 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<SpawnType, int> _raidAssistTarget;
 
         /// <summary>
+        /// Get the current raid assist target (1-3)
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public SpawnType GetRaidAssistTarget(int index) => _raidAssistTarget[index];
+
+        public IEnumerable<SpawnType> RaidAssistTargets
+        {
+            get
+            {
+                for (int i = 1; i <= 3; i++)
+                {
+                    yield return GetRaidAssistTarget(i);
+                }
+            }
+        }
+
+        /// <summary>
         /// Target of the group's main assist
         /// </summary>
         public SpawnType GroupAssistTarget => GetMember<SpawnType>("GroupAssistTarget");
@@ -737,9 +1292,45 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<SpawnType, int> _raidMarkNPC;
 
         /// <summary>
+        /// Get the current raid marked NPC (1-3)
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public SpawnType GetRaidMarkNPC(int index) => _raidMarkNPC[index];
+
+        public IEnumerable<SpawnType> RaidMarkNPCs
+        {
+            get
+            {
+                for (int i = 1; i <= 3; i++)
+                {
+                    yield return GetRaidMarkNPC(i);
+                }
+            }
+        }
+
+        /// <summary>
         /// Current group marked NPC (1 - 3)
         /// </summary>
         private readonly IndexedMember<SpawnType, int> _groupMarkNPC;
+
+        /// <summary>
+        /// Get the current group marked NPC (1 - 3)
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public SpawnType GetGroupMarkNPC(int index) => _groupMarkNPC[index];
+
+        public IEnumerable<SpawnType> GroupMarkNPCs
+        {
+            get
+            {
+                for (int i = 1; i <= 3; i++)
+                {
+                    yield return GetGroupMarkNPC(i);
+                }
+            }
+        }
 
         /// <summary>
         /// Strength
@@ -869,14 +1460,89 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool AutoFire => GetMember<BoolType>("AutoFire");
 
         /// <summary>
-        /// Language name by number, or number by name
+        /// Language name by number, or number by name.
+        /// Index is base 1.
+        /// Range is [1:27]
         /// </summary>
         private readonly IndexedStringMember<int, IntType, string> _language;
 
         /// <summary>
-        /// Aura by name or slot #
+        /// Language number by name.
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        public uint? GetLanguageNumber(string language) => (uint?)_language[language];
+
+        /// <summary>
+        /// Language name by number. Index is base 1.
+        /// Range is [1:27]
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public string GetLanguageName(int index) => _language[index];
+
+        public IDictionary<string, uint?> LanguageSkills
+        {
+            get
+            {
+                var items = new Dictionary<string, uint?>(27);
+
+                for (int i = 0; i < 27; i++)
+                {
+                    var name = GetLanguageName(i + 1);
+                    var skill = GetLanguageSkill(i + 1);
+
+                    if (!string.IsNullOrWhiteSpace(name) && !items.ContainsKey(name))
+                    {
+                        items.Add(name, skill);
+                    }
+                }
+
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// Aura by name or slot # (base 1).
         /// </summary>
         private readonly IndexedMember<AuraType, string, AuraType, int> _aura;
+
+        /// <summary>
+        /// Get an aura by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public AuraType GetAura(string name) => _aura[name];
+
+        /// <summary>
+        /// Get an aura by slot # (base 1)
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public AuraType GetAura(int slot) => _aura[slot];
+
+        public IEnumerable<AuraType> Auras
+        {
+            get
+            {
+                var i = 1;
+
+                while (i <= 100)
+                {
+                    var item = GetAura(i);
+
+                    if (item != null)
+                    {
+                        i++;
+                        yield return item;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Level of Mark NPC of the current group leader (not your own ability level)
@@ -1296,9 +1962,24 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<TimeStampType, int, TimeStampType, string> _gemTimer;
 
         /// <summary>
-        /// Returns TRUE/FALSE if you have that expansion by # or name
+        /// Returns TRUE/FALSE if you have that expansion by # or name.
         /// </summary>
         private readonly IndexedMember<BoolType, int, BoolType, string> _haveExpansion;
+
+        /// <summary>
+        /// Returns TRUE/FALSE if you have that expansion by #.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public bool HaveExpansion(int number) => _haveExpansion[number];
+
+        /// <summary>
+        /// Returns TRUE/FALSE if you have that expansion by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool HaveExpansion(string name) => _haveExpansion[name];
+
 
         /// <summary>
         /// Your aggro percentage
@@ -1772,5 +2453,130 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Equivalent of the command /stopcast
         /// </summary>
         public void StopCast() => GetMember<MQ2DataType>("StopCast");
+    }
+
+    public class GemInfo
+    {
+        public int Slot { get; set; }
+        public SpellType MemorizedSpell { get; set; }
+        public bool Ready { get; set; }
+
+        public GemInfo()
+        {
+            
+        }
+
+        public GemInfo(int gemSlot, CharacterType me)
+        {
+            Slot = gemSlot;
+            MemorizedSpell = me.GetGem(gemSlot);
+            Ready = me.IsSpellReady(gemSlot);
+        }
+    }
+
+    public class CombatAbilityInfo
+    {
+        public SpellType Ability { get; set; }
+        public int Number { get; set; }
+        public bool Ready { get; set; }
+        public TimeSpan? Timer { get; set; }
+
+        public CombatAbilityInfo()
+        {
+
+        }
+
+        public CombatAbilityInfo(int number, CharacterType me)
+        {
+            Ability = me.GetCombatAbility(number);
+            Number = number;
+            Timer = me.GetCombatAbilityTimer(number);
+            Ready = me.GetCombatAbilityReady(number);
+        }
+    }
+
+    public class AltAbilityInfo
+    {
+        public AltAbilityType Ability { get; set; }
+        public int? ID { get; set; }
+        public int Index { get; set; }
+        public string Name { get; set; }
+        public bool Ready { get; set; }
+        public TimeSpan? Timer { get; set; }
+
+        public AltAbilityInfo()
+        {
+            
+        }
+
+        public AltAbilityInfo(int index, CharacterType me)
+        {
+            var id = NativeMethods.GetAltAbilityID(index);
+
+            Ability = id != -1 ? me.GetAltAbility(id) : null;
+            ID = id != -1 ? id : (int?)null;
+            Index = index;
+            Ready = id != -1 ? me.GetAltAbilityReady(ID.Value) : false;
+            Timer = id != -1 ? me.GetAltAbilityTimer(ID.Value) : null;
+        }
+
+        private static class NativeMethods
+        {
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int GetAltAbilityID(int index);
+        }
+    }
+
+    public class SkillInfo
+    {
+        public uint? AbilityID { get; set; }
+        public uint? Base { get; set; }
+        public uint? Cap { get; set; }
+        public int Index { get; set; }
+        public uint? Level { get; set; }
+        public string Name { get; set; }
+        public bool Ready { get; set; }
+
+        public SkillInfo(int index, CharacterType me)
+        {
+            Index = index;
+            Level = me.GetSkillLevel(index);
+
+            if (Level > 0)
+            {
+                var name = new StringBuilder(100);
+                
+                NativeMethods.GetSkillName(index, name);
+                
+                Name = name?.ToString();
+
+                if (!string.IsNullOrEmpty(Name))
+                {
+                    AbilityID = me.GetAbilityID(Name);
+
+                    if (AbilityID != null)
+                    {
+                        Ready = me.GetAbilityReady((int)AbilityID.Value);
+                    }
+                }
+
+                Base = me.GetSkillBase(index);
+                Cap = me.GetSkillCap(index);
+            }
+            else
+            {
+                Base = null;
+                Cap = null;
+                Name = null;
+                AbilityID = null;
+                Ready = false;
+            }
+        }
+
+        private static class NativeMethods
+        {
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void GetSkillName(int index, [MarshalAs(UnmanagedType.LPStr)] StringBuilder name);
+        }
     }
 }

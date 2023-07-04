@@ -18,6 +18,8 @@ namespace MQ2DotNet.Services
     {
         private readonly MQ2TypeFactory _typeFactory;
 
+        public static TLO Instance { get; private set; }
+
         /// <summary>
         /// Creates a new instance of TLO that uses the supplied MQ2TypeFactory to create MQ2DataType
         /// </summary>
@@ -55,6 +57,11 @@ namespace MQ2DotNet.Services
             _teleportationItem = new IndexedTLO<KeyRingItemType, string, KeyRingItemType, int>(this, "TeleportationItem");
             _subDefined = new IndexedTLO<BoolType>(this, "SubDefined");
             _invSlot = new IndexedTLO<InvSlotType, string, InvSlotType, int>(this, "InvSlot");
+
+            if (Instance == null)
+            {
+                Instance = this;
+            }
         }
 
         /// <summary>
@@ -141,9 +148,9 @@ namespace MQ2DotNet.Services
         /// 
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-altability/#forms
         /// </summary>
-        /// <param name="altabilityID"></param>
+        /// <param name="altAbilityID"></param>
         /// <returns></returns>
-        public AltAbilityType GetAltAbility(int altabilityID) => _altAbility[altabilityID];
+        public AltAbilityType GetAltAbility(int altAbilityID) => _altAbility[altAbilityID];
 
         /// <summary>
         /// Danger: The AltAbility TLO should not be used except for when experimenting with data. If you've already purchased the AA, use <see cref="CharacterType._altAbility"/>, which is tailored to your character and is much faster.

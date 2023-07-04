@@ -14,8 +14,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
     }
 
     /// <summary>
-    /// MQ2 type for a spawn.
+    /// TODO: Update members and methods according to doco and implement indexed member wrapper methods and properties.
+    /// Represents an in-game spawn.
     /// Last Verified: 2023-07-01
+    /// https://docs.macroquest.org/reference/data-types/datatype-spawn/
     /// </summary>
     [PublicAPI]
     [MQ2Type("spawn")]
@@ -947,14 +949,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
             get
             {
                 var count = CachedBuffCount ?? 0;
-                List<CachedBuffType> items = new List<CachedBuffType>((int)count);
 
                 for (int i = 0; i < count; i++)
                 {
-                    items.Add(GetCachedBuff(i));
+                    yield return GetCachedBuff(i);
                 }
-
-                return items;
             }
         }
 
@@ -1032,14 +1031,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
             get
             {
                 var count = BuffCount ?? 0;
-                List<CachedBuffType> items = new List<CachedBuffType>((int)count);
 
                 for (int i = 0; i < count; i++)
                 {
-                    items.Add(GetBuff(i + 1));
+                    yield return GetBuff(i + 1);
                 }
-
-                return items;
             }
         }
 
@@ -1056,14 +1052,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
             get
             {
                 var count = MyBuffCount ?? 0;
-                List<CachedBuffType> items = new List<CachedBuffType>((int)count);
 
                 for (int i = 0; i < count; i++)
                 {
-                    items.Add(GetMyBuff(i + 1));
+                    yield return GetMyBuff(i + 1);
                 }
-
-                return items;
             }
         }
 

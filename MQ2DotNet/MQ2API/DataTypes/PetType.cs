@@ -13,7 +13,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [PublicAPI]
     [MQ2Type("pet")]
-    public class PetType : SpawnType
+    public class PetType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {
         public const int MAX_PET_BUFFS = 100;
 

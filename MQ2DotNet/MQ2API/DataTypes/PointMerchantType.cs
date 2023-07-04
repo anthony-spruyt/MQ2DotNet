@@ -10,7 +10,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [PublicAPI]
     [MQ2Type("pointmerchant")]
-    public class PointMerchantType : SpawnType
+    public class PointMerchantType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {
         public const int MAX_ITEMS = 1000;
 

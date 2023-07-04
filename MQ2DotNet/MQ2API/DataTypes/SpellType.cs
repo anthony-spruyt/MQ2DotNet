@@ -623,9 +623,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool IsActiveAA => GetMember<BoolType>("IsActiveAA");
 
         /// <summary>
-        /// TODO: what is this? Online doco states it is "Appears to be max distance" but from the MQ client source we can see it is of zone type.
+        /// TODO: what is this? Online doco is also not sure -> "Appears to be max distance".
         /// </summary>
-        public ZoneType Location => GetMember<ZoneType>("Location");
+        public uint? Location => GetMember<IntType>("Location");
 
         /// <summary>
         /// Is this spell a swarm spell?

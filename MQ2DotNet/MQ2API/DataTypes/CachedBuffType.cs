@@ -16,7 +16,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     [PublicAPI]
     [MQ2Type("cachedbuff")]
     [Obsolete]
-    public class CachedBuffType : SpellType
+    public class CachedBuffType : MQ2DataType//SpellType inheritence is an issue in this implementation.
     {
         internal CachedBuffType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -60,7 +60,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns the duration of the buff.
         /// </summary>
-        public new TimeSpan? Duration => GetMember<TimeStampType>("Duration");
+        public TimeSpan? Duration => GetMember<TimeStampType>("Duration");
 
         /// <summary>
         /// How long it has been since this information was refreshed.

@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using MQ2DotNet.Services;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -9,7 +10,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [PublicAPI]
     [MQ2Type("currentzone")]
-    public class CurrentZoneType : ZoneType
+    public class CurrentZoneType : MQ2DataType//ZoneType inheritence is an issue in this implementation.
     {
         internal CurrentZoneType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -18,17 +19,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// ID of the zone
         /// </summary>
-        public new int? ID => GetMember<IntType>("ID");
+        public int? ID => GetMember<IntType>("ID");
         
         /// <summary>
         /// Full zone name e.g. "The Plane of Knowledge"
         /// </summary>
-        public new string Name => GetMember<StringType>("Name");
+        public string Name => GetMember<StringType>("Name");
         
         /// <summary>
         /// Short zone name e.g. "PoKnowledge"
         /// </summary>
-        public new string ShortName => GetMember<StringType>("ShortName");
+        public string ShortName => GetMember<StringType>("ShortName");
 
         /// <summary>
         /// Zone type:0=Indoor Dungeon 1=Outdoor 2=Outdoor City 3=Dungeon City 4=Indoor City 5=Outdoor Dungeon.
@@ -71,6 +72,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// True if binding isn't allowed in this zone outside specified bindable areas.
         /// </summary>
         public bool NoBind => GetMember<BoolType>("NoBind");
+
+        public ZoneType Zone => ID.HasValue ? TLO.Instance?.GetZone(ID.Value) : null;
 
         /// <summary>
         /// Same as <see cref="ZoneType.Name"/>

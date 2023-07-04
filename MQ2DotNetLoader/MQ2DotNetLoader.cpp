@@ -141,6 +141,29 @@ extern "C" __declspec(dllexport) bool MQ2Type__ToString(MQ2Type* type, MQVarPtr&
 	return type != nullptr && type->ToString(varPtr, destination);
 }
 
+// Helper functions for other random stuff
+extern "C" __declspec(dllexport) int GetAltAbilityID(int index)
+{
+	if (index < 0 || index >= AA_CHAR_MAX_REAL || pLocalPC == nullptr)
+	{
+		return -1;
+	}
+
+	if (CAltAbilityData* pAbility = GetAAById(pLocalPC->GetAlternateAbilityId(index)))
+	{
+		return pAbility->ID;
+	}
+
+	return -1;
+}
+extern "C" __declspec(dllexport) void GetSkillName(int index, char* destination)
+{
+	if (const char* thename = szSkills[index - 1])
+	{
+		strcpy(destination, thename);
+	}
+}
+
 void GetStructSizes()
 {
 	int s1 = sizeof(MQ2Type);

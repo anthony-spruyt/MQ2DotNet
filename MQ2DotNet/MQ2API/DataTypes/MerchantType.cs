@@ -1,5 +1,7 @@
 ﻿using JetBrains.Annotations;
+using MQ2DotNet.Services;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -10,7 +12,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [PublicAPI]
     [MQ2Type("merchant")]
-    public class MerchantType : SpawnType
+    public class MerchantType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {
         internal MerchantType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {

@@ -3,6 +3,7 @@
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
+    /// TODO: Update members and methods according to doco and implement indexed member wrapper methods and properties.
     /// MQ2 type from the MQ2Cast plugin.
     /// Last Verified: 2023-06-25
     /// TODO: Invalidate this and make member calls throw if MQ2Cast isn't loaded

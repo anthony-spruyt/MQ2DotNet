@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using MQ2DotNet.Services;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -9,7 +10,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [PublicAPI]
     [MQ2Type("mercenary")]
-    public class MercenaryType : SpawnType
+    public class MercenaryType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {
         internal MercenaryType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -29,7 +30,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current state of the mercenary (returns "DEAD","SUSPENDED","ACTIVE", or "UNKNOWN")
         /// </summary>
-        public new string State => GetMember<StringType>("State");
+        public string State => GetMember<StringType>("State");
 
         /// <summary>
         /// Current state ID of the mercenary as a number.
@@ -44,7 +45,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of the mercenary
         /// </summary>
-        public new string Name => GetMember<StringType>("Name");
+        public string Name => GetMember<StringType>("Name");
+
+        /// <summary>
+        /// Does a spawn search for a merc with same name since inheritence is wonky here.
+        /// </summary>
+        public SpawnType Spawn => TLO.Instance?.GetSpawn($"mercenary {Name}");
 
         /// <summary>
         /// Same as <see cref="Name"/>

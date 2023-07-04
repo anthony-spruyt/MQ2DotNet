@@ -10,7 +10,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [PublicAPI]
     [MQ2Type("target")]
-    public class TargetType : SpawnType
+    public class TargetType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {
         internal TargetType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {

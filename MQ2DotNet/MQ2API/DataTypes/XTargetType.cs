@@ -67,5 +67,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Spawn in the XTarget slot
         /// </summary>
         public SpawnType GetSpawn(TLO tlo) => tlo.GetSpawn($"id {ID}");
+
+        /// <summary>
+        /// Spawn in the XTarget slot
+        /// </summary>
+        public SpawnType Spawn => TLO.Instance?.GetSpawn($"id {ID}");
     }
 }
