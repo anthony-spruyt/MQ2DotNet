@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MQ2Flux
+namespace MQ2Flux.Services
 {
-    public interface IMq2Logger
+    public interface IMQ2Logger
     {
         void Log(string text);
         void LogError(Exception exception, string message = null);

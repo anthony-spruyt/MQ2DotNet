@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using MQ2Flux.Services;
+using System.Collections.Generic;
 
-namespace MQ2Flux
+namespace MQ2Flux.Services
 {
-    public class Mq2CommandProvider : IMq2CommandProvider
+    public class MQ2CommandProvider : IMQ2CommandProvider
     {
-        public IEnumerable<IMq2AsyncCommand> AsyncCommands { get; private set; }
-        public IEnumerable<IMq2Command> Commands { get; private set; }
+        public IEnumerable<IMQ2AsyncCommand> AsyncCommands { get; private set; }
+        public IEnumerable<IMQ2Command> Commands { get; private set; }
 
-        private readonly IMq2Context context;
+        private readonly IMQ2Context context;
 
-        public Mq2CommandProvider(IMq2Context context, IFluxAsyncCommand fluxAsyncCommandService)
+        public MQ2CommandProvider(IMQ2Context context, IFluxMQ2AsyncCommand fluxAsyncCommandService)
         {
             this.context = context;
-            AsyncCommands = new IMq2AsyncCommand[]
+            AsyncCommands = new IMQ2AsyncCommand[]
             {
                 fluxAsyncCommandService
             };
-            Commands = new IMq2Command[] { };
+            Commands = new IMQ2Command[]
+            {
+                
+            };
         }
 
         public void Load()

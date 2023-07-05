@@ -1,12 +1,12 @@
 ﻿using MediatR;
-using MQ2Flux.Requests;
-using System;
+using MQ2Flux.Commands;
+using MQ2Flux.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQ2Flux.Handlers
+namespace MQ2Flux.Handlers.Handlers
 {
-    public class SaveConfigHandler : IRequestHandler<SaveConfigRequest>
+    public class SaveConfigHandler : IRequestHandler<SaveConfigCommand>
     {
         private readonly IMQ2Config config;
 
@@ -15,7 +15,7 @@ namespace MQ2Flux.Handlers
             this.config = config;
         }
 
-        public async Task Handle(SaveConfigRequest request, CancellationToken cancellationToken)
+        public async Task Handle(SaveConfigCommand request, CancellationToken cancellationToken)
         {
             await config.SaveAsync(request.Notify);
         }

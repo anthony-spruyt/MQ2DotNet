@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace MQ2Flux
+namespace MQ2Flux.Services
 {
-    public class Mq2Logger : IMq2Logger
+    public class MQ2Logger : IMQ2Logger
     {
         private const int MAX_TEXT_LENGTH = 1000;
 
-        private readonly IMq2Context context;
+        private readonly IMQ2Context context;
 
-        public Mq2Logger(IMq2Context context)
+        public MQ2Logger(IMQ2Context context)
         {
             this.context = context;
 

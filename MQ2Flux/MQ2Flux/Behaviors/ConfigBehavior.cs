@@ -1,9 +1,16 @@
 ﻿using MediatR;
+using MQ2Flux.Models;
+using MQ2Flux.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQ2Flux
+namespace MQ2Flux.Behaviors
 {
+    public interface IConfigRequest
+    {
+        FluxConfig Config { get; set; }
+    }
+
     public class ConfigBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly IMQ2Config config;

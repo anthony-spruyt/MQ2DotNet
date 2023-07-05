@@ -74,39 +74,34 @@
     <Compile Include="Behaviors\BehaviorExtensions.cs" />
     <Compile Include="Behaviors\CharacterConfigBehavior.cs" />
     <Compile Include="Behaviors\Mq2ContextBehavior.cs" />
-    <Compile Include="Handlers\LoadCommandsHandler.cs" />
+    <Compile Include="Handlers\LoadMQ2CommandsHandler.cs" />
     <Compile Include="Handlers\SaveConfigHandler.cs" />
     <Compile Include="Handlers\TestRequestHandler.cs" />
-    <Compile Include="Handlers\UnloadCommandsHandler.cs" />
+    <Compile Include="Handlers\UnloadMQ2CommandsHandler.cs" />
     <Compile Include="Notifications\ConfigUpdateNotification.cs" />
     <Compile Include="Behaviors\ConfigBehavior.cs" />
-    <Compile Include="Requests\IConfigRequest.cs" />
-    <Compile Include="Requests\IMq2ContextRequest.cs" />
-    <Compile Include="Requests\ICharacterConfigRequest.cs" />
-    <Compile Include="Requests\LoadCommandsRequest.cs" />
-    <Compile Include="Requests\SaveConfigRequest.cs" />
-    <Compile Include="Requests\SlotClickRequest.cs" />
-    <Compile Include="Requests\TestRequest.cs" />
-    <Compile Include="Requests\ProcessRequest.cs" />
+    <Compile Include="Commands\MQ2Commands.cs" />
+    <Compile Include="Commands\SaveConfigCommand.cs" />
+    <Compile Include="Commands\TestCommand.cs" />
+    <Compile Include="Commands\ProcessCommand.cs" />
     <Compile Include="Handlers\ProcessHandler.cs" />
     <Compile Include="Models\FluxConfig.cs" />
-    <Compile Include="Requests\UnloadCommandsRequest.cs" />
-    <Compile Include="Services\Mq2Commands\FluxAsyncCommand.cs" />
-    <Compile Include="Services\CommandProviders\IMq2CommandProvider.cs" />
-    <Compile Include="Services\CommandProviders\Mq2CommandProvider.cs" />
-    <Compile Include="Services\MQ2Config\MQ2ConfigExtensions.cs" />
-    <Compile Include="Services\MQ2Config\MQ2Config.cs" />
-    <Compile Include="Services\MQ2Config\IMQ2Config.cs" />
-    <Compile Include="Services\Mq2Context\Mq2Context.cs" />
-    <Compile Include="Services\Mq2Context\Mq2ContextExtensions.cs" />
-    <Compile Include="Services\Mq2Logger\Mq2LoggerExtensions.cs" />
-    <Compile Include="Services\Mq2Commands\IMq2AsyncCommand .cs" />
-    <Compile Include="Services\Mq2Commands\IMq2Command.cs" />
-    <Compile Include="Services\Mq2Context\IMq2Context.cs" />
-    <Compile Include="Services\Mq2Logger\Mq2Logger.cs" />
-    <Compile Include="Services\Mq2Logger\IMq2Logger.cs" />
+    <Compile Include="Services\FluxMQ2AsyncCommand.cs" />
+    <Compile Include="Services\IMQ2CommandProvider.cs" />
+    <Compile Include="Services\MQ2CommandProvider.cs" />
+    <Compile Include="Services\MQ2ConfigExtensions.cs" />
+    <Compile Include="Services\MQ2Config.cs" />
+    <Compile Include="Services\IMQ2Config.cs" />
+    <Compile Include="Services\MQ2Context.cs" />
+    <Compile Include="Services\MQ2ContextExtensions.cs" />
+    <Compile Include="Services\MQ2LoggerExtensions.cs" />
+    <Compile Include="Services\IMQ2AsyncCommand.cs" />
+    <Compile Include="Services\IMQ2Command.cs" />
+    <Compile Include="Services\IMQ2Context.cs" />
+    <Compile Include="Services\MQ2Logger.cs" />
+    <Compile Include="Services\IMQ2Logger.cs" />
     <Compile Include="MQ2Flux.cs" />
-    <Compile Include="Services\CommandProviders\Mq2CommandProviderExtensions.cs" />
+    <Compile Include="Services\MQ2CommandProviderExtensions.cs" />
     <Compile Include="Utils\UtilityExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +150,9 @@
     <None Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Queries\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

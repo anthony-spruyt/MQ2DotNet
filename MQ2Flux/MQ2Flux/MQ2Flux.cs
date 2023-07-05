@@ -5,6 +5,9 @@ using Microsoft.Extensions.Logging;
 using MQ2DotNet.MQ2API;
 using MQ2DotNet.Program;
 using MQ2DotNet.Services;
+using MQ2Flux.Behaviors;
+using MQ2Flux.Commands;
+using MQ2Flux.Services;
 using System;
 using System.IO;
 using System.Reflection;
@@ -17,7 +20,7 @@ namespace MQ2Flux
     {
         private readonly MQ2 mq2;
         private readonly Chat chat;
-        private readonly Commands commands;
+        private readonly MQ2DotNet.Services.Commands commands;
         private readonly Events events;
         private readonly Spawns spawns;
         private readonly TLO tlo;
@@ -25,10 +28,10 @@ namespace MQ2Flux
         private ServiceProvider serviceProvider;
         private ILogger<MQ2Flux> logger;
         private IMediator mediator;
-        private IMq2Logger mQ2logger;
+        private IMQ2Logger mQ2logger;
         private bool disposedValue;
 
-        public MQ2Flux(MQ2 mq2, Chat chat, Commands commands, Events events, Spawns spawns, TLO tlo)
+        public MQ2Flux(MQ2 mq2, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
         {
             if (mq2 is null)
             {
@@ -78,7 +81,7 @@ namespace MQ2Flux
 
                 CancellationToken[] cancellationTokens = await mediator.Send
                 (
-                    new LoadCommandsRequest()
+                    new LoadMQ2Commands()
                     {
                         CancellationToken = token
                     }
@@ -88,11 +91,11 @@ namespace MQ2Flux
                 {
                     while (!linkedTokenSource.IsCancellationRequested)
                     {
-                        if (tlo.EverQuest.GameState == MQ2DotNet.EQ.GameState.InGame)
+                        if (tlo?.EverQuest?.GameState == MQ2DotNet.EQ.GameState.InGame)
                         {
                             await mediator.Send
                             (
-                                new ProcessRequest()
+                                new ProcessCommand()
                                 {
                                     Args = args
                                 },
@@ -106,7 +109,7 @@ namespace MQ2Flux
                     }
                 }
 
-                await mediator.Send(new UnloadCommandsRequest());
+                await mediator.Send(new UnloadMQ2Commands());
 
                 mQ2logger.Log($"Stopped");
             }
@@ -133,7 +136,7 @@ namespace MQ2Flux
 
                 logger = serviceProvider.GetRequiredService<ILogger<MQ2Flux>>();
                 mediator = serviceProvider.GetRequiredService<IMediator>();
-                mQ2logger = serviceProvider.GetRequiredService<IMq2Logger>();
+                mQ2logger = serviceProvider.GetRequiredService<IMQ2Logger>();
 
                 return configuration;
             }
@@ -182,9 +185,9 @@ namespace MQ2Flux
                         config.AddFluxBehaviors();
                     }
                 )
-                .AddMq2Context(mq2, chat, commands, events, spawns, tlo)
-                .AddMq2Logging()
-                .AddMq2CommandProvider()
+                .AddMQ2Context(mq2, chat, commands, events, spawns, tlo)
+                .AddMQ2Logging()
+                .AddMQ2CommandProvider()
                 .AddMQ2Config();
         }
 

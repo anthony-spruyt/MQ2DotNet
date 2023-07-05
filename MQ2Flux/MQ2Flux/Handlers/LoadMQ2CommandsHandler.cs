@@ -1,20 +1,22 @@
 ﻿using MediatR;
+using MQ2Flux.Commands;
+using MQ2Flux.Services;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQ2Flux
+namespace MQ2Flux.Handlers
 {
-    public class LoadCommandsHandler : IRequestHandler<LoadCommandsRequest, CancellationToken[]>
+    public class LoadMQ2CommandsHandler : IRequestHandler<LoadMQ2Commands, CancellationToken[]>
     {
-        private readonly IMq2CommandProvider commandProvider;
+        private readonly IMQ2CommandProvider commandProvider;
 
-        public LoadCommandsHandler(IMq2CommandProvider commandProvider)
+        public LoadMQ2CommandsHandler(IMQ2CommandProvider commandProvider)
         {
             this.commandProvider = commandProvider;
         }
 
-        public Task<CancellationToken[]> Handle(LoadCommandsRequest request, CancellationToken cancellationToken)
+        public Task<CancellationToken[]> Handle(LoadMQ2Commands request, CancellationToken cancellationToken)
         {
             commandProvider.Load();
 
@@ -31,7 +33,7 @@ namespace MQ2Flux
 
             for (int i = 0; i < commandProvider.Commands.Count(); i++)
             {
-                cancellationTokens[i] = commandProvider.Commands.ElementAt(i).Token;
+                cancellationTokens[i] = commandProvider.Commands.ElementAt(i).CancellationToken;
             }
 
             for (int i = 0; i < commandProvider.AsyncCommands.Count(); i++)

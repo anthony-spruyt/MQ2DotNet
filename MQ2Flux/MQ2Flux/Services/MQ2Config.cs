@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using MQ2Flux.Models;
 using MQ2Flux.Notifications;
 using System;
@@ -7,28 +8,29 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQ2Flux
+namespace MQ2Flux.Services
 {
     public class MQ2Config : IMQ2Config, IDisposable
     {
         public FluxConfig FluxConfig { get; private set; }
 
         private const string CONFIG_FILE_NAME = "MQ2Flux.json";
-        private readonly IMq2Context context;
-        private readonly IMq2Logger logger;
+        private readonly IMQ2Context context;
+        private readonly IMQ2Logger mq2Logger;
         private readonly IMediator mediator;
+        private readonly ILogger<MQ2Config> logger;
+        private readonly string path;
 
         private FileSystemWatcher watcher;
         private bool disposedValue;
-        private string path;
         private SemaphoreSlim semaphoreSlim;
 
-        public MQ2Config(IMq2Context context, IMq2Logger logger, IMediator mediator)
+        public MQ2Config(IMQ2Context context, IMQ2Logger mq2Logger, IMediator mediator, ILogger<MQ2Config> logger)
         {
             this.context = context;
-            this.logger = logger;
+            this.mq2Logger = mq2Logger;
             this.mediator = mediator;
-
+            this.logger = logger;
             semaphoreSlim = new SemaphoreSlim(0, 1);
             path = Path.Combine(this.context.MQ2.ConfigPath, CONFIG_FILE_NAME);
 
@@ -52,12 +54,11 @@ namespace MQ2Flux
 
                         File.WriteAllText(path, json);
 
-                        logger.Log("Config saved to disk");
+                        
                     }
                     catch (Exception ex)
                     {
-                        logger.Log("Failed to save config to disk");
-                        logger.LogError(ex);
+                        Log(ex, "Failed to save config to disk");
                     }
                 }
             );
@@ -69,6 +70,18 @@ namespace MQ2Flux
         {
             LoadConfig();
             CreateWatcher();
+        }
+
+        private void Log(string text)
+        {
+            mq2Logger.Log(text);
+            logger.LogInformation(text);
+        }
+
+        private void Log(Exception ex, string message, params object[] args)
+        {
+            mq2Logger.LogError(ex, message);
+            logger.LogError(ex, message, args);
         }
 
         private void CreateWatcher()
@@ -95,7 +108,7 @@ namespace MQ2Flux
 
                     FluxConfig = JsonSerializer.Deserialize<FluxConfig>(json);
 
-                    logger.Log("Configuration loaded from disk");
+                    Log("Configuration loaded from disk");
                 }
                 else
                 {
@@ -105,15 +118,14 @@ namespace MQ2Flux
 
                     File.WriteAllText(path, json);
 
-                    logger.Log("Default config created and saved to disk");
+                    Log("Default config created and saved to disk");
                 }
             }
             catch (Exception ex)
             {
                 FluxConfig = new FluxConfig();
 
-                logger.Log("Failed to load config, reverted to default configuration");
-                logger.LogError(ex);
+                Log(ex, "Failed to load config, reverted to default configuration");
             }
         }
 
@@ -130,7 +142,7 @@ namespace MQ2Flux
                             return;
                         }
 
-                        logger.Log("Config change detected");
+                        Log("Config change detected");
 
                         await Task.Delay(1000);
 
@@ -146,8 +158,7 @@ namespace MQ2Flux
                     }
                     catch (Exception ex)
                     {
-                        logger.Log("Config changed event handling failed");
-                        logger.LogError(ex);
+                        Log(ex, "Config changed event handling failed");
                     }
                     finally
                     {

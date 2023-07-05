@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace MQ2Flux
+namespace MQ2Flux.Services
 {
     public static class MQ2ConfigExtensions
     {

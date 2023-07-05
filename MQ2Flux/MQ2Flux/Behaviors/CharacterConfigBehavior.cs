@@ -6,8 +6,13 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQ2Flux
+namespace MQ2Flux.Behaviors
 {
+    public interface ICharacterConfigRequest : IConfigRequest, IMQ2ContextRequest
+    {
+        CharacterConfig Character { get; set; }
+    }
+
     public class CharacterConfigBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -38,12 +43,13 @@ namespace MQ2Flux
 
                 if (characterConfig == null)
                 {
-                    characterConfig = new CharacterConfig();
+                    characterConfig = new CharacterConfig()
+                    {
+                        Name = name,
+                        Server = server
+                    };
 
-                    characterConfig.Name = name;
-                    characterConfig.Server = server;
 
-                    
                 }
             }
             catch (Exception ex)

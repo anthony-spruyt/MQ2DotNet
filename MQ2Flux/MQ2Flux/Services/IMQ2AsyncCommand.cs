@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQ2Flux
+namespace MQ2Flux.Services
 {
-    public interface IMq2AsyncCommand : IDisposable
+    public interface IMQ2AsyncCommand : IDisposable
     {
         string Command { get; }
         CancellationToken CancellationToken { get; }

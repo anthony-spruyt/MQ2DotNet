@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading;
 
-namespace MQ2Flux
+namespace MQ2Flux.Services
 {
-    public interface IMq2Command : IDisposable
+    public interface IMQ2Command : IDisposable
     {
         string Command { get; }
-        CancellationToken Token { get; }
+        CancellationToken CancellationToken { get; }
 
         void Handle(string[] args);
     }

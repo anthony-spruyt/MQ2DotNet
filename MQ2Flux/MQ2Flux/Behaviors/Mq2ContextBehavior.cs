@@ -1,21 +1,27 @@
 ﻿using MediatR;
+using MQ2Flux.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQ2Flux
+namespace MQ2Flux.Behaviors
 {
-    public class Mq2ContextBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public interface IMQ2ContextRequest
     {
-        private readonly IMq2Context context;
+        IMQ2Context Context { get; set; }
+    }
 
-        public Mq2ContextBehavior(IMq2Context context)
+    public class MQ2ContextBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    {
+        private readonly IMQ2Context context;
+
+        public MQ2ContextBehavior(IMQ2Context context)
         {
             this.context = context;
         }
 
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            if (request is IMq2ContextRequest contextRequest)
+            if (request is IMQ2ContextRequest contextRequest)
             {
                 contextRequest.Context = context;
             }

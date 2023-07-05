@@ -1,30 +1,30 @@
 ﻿using MediatR;
-using MQ2Flux.Requests;
+using MQ2Flux.Commands;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQ2Flux
+namespace MQ2Flux.Services
 {
-    public interface IFluxAsyncCommand : IMq2AsyncCommand
+    public interface IFluxMQ2AsyncCommand : IMQ2AsyncCommand
     {
 
     }
 
-    public class FluxAsyncCommand : IFluxAsyncCommand, IDisposable
+    public class FluxMQ2AsyncCommand : IFluxMQ2AsyncCommand, IDisposable
     {
         public string Command => "/flux";
 
         public CancellationToken CancellationToken => cancellationTokenSource.Token;
 
-        private readonly IMq2Logger logger;
+        private readonly IMQ2Logger logger;
         private readonly IMediator mediator;
 
         private bool disposedValue;
         private CancellationTokenSource cancellationTokenSource;
 
-        public FluxAsyncCommand(IMq2Logger logger, IMediator mediator)
+        public FluxMQ2AsyncCommand(IMQ2Logger logger, IMediator mediator)
         {
             this.logger = logger;
             this.mediator = mediator;
@@ -53,14 +53,16 @@ namespace MQ2Flux
 
                 if (args.Any(i => string.Compare(i, "save", true) == 0))
                 {
-                    Mediate(new SaveConfigRequest(), cancellationTokenSource.Token);
+                    await mediator.Send(new SaveConfigCommand(), cancellationTokenSource.Token);
+                    //Mediate(new SaveConfigRequest(), cancellationTokenSource.Token);
 
                     return;
                 }
 
                 if (args.Any(i => string.Compare(i, "-t", true) == 0 || string.Compare(i, "--test", true) == 0))
                 {
-                    Mediate(new TestRequest(), cancellationTokenSource.Token);
+                    await mediator.Send(new TestCommand(), cancellationTokenSource.Token);
+                    //Mediate(new TestRequest(), cancellationTokenSource.Token);
 
                     return;
                 }
@@ -84,24 +86,24 @@ namespace MQ2Flux
             }
         }
 
-        private void Mediate(IRequest request, CancellationToken token)
-        {
-            _ = Task.Run
-            (
-                async () =>
-                {
-                    try
-                    {
-                        await mediator.Send(request, token);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Log($"{this.GetType().Name} failed to mediate the command");
-                        logger.LogError(ex);
-                    }
-                }
-            ).ConfigureAwait(false);
-        }
+        //private void Mediate(IRequest request, CancellationToken token)
+        //{
+        //    _ = Task.Run
+        //    (
+        //        async () =>
+        //        {
+        //            try
+        //            {
+        //                await mediator.Send(request, token);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                logger.Log($"{this.GetType().Name} failed to mediate the command");
+        //                logger.LogError(ex);
+        //            }
+        //        }
+        //    ).ConfigureAwait(false);
+        //}
 
         protected virtual void Dispose(bool disposing)
         {
