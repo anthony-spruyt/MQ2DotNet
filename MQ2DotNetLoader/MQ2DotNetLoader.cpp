@@ -156,13 +156,6 @@ extern "C" __declspec(dllexport) int GetAltAbilityID(int index)
 
 	return -1;
 }
-extern "C" __declspec(dllexport) void GetSkillName(int index, char* destination)
-{
-	if (const char* thename = szSkills[index - 1])
-	{
-		strcpy(destination, thename);
-	}
-}
 
 void GetStructSizes()
 {

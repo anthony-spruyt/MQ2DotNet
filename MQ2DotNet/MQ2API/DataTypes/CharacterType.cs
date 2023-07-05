@@ -4,7 +4,6 @@ using MQ2DotNet.Services;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -23,6 +22,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public const int AA_CHAR_MAX_REAL = 300;
         public const int NUM_SKILLS = 100;
         public const int NUM_BOOK_SLOTS = 1120;
+        public const int MAX_BANDOLIER_ITEMS = 20;
 
         internal CharacterType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -696,7 +696,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? AAPoints => GetMember<IntType>("AAPoints");
 
         /// <summary>
-        /// Is auto attack turned on?
+        /// In combat?
         /// </summary>
         public bool Combat => GetMember<BoolType>("Combat");
 
@@ -837,7 +837,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
 
         /// <summary>
-        /// Combat ability reuse time remaining by name or number.
+        /// Combat ability reuse time remaining by name or number (base 1).
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int"/>.
         /// </summary>
         private readonly IndexedMember<TicksType, int, TicksType, string> _combatAbilityTimer;
@@ -845,7 +845,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The time remaining before the Combat Ability is usable
         /// </summary>
-        /// <param name="number"></param>
+        /// <param name="number">The base 1 index.</param>
         /// <returns></returns>
         public TimeSpan? GetCombatAbilityTimer(int number) => _combatAbilityTimer[number];
 
@@ -857,14 +857,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public TimeSpan? GetCombatAbilityTimer(string name) => _combatAbilityTimer[name];
 
         /// <summary>
-        /// Combat ability ready by name or number.
+        /// Combat ability ready by name or number (base 1).
         /// </summary>
         private readonly IndexedMember<BoolType, int, BoolType, string> _combatAbilityReady;
 
         /// <summary>
         /// Is this Combat Ability ready?
         /// </summary>
-        /// <param name="number"></param>
+        /// <param name="number">The base 1 index.</param>
         /// <returns></returns>
         public bool GetCombatAbilityReady(int number) => _combatAbilityReady[number];
 
@@ -1037,6 +1037,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
+                // Why not use the TLO skills?
                 var items = new List<SkillInfo>(NUM_SKILLS);
 
                 for (int i = 0; i < NUM_SKILLS; i++)
@@ -1092,6 +1093,26 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="abilityID"></param>
         /// <returns></returns>
         public bool GetAbilityReady(int abilityID) => _abilityReady[abilityID];
+
+        public IEnumerable<AbilityInfo> Abilities
+        {
+            get
+            {
+                var items = new List<AbilityInfo>(NUM_SKILLS);
+
+                for (int i = 0; i < NUM_SKILLS; i++)
+                {
+                    var item = new AbilityInfo(i + 1, this);
+
+                    if (item.Skill?.Activated ?? false)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+        }
 
         /// <summary>
         /// Ranged attack ready?
@@ -1534,6 +1555,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
                     if (item != null)
                     {
                         i++;
+
                         yield return item;
                     }
                     else
@@ -1923,10 +1945,18 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? XTargetSlots => GetMember<IntType>("XTargetSlots");
 
         /// <summary>
-        /// Number of mobs on your XTarget, excluding your current target, that have less than the supplied % of aggro on you.
+        /// N is optional and defaults to 100.
+        /// Returns the number of AUTO-HATER mobs on the extended target window where your aggro is less than the optional parameter N.N must be between 1-100 inclusive or it will be set to 100 (the default value).
         /// Cast to <see cref="uint"/> to get the value. Value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
         private readonly IndexedMember<IntType, int> _xTAggroCount;
+
+        /// <summary>
+        /// Returns the number of AUTO-HATER mobs, excluding your current target, on the extended target window where your aggro is less than the optional parameter N.N must be between 1-100 inclusive or it will be set to 100 (the default value).
+        /// </summary>
+        /// <param name="aggro"></param>
+        /// <returns></returns>
+        public uint? GetXTargetAggroCount(int aggro = 100) => _xTAggroCount[aggro];
 
         /// <summary>
         /// Number of spawns in auto hater slots in your XTarget
@@ -1934,10 +1964,41 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? XTHaterCount => GetMember<IntType>("XTHaterCount");
 
         /// <summary>
-        /// Returns a spawn from your XTarget by index (1 - 13) or name.
+        /// Returns a spawn from your XTarget by base 1 index (1 - 13) or name.
         /// If no index was provided then it returns the count. Cast to <see cref="uint"/> to get the value since the value field is <see cref="MQ2VarPtr.Dword"/> when no index is provided.
         /// </summary>
         private readonly IndexedMember<XTargetType, int, XTargetType, string> _xTarget;
+
+        /// <summary>
+        /// Get XTarget by base 1 index.
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <returns></returns>
+        public XTargetType GetXTarget(int index) => _xTarget[index];
+
+        /// <summary>
+        /// Get XTarget by spawn name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public XTargetType GetXTarget(string name) => _xTarget[name];
+
+        /// <summary>
+        /// The total XTargets.
+        /// </summary>
+        public uint? XTargetCount => GetMember<IntType>("XTarget");
+
+        public IEnumerable<XTargetType> XTargets
+        {
+            get
+            {
+                var count = XTargetCount ?? 0;
+                for (int i = 0; i < count; i++)
+                {
+                    yield return GetXTarget(i + 1);
+                }
+            }
+        }
 
         /// <summary>
         /// Total Combined Haste (worn and spell) as shown in Inventory Window stats
@@ -1951,6 +2012,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<IntType, int> _sPA;
 
         /// <summary>
+        /// Returns the total amount of a SPA your character has.
+        /// </summary>
+        /// <param name="spaID"></param>
+        /// <returns></returns>
+        public uint? GetSPATotal(int spaID) => _sPA[spaID];
+
+        /// <summary>
         /// Current active mercenary stance as a string, default is NULL.
         /// </summary>
         public string MercenaryStance => GetMember<StringType>("MercenaryStance");
@@ -1960,6 +2028,20 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
         private readonly IndexedMember<TimeStampType, int, TimeStampType, string> _gemTimer;
+
+        /// <summary>
+        /// Recast time remaining on a spell gem by spell slot (base 1).
+        /// </summary>
+        /// <param name="gemSlot">The base 1 gem slot.</param>
+        /// <returns></returns>
+        public TimeSpan? GetGemTimer(int gemSlot) => _gemTimer[gemSlot];
+
+        /// <summary>
+        /// Recast time remaining on a spell gem by spell name.
+        /// </summary>
+        /// <param name="spellName"></param>
+        /// <returns></returns>
+        public TimeSpan? GetGemTimer(string spellName) => _gemTimer[spellName];
 
         /// <summary>
         /// Returns TRUE/FALSE if you have that expansion by # or name.
@@ -2043,11 +2125,82 @@ namespace MQ2DotNet.MQ2API.DataTypes
         [Obsolete("TODO: Fix this. Its a struct not an int*")]
         public string Subscription => GetMember<StringType>("Subscription");
 
+        /*
+         
+         / AltCurrency values
+enum ALTCURRENCY
+{
+	ALTCURRENCY_DOUBLOONS = 10, // TBS
+	ALTCURRENCY_ORUX = 11, // TBS
+	ALTCURRENCY_PHOSPHENES = 12, // TBS
+	ALTCURRENCY_PHOSPHITES = 13, // TBS
+	ALTCURRENCY_FAYCITES = 14, // SoF
+	ALTCURRENCY_CHRONOBINES = 15, // SoD
+	ALTCURRENCY_SILVERTOKENS = 16, // UF
+	ALTCURRENCY_GOLDTOKENS = 17, // UF
+	ALTCURRENCY_MCKENZIE = 18, // SoD
+	ALTCURRENCY_BAYLE = 19, // SoD
+	ALTCURRENCY_RECLAMATION = 20, // EQ
+	ALTCURRENCY_BRELLIUM = 21, // UF
+	ALTCURRENCY_MOTES = 22, // HoT
+	ALTCURRENCY_REBELLIONCHITS = 23, // VoA
+	ALTCURRENCY_DIAMONDCOINS = 24, // VoA
+	ALTCURRENCY_BRONZEFIATS = 25, // VoA
+	ALTCURRENCY_VOUCHER = 26, // TDS
+	ALTCURRENCY_VELIUMSHARDS = 27, // RoF
+	ALTCURRENCY_CRYSTALLIZEDFEAR = 28, // RoF
+	ALTCURRENCY_SHADOWSTONES = 29, // RoF
+	ALTCURRENCY_DREADSTONES = 30, // RoF
+	ALTCURRENCY_MARKSOFVALOR = 31, // CoTF
+	ALTCURRENCY_MEDALSOFHEROISM = 32, // CoTF
+	ALTCURRENCY_COMMEMORATIVE_COINS = 33, // VoA
+	ALTCURRENCY_FISTSOFBAYLE = 34, // CoTF
+	ALTCURRENCY_NOBLES = 35, // EQ
+	ALTCURRENCY_ENERGYCRYSTALS = 36, // TDS
+	ALTCURRENCY_PIECESOFEIGHT = 37, // TDS
+	ALTCURRENCY_REMNANTSOFTRANQUILITY = 38, // TBM
+	ALTCURRENCY_BIFURCATEDCOIN = 39, // TBM
+	ALTCURRENCY_ADOPTIVE = 40, // EQ
+	ALTCURRENCY_SATHIRSTRADEGEMS = 41, // EoK
+	ALTCURRENCY_ANCIENTSEBILISIANCOINS = 42, // EoK
+	ALTCURRENCY_BATHEZIDTRADEGEMS = 43, // RoS
+	ALTCURRENCY_ANCIENTDRACONICCOIN = 44, // RoS
+	ALTCURRENCY_FETTERREDIFRITCOINS = 45, // TBL
+	ALTCURRENCY_ENTWINEDDJINNCOINS = 46, // TBL
+	ALTCURRENCY_CRYSTALLIZEDLUCK = 47, // TBL
+	ALTCURRENCY_FROSTSTONEDUCAT = 48, // ToV Group
+	ALTCURRENCY_WARLORDSSYMBOL = 49, // ToV Raid
+	ALTCURRENCY_OVERSEERTETRADRACHM = 50, // Overseer
+	ALTCURRENCY_RESTLESSMARK = 51, // CoV
+	ALTCURRENCY_WARFORGEDEMBLEM = 52, // CoV
+	ALTCURRENCY_SCARLETMARKS = 53, // ToL
+	ALTCURRENCY_MEDALSOFCONFLICT = 54, // ToL
+	ALTCURRENCY_SHADEDSPECIE = 55, // NoS
+	ALTCURRENCY_SPIRITUALMEDALLION = 56, // Nos
+};
+         
+         */
+
         /// <summary>
-        /// Quantity of an alt currency by name or number.
+        /// The amount of alternate currency given the name (e.g. Marks of Valor) or alt currency ID.
         /// Cast to <see cref="uint"/> to get the value. The value field is <see cref="MQ2VarPtr.Dword"/>.
         /// </summary>
         private readonly IndexedMember<IntType, int, IntType, string> _altCurrency;
+
+        /// <summary>
+        /// The amount of alternate currency given the alt currency ID.
+        /// </summary>
+        /// <param name="altCurrencyID"></param>
+        /// <returns></returns>
+        public uint? GetAltCurrencyAmount(int altCurrencyID) => _altCurrency[altCurrencyID];
+
+        /// <summary>
+        /// The amount of alternate currency given the name (e.g. Marks of Valor).
+        /// TODO: map to enum.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public uint? GetAltCurrencyAmount(string name) => _altCurrency[name];
 
         /// <summary>
         /// Debuff with a slow SPA
@@ -2214,9 +2367,26 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public int? Instance => GetMember<IntType>("Instance");
 
         /// <summary>
-        /// TODO: new member
+        /// TODO: new member and no details for online doco.
+        /// The index is base 1.
         /// </summary>
         private readonly IndexedStringMember<int, IntType, string> _mercListInfo;
+
+        /// <summary>
+        /// TODO: new member and no details for online doco.
+        /// The index is base 1.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public string GetMercListInfo(int index) => _mercListInfo[index];
+
+        /// <summary>
+        /// TODO: new member and no details for online doco.
+        /// The returned index is base 1.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public uint? GetMercListInfo(string index) => _mercListInfo[index];
 
         /// <summary>
         /// Using advanced looting?
@@ -2254,9 +2424,47 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<WorldLocationType, int> _boundLocation;
 
         /// <summary>
+        /// Returns information about your bind points (0-4).
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public WorldLocationType GetBoundLocation(int index) => _boundLocation[index];
+
+        public IEnumerable<WorldLocationType> BoundLocations
+        {
+            get
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    yield return GetBoundLocation(i);
+                }
+            }
+        }
+
+        /// <summary>
         /// Autoskill by number
         /// </summary>
         private readonly IndexedMember<SkillType, int> _autoSkill;
+
+        /// <summary>
+        /// Autoskill by number (base 1). No online doco for this member.
+        /// Valid indexes seem to be only 1 and 2.
+        /// </summary>
+        /// <param name="number">The base 1 index.</param>
+        /// <returns></returns>
+        public SkillType GetAutoSkill(int number) => _autoSkill[number];
+
+        public IEnumerable<SkillType> AutoSkills
+        {
+            get
+            {
+                for (int i = 1; i <= 2; i++)
+                {
+                    yield return GetAutoSkill(i);
+                }
+            }
+        }
+
 
         /// <summary>
         /// Base strength
@@ -2319,6 +2527,31 @@ namespace MQ2DotNet.MQ2API.DataTypes
         private readonly IndexedMember<BandolierType, string, BandolierType, int> _bandolier;
 
         /// <summary>
+        /// Get a bandolier set by slot number (1 - 20).
+        /// </summary>
+        /// <param name="slotNumber">The base 1 index.</param>
+        /// <returns></returns>
+        public BandolierType GetBandolier(int slotNumber) => _bandolier[slotNumber];
+
+        /// <summary>
+        /// Get a bandolier set by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public BandolierType GetBandolier(string name) => _bandolier[name];
+
+        public IEnumerable<BandolierType> Bandoliers
+        {
+            get
+            {
+                for (int i = 0; i < MAX_BANDOLIER_ITEMS; i++)
+                {
+                    yield return GetBandolier(i + 1);
+                }
+            }
+        }
+
+        /// <summary>
         /// Fear debuff if the target has one
         /// </summary>
         public BuffType Feared => GetMember<BuffType>("Feared");
@@ -2354,10 +2587,24 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public uint? SpellRankCap => GetMember<IntType>("SpellRankCap");
 
         /// <summary>
-        /// Ability with this name or on this button # ready?
+        /// Get the ability timer for an ability with this name or ability ID.
         /// Cast to <see cref="TimeSpan"/> to get the value. Value field is <see cref="MQ2VarPtr.Int64"/>.
         /// </summary>
         private readonly IndexedMember<TimeStampType, int, TimeStampType, string> _abilityTimer;
+
+        /// <summary>
+        /// Get the ability timer for an ability with this ability ID.
+        /// </summary>
+        /// <param name="abilityID"></param>
+        /// <returns></returns>
+        public TimeSpan? GetAbilityTimer(int abilityID) => _abilityTimer[abilityID];
+
+        /// <summary>
+        /// Get the ability timer for an ability with this name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public TimeSpan? GetAbilityTimer(string name) => _abilityTimer[name];
 
         /// <summary>
         /// TODO: new member
@@ -2455,43 +2702,29 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public void StopCast() => GetMember<MQ2DataType>("StopCast");
     }
 
-    public class GemInfo
+    public class AbilityInfo : SkillInfo
     {
-        public int Slot { get; set; }
-        public SpellType MemorizedSpell { get; set; }
-        public bool Ready { get; set; }
-
-        public GemInfo()
-        {
-            
-        }
-
-        public GemInfo(int gemSlot, CharacterType me)
-        {
-            Slot = gemSlot;
-            MemorizedSpell = me.GetGem(gemSlot);
-            Ready = me.IsSpellReady(gemSlot);
-        }
-    }
-
-    public class CombatAbilityInfo
-    {
-        public SpellType Ability { get; set; }
-        public int Number { get; set; }
         public bool Ready { get; set; }
         public TimeSpan? Timer { get; set; }
 
-        public CombatAbilityInfo()
+        /// <summary>
+        /// Constructs a new instance of <see cref="AbilityInfo"/>.
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <param name="me"></param>
+        public AbilityInfo(int index, CharacterType me) : base(index, me)
         {
+            if (Level > 0 && Skill != null && Skill.Activated && Skill.ID.HasValue)
+            {
+                var id = (int)Skill.ID.Value;
 
-        }
-
-        public CombatAbilityInfo(int number, CharacterType me)
-        {
-            Ability = me.GetCombatAbility(number);
-            Number = number;
-            Timer = me.GetCombatAbilityTimer(number);
-            Ready = me.GetCombatAbilityReady(number);
+                Ready = me.GetAbilityReady(id);
+                Timer = me.GetAbilityTimer(id);
+            }
+            else
+            {
+                Ready = false;
+            }
         }
     }
 
@@ -2499,25 +2732,42 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         public AltAbilityType Ability { get; set; }
         public int? ID { get; set; }
+        /// <summary>
+        /// The base 0 index.
+        /// </summary>
         public int Index { get; set; }
-        public string Name { get; set; }
         public bool Ready { get; set; }
         public TimeSpan? Timer { get; set; }
 
         public AltAbilityInfo()
         {
-            
+
         }
 
+        /// <summary>
+        /// Constructs a new instance of <see cref="AltAbilityInfo"/>.
+        /// </summary>
+        /// <param name="index">The base 0 index.</param>
+        /// <param name="me"></param>
         public AltAbilityInfo(int index, CharacterType me)
         {
             var id = NativeMethods.GetAltAbilityID(index);
-
-            Ability = id != -1 ? me.GetAltAbility(id) : null;
-            ID = id != -1 ? id : (int?)null;
             Index = index;
-            Ready = id != -1 ? me.GetAltAbilityReady(ID.Value) : false;
-            Timer = id != -1 ? me.GetAltAbilityTimer(ID.Value) : null;
+
+            if (id != -1)
+            {
+                Ability =me.GetAltAbility(id);
+                ID = id;
+                Ready = me.GetAltAbilityReady(ID.Value);
+                Timer = me.GetAltAbilityTimer(ID.Value);
+            }
+            else
+            {
+                Ability = null;
+                ID = null;
+                Ready = false;
+                Timer = null;
+            }
         }
 
         private static class NativeMethods
@@ -2527,16 +2777,80 @@ namespace MQ2DotNet.MQ2API.DataTypes
         }
     }
 
+    public class CombatAbilityInfo
+    {
+        public SpellType Ability { get; set; }
+        /// <summary>
+        /// The base 1 index.
+        /// </summary>
+        public int Number { get; set; }
+        public bool Ready { get; set; }
+        public TimeSpan? Timer { get; set; }
+
+        public CombatAbilityInfo()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="CombatAbilityInfo"/>.
+        /// </summary>
+        /// <param name="number">The base 1 index.</param>
+        /// <param name="me"></param>
+        public CombatAbilityInfo(int number, CharacterType me)
+        {
+            Ability = me.GetCombatAbility(number);
+            Number = number;
+            Timer = me.GetCombatAbilityTimer(number);
+            Ready = me.GetCombatAbilityReady(number);
+        }
+    }
+
+    public class GemInfo
+    {
+        public SpellType MemorizedSpell { get; set; }
+        public bool Ready { get; set; }
+        /// <summary>
+        /// The base 1 gem slot.
+        /// </summary>
+        public int Slot { get; set; }
+        public TimeSpan? Timer { get; set; }
+
+        public GemInfo()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="GemInfo"/>.
+        /// </summary>
+        /// <param name="gemSlot">The base 1 gem slot.</param>
+        /// <param name="me"></param>
+        public GemInfo(int gemSlot, CharacterType me)
+        {
+            MemorizedSpell = me.GetGem(gemSlot);
+            Ready = me.IsSpellReady(gemSlot);
+            Slot = gemSlot;
+            Timer = me.GetGemTimer(gemSlot);
+        }
+    }
+
     public class SkillInfo
     {
-        public uint? AbilityID { get; set; }
         public uint? Base { get; set; }
         public uint? Cap { get; set; }
+        /// <summary>
+        /// The base 1 index.
+        /// </summary>
         public int Index { get; set; }
         public uint? Level { get; set; }
-        public string Name { get; set; }
-        public bool Ready { get; set; }
+        public SkillType Skill { get; set; }
 
+        /// <summary>
+        /// Constructs a new instance of <see cref="SkillInfo"/>.
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <param name="me"></param>
         public SkillInfo(int index, CharacterType me)
         {
             Index = index;
@@ -2544,22 +2858,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
             if (Level > 0)
             {
-                var name = new StringBuilder(100);
-                
-                NativeMethods.GetSkillName(index, name);
-                
-                Name = name?.ToString();
-
-                if (!string.IsNullOrEmpty(Name))
-                {
-                    AbilityID = me.GetAbilityID(Name);
-
-                    if (AbilityID != null)
-                    {
-                        Ready = me.GetAbilityReady((int)AbilityID.Value);
-                    }
-                }
-
+                Skill = TLO.Instance.GetSkill(index);
                 Base = me.GetSkillBase(index);
                 Cap = me.GetSkillCap(index);
             }
@@ -2567,16 +2866,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
             {
                 Base = null;
                 Cap = null;
-                Name = null;
-                AbilityID = null;
-                Ready = false;
+                Skill = null;
             }
-        }
-
-        private static class NativeMethods
-        {
-            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
-            public static extern void GetSkillName(int index, [MarshalAs(UnmanagedType.LPStr)] StringBuilder name);
         }
     }
 }

@@ -21,7 +21,6 @@ namespace MQ2DotNet.MQ2API
 
         private readonly MQ2TypeFactory _typeFactory;
         private readonly MQ2TypeVar _typeVar;
-        private readonly bool defaultToString;
 
         /// <summary>
         /// Create a new MQ2DataType from an MQ2TypeVar
@@ -30,7 +29,6 @@ namespace MQ2DotNet.MQ2API
         /// <param name="typeVar"></param>
         public MQ2DataType(MQ2TypeFactory typeFactory, MQ2TypeVar typeVar)
         {
-            defaultToString = true;
             _typeFactory = typeFactory;
             _typeVar = typeVar;
         }
@@ -54,9 +52,12 @@ namespace MQ2DotNet.MQ2API
         /// <inheritdoc />
         public override string ToString()
         {
-            return defaultToString ?
-                base.ToString() : 
-                _typeVar.ToString();
+            return _typeVar.ToString();
+        }
+
+        public string OriginalToString()
+        {
+            return base.ToString();
         }
 
         #region Helpers for derived classes

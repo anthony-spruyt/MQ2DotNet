@@ -49,7 +49,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public bool AltTimer => (uint?)GetMember<IntType>("AltTimer") > 0;
         
         /// <summary>
-        /// Returns TRUE if the skill has been activated
+        /// Returns TRUE if the skill requires activation, IOW it is not passive.
         /// </summary>
         public bool Activated => GetMember<BoolType>("Activated");
         
