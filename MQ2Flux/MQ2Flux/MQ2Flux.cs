@@ -79,10 +79,10 @@ namespace MQ2Flux
         {
             Configure(args);
 
+            mQ2logger.Log($"Started");
+
             try
             {
-                mQ2logger.Log($"Started");
-
                 CancellationToken[] cancellationTokens = await mediator.Send
                 (
                     new LoadMQ2Commands()
@@ -125,7 +125,8 @@ namespace MQ2Flux
 
                         FlushMQ2DataTypeErrors(logger);
 
-                        await Task.Yield();
+                        //await Task.Yield();
+                        await Task.Delay(TimeSpan.FromMilliseconds(10), linkedTokenSource.Token);
                     }
                 }
 
@@ -146,14 +147,15 @@ namespace MQ2Flux
                 events.SetGameState -= Events_SetGameState;
 
                 await mediator.Send(new UnloadMQ2Commands());
-
-                mQ2logger.Log($"Stopped");
             }
+            catch (TaskCanceledException) { }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"Error in {nameof(Main)}");
                 mQ2logger.LogError(ex);
             }
+
+            mQ2logger.Log($"Stopped");
 
             if (token.IsCancellationRequested)
             {
@@ -238,7 +240,7 @@ namespace MQ2Flux
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to configure", ex);
+                throw new Exception("Failed to configure MQ2Flux", ex);
             }
         }
 
@@ -285,7 +287,8 @@ namespace MQ2Flux
                 .AddMQ2ChatHistory()
                 .AddMQ2Logging()
                 .AddMQ2Config()
-                .AddMQ2CommandProvider();
+                .AddMQ2CommandProvider()
+                .AddItemService();
         }
 
         private void FlushMQ2DataTypeErrors(ILogger<MQ2Flux> logger)

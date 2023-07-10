@@ -20,7 +20,6 @@ namespace MQ2Flux.Handlers
         public Task Handle(LearnALanguageCommand request, CancellationToken cancellationToken)
         {
             var me = request.Context.TLO.Me;
-            var mq2 = request.Context.MQ2;
 
             if (!me.Combat && me.Grouped)
             {
@@ -44,6 +43,7 @@ namespace MQ2Flux.Handlers
 
                 if (languageNumber.HasValue)
                 {
+                    var mq2 = request.Context.MQ2;
                     var message = $"Lets practise {language}. The time is {DateTimeOffset.Now.ToLocalTime()}. One two three four five six seven eight nine ten! Lets do it all again.";
 
                     if (chatHistory.NoSpam(TimeSpan.FromSeconds(1), message))

@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -42,9 +43,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Spell cast time.
-        /// TODO: determine the unit type (milliseconds, seconds etc.)
         /// </summary>
-        public uint? CastTime => GetMember<IntType>("CastTime");
+        public TimeSpan? CastTime => GetMember<IntType>("CastTime");
 
         /// <summary>
         /// Timer ID of the spell.

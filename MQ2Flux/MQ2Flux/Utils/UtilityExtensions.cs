@@ -17,10 +17,6 @@ namespace MQ2Flux
 
         public static string Serialize(this object @this)
         {
-            /*
-             * ReferenceHandler.Preserve on JsonSerializerOptions to support cycles. Path: $.DSed.Spell.RankName.RankName.RankName.RankName.RankName.RankName.CastTime.Hours.
-             */
-
             return JsonSerializer.Serialize(@this, options: options);
         }
 

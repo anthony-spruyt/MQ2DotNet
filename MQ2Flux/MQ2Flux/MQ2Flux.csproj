@@ -78,6 +78,7 @@
     <Compile Include="Commands\DispenseCommand.cs" />
     <Compile Include="Commands\EatAndDrinkCommand.cs" />
     <Compile Include="Commands\LearnALanguageCommand.cs" />
+    <Compile Include="Commands\SummonFoodAndDrinkCommand.cs" />
     <Compile Include="Extensions\CharacterTypeExtensions.cs" />
     <Compile Include="Extensions\ItemTypeExtensions.cs" />
     <Compile Include="Handlers\DismissAlertWindowCommandHandler.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Handlers\LearnALanguageCommandHandler.cs" />
     <Compile Include="Handlers\LoadMQ2CommandsHandler.cs" />
     <Compile Include="Handlers\SaveConfigCommandHandler.cs" />
+    <Compile Include="Handlers\SummonFoodAndDrinkCommandHandler.cs" />
     <Compile Include="Handlers\TestCommandHandler.cs" />
     <Compile Include="Handlers\UnloadMQ2CommandsHandler.cs" />
     <Compile Include="Notifications\ConfigUpdateNotification.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Models\FluxConfig.cs" />
     <Compile Include="Services\FluxMQ2AsyncCommand.cs" />
     <Compile Include="Services\CateringService.cs" />
+    <Compile Include="Services\ItemService.cs" />
     <Compile Include="Services\LanguageService.cs" />
     <Compile Include="Services\MQ2ChatHistory.cs" />
     <Compile Include="Services\MQ2CommandProvider.cs" />

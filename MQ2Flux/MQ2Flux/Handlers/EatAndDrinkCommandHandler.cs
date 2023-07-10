@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Handlers
 {
-    internal class EatAndDrinkCommandHandler : IRequestHandler<EatAndDrinkCommand>
+    public class EatAndDrinkCommandHandler : IRequestHandler<EatAndDrinkCommand>
     {
-        private readonly IMQ2Logger mq2Logger;
         private readonly IMQ2ChatHistory chatHistory;
+        private readonly IItemService itemService;
 
-        public EatAndDrinkCommandHandler(IMQ2Logger mq2Logger, IMQ2ChatHistory chatHistory)
+        public EatAndDrinkCommandHandler(IMQ2ChatHistory chatHistory, IItemService itemService)
         {
-            this.mq2Logger = mq2Logger;
             this.chatHistory = chatHistory;
+            this.itemService = itemService;
         }
 
-        public Task Handle(EatAndDrinkCommand request, CancellationToken cancellationToken)
+        public async Task Handle(EatAndDrinkCommand request, CancellationToken cancellationToken)
         {
             var mq2 = request.Context.MQ2;
             var me = request.Context.TLO.Me;
@@ -29,7 +29,7 @@ namespace MQ2Flux.Handlers
 
             if (!amIHungry && !amIThirsty)
             {
-                return Task.CompletedTask;
+                return;
             }
 
             var allMyInv = me.Inventory.Flatten();
@@ -43,8 +43,7 @@ namespace MQ2Flux.Handlers
 
                 if (food != null)
                 {
-                    mq2Logger.Log($"Eating {food.Name}");
-                    mq2.DoCommand($"/useitem {food.Name}");
+                    await itemService.UseItemAsync(food, "Eating", cancellationToken);
                 }
                 else if (me.Grouped)
                 {
@@ -66,8 +65,7 @@ namespace MQ2Flux.Handlers
 
                 if (drink != null)
                 {
-                    mq2Logger.Log($"Drinking {drink.Name}");
-                    mq2.DoCommand($"/useitem {drink.Name}");
+                    await itemService.UseItemAsync(drink, "Drinking", cancellationToken);
                 }
                 else if (me.Grouped)
                 {
@@ -79,8 +77,6 @@ namespace MQ2Flux.Handlers
                     }
                 }
             }
-
-            return Task.CompletedTask;
         }
     }
 }

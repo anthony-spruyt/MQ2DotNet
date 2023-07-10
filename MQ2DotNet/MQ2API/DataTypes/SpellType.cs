@@ -34,6 +34,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _hasSPA = new IndexedMember<BoolType, int>(this, "HasSPA");
             _trigger = new IndexedMember<SpellType, int>(this, "Trigger");
             _link = new IndexedStringMember<string>(this, "Link");
+            CastOnYou = GetMember<StringType>("CastOnYou");
             Name = GetMember<StringType>("Name");
         }
 
@@ -219,7 +220,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Message when cast on yourself.
         /// </summary>
-        public string CastOnYou => GetMember<StringType>("CastOnYou");
+        public string CastOnYou { get; }
 
         /// <summary>
         /// Message when cast on others.

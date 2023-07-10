@@ -143,6 +143,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public static implicit operator TimeSpan?(IntType typeVar)
         {
             // SkillType::ReuseTime
+            // ItemSpellType::CastTime
             return typeVar == null ? TimeSpan.Zero : TimeSpan.FromMilliseconds(typeVar.VarPtr.Dword);
         }
     }
