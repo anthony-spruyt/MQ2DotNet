@@ -13,12 +13,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal TaskMemberType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
+            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
         /// Returns name of the member.
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// Returns true if member is leader.

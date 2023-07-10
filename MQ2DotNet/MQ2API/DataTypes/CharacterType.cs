@@ -68,12 +68,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _autoSkill = new IndexedMember<SkillType, int>(this, "AutoSkill");
             _bandolier = new IndexedMember<BandolierType, string, BandolierType, int>(this, "Bandolier");
             _abilityTimer = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "AbilityTimer");
+            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
         /// The player name.
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// The player origin zone.
@@ -545,7 +546,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
             {
                 for (int i = 0; i < NUM_INV_SLOTS; i++)
                 {
-                    yield return GetInvetoryItem(i);
+                    var item = GetInvetoryItem(i);
+
+                    if (item.ID.HasValue)
+                    {
+                        yield return item;
+                    }
                 }
             }
         }

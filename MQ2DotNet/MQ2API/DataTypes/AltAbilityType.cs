@@ -14,33 +14,38 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal AltAbilityType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
+            Category = GetMember<StringType>("Category");
+            Description = GetMember<StringType>("Description");
+            Name = GetMember<StringType>("Name");
+            ShortName = GetMember<StringType>("ShortName");
+            ShortName2 = GetMember<StringType>("ShortName2");
         }
 
         /// <summary>
         /// Name
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// Basic description
         /// </summary>
-        public string Description => GetMember<StringType>("Description");
+        public string Description { get; }
 
         /// <summary>
         /// The name of the category that this AA belongs to.
         /// TODO: create an enum for this.
         /// </summary>
-        public string Category => GetMember<StringType>("Category");
+        public string Category { get; }
 
         /// <summary>
         /// First line of button label (if any)
         /// </summary>
-        public string ShortName => GetMember<StringType>("ShortName");
+        public string ShortName { get; }
 
         /// <summary>
         /// Second line of button label (if any)
         /// </summary>
-        public string ShortName2 => GetMember<StringType>("ShortName2");
+        public string ShortName2 { get; }
 
         /// <summary>
         /// ID

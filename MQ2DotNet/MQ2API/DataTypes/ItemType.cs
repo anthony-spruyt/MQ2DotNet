@@ -22,6 +22,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _race = new IndexedMember<RaceType, int, RaceType, string>(this, "Race");
             _deity = new IndexedMember<DeityType, int, DeityType, string>(this, "Deity");
             _augSlot = new IndexedMember<AugType, int>(this, "AugSlot");
+            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// Lore?

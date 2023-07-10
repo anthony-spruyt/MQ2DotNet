@@ -14,12 +14,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal DZMemberType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
+            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
         /// The name of the member
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// Returns true if the dzmember can successfully enter the dz.

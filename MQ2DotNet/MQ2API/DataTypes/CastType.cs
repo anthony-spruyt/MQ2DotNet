@@ -14,6 +14,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal CastType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
+            Result = GetMember<StringType>("Result");
+            Status = GetMember<StringType>("Status");
         }
 
         /// <summary>
@@ -39,12 +41,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: What is this?
         /// </summary>
-        public string Status => GetMember<StringType>("Status");
+        public string Status { get; }
 
         /// <summary>
         /// TODO: What is this?
         /// </summary>
-        public string Result => GetMember<StringType>("Result");
+        public string Result { get; }
 
         /// <summary>
         /// TODO: What is this?

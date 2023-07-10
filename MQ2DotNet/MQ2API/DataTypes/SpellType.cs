@@ -34,6 +34,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _hasSPA = new IndexedMember<BoolType, int>(this, "HasSPA");
             _trigger = new IndexedMember<SpellType, int>(this, "Trigger");
             _link = new IndexedStringMember<string>(this, "Link");
+            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Spell Name
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
         
         /// <summary>
         /// Level

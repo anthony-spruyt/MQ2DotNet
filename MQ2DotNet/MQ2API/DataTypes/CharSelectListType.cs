@@ -13,6 +13,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal CharSelectListType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
+            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of the character
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// Level of the character

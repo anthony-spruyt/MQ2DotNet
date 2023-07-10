@@ -14,6 +14,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal AuraType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             _find = new IndexedMember<IntType, string>(this, "Find");
+            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of the aura.
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// Spawn ID of the caster / ID of the spawn that emits aura.

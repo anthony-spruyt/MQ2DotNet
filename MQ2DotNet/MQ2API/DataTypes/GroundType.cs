@@ -16,6 +16,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal GroundType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             _search = new IndexedMember<GroundType, int, GroundType, string>(this, "Search");
+            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Internal name
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// Displays name of the grounspawn

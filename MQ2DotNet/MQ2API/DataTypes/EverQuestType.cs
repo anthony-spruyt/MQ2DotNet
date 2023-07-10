@@ -2,6 +2,7 @@
 using MQ2DotNet.EQ;
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -19,6 +20,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _chatChannel = new IndexedStringMember<int, BoolType, string>(this, "ChatChannel");
             _charSelectList = new IndexedMember<CharSelectListType, string, CharSelectListType, int>(this, "CharSelectList");
             _validLoc = new IndexedMember<BoolType, string>(this, "ValidLoc");
+            LoginName = GetMember<StringType>("LoginName");
+            Server = GetMember<StringType>("Server");
         }
 
         /// <summary>
@@ -34,13 +37,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summaryMouseX
         /// Your station name
         /// </summary>
-        public string LoginName => GetMember<StringType>("LoginName");
+        public string LoginName { get; }
 
         /// <summary>
         /// Name of the server in short form e.g. firiona.
         /// doco says "Full name of your server" but this returns the short name.
         /// </summary>
-        public string Server => GetMember<StringType>("Server");
+        public string Server { get; }
 
         /// <summary>
         /// Last command entered

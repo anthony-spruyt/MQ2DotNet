@@ -11,6 +11,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-string/
     /// </summary>
+    /// <remarks>Since most MQ2 strings share the same storage (DataTypeTemp), lazy evaluation is a bad idea.</remarks>
     [PublicAPI]
     [MQ2Type("string")]
     public class StringType : MQ2DataType
@@ -19,7 +20,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         internal StringType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            // Since most MQ2 strings share the same storage (DataTypeTemp), lazy evaluation is a bad idea
+            // Since most MQ2 strings share the same storage (DataTypeTemp), lazy evaluation is a bad idea.
             _string = typeVar.VarPtr.Ptr != IntPtr.Zero ? Marshal.PtrToStringAnsi(typeVar.VarPtr.Ptr) : null;
         }
 

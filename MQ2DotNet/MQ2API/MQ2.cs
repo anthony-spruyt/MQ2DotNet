@@ -1,8 +1,7 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using JetBrains.Annotations;
-using MQ2DotNet.Utility;
 
 namespace MQ2DotNet.MQ2API
 {
@@ -18,7 +17,7 @@ namespace MQ2DotNet.MQ2API
         /// <param name="text">Text to write</param>
         public void WriteChat(string text)
         {
-            MQ2WriteChatf(Sanitize(text));
+            NativeMethods.MQ2WriteChatf(Sanitize(text));
         }
 
         /// <summary>
@@ -28,7 +27,7 @@ namespace MQ2DotNet.MQ2API
         public void WriteChatSafe(string text)
         {
             // Trim so as to not crash MQ2/EQ
-            MQ2WriteChatfSafe(Sanitize(text));
+            NativeMethods.MQ2WriteChatfSafe(Sanitize(text));
         }
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace MQ2DotNet.MQ2API
             if (parse)
                 formula = Parse(formula);
 
-            if (!MQ2Calculate(formula, out var result))
+            if (!NativeMethods.MQ2Calculate(formula, out var result))
                 throw new FormatException("Could not parse if condition: " + formula);
 
             return result;
@@ -56,7 +55,6 @@ namespace MQ2DotNet.MQ2API
         /// <returns>True if the result is non-zero, otherwise false</returns>
         public bool If(string formula, bool parse = true)
         {
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
             return Calculate(formula, parse) != 0.0;
         }
 
@@ -68,7 +66,7 @@ namespace MQ2DotNet.MQ2API
         public string Parse(string expression)
         {
             var sb = new StringBuilder(expression, 2047);
-            if (!MQ2ParseMacroData(sb, (uint)sb.Capacity + 1))
+            if (!NativeMethods.MQ2ParseMacroData(sb, (uint)sb.Capacity + 1))
                 throw new FormatException("Could not parse expression: " + expression);
 
             return sb.ToString();
@@ -81,7 +79,7 @@ namespace MQ2DotNet.MQ2API
         /// <param name="command">Command to execute</param>
         public void DoCommand(string command)
         {
-            MQ2HideDoCommand(GetCharSpawn(), command, false);
+            NativeMethods.MQ2HideDoCommand(GetCharSpawn(), command, false);
         }
 
         /// <summary>
@@ -91,8 +89,8 @@ namespace MQ2DotNet.MQ2API
         {
             get
             {
-                var hDll = NativeMethods.LoadLibrary("MQ2Main.dll");
-                return Marshal.PtrToStringAnsi(NativeMethods.GetProcAddress(hDll, "gPathMQRoot"));
+                var hDll = Utility.NativeMethods.LoadLibrary("MQ2Main.dll");
+                return Marshal.PtrToStringAnsi(Utility.NativeMethods.GetProcAddress(hDll, "gPathMQRoot"));
             }
         }
 
@@ -103,8 +101,8 @@ namespace MQ2DotNet.MQ2API
         {
             get
             {
-                var hDll = NativeMethods.LoadLibrary("MQ2Main.dll");
-                return Marshal.PtrToStringAnsi(NativeMethods.GetProcAddress(hDll, "gPathResources")) + "\\MQ2DotNet";
+                var hDll = Utility.NativeMethods.LoadLibrary("MQ2Main.dll");
+                return Marshal.PtrToStringAnsi(Utility.NativeMethods.GetProcAddress(hDll, "gPathResources")) + "\\MQ2DotNet";
             }
         }
 
@@ -115,14 +113,14 @@ namespace MQ2DotNet.MQ2API
         {
             get
             {
-                var hDll = NativeMethods.LoadLibrary("MQ2Main.dll");
-                return Marshal.PtrToStringAnsi(NativeMethods.GetProcAddress(hDll, "gPathConfig"));
+                var hDll = Utility.NativeMethods.LoadLibrary("MQ2Main.dll");
+                return Marshal.PtrToStringAnsi(Utility.NativeMethods.GetProcAddress(hDll, "gPathConfig"));
             }
         }
 
         private static IntPtr GetCharSpawn()
         {
-            var ppPlayer = NativeMethods.GetProcAddress(NativeMethods.LoadLibrary("eqlib.dll"), "pLocalPlayer");
+            var ppPlayer = Utility.NativeMethods.GetProcAddress(Utility.NativeMethods.LoadLibrary("eqlib.dll"), "pLocalPlayer");
             var pPlayer = Marshal.ReadIntPtr(ppPlayer);
             return Marshal.ReadIntPtr(pPlayer);
         }
@@ -201,22 +199,25 @@ namespace MQ2DotNet.MQ2API
         #endregion
 
         #region MQ2Main imports
-        [DllImport("MQ2Main.dll", EntryPoint = "Calculate", CallingConvention = CallingConvention.Cdecl)]
-        [return: MarshalAs(UnmanagedType.I1)]
-        private static extern bool MQ2Calculate([MarshalAs(UnmanagedType.LPStr)] string formula, out double result);
+        private static class NativeMethods
+        {
+            [DllImport("MQ2Main.dll", EntryPoint = "Calculate", CallingConvention = CallingConvention.Cdecl)]
+            [return: MarshalAs(UnmanagedType.I1)]
+            public static extern bool MQ2Calculate([MarshalAs(UnmanagedType.LPStr)] string formula, out double result);
 
-        [DllImport("MQ2Main.dll", EntryPoint = "ParseMacroData", CallingConvention = CallingConvention.Cdecl)]
-        [return: MarshalAs(UnmanagedType.I1)]
-        private static extern bool MQ2ParseMacroData([MarshalAs(UnmanagedType.LPStr)] StringBuilder szOriginal, uint BufferSize);
+            [DllImport("MQ2Main.dll", EntryPoint = "ParseMacroData", CallingConvention = CallingConvention.Cdecl)]
+            [return: MarshalAs(UnmanagedType.I1)]
+            public static extern bool MQ2ParseMacroData([MarshalAs(UnmanagedType.LPStr)] StringBuilder szOriginal, uint BufferSize);
 
-        [DllImport("MQ2Main.dll", EntryPoint = "HideDoCommand", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void MQ2HideDoCommand(IntPtr pCharSpawn, [MarshalAs(UnmanagedType.LPStr)] string Command, bool delayed);
+            [DllImport("MQ2Main.dll", EntryPoint = "HideDoCommand", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void MQ2HideDoCommand(IntPtr pCharSpawn, [MarshalAs(UnmanagedType.LPStr)] string Command, bool delayed);
 
-        [DllImport("MQ2Main.dll", EntryPoint = "WriteChatf", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void MQ2WriteChatf([MarshalAs(UnmanagedType.LPStr)] string buffer);
+            [DllImport("MQ2Main.dll", EntryPoint = "WriteChatf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void MQ2WriteChatf([MarshalAs(UnmanagedType.LPStr)] string buffer);
 
-        [DllImport("MQ2Main.dll", EntryPoint = "WriteChatfSafe", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void MQ2WriteChatfSafe([MarshalAs(UnmanagedType.LPStr)] string buffer);
+            [DllImport("MQ2Main.dll", EntryPoint = "WriteChatfSafe", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void MQ2WriteChatfSafe([MarshalAs(UnmanagedType.LPStr)] string buffer);
+        }
         #endregion
     }
 }

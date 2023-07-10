@@ -13,17 +13,19 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal ZoneType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
+            Name = GetMember<StringType>("Name");
+            ShortName = GetMember<StringType>("ShortName");
         }
 
         /// <summary>
         /// Full zone name e.g. "The Plane of Knowledge"
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// Short zone name e.g. "PoKnowledge"
         /// </summary>
-        public string ShortName => GetMember<StringType>("ShortName");
+        public string ShortName { get; }
 
         /// <summary>
         /// ID of the zone

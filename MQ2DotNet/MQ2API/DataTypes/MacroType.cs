@@ -17,6 +17,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _isTLO = new IndexedMember<BoolType>(this, "IsTLO");
             _isOuterVariable = new IndexedMember<BoolType>(this, "IsOuterVariable");
             _variable = new IndexedMember<MQ2DataType>(this, "Variable");
+            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The name of the macro currently running e.g. kissassist.mac
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// How long the macro has been running.

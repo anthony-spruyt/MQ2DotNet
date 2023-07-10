@@ -14,6 +14,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal XTargetType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
+            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of specified XTarget.
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
 
         /// <summary>
         /// Your percentage aggro on the spawn.

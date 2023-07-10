@@ -15,6 +15,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal MenuType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             _items = new IndexedMember<StringType, int>(this, "Items");
+            Name = GetMember<StringType>("Name");
         }
         
         /// <summary>
@@ -37,7 +38,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: What is this?
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public string Name { get; }
         
         /// <summary>
         /// TODO: What is this?

@@ -9,7 +9,7 @@ namespace MQ2DotNet.MQ2API
     [PublicAPI]
     public class MQ2Type
     {
-        #region Cache members, not sure if this is a good idea... Will find out =)
+        #region Cache members, not sure if this is a good idea... So far not a good idea from testing, strange behaviour with StringType, but might be just strings dont like lazy loading, because of shared temp var in MQ2 client.
         public static readonly bool IsMemberCachingEnabled = false;
 
         private struct MemberKey
