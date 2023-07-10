@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MQ2DotNet.EQ;
 using MQ2DotNet.MQ2API;
 using MQ2DotNet.Program;
 using MQ2DotNet.Services;
@@ -10,6 +11,7 @@ using MQ2Flux.Commands;
 using MQ2Flux.Services;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +31,7 @@ namespace MQ2Flux
         private ILogger<MQ2Flux> logger;
         private IMediator mediator;
         private IMQ2Logger mQ2logger;
+        private GameState gameState;
         private bool disposedValue;
 
         public MQ2Flux(MQ2 mq2, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
@@ -69,6 +72,7 @@ namespace MQ2Flux
             this.events = events;
             this.spawns = spawns;
             this.tlo = tlo;
+            gameState = tlo?.EverQuest?.GameState ?? GameState.Unknown;
         }
 
         public async Task Main(CancellationToken token, string[] args)
@@ -87,11 +91,27 @@ namespace MQ2Flux
                     }
                 );
 
+                events.BeginZone += Events_BeginZone;
+                events.EndZone += Events_EndZone;
+                events.OnAddGroundItem += Events_OnAddGroundItem;
+                events.OnAddSpawn += Events_OnAddSpawn;
+                events.OnCleanUI += Events_OnCleanUI;
+                events.OnDrawHUD += Events_OnDrawHUD;
+                events.OnLoadPlugin += Events_OnLoadPlugin;
+                events.OnMacroStart += Events_OnMacroStart;
+                events.OnMacroStop += Events_OnMacroStop;
+                events.OnReloadUI += Events_OnReloadUI;
+                events.OnRemoveGroundItem += Events_OnRemoveGroundItem;
+                events.OnRemoveSpawn += Events_OnRemoveSpawn;
+                events.OnUnloadPlugin += Events_OnUnloadPlugin;
+                events.OnZoned += Events_OnZoned;
+                events.SetGameState += Events_SetGameState;
+
                 using (CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokens))
                 {
                     while (!linkedTokenSource.IsCancellationRequested)
                     {
-                        if (tlo?.EverQuest?.GameState == MQ2DotNet.EQ.GameState.InGame)
+                        if (gameState == GameState.InGame)
                         {
                             await mediator.Send
                             (
@@ -103,11 +123,27 @@ namespace MQ2Flux
                             );
                         }
 
-                        DumpMQ2DataTypeErrors(logger);
+                        FlushMQ2DataTypeErrors(logger);
 
                         await Task.Yield();
                     }
                 }
+
+                events.BeginZone -= Events_BeginZone;
+                events.EndZone -= Events_EndZone;
+                events.OnAddGroundItem -= Events_OnAddGroundItem;
+                events.OnAddSpawn -= Events_OnAddSpawn;
+                events.OnCleanUI -= Events_OnCleanUI;
+                events.OnDrawHUD -= Events_OnDrawHUD;
+                events.OnLoadPlugin -= Events_OnLoadPlugin;
+                events.OnMacroStart -= Events_OnMacroStart;
+                events.OnMacroStop -= Events_OnMacroStop;
+                events.OnReloadUI -= Events_OnReloadUI;
+                events.OnRemoveGroundItem -= Events_OnRemoveGroundItem;
+                events.OnRemoveSpawn -= Events_OnRemoveSpawn;
+                events.OnUnloadPlugin -= Events_OnUnloadPlugin;
+                events.OnZoned -= Events_OnZoned;
+                events.SetGameState -= Events_SetGameState;
 
                 await mediator.Send(new UnloadMQ2Commands());
 
@@ -115,7 +151,7 @@ namespace MQ2Flux
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"Error in {nameof(MQ2Flux.Main)}");
+                logger.LogError(ex, $"Error in {nameof(Main)}");
                 mQ2logger.LogError(ex);
             }
 
@@ -123,6 +159,66 @@ namespace MQ2Flux
             {
                 token.ThrowIfCancellationRequested();
             }
+        }
+
+        private void Events_BeginZone(object sender, EventArgs e)
+        {
+        }
+
+        private void Events_EndZone(object sender, EventArgs e)
+        {
+        }
+
+        private void Events_OnAddGroundItem(object sender, MQ2DotNet.MQ2API.DataTypes.GroundType e)
+        {
+        }
+
+        private void Events_OnAddSpawn(object sender, MQ2DotNet.MQ2API.DataTypes.SpawnType e)
+        {
+        }
+
+        private void Events_OnCleanUI(object sender, EventArgs e)
+        {
+        }
+
+        private void Events_OnDrawHUD(object sender, EventArgs e)
+        {
+        }
+
+        private void Events_OnLoadPlugin(object sender, string e)
+        {
+        }
+
+        private void Events_OnMacroStart(object sender, string e)
+        {
+        }
+
+        private void Events_OnMacroStop(object sender, string e)
+        {
+        }
+
+        private void Events_OnReloadUI(object sender, EventArgs e)
+        {
+        }
+        private void Events_OnRemoveGroundItem(object sender, MQ2DotNet.MQ2API.DataTypes.GroundType e)
+        {
+        }
+
+        private void Events_OnRemoveSpawn(object sender, MQ2DotNet.MQ2API.DataTypes.SpawnType e)
+        {
+        }
+
+        private void Events_OnUnloadPlugin(object sender, string e)
+        {
+        }
+
+        private void Events_OnZoned(object sender, EventArgs e)
+        {
+        }
+
+        private void Events_SetGameState(object sender, GameState e)
+        {
+            gameState = e;
         }
 
         private IConfiguration Configure(string[] args)
@@ -186,20 +282,28 @@ namespace MQ2Flux
                     }
                 )
                 .AddMQ2Context(mq2, chat, commands, events, spawns, tlo)
+                .AddMQ2ChatHistory()
                 .AddMQ2Logging()
-                .AddMQ2CommandProvider()
-                .AddMQ2Config();
+                .AddMQ2Config()
+                .AddMQ2CommandProvider();
         }
 
-        private void DumpMQ2DataTypeErrors(ILogger<MQ2Flux> logger)
+        private void FlushMQ2DataTypeErrors(ILogger<MQ2Flux> logger)
         {
+            if (!MQ2DataType.DataTypeErrors.Any())
+            {
+                return;
+            }
+
             _ = Task.Run
             (
                 () =>
                 {
                     try
                     {
-                        foreach (var key in MQ2DataType.DataTypeErrors.Keys)
+                        var keys = MQ2DataType.DataTypeErrors.Keys.ToArray();
+
+                        foreach (var key in keys)
                         {
                             MQ2DataType.DataTypeErrors.TryRemove(key, out var ex);
 

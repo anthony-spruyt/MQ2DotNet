@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Behaviors
 {
-    public interface IMQ2ContextRequest
+    public interface IMQ2ContextRequest : IRequest
     {
         IMQ2Context Context { get; set; }
     }

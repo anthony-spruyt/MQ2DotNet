@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Handlers.Handlers
 {
-    public class SaveConfigHandler : IRequestHandler<SaveConfigCommand>
+    public class SaveConfigCommandHandler : IRequestHandler<SaveConfigCommand>
     {
         private readonly IMQ2Config config;
 
-        public SaveConfigHandler(IMQ2Config config)
+        public SaveConfigCommandHandler(IMQ2Config config)
         {
             this.config = config;
         }

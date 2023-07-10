@@ -23,6 +23,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public const int NUM_SKILLS = 100;
         public const int NUM_BOOK_SLOTS = 1120;
         public const int MAX_BANDOLIER_ITEMS = 20;
+        public const int MAX_LANGUAGES = 32;
 
         internal CharacterType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -1512,15 +1513,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var items = new Dictionary<string, uint?>(27);
+                var items = new Dictionary<string, uint?>(MAX_LANGUAGES);
 
-                for (int i = 0; i < 27; i++)
+                for (int i = 0; i < MAX_LANGUAGES; i++)
                 {
                     var name = GetLanguageName(i + 1);
-                    var skill = GetLanguageSkill(i + 1);
 
                     if (!string.IsNullOrWhiteSpace(name) && !items.ContainsKey(name))
                     {
+                        var skill = GetLanguageSkill(i + 1);
+
                         items.Add(name, skill);
                     }
                 }

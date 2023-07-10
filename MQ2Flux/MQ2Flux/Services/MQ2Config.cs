@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MQ2Flux.Models;
 using MQ2Flux.Notifications;
@@ -10,6 +11,21 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Services
 {
+    public interface IMQ2Config
+    {
+        FluxConfig FluxConfig { get; }
+
+        Task SaveAsync(bool notify = false);
+    }
+
+    public static class MQ2ConfigExtensions
+    {
+        public static IServiceCollection AddMQ2Config(this IServiceCollection services)
+        {
+            return services.AddSingleton<IMQ2Config, MQ2Config>();
+        }
+    }
+
     public class MQ2Config : IMQ2Config, IDisposable
     {
         public FluxConfig FluxConfig { get; private set; }

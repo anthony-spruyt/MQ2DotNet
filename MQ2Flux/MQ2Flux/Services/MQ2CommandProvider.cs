@@ -1,8 +1,26 @@
-﻿using MQ2Flux.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 
 namespace MQ2Flux.Services
 {
+    public interface IMQ2CommandProvider
+    {
+        IEnumerable<IMQ2AsyncCommand> AsyncCommands { get; }
+        IEnumerable<IMQ2Command> Commands { get; }
+        void Load();
+        void Unload();
+    }
+
+    public static class MQ2CommandProviderExtensions
+    {
+        public static IServiceCollection AddMQ2CommandProvider(this IServiceCollection services)
+        {
+            return services
+                .AddSingleton<IMQ2CommandProvider, MQ2CommandProvider>()
+                .AddSingleton<IFluxMQ2AsyncCommand, FluxMQ2AsyncCommand>();
+        }
+    }
+
     public class MQ2CommandProvider : IMQ2CommandProvider
     {
         public IEnumerable<IMQ2AsyncCommand> AsyncCommands { get; private set; }

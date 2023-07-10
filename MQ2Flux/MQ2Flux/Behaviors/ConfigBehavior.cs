@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Behaviors
 {
-    public interface IConfigRequest
+    public interface IConfigRequest : IRequest
     {
         FluxConfig Config { get; set; }
     }

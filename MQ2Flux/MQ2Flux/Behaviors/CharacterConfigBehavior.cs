@@ -10,6 +10,9 @@ namespace MQ2Flux.Behaviors
 {
     public interface ICharacterConfigRequest : IConfigRequest, IMQ2ContextRequest
     {
+        /// <summary>
+        /// The effective character configuration.
+        /// </summary>
         CharacterConfig Character { get; set; }
     }
 
@@ -41,16 +44,7 @@ namespace MQ2Flux.Behaviors
                         string.Compare(c.Server, server, true) == 0
                 );
 
-                if (characterConfig == null)
-                {
-                    characterConfig = new CharacterConfig()
-                    {
-                        Name = name,
-                        Server = server
-                    };
-
-
-                }
+                characterConfig = characterConfig.Effective(charConfigRequest.Config?.Defaults);
             }
             catch (Exception ex)
             {
