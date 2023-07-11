@@ -22,7 +22,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _race = new IndexedMember<RaceType, int, RaceType, string>(this, "Race");
             _deity = new IndexedMember<DeityType, int, DeityType, string>(this, "Deity");
             _augSlot = new IndexedMember<AugType, int>(this, "AugSlot");
+            DMGBonusType = GetMember<StringType>("DMGBonusType");
+            EffectType = GetMember<StringType>("EffectType");
+            ItemLink = GetMember<StringType>("ItemLink");
+            ItemLinkClickable = GetMember<StringType>("ItemLink", "CLICKABLE");
+            LDoNTheme = GetMember<StringType>("LDoNTheme");
             Name = GetMember<StringType>("Name");
+            Type = GetMember<StringType>("Type");
         }
 
         /// <summary>
@@ -100,7 +106,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Type of the item e.g. Armor, 2H Slashing (corresponds to type in bazaar search)
         /// </summary>
-        public string Type => GetMember<StringType>("Type");
+        public string Type { get; }
 
         /// <summary>
         /// Charges on the item TODO: Total or remaining charges?
@@ -110,12 +116,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// "All", "Deepest Guk", "Miragul's", "Mistmoore", "Rujarkian", "Takish", "Unknown"
         /// </summary>
-        public LDoNTheme? LDoNTheme => GetMember<StringType>("LDoNTheme");
+        public LDoNTheme? LDoNTheme { get; }
 
         /// <summary>
         /// "None", "Magic", "Fire", "Cold", "Poison", "Disease"
         /// </summary>
-        public DMGBonusType? DMGBonusType => GetMember<StringType>("DMGBonusType");
+        public DMGBonusType? DMGBonusType { get; }
 
         /// <summary>
         /// Number of slots, if this is a container
@@ -315,7 +321,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Spell Scroll - Scribeable spell scroll
         /// Worn - item has a focus effect
         /// </summary>
-        public EffectType? EffectType => GetMember<StringType>("EffectType");
+        public EffectType? EffectType { get; }
 
         /// <summary>
         /// Instrument Modifier Value
@@ -1002,13 +1008,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Just prints the actual hexlink for an item (not clickable)
         /// </summary>
-        public string ItemLink => GetMember<StringType>("ItemLink");
+        public string ItemLink { get; }
 
         /// <summary>
         /// Just prints the actual hexlink for an item (clickable)
         /// ItemLink[CLICKABLE]
         /// </summary>
-        public string ItemLinkClickable => GetMember<StringType>("ItemLink", "CLICKABLE");
+        public string ItemLinkClickable { get; }
 
         /// <summary>
         /// ID of the icon used for the item

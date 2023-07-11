@@ -13,10 +13,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         public FrameLimiterType(MQ2TypeFactory typeFactory, MQ2TypeVar typeVar) : base(typeFactory, typeVar)
         {
+            Status = GetMember<StringType>("Status");
         }
 
         protected FrameLimiterType(string typeName, MQ2TypeFactory typeFactory, MQ2VarPtr varPtr) : base(typeName, typeFactory, varPtr)
         {
+            Status = GetMember<StringType>("Status");
         }
 
         /// <summary>
@@ -33,7 +35,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Either "Foreground" or "Background".
         /// TODO: map to enum
         /// </summary>
-        public string Status => GetMember<StringType>("Status");
+        public string Status { get; }
 
         /// <summary>
         /// Current CPU usage as %

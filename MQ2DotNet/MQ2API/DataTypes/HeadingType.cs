@@ -14,6 +14,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal HeadingType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             Name = GetMember<StringType>("Name");
+            ShortName = GetMember<StringType>("ShortName");
         }
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The short compass direction, eg. "S", "SSE"
         /// </summary>
-        public string ShortName => GetMember<StringType>("ShortName");
+        public string ShortName { get; }
 
         /// <summary>
         /// The long compass direction, eg. "south", "south by southeast"
