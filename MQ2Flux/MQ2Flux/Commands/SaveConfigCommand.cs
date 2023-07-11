@@ -4,7 +4,7 @@ using MQ2Flux.Models;
 
 namespace MQ2Flux.Commands
 {
-    public class SaveConfigCommand : IConfigRequest
+    public class SaveConfigCommand : IConfigRequest, IRequest
     {
         public FluxConfig Config { get; set; }
         public bool Notify { get; set; } = false;

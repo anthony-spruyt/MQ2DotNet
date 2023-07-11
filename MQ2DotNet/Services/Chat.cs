@@ -138,7 +138,8 @@ namespace MQ2DotNet.Services
                 while (!found)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    await Task.Yield();
+                    //await Task.Yield(); // this seems to makes things super laggy very quickly...
+                    await Task.Delay(100);
                 }
             }
             finally

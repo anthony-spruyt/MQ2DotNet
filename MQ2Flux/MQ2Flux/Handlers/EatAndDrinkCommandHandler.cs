@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Handlers
 {
-    public class EatAndDrinkCommandHandler : IRequestHandler<EatAndDrinkCommand>
+    public class EatAndDrinkCommandHandler : IRequestHandler<EatAndDrinkCommand, bool>
     {
         private readonly IMQ2ChatHistory chatHistory;
         private readonly IItemService itemService;
@@ -23,7 +23,7 @@ namespace MQ2Flux.Handlers
             this.itemService = itemService;
         }
 
-        public async Task Handle(EatAndDrinkCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(EatAndDrinkCommand request, CancellationToken cancellationToken)
         {
             var me = request.Context.TLO.Me;
             var amIHungry = me.AmIHungry();
@@ -31,18 +31,21 @@ namespace MQ2Flux.Handlers
 
             if (!amIHungry && !amIThirsty)
             {
-                return;
+                return false;
             }
 
             var dontConsume = request.Character.DontConsume;
             var mq2 = request.Context.MQ2;
             var allMyInv = me.Inventory.Flatten();
 
-            await HandleHungerAsync(dontConsume, mq2, me, allMyInv, cancellationToken);
-            await HandleThirstAsync(dontConsume, mq2, me, allMyInv, cancellationToken);
+            if (await HandleHungerAsync(dontConsume, mq2, me, allMyInv, cancellationToken))
+            {
+                return true;
+            }
+            return await HandleThirstAsync(dontConsume, mq2, me, allMyInv, cancellationToken);
         }
 
-        private async Task HandleThirstAsync(IEnumerable<string> dontConsume, MQ2 mq2, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
+        private async Task<bool> HandleThirstAsync(IEnumerable<string> dontConsume, MQ2 mq2, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
         {
             if (me.AmIThirsty())
             {
@@ -53,7 +56,7 @@ namespace MQ2Flux.Handlers
 
                 if (drink != null)
                 {
-                    await itemService.UseItemAsync(drink, "Drinking", cancellationToken);
+                    return await itemService.UseItemAsync(drink, "Drinking", cancellationToken);
                 }
                 else if (me.Grouped)
                 {
@@ -65,9 +68,11 @@ namespace MQ2Flux.Handlers
                     }
                 }
             }
+
+            return false;
         }
 
-        private async Task HandleHungerAsync(IEnumerable<string> dontConsume, MQ2 mq2, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
+        private async Task<bool> HandleHungerAsync(IEnumerable<string> dontConsume, MQ2 mq2, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
         {
             if (me.AmIHungry())
             {
@@ -78,7 +83,7 @@ namespace MQ2Flux.Handlers
 
                 if (food != null)
                 {
-                    await itemService.UseItemAsync(food, "Eating", cancellationToken);
+                    return await itemService.UseItemAsync(food, "Eating", cancellationToken);
                 }
                 else if (me.Grouped)
                 {
@@ -90,6 +95,8 @@ namespace MQ2Flux.Handlers
                     }
                 }
             }
+
+            return false;
         }
     }
 }

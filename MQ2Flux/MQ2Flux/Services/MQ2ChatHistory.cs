@@ -62,6 +62,11 @@ namespace MQ2Flux.Services
 
         public bool NoSpam(TimeSpan timespan, string text)
         {
+            if (timespan == TimeSpan.Zero)
+            {
+                return true;
+            }
+
             var timestamp = DateTimeOffset.Now.Subtract(timespan);
             var enumerable = Chat.TakeWhile(i => i.Timestamp >= timestamp);
             var matchFound = enumerable.Any(i => i.Message.Contains(text));

@@ -5,7 +5,7 @@ namespace MQ2Flux.Services
 {
     public interface IMQ2Logger
     {
-        void Log(string text);
+        void Log(string text, TimeSpan? noSpam = null);
         void LogError(Exception exception, string message = null);
     }
 
@@ -30,7 +30,7 @@ namespace MQ2Flux.Services
             this.chatHistory = chatHistory;
         }
 
-        public void Log(string text)
+        public void Log(string text, TimeSpan? noSpam = null)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -39,10 +39,17 @@ namespace MQ2Flux.Services
                 return;
             }
 
-            if (chatHistory.NoSpam(TimeSpan.FromMilliseconds(500), text))
+            if (noSpam == null)
             {
-                context.MQ2?.WriteChatSafe($"\am[{nameof(MQ2Flux)}] \aw{text}");
+                noSpam = TimeSpan.FromMilliseconds(1000);
             }
+
+            if (noSpam != TimeSpan.Zero && !chatHistory.NoSpam(noSpam.Value, text))
+            {
+                return;
+            }
+
+            context.MQ2?.WriteChatSafe($"\am[{nameof(MQ2Flux)}] \aw{text}");
         }
 
         public void LogError(Exception exception, string message = null)

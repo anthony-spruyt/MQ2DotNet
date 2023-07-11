@@ -18,9 +18,26 @@ namespace MQ2Flux.Handlers
         {
             await mediator.Send(new DismissAlertWindowCommand(), cancellationToken);
             await mediator.Send(new LearnALanguageCommand(), cancellationToken);
-            await mediator.Send(new DispenseCommand(), cancellationToken);
-            await mediator.Send(new SummonFoodAndDrinkCommand(), cancellationToken);
-            await mediator.Send(new EatAndDrinkCommand(), cancellationToken);
+
+            if (await mediator.Send(new DispenseCommand(), cancellationToken))
+            {
+                return;
+            }
+
+            if (await mediator.Send(new SummonFoodAndDrinkCommand(), cancellationToken))
+            {
+                return;
+            }
+
+            if (await mediator.Send(new EatAndDrinkCommand(), cancellationToken))
+            {
+                return;
+            }
+
+            if (await mediator.Send(new ForageCommand(), cancellationToken))
+            {
+                return;
+            }
         }
     }
 }

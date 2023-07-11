@@ -77,6 +77,7 @@
     <Compile Include="Commands\DismissAlertWindowCommand.cs" />
     <Compile Include="Commands\DispenseCommand.cs" />
     <Compile Include="Commands\EatAndDrinkCommand.cs" />
+    <Compile Include="Commands\ForageCommand.cs" />
     <Compile Include="Commands\LearnALanguageCommand.cs" />
     <Compile Include="Commands\SummonFoodAndDrinkCommand.cs" />
     <Compile Include="Extensions\CharacterTypeExtensions.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Handlers\DismissAlertWindowCommandHandler.cs" />
     <Compile Include="Handlers\DispenseCommandHandler.cs" />
     <Compile Include="Handlers\EatAndDrinkCommandHandler.cs" />
+    <Compile Include="Handlers\ForageCommandHandler.cs" />
     <Compile Include="Handlers\LearnALanguageCommandHandler.cs" />
     <Compile Include="Handlers\LoadMQ2CommandsHandler.cs" />
     <Compile Include="Handlers\SaveConfigCommandHandler.cs" />

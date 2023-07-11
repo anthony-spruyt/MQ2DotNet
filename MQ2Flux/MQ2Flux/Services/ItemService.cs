@@ -12,8 +12,8 @@ namespace MQ2Flux.Services
 {
     public interface IItemService
     {
+        Task AutoInventoryAsync(Predicate<ItemType> predicate = null, CancellationToken cancellationToken = default);
         Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default);
-        bool UseItem(ItemType item, string verb = "Using", CancellationToken cancellationToken = default);
     }
 
     public static class ItemServiceExtensions
@@ -43,26 +43,28 @@ namespace MQ2Flux.Services
             semaphore = new SemaphoreSlim(1);
         }
 
-        public bool UseItem(ItemType item, string verb = "Using", CancellationToken cancellationToken = default)
+        public async Task AutoInventoryAsync(Predicate<ItemType> predicate = null, CancellationToken cancellationToken = default)
         {
-            if (!IsValid(item))
+            DateTime waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+
+            while (waitUntil >= DateTime.UtcNow && context.TLO.Cursor == null && !cancellationToken.IsCancellationRequested)
             {
-                return false;
+                await Task.Yield();
             }
 
-            PurgeCache();
-
-            string command = $"/useitem {item.Name}";
-
-            if (cachedCommands.TryAdd(command, DateTime.UtcNow))
+            if (cancellationToken.IsCancellationRequested || (predicate != null && !predicate(context.TLO.Cursor)))
             {
-                mq2Logger.Log($"{verb} [\ag{item.Name}\aw]");
-                context.MQ2.DoCommand(command);
-
-                return true;
+                return;
             }
 
-            return false;
+            mq2Logger.Log($"Putting [\ag{context.TLO.Cursor.Name}\aw] into your inventory", TimeSpan.Zero);
+
+            while (context.TLO.Cursor != null && !cancellationToken.IsCancellationRequested)
+            {
+                context.MQ2.DoCommand("/autoinv");
+
+                await Task.Delay(500, cancellationToken);
+            }
         }
 
         public async Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default)
@@ -88,13 +90,14 @@ namespace MQ2Flux.Services
                 if (!item.HasCastTime())
                 {
                     context.MQ2.DoCommand(command);
-                    mq2Logger.Log($"{verb} [\ag{item.Name}\aw]");
+
+                    mq2Logger.Log($"{verb} [\ag{item.Name}\aw]", TimeSpan.Zero);
 
                     return true;
                 }
 
                 var castTime = item.Clicky.CastTime.Value;
-                var timeout = castTime + TimeSpan.FromMilliseconds(250); // add some fat
+                var timeout = castTime + TimeSpan.FromMilliseconds(500); // add some fat
                 var castOnYou = item.Clicky.Spell.CastOnYou;
                 var castOnAnother = item.Clicky.Spell.CastOnAnother;
                 var wasCastOnYou = false;
@@ -119,15 +122,17 @@ namespace MQ2Flux.Services
                     )
                 );
 
-                await Task.Yield();
-
                 context.MQ2.DoCommand(command);
-                mq2Logger.Log($"{verb} [\ag{item.Name}\aw]");
+
+                mq2Logger.Log($"{verb} [\ag{item.Name}\aw] \austarted", TimeSpan.Zero);
 
                 await waitForEQTask.TimeoutAfter(timeout);
 
                 if (fizzled || interrupted)
                 {
+                    //var reason = fizzled ? "fizzled" : "was interrupted";
+                    //mq2Logger.Log($"{verb} [\ay{item.Name}\aw] \ar{reason}", TimeSpan.Zero);
+
                     return false;
                 }
             }
@@ -139,6 +144,8 @@ namespace MQ2Flux.Services
             {
                 semaphore.Release();
             }
+
+            //mq2Logger.Log($"{verb} [\ay{item.Name}\aw] \agsucceeded", TimeSpan.Zero);
 
             return true;
         }

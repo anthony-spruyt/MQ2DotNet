@@ -63,8 +63,10 @@ namespace MQ2Flux.Services
 
                 if (gem == 0)
                 {
-                    // Not memorized - add support for this later.
-                    return false;
+                    if (!await MemorizeSpellAsync((int)me.NumGems.Value, spellBookSpell))
+                    {
+                        return false;
+                    }
                 }
 
                 if (!me.IsSpellReady(spellBookSpell.Name))
@@ -73,7 +75,7 @@ namespace MQ2Flux.Services
                 }
 
                 var castTime = spell.CastTime ?? TimeSpan.Zero;
-                var timeout = castTime + TimeSpan.FromMilliseconds(250); // add some fat
+                var timeout = castTime + TimeSpan.FromMilliseconds(500); // add some fat
                 var castOnYou = spell.CastOnYou;
                 var castOnAnother = spell.CastOnAnother;
                 var wasCastOnYou = false;
@@ -98,15 +100,17 @@ namespace MQ2Flux.Services
                     )
                 );
 
-                await Task.Yield();
-
                 context.MQ2.DoCommand($"/cast {gem}");
-                mq2Logger.Log($"Casting [\ay{spell.Name}\aw]");
+
+                mq2Logger.Log($"Casting [\ay{spell.Name}\aw]", TimeSpan.Zero);
 
                 await waitForEQTask.TimeoutAfter(timeout);
 
                 if (fizzled || interrupted)
                 {
+                    //var reason = fizzled ? "fizzled" : "was interrupted";
+                    //mq2Logger.Log($"Casting [\ay{spell.Name}\aw] \ar{reason}", TimeSpan.Zero);
+                    
                     return false;
                 }
             }
@@ -119,7 +123,44 @@ namespace MQ2Flux.Services
                 semaphore.Release();
             }
 
+            //mq2Logger.Log($"Casting [\ay{spell.Name}\aw] \agsucceeded", TimeSpan.Zero);
+
             return true;
+        }
+
+        public async Task<bool> MemorizeSpellAsync(int slot, string spellName, CancellationToken cancellationToken = default)
+        {
+            var me = context.TLO.Me;
+
+            if (me.GetGem(spellName) == slot)
+            {
+                return true;
+            }
+
+            DateTime waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(10);
+
+            context.MQ2.DoCommand($"/memspell {slot} \"{spellName}\"");
+            mq2Logger.Log($"Memorizing [\ay{spellName}\aw]", TimeSpan.Zero);
+
+            while
+            (
+                waitUntil >= DateTime.UtcNow && 
+                (
+                    me.GetGem(spellName) != slot ||
+                    !me.IsSpellReady(spellName)
+                ) &&
+                !cancellationToken.IsCancellationRequested
+            )
+            {
+                await Task.Delay(100, cancellationToken);
+            }
+
+            return context.TLO.Me.GetGem(spellName) == slot;
+        }
+
+        public Task<bool> MemorizeSpellAsync(int slot, SpellType spellBookSpell, CancellationToken cancellationToken = default)
+        {
+            return MemorizeSpellAsync(slot, spellBookSpell.Name, cancellationToken);
         }
 
         protected virtual void Dispose(bool disposing)

@@ -5,7 +5,7 @@ using MQ2Flux.Services;
 
 namespace MQ2Flux.Commands
 {
-    public class ProcessCommand : ICharacterConfigRequest
+    public class ProcessCommand : ICharacterConfigRequest, IRequest
     {
         public string[] Args { get; set; }
         public IMQ2Context Context { get; set; }

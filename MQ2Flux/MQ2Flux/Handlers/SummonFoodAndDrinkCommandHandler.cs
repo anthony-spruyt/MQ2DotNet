@@ -1,16 +1,17 @@
 ﻿using MediatR;
-using MQ2DotNet.MQ2API;
+using MQ2DotNet.EQ;
 using MQ2DotNet.MQ2API.DataTypes;
 using MQ2Flux.Commands;
 using MQ2Flux.Extensions;
 using MQ2Flux.Services;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQ2Flux.Handlers
 {
-    public class SummonFoodAndDrinkCommandHandler : IRequestHandler<SummonFoodAndDrinkCommand>
+    public class SummonFoodAndDrinkCommandHandler : IRequestHandler<SummonFoodAndDrinkCommand, bool>
     {
         private static readonly string[] summonFoodSpellNames = new string[]
         {
@@ -28,23 +29,22 @@ namespace MQ2Flux.Handlers
             "Gift of Xev",
             "Summon Drink"
         };
-
+        private readonly IItemService itemService;
         private readonly ISpellCastingService spellCastingService;
-        private readonly IMQ2Logger mq2Logger;
 
-        public SummonFoodAndDrinkCommandHandler(ISpellCastingService spellCastingService, IMQ2Logger mq2Logger)
+        public SummonFoodAndDrinkCommandHandler(IItemService itemService, ISpellCastingService spellCastingService)
         {
+            this.itemService = itemService;
             this.spellCastingService = spellCastingService;
-            this.mq2Logger = mq2Logger;
         }
 
-        public async Task Handle(SummonFoodAndDrinkCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(SummonFoodAndDrinkCommand request, CancellationToken cancellationToken)
         {
             var me = request.Context.TLO.Me;
 
-            if (!me.Spawn.Class.CanCast || me.Combat || me.Moving || me.AmICasting())
+            if (!me.Spawn.Class.CanCast || me.CombatState == CombatState.Combat || me.Moving || me.AmICasting())
             {
-                return;
+                return false;
             }
 
             var allMyInv = me.Inventory.Flatten();
@@ -54,8 +54,12 @@ namespace MQ2Flux.Handlers
 
             if (actualFoodCount < 10 && TryGetSummonSpell(me, summonFoodSpellNames, out var foodSpell))
             {
-                await spellCastingService.CastAsync(foodSpell, cancellationToken);
-                AutoInventory(request.Context.MQ2, request.Context.TLO.Cursor);
+                if (await spellCastingService.CastAsync(foodSpell, cancellationToken))
+                {
+                    await itemService.AutoInventoryAsync(cursor => cursor != null && cursor.NoRent, cancellationToken);
+
+                    return true;
+                }
             }
 
             var actualDrinkCount = allMyInv
@@ -64,9 +68,15 @@ namespace MQ2Flux.Handlers
 
             if (actualDrinkCount < 10 && TryGetSummonSpell(me, summonDrinkSpellNames, out var drinkSpell))
             {
-                await spellCastingService.CastAsync(drinkSpell, cancellationToken);
-                AutoInventory(request.Context.MQ2, request.Context.TLO.Cursor);
+                if (await spellCastingService.CastAsync(drinkSpell, cancellationToken))
+                {
+                    await itemService.AutoInventoryAsync(cursor => cursor != null && cursor.NoRent, cancellationToken);
+
+                    return true;
+                }   
             }
+
+            return false;
         }
 
         private static bool TryGetSummonSpell(CharacterType me, string[] summonSpellNames, out SpellType spell)
@@ -77,15 +87,6 @@ namespace MQ2Flux.Handlers
             spell = found ? spellBookSpells.First().Value : null;
 
             return found;
-        }
-
-        private void AutoInventory(MQ2 mq2, ItemType cursor)
-        {
-            if (cursor != null && cursor.NoRent)
-            {
-                mq2Logger.Log($"Putting [\ag{cursor.Name}\aw] into your inventory");
-                mq2.DoCommand("/autoinv");
-            }
         }
     }
 }
