@@ -24,7 +24,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             _tab = new IndexedMember<WindowType, string, WindowType, int>(this, "Tab");
             List = new ListMember(this);
-            Name = GetMember<StringType>("Name");
         }
         
         /// <summary>
@@ -302,7 +301,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of window piece, e.g. "ChatWindow" for top level windows, or the piece name for child windows. Note: this is Custom UI dependent
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
         
         /// <summary>
         /// ScreenID of window piece. Note: This is not Custom UI dependent, it must be the same on all UIs

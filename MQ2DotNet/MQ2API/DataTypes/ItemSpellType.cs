@@ -14,8 +14,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal ItemSpellType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            OtherName = GetMember<StringType>("OtherName");
-            OverrideDescription = GetMember<StringType>("OverrideDescription");
         }
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Overrides the normal spell name string, if set. Same as <see cref="OverrideName"/>
         /// </summary>
-        public string OtherName { get; }
+        public string OtherName => GetMember<StringType>("OtherName");
 
         /// <summary>
         /// TODO: What is this? Not in the online doco at https://docs.macroquest.org/reference/data-types/datatype-itemspell/#members.
@@ -82,7 +80,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Overrides the normal spell description string, if set.
         /// </summary>
-        public string OverrideDescription { get; }
+        public string OverrideDescription => GetMember<StringType>("OverrideDescription");
 
         /// <summary>
         /// The spell.

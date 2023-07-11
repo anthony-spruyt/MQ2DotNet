@@ -17,8 +17,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             _member = new IndexedMember<FellowshipMemberType, string, FellowshipMemberType, int>(this, "Member");
             _sharing = new IndexedMember<BoolType, int>(this, "Sharing");
-            Leader = GetMember<StringType>("Leader");
-            MotD = GetMember<StringType>("MotD");
         }
 
         /// <summary>
@@ -34,12 +32,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Fellowship leader's name.
         /// </summary>
-        public string Leader { get; }
+        public string Leader => GetMember<StringType>("Leader");
 
         /// <summary>
         /// Fellowship Message of the Day.
         /// </summary>
-        public string MotD { get; }
+        public string MotD => GetMember<StringType>("MotD");
 
         /// <summary>
         /// Number of members in the fellowship.

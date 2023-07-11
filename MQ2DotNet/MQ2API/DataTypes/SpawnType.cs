@@ -38,7 +38,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _myBuff = new IndexedMember<CachedBuffType, int, CachedBuffType, string>(this, "MyBuff");
             _buffDuration = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "BuffDuration");
             _myBuffDuration = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "MyBuffDuration");
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -62,7 +61,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _myBuff = new IndexedMember<CachedBuffType, int, CachedBuffType, string>(this, "MyBuff");
             _buffDuration = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "BuffDuration");
             _myBuffDuration = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "MyBuffDuration");
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -103,7 +101,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Internal name of the spawn e.g. a_rat01
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Last name

@@ -126,7 +126,7 @@ namespace MQ2Flux
                         FlushMQ2DataTypeErrors(logger);
 
                         //await Task.Yield();
-                        await Task.Delay(TimeSpan.FromMilliseconds(10), linkedTokenSource.Token);
+                        await Task.Delay(TimeSpan.FromMilliseconds(100), linkedTokenSource.Token);
                     }
                 }
 
@@ -288,7 +288,8 @@ namespace MQ2Flux
                 .AddMQ2Logging()
                 .AddMQ2Config()
                 .AddMQ2CommandProvider()
-                .AddItemService();
+                .AddItemService()
+                .AddSpellCastingService();
         }
 
         private void FlushMQ2DataTypeErrors(ILogger<MQ2Flux> logger)

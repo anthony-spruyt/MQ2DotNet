@@ -14,7 +14,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal BandolierType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             _item = new IndexedMember<BandolierItemType, int>(this, "Item");
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -66,7 +65,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns the name of the bandolier set.
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Activate the bandolier profile.

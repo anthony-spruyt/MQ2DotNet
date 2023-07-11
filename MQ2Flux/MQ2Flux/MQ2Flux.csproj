@@ -81,6 +81,7 @@
     <Compile Include="Commands\SummonFoodAndDrinkCommand.cs" />
     <Compile Include="Extensions\CharacterTypeExtensions.cs" />
     <Compile Include="Extensions\ItemTypeExtensions.cs" />
+    <Compile Include="Extensions\SpellTypeExtensions.cs" />
     <Compile Include="Handlers\DismissAlertWindowCommandHandler.cs" />
     <Compile Include="Handlers\DispenseCommandHandler.cs" />
     <Compile Include="Handlers\EatAndDrinkCommandHandler.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Commands\ProcessCommand.cs" />
     <Compile Include="Handlers\ProcessCommandHandler.cs" />
     <Compile Include="Models\FluxConfig.cs" />
+    <Compile Include="Services\SpellCastingService.cs" />
     <Compile Include="Services\FluxMQ2AsyncCommand.cs" />
     <Compile Include="Services\CateringService.cs" />
     <Compile Include="Services\ItemService.cs" />

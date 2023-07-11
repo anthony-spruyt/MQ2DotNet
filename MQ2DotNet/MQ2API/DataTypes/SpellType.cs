@@ -34,10 +34,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _hasSPA = new IndexedMember<BoolType, int>(this, "HasSPA");
             _trigger = new IndexedMember<SpellType, int>(this, "Trigger");
             _link = new IndexedStringMember<string>(this, "Link");
-            BaseName = GetMember<StringType>("BaseName");
-            CastOnAnother = GetMember<StringType>("CastOnAnother");
-            CastOnYou = GetMember<StringType>("CastOnYou");
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -59,8 +55,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Spell Name
         /// </summary>
-        public string Name { get; }
-        
+        public string Name => GetMember<StringType>("Name");
+
         /// <summary>
         /// Level
         /// </summary>
@@ -222,12 +218,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Message when cast on yourself.
         /// </summary>
-        public string CastOnYou { get; }
+        public string CastOnYou => GetMember<StringType>("CastOnYou");
 
         /// <summary>
         /// Message when cast on others.
         /// </summary>
-        public string CastOnAnother { get; }
+        public string CastOnAnother => GetMember<StringType>("CastOnAnother");
 
         /// <summary>
         /// The "wear off" message.
@@ -589,7 +585,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of the spell, without rank
         /// </summary>
-        public string BaseName { get; }
+        public string BaseName => GetMember<StringType>("BaseName");
 
         /// <summary>
         /// Returns either 1, 2 or 3 for spells and 4-30 for clickys and potions.

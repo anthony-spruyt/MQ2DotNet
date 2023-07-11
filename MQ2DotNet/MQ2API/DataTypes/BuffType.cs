@@ -19,7 +19,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal BuffType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Caster = GetMember<StringType>("Caster");
         }
 
         /// <summary>
@@ -86,7 +85,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of the caster who cast the buff, if available.
         /// </summary>
-        public string Caster { get; }
+        public string Caster => GetMember<StringType>("Caster");
 
         /// <summary>
         /// Removes the named/partial name buff.

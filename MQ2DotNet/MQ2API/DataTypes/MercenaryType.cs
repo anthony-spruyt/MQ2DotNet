@@ -14,7 +14,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal MercenaryType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of the mercenary
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Does a spawn search for a merc with same name since inheritence is wonky here.

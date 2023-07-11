@@ -1,8 +1,11 @@
 ﻿using MediatR;
+using MQ2DotNet.MQ2API;
+using MQ2DotNet.MQ2API.DataTypes;
 using MQ2Flux.Commands;
 using MQ2Flux.Extensions;
 using MQ2Flux.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +25,6 @@ namespace MQ2Flux.Handlers
 
         public async Task Handle(EatAndDrinkCommand request, CancellationToken cancellationToken)
         {
-            var mq2 = request.Context.MQ2;
             var me = request.Context.TLO.Me;
             var amIHungry = me.AmIHungry();
             var amIThirsty = me.AmIThirsty();
@@ -32,34 +34,20 @@ namespace MQ2Flux.Handlers
                 return;
             }
 
+            var dontConsume = request.Character.DontConsume;
+            var mq2 = request.Context.MQ2;
             var allMyInv = me.Inventory.Flatten();
 
-            if (me.AmIHungry())
-            {
-                var food = allMyInv
-                    .Where(i => i.IsEdible() && !(request.Character.DontConsume.Contains(i.Name)))
-                    .OrderBy(i => i.GetNutrientScore())
-                    .FirstOrDefault();
+            await HandleHungerAsync(dontConsume, mq2, me, allMyInv, cancellationToken);
+            await HandleThirstAsync(dontConsume, mq2, me, allMyInv, cancellationToken);
+        }
 
-                if (food != null)
-                {
-                    await itemService.UseItemAsync(food, "Eating", cancellationToken);
-                }
-                else if (me.Grouped)
-                {
-                    var message = "I am hungry and out of food. Can anyone please help me out?";
-
-                    if (chatHistory.NoSpam(TimeSpan.FromSeconds(60), message))
-                    {
-                        mq2.DoCommand($"/g {message}");
-                    }
-                }
-            }
-
+        private async Task HandleThirstAsync(IEnumerable<string> dontConsume, MQ2 mq2, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
+        {
             if (me.AmIThirsty())
             {
                 var drink = allMyInv
-                    .Where(i => i.IsDrinkable() && !(request.Character.DontConsume.Contains(i.Name)))
+                    .Where(i => i.IsDrinkable() && !(dontConsume.Contains(i.Name)))
                     .OrderBy(i => i.GetNutrientScore())
                     .FirstOrDefault();
 
@@ -70,6 +58,31 @@ namespace MQ2Flux.Handlers
                 else if (me.Grouped)
                 {
                     var message = "I am thirsty and out of drink. Can anyone please help me out?";
+
+                    if (chatHistory.NoSpam(TimeSpan.FromSeconds(60), message))
+                    {
+                        mq2.DoCommand($"/g {message}");
+                    }
+                }
+            }
+        }
+
+        private async Task HandleHungerAsync(IEnumerable<string> dontConsume, MQ2 mq2, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
+        {
+            if (me.AmIHungry())
+            {
+                var food = allMyInv
+                    .Where(i => i.IsEdible() && !(dontConsume.Contains(i.Name)))
+                    .OrderBy(i => i.GetNutrientScore())
+                    .FirstOrDefault();
+
+                if (food != null)
+                {
+                    await itemService.UseItemAsync(food, "Eating", cancellationToken);
+                }
+                else if (me.Grouped)
+                {
+                    var message = "I am hungry and out of food. Can anyone please help me out?";
 
                     if (chatHistory.NoSpam(TimeSpan.FromSeconds(60), message))
                     {

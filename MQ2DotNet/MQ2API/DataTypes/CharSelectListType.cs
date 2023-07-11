@@ -13,9 +13,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal CharSelectListType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Class = GetMember<StringType>("Class");
-            Name = GetMember<StringType>("Name");
-            Race = GetMember<StringType>("Race");
         }
 
         /// <summary>
@@ -26,7 +23,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of the character
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Level of the character
@@ -37,13 +34,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Class of the character
         /// TODO: map to an enum.
         /// </summary>
-        public string Class { get; }
+        public string Class => GetMember<StringType>("Class");
 
         /// <summary>
         /// Race of the character
         /// TODO: map to an enum.
         /// </summary>
-        public string Race { get; }
+        public string Race => GetMember<StringType>("Race");
 
         /// <summary>
         /// Id of the zone the character logged out in

@@ -16,12 +16,22 @@ namespace MQ2DotNet.MQ2API.DataTypes
     [MQ2Type("string")]
     public class StringType : MQ2DataType
     {
+        private static readonly object _lock = new object();
         private readonly string _string;
 
         internal StringType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            // Since most MQ2 strings share the same storage (DataTypeTemp), lazy evaluation is a bad idea.
-            _string = typeVar.VarPtr.Ptr != IntPtr.Zero ? Marshal.PtrToStringAnsi(typeVar.VarPtr.Ptr) : null;
+            lock (_lock)
+            {
+                // Since most MQ2 strings share the same storage (DataTypeTemp), lazy evaluation is a bad idea.
+                _string = typeVar.VarPtr.Ptr != IntPtr.Zero ? Marshal.PtrToStringAnsi(typeVar.VarPtr.Ptr) : null;
+            }
+
+            // Standardize null, empty, whitespace handling.
+            if (string.Compare(_string, "NULL", true) == 0 || string.IsNullOrWhiteSpace(_string))
+            {
+                _string = string.Empty;
+            }
         }
 
         /// <summary>

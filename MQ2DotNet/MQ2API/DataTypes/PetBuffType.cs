@@ -14,7 +14,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal PetBuffType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            
         }
 
         /// <summary>

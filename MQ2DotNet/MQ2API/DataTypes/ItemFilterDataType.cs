@@ -13,13 +13,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal ItemFilterDataType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
         /// The Name of the item.
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// The ID of the item.

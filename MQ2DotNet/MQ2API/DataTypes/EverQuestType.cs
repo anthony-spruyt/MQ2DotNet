@@ -20,15 +20,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _chatChannel = new IndexedStringMember<int, BoolType, string>(this, "ChatChannel");
             _charSelectList = new IndexedMember<CharSelectListType, string, CharSelectListType, int>(this, "CharSelectList");
             _validLoc = new IndexedMember<BoolType, string>(this, "ValidLoc");
-            CurrentUI = GetMember<StringType>("CurrentUI");
-            GameState = GetMember<StringType>("GameState");
-            LastCommand = GetMember<StringType>("LastCommand");
-            LastTell = GetMember<StringType>("LastTell");
-            LoginName = GetMember<StringType>("LoginName");
-            Path = GetMember<StringType>("Path");
-            PPriority = GetMember<StringType>("PPriority");
-            Server = GetMember<StringType>("Server");
-            WinTitle = GetMember<StringType>("WinTitle");
         }
 
         /// <summary>
@@ -39,28 +30,28 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Shows the current game state. Values: CHARSELECT, INGAME, PRECHARSELECT, UNKNOWN
         /// </summary>
-        public GameState? GameState { get; }
+        public GameState? GameState => GetMember<StringType>("GameState");
 
         /// <summaryMouseX
         /// Your station name
         /// </summary>
-        public string LoginName { get; }
+        public string LoginName => GetMember<StringType>("LoginName");
 
         /// <summary>
         /// Name of the server in short form e.g. firiona.
         /// doco says "Full name of your server" but this returns the short name.
         /// </summary>
-        public string Server { get; }
+        public string Server => GetMember<StringType>("Server");
 
         /// <summary>
         /// Last command entered
         /// </summary>
-        public string LastCommand { get; }
+        public string LastCommand => GetMember<StringType>("LastCommand");
 
         /// <summary>
         /// Name of last person to send you a tell
         /// </summary>
-        public string LastTell { get; }
+        public string LastTell => GetMember<StringType>("LastTell");
 
         /// <summary>
         /// Running time of current MQ2 session, in milliseconds
@@ -181,7 +172,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Titlebar text of the Everquest window.
         /// </summary>
-        public string WinTitle { get; }
+        public string WinTitle => GetMember<StringType>("WinTitle");
 
         /// <summary>
         /// Process ID of this eqgame.exe
@@ -215,7 +206,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns the processor priority that Everquest is set to. Values: UNKNOWN, LOW, BELOW NORMAL, NORMAL, ABOVE NORMAL, HIGH, REALTIME
         /// TODO: map to an enum
         /// </summary>
-        public string PPriority { get; }
+        public string PPriority => GetMember<StringType>("PPriority");
 
         /// <summary>
         /// Returns TRUE if a layoutcopy is in progress and FALSE if not.
@@ -274,7 +265,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// return a string representing the currently loaded UI skin
         /// </summary>
-        public string CurrentUI { get; }
+        public string CurrentUI => GetMember<StringType>("CurrentUI");
 
         /// <summary>
         /// returns a bool true or false if the "Default" UI skin is the one loaded
@@ -303,7 +294,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Path to the Everquest folder
         /// </summary>
-        public string Path { get; }
+        public string Path => GetMember<StringType>("Path");
 
         /// <summary>
         /// UI scale factor

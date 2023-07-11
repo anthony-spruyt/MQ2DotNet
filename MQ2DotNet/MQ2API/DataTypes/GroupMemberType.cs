@@ -12,14 +12,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
     public class GroupMemberType : MQ2DataType
     {
         internal GroupMemberType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
-        {
-            Name = GetMember<StringType>("Name");
+        {   
         }
 
         /// <summary>
         /// The name of the group member. This works even if they are not in the same zone as you
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// TRUE if the member is the group's leader, FALSE otherwise

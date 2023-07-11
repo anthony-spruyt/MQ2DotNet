@@ -16,7 +16,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             _timer = new IndexedMember<DZTimerType, int, DZTimerType, string>(this, "Timer");
             _member = new IndexedMember<DZMemberType, int, DZMemberType, string>(this, "Member");
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -70,7 +69,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The full name of the dynamic zone
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Current number of characters in the dynamic zone

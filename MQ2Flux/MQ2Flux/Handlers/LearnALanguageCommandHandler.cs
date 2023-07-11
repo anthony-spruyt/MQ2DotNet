@@ -37,6 +37,7 @@ namespace MQ2Flux.Handlers
                     {
                         language = item.Key;
                         languageNumber = i + 1;
+
                         break;
                     }
                 }

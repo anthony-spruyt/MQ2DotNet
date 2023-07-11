@@ -69,18 +69,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _autoSkill = new IndexedMember<SkillType, int>(this, "AutoSkill");
             _bandolier = new IndexedMember<BandolierType, string, BandolierType, int>(this, "Bandolier");
             _abilityTimer = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "AbilityTimer");
-            CombatState = GetMember<StringType>("CombatState");
-            //GroupList = GetMember<StringType>("GroupList");
-            Inviter = GetMember<StringType>("Inviter");
-            MercenaryStance = GetMember<StringType>("MercenaryStance");
-            Name = GetMember<StringType>("Name");
-            //Subscription = GetMember<StringType>("Subscription");
         }
 
         /// <summary>
         /// The player name.
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// The player origin zone.
@@ -736,7 +730,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// This isn't really working as intended just yet as per MQ client comments
         /// </summary>
         [Obsolete]
-        public string GroupList { get; }
+        public string GroupList => GetMember<StringType>("GroupList");
 
         /// <summary>
         /// Am I the group leader?
@@ -1647,7 +1641,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns one of the following: COMBAT, DEBUFFED, COOLDOWN, ACTIVE, RESTING, UNKNOWN
         /// </summary>
-        public CombatState? CombatState { get; }
+        public CombatState? CombatState => GetMember<StringType>("CombatState");
 
         /// <summary>
         /// Corruption resist
@@ -2034,7 +2028,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current active mercenary stance as a string, default is NULL.
         /// </summary>
-        public string MercenaryStance { get; }
+        public string MercenaryStance => GetMember<StringType>("MercenaryStance");
 
         /// <summary>
         /// Recast time remaining on a spell gem by number or spell name.
@@ -2136,7 +2130,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TODO: Source states - Fix this. Its a struct not an int*
         /// </summary>
         [Obsolete("TODO: Fix this. Its a struct not an int*")]
-        public string Subscription { get; }
+        public string Subscription => GetMember<StringType>("Subscription");
 
         /*
          
@@ -2652,7 +2646,7 @@ enum ALTCURRENCY
         /// <summary>
         /// TODO: new member
         /// </summary>
-        public string Inviter { get; }
+        public string Inviter => GetMember<StringType>("Inviter");
 
         /// <summary>
         /// TODO: new member

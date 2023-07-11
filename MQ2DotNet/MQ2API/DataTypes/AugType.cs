@@ -13,7 +13,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal AugType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The name of the item socketed in this slot, if any.
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// The item socketed in this slot, if any.

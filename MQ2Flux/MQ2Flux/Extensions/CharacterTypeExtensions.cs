@@ -1,4 +1,5 @@
 ﻿using MQ2DotNet.MQ2API.DataTypes;
+using System;
 
 namespace MQ2Flux.Extensions
 {
@@ -30,6 +31,11 @@ namespace MQ2Flux.Extensions
             }
 
             return @this.Thirst.Value < threshold;
+        }
+
+        public static bool AmICasting(this CharacterType @this)
+        {
+            return @this.CastTimeLeft.HasValue && @this.CastTimeLeft.Value > TimeSpan.Zero;
         }
     }
 }

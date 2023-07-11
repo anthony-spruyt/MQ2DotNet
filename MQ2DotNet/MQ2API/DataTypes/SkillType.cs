@@ -16,13 +16,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         internal SkillType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
         /// Name of the skill
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
         
         /// <summary>
         /// Skill number

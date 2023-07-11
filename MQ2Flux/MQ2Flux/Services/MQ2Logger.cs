@@ -39,7 +39,7 @@ namespace MQ2Flux.Services
                 return;
             }
 
-            if (chatHistory.NoSpam(TimeSpan.FromSeconds(2), text))
+            if (chatHistory.NoSpam(TimeSpan.FromMilliseconds(500), text))
             {
                 context.MQ2?.WriteChatSafe($"\am[{nameof(MQ2Flux)}] \aw{text}");
             }
@@ -49,7 +49,7 @@ namespace MQ2Flux.Services
         {
             string errorMessage = string.IsNullOrWhiteSpace(message) ? "A MQ2Flux error has occured" : message;
 
-            if (!chatHistory.NoSpam(TimeSpan.FromSeconds(2), errorMessage))
+            if (!chatHistory.NoSpam(TimeSpan.FromSeconds(5), errorMessage))
             {
                 return;
             }

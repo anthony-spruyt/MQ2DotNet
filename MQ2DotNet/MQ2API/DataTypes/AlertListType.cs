@@ -14,12 +14,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal AlertListType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            BodyType = GetMember<StringType>("BodyType");
-            Class = GetMember<StringType>("Class");
-            Light = GetMember<StringType>("Light");
-            Name = GetMember<StringType>("Name");
-            Race = GetMember<StringType>("Race");
-    }
+        }
 
         /// <summary>
         /// Any spawn that is at this level or greater
@@ -54,30 +49,30 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Any spawn with the given name
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Any spawn with given body type
         /// TODO: can we maybe make an enum?
         /// </summary>
-        public string BodyType { get; }
+        public string BodyType => GetMember<StringType>("BodyType");
 
         /// <summary>
         /// Any spawn with the given race
         /// TODO: can we maybe make an enum? <see cref="EQ.Race"/>
         /// </summary>
-        public string Race { get; }
+        public string Race => GetMember<StringType>("Race");
 
         /// <summary>
         /// Any spawn that is the given class
         /// TODO: can we maybe make an enum? <see cref="EQ.Class"/>
         /// </summary>
-        public string Class { get; }
+        public string Class => GetMember<StringType>("Class");
 
         /// <summary>
         /// Any spawn that is equipped with the given light source
         /// </summary>
-        public string Light { get; }
+        public string Light => GetMember<StringType>("Light");
 
         /// <summary>
         /// Any member of the guild with the given id

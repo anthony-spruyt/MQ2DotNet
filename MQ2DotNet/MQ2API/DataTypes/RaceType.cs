@@ -17,7 +17,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         internal RaceType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
@@ -28,7 +27,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The name of the race
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// TODO: Not implemented.

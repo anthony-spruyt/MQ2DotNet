@@ -20,13 +20,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal CachedBuffType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            CasterName = GetMember<StringType>("CasterName");
         }
 
         /// <summary>
         /// Returns the name of the caster who applied the buff
         /// </summary>
-        public string CasterName { get; }
+        public string CasterName => GetMember<StringType>("CasterName");
 
         /// <summary>
         /// Same as <see cref="CasterName"/>, added for consistency.

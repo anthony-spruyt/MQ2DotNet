@@ -13,13 +13,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal RaidMemberType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
         /// Raid member's name
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
         
         /// <summary>
         /// Current group number (or 0)

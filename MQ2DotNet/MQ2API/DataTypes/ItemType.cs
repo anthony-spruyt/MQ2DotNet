@@ -22,13 +22,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _race = new IndexedMember<RaceType, int, RaceType, string>(this, "Race");
             _deity = new IndexedMember<DeityType, int, DeityType, string>(this, "Deity");
             _augSlot = new IndexedMember<AugType, int>(this, "AugSlot");
-            DMGBonusType = GetMember<StringType>("DMGBonusType");
-            EffectType = GetMember<StringType>("EffectType");
-            ItemLink = GetMember<StringType>("ItemLink");
-            ItemLinkClickable = GetMember<StringType>("ItemLink", "CLICKABLE");
-            LDoNTheme = GetMember<StringType>("LDoNTheme");
-            Name = GetMember<StringType>("Name");
-            Type = GetMember<StringType>("Type");
         }
 
         /// <summary>
@@ -44,7 +37,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Lore?
@@ -106,7 +99,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Type of the item e.g. Armor, 2H Slashing (corresponds to type in bazaar search)
         /// </summary>
-        public string Type { get; }
+        public string Type => GetMember<StringType>("Type");
 
         /// <summary>
         /// Charges on the item TODO: Total or remaining charges?
@@ -116,12 +109,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// "All", "Deepest Guk", "Miragul's", "Mistmoore", "Rujarkian", "Takish", "Unknown"
         /// </summary>
-        public LDoNTheme? LDoNTheme { get; }
+        public LDoNTheme? LDoNTheme => GetMember<StringType>("LDoNTheme");
 
         /// <summary>
         /// "None", "Magic", "Fire", "Cold", "Poison", "Disease"
         /// </summary>
-        public DMGBonusType? DMGBonusType { get; }
+        public DMGBonusType? DMGBonusType => GetMember<StringType>("DMGBonusType");
 
         /// <summary>
         /// Number of slots, if this is a container
@@ -321,7 +314,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Spell Scroll - Scribeable spell scroll
         /// Worn - item has a focus effect
         /// </summary>
-        public EffectType? EffectType { get; }
+        public EffectType? EffectType => GetMember<StringType>("EffectType");
 
         /// <summary>
         /// Instrument Modifier Value
@@ -1008,13 +1001,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Just prints the actual hexlink for an item (not clickable)
         /// </summary>
-        public string ItemLink { get; }
+        public string ItemLink => GetMember<StringType>("ItemLink");
 
         /// <summary>
         /// Just prints the actual hexlink for an item (clickable)
         /// ItemLink[CLICKABLE]
         /// </summary>
-        public string ItemLinkClickable { get; }
+        public string ItemLinkClickable => GetMember<StringType>("ItemLink", "CLICKABLE");
 
         /// <summary>
         /// ID of the icon used for the item

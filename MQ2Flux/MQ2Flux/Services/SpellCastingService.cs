@@ -3,100 +3,79 @@ using MQ2DotNet.MQ2API.DataTypes;
 using MQ2DotNet.Utility;
 using MQ2Flux.Extensions;
 using System;
-using System.Collections.Concurrent;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQ2Flux.Services
 {
-    public interface IItemService
+    public interface ISpellCastingService
     {
-        Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default);
-        bool UseItem(ItemType item, string verb = "Using", CancellationToken cancellationToken = default);
+        Task<bool> CastAsync(SpellType spell, CancellationToken cancellationToken = default);
     }
 
-    public static class ItemServiceExtensions
+    public static class SpellCastingServiceExtensions
     {
-        public static IServiceCollection AddItemService(this IServiceCollection services)
+        public static IServiceCollection AddSpellCastingService(this IServiceCollection services)
         {
             return services
-                .AddSingleton<IItemService, ItemService>();
+                .AddSingleton<ISpellCastingService, SpellCastingService>();
         }
     }
 
-    public class ItemService : IItemService, IDisposable
+    public class SpellCastingService : ISpellCastingService, IDisposable
     {
-        private readonly IMQ2Logger mq2Logger;
         private readonly IMQ2Context context;
-        private readonly ConcurrentDictionary<string, DateTime> cachedCommands;
+        private readonly IMQ2Logger mq2Logger;
 
         private SemaphoreSlim semaphore;
         private bool disposedValue;
 
-        public ItemService(IMQ2Logger mq2Logger, IMQ2Context context)
+        public SpellCastingService(IMQ2Context context, IMQ2Logger mq2Logger)
         {
-            this.mq2Logger = mq2Logger;
             this.context = context;
+            this.mq2Logger = mq2Logger;
 
-            cachedCommands = new ConcurrentDictionary<string, DateTime>();
             semaphore = new SemaphoreSlim(1);
         }
 
-        public bool UseItem(ItemType item, string verb = "Using", CancellationToken cancellationToken = default)
-        {
-            if (!IsValid(item))
-            {
-                return false;
-            }
-
-            PurgeCache();
-
-            string command = $"/useitem {item.Name}";
-
-            if (cachedCommands.TryAdd(command, DateTime.UtcNow))
-            {
-                mq2Logger.Log($"{verb} [\ag{item.Name}\aw]");
-                context.MQ2.DoCommand(command);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public async Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default)
+        public async Task<bool> CastAsync(SpellType spell, CancellationToken cancellationToken = default)
         {
             await semaphore.WaitAsync(cancellationToken);
 
             try
             {
-                if (!IsValid(item))
+                var me = context.TLO.Me;
+
+                if (!me.Spawn.Class.CanCast || me.AmICasting() || (me.Moving && spell.HasCastTime()))
                 {
                     return false;
                 }
 
-                PurgeCache();
+                var spellBookSpell = me.GetSpellbookSpellBySpellID((int)spell.ID.Value);
 
-                string command = $"/useitem {item.Name}";
+                if (spellBookSpell == null)
+                {
+                    // You dont know this spell.
+                    return false;
+                }
 
-                if (!cachedCommands.TryAdd(command, DateTime.UtcNow))
+                var gem = me.GetGem(spellBookSpell.Name) ?? 0;
+
+                if (gem == 0)
+                {
+                    // Not memorized - add support for this later.
+                    return false;
+                }
+
+                if (!me.IsSpellReady(spellBookSpell.Name))
                 {
                     return false;
                 }
 
-                if (!item.HasCastTime())
-                {
-                    context.MQ2.DoCommand(command);
-                    mq2Logger.Log($"{verb} [\ag{item.Name}\aw]");
-
-                    return true;
-                }
-
-                var castTime = item.Clicky.CastTime.Value;
+                var castTime = spell.CastTime ?? TimeSpan.Zero;
                 var timeout = castTime + TimeSpan.FromMilliseconds(250); // add some fat
-                var castOnYou = item.Clicky.Spell.CastOnYou;
-                var castOnAnother = item.Clicky.Spell.CastOnAnother;
+                var castOnYou = spell.CastOnYou;
+                var castOnAnother = spell.CastOnAnother;
                 var wasCastOnYou = false;
                 var wasCastOnAnother = false;
                 var fizzled = false;
@@ -121,8 +100,8 @@ namespace MQ2Flux.Services
 
                 await Task.Yield();
 
-                context.MQ2.DoCommand(command);
-                mq2Logger.Log($"{verb} [\ag{item.Name}\aw]");
+                context.MQ2.DoCommand($"/cast {gem}");
+                mq2Logger.Log($"Casting [\ay{spell.Name}\aw]");
 
                 await waitForEQTask.TimeoutAfter(timeout);
 
@@ -141,35 +120,6 @@ namespace MQ2Flux.Services
             }
 
             return true;
-        }
-
-        private bool IsValid(ItemType item)
-        {
-            if (!item.CanUse || !item.IsTimerReady())
-            {
-                return false;
-            }
-
-            var me = context.TLO.Me;
-
-            if (me.AmICasting() || (item.HasCastTime() && me.Moving))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private void PurgeCache()
-        {
-            var rtt = context.TLO.EverQuest.Ping > 0 ? TimeSpan.FromMilliseconds(context.TLO.EverQuest.Ping.Value * 3) : TimeSpan.FromMilliseconds(1500);
-            var purgeOlderThan = DateTime.UtcNow.Subtract(rtt);
-            var keys = cachedCommands.Where(i => i.Value < DateTime.UtcNow).Select(i => i.Key).ToArray();
-
-            foreach (var key in keys)
-            {
-                cachedCommands.TryRemove(key, out var _);
-            }
         }
 
         protected virtual void Dispose(bool disposing)
@@ -193,7 +143,7 @@ namespace MQ2Flux.Services
         }
 
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~ItemService()
+        // ~SpellCastingService()
         // {
         //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         //     Dispose(disposing: false);

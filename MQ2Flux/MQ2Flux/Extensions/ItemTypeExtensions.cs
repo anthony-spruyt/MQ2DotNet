@@ -1,4 +1,5 @@
 ﻿using MQ2DotNet.MQ2API.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,6 +7,22 @@ namespace MQ2Flux.Extensions
 {
     public static class ItemTypeExtensions
     {
+        public static bool IsTimerReady(this ItemType @this)
+        {
+            return @this.TimerReady.HasValue && @this.TimerReady.Value > TimeSpan.Zero;
+        }
+
+        public static bool HasCastTime(this ItemType @this)
+        {
+            return @this.CastTime.HasValue ?
+                @this.CastTime.Value > TimeSpan.Zero :
+                @this.Clicky == null ?
+                    false :
+                    @this.Clicky.CastTime.HasValue ?
+                        @this.Clicky.CastTime.Value > TimeSpan.Zero :
+                        false;
+        }
+
         /// <summary>
         /// Flatten all inventory content. IE top level inventory and all container contents.
         /// </summary>

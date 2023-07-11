@@ -17,13 +17,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal TypeType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             _member = new IndexedStringMember<int, IntType, string>(this, "Member");
-            Name = GetMember<StringType>("Name");
         }
 
         /// <summary>
         /// Type name
         /// </summary>
-        public string Name { get; }
+        public string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Member name based on an internal ID number (based on 1 through N, not all values will be used).

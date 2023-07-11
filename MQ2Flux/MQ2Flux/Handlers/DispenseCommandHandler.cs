@@ -1,8 +1,11 @@
 ﻿using MediatR;
+using MQ2DotNet.MQ2API;
+using MQ2DotNet.MQ2API.DataTypes;
 using MQ2Flux.Commands;
 using MQ2Flux.Extensions;
+using MQ2Flux.Models;
 using MQ2Flux.Services;
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +26,14 @@ namespace MQ2Flux.Handlers
         public async Task Handle(DispenseCommand request, CancellationToken cancellationToken)
         {
             var dispensers = request.Character.Dispensers;
-            
+
+            AddDefaultDispensers(dispensers);
+            await DispenseAsync(dispensers, request.Context.TLO.Me, cancellationToken);
+            AutoInventory(dispensers, request.Context.MQ2, request.Context.TLO.Cursor);
+        }
+
+        private static void AddDefaultDispensers(List<FoodAndDrinkDispenser> dispensers)
+        {
             if (!dispensers.Any(i => i.DispenserID == 71979 || string.Compare(i.DispenserName, "Fresh Cookie Dispenser") == 0))
             {
                 dispensers.Add(new Models.FoodAndDrinkDispenser() { DispenserID = 71979, SummonID = 71980, TargetCount = 5 });
@@ -36,11 +46,11 @@ namespace MQ2Flux.Handlers
             {
                 dispensers.Add(new Models.FoodAndDrinkDispenser() { DispenserID = 52191, SummonID = 52199, TargetCount = 5 });
             }
+        }
 
-            var me = request.Context.TLO.Me;
-            var mq2 = request.Context.MQ2;
-
-            if (!me.Moving && (!me.CastTimeLeft.HasValue || me.CastTimeLeft.Value == TimeSpan.Zero))
+        private async Task DispenseAsync(List<FoodAndDrinkDispenser> dispensers, CharacterType me, CancellationToken cancellationToken)
+        {
+            if (!me.Moving && !me.AmICasting())
             {
                 var allMyInv = me.Inventory.Flatten();
 
@@ -56,7 +66,7 @@ namespace MQ2Flux.Handlers
                         {
                             var dispenserItem = allMyInv.FirstOrDefault(i => (dispenser.DispenserID.HasValue && dispenser.DispenserID.Value == i.ID) || string.Compare(dispenser.DispenserName, i.Name) == 0);
 
-                            if (dispenserItem != null && dispenserItem.TimerReady.HasValue && dispenserItem.TimerReady.Value == TimeSpan.Zero)
+                            if (dispenserItem != null)
                             {
                                 await itemService.UseItemAsync(dispenserItem, "Dispensing", cancellationToken);
 
@@ -66,9 +76,10 @@ namespace MQ2Flux.Handlers
                     }
                 }
             }
+        }
 
-            var cursor = request.Context.TLO.Cursor;
-
+        private void AutoInventory(List<FoodAndDrinkDispenser> dispensers, MQ2 mq2, ItemType cursor)
+        {
             if (cursor != null && dispensers.Any(i => (i.SummonID.HasValue && i.SummonID.Value == cursor.ID) || string.Compare(i.SummonName, cursor.Name) == 0))
             {
                 mq2Logger.Log($"Putting [\ag{cursor.Name}\aw] into your inventory");
