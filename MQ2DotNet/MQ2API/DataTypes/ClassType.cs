@@ -17,6 +17,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal ClassType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             Name = GetMember<StringType>("Name");
+            ShortName = GetMember<StringType>("ShortName");
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The short name (three letter code) of the class. Ex: RNG for Ranger
         /// </summary>
-        public string ShortName => GetMember<StringType>("ShortName");
+        public string ShortName { get; }
 
         /// <summary>
         /// Can cast spells, including Bard

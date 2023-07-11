@@ -14,17 +14,19 @@ namespace MQ2DotNet.MQ2API.DataTypes
     {
         internal DZTimerType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
+            EventName = GetMember<StringType>("EventName");
+            ExpeditionName = GetMember<StringType>("ExpeditionName");
         }
 
         /// <summary>
         /// The name of the expedition
         /// </summary>
-        public string ExpeditionName => GetMember<StringType>("ExpeditionName");
+        public string ExpeditionName { get; }
 
         /// <summary>
         /// The name of the event
         /// </summary>
-        public string EventName => GetMember<StringType>("EventName");
+        public string EventName { get; }
 
         /// <summary>
         /// The timestamp indicating when this lockout expires.

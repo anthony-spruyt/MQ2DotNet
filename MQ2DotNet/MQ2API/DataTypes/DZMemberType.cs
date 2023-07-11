@@ -15,6 +15,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal DZMemberType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             Name = GetMember<StringType>("Name");
+            Status = GetMember<StringType>("Status");
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The status of the member - one of the following: Unknown, Online, Offline, In Dynamic Zone, Link Dead.
         /// TODO: test enum conversion.
         /// </summary>
-        public DZStatus? Status => GetMember<StringType>("Status");
+        public DZStatus? Status { get; }
 
         /// <summary>
         /// Same as <see cref="Name"/>

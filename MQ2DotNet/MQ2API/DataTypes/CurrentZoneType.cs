@@ -15,6 +15,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal CurrentZoneType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
             Name = GetMember<StringType>("Name");
+            ShortName = GetMember<StringType>("ShortName");
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Short zone name e.g. "PoKnowledge"
         /// </summary>
-        public string ShortName => GetMember<StringType>("ShortName");
+        public string ShortName { get; }
 
         /// <summary>
         /// Zone type:0=Indoor Dungeon 1=Outdoor 2=Outdoor City 3=Dungeon City 4=Indoor City 5=Outdoor Dungeon.
