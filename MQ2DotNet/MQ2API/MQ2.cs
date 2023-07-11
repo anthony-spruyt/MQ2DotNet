@@ -102,7 +102,7 @@ namespace MQ2DotNet.MQ2API
             get
             {
                 var hDll = Utility.NativeMethods.LoadLibrary("MQ2Main.dll");
-                return Marshal.PtrToStringAnsi(Utility.NativeMethods.GetProcAddress(hDll, "gPathResources")) + "\\MQ2DotNet";
+                return $"{Marshal.PtrToStringAnsi(Utility.NativeMethods.GetProcAddress(hDll, "gPathResources"))}\\MQ2DotNet";
             }
         }
 
