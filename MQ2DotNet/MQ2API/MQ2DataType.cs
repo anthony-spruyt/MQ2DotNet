@@ -55,7 +55,7 @@ namespace MQ2DotNet.MQ2API
             return _typeVar.ToString();
         }
 
-        public string OriginalToString()
+        protected string OriginalToString()
         {
             return base.ToString();
         }

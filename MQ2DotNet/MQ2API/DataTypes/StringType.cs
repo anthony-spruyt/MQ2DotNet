@@ -46,7 +46,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Implicit conversion to a LDoNTheme
-        /// TODO: havent tested this type of parsing yet.
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
@@ -57,7 +56,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Implicit conversion to a DMGBonusType
-        /// TODO: havent tested this type of parsing yet.
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
@@ -68,7 +66,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Implicit conversion to a EffectType
-        /// TODO: havent tested this type of parsing yet.
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
@@ -79,7 +76,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Implicit conversion to a CombatState
-        /// TODO: havent tested this type of parsing yet.
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
@@ -90,7 +86,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Implicit conversion to a DZStatus
-        /// TODO: havent tested this type of parsing yet.
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
@@ -101,7 +96,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Implicit conversion to a GameState
-        /// TODO: havent tested this type of parsing yet.
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
@@ -112,7 +106,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Implicit conversion to a PetStance
-        /// TODO: havent tested this type of parsing yet.
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
@@ -123,13 +116,22 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Implicit conversion to a ConColor
-        /// TODO: havent tested this type of parsing yet.
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
         public static implicit operator ConColor?(StringType typeVar)
         {
             return typeVar?._string?.ToEnum<ConColor>();
+        }
+
+        /// <summary>
+        /// Implicit conversion to a SpawnState
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator SpawnState?(StringType typeVar)
+        {
+            return typeVar?._string?.ToEnum<SpawnState>();
         }
     }
 }

@@ -315,9 +315,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// STAND, SIT, DUCK, BIND, FEIGN, DEAD, STUN, HOVER, MOUNT, UNKNOWN
-        /// TODO: map to an enum
         /// </summary>
-        public string State => GetMember<StringType>("State");
+        public SpawnState? State => GetMember<StringType>("State");
 
         /// <summary>
         /// Standing?
