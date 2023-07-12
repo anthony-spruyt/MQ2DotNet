@@ -20,6 +20,8 @@ namespace MQ2Flux
 {
     public class MQ2Flux : IProgram
     {
+        public static Task Yield => Task.Delay(100);
+
         private readonly MQ2 mq2;
         private readonly Chat chat;
         private readonly MQ2DotNet.Services.Commands commands;
@@ -125,8 +127,7 @@ namespace MQ2Flux
 
                         FlushMQ2DataTypeErrors(logger);
 
-                        await Task.Yield();
-                        //await Task.Delay(100, linkedTokenSource.Token);
+                        await Yield;
                     }
                 }
 

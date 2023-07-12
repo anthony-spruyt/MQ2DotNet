@@ -49,7 +49,7 @@ namespace MQ2Flux.Services
 
             while (waitUntil >= DateTime.UtcNow && context.TLO.Cursor == null && !cancellationToken.IsCancellationRequested)
             {
-                await Task.Yield();
+                await MQ2Flux.Yield;
             }
 
             if (cancellationToken.IsCancellationRequested || (predicate != null && !predicate(context.TLO.Cursor)))
@@ -63,7 +63,7 @@ namespace MQ2Flux.Services
             {
                 context.MQ2.DoCommand("/autoinv");
 
-                await Task.Delay(500, cancellationToken);
+                await MQ2Flux.Yield;
             }
         }
 
@@ -118,6 +118,7 @@ namespace MQ2Flux.Services
 
                             return wasCastOnYou || wasCastOnAnother || fizzled || interrupted;
                         },
+                        timeout,
                         cancellationToken
                     )
                 );
@@ -126,7 +127,7 @@ namespace MQ2Flux.Services
 
                 mq2Logger.Log($"{verb} [\ag{item.Name}\aw] \austarted", TimeSpan.Zero);
 
-                await waitForEQTask.TimeoutAfter(timeout);
+                await waitForEQTask;
 
                 if (fizzled || interrupted)
                 {

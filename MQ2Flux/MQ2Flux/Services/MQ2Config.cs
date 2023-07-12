@@ -39,7 +39,7 @@ namespace MQ2Flux.Services
 
         private FileSystemWatcher watcher;
         private bool disposedValue;
-        private SemaphoreSlim semaphoreSlim;
+        private SemaphoreSlim semaphore;
 
         public MQ2Config(IMQ2Context context, IMQ2Logger mq2Logger, IMediator mediator, ILogger<MQ2Config> logger)
         {
@@ -47,7 +47,7 @@ namespace MQ2Flux.Services
             this.mq2Logger = mq2Logger;
             this.mediator = mediator;
             this.logger = logger;
-            semaphoreSlim = new SemaphoreSlim(0, 1);
+            semaphore = new SemaphoreSlim(0, 1);
             path = Path.Combine(this.context.MQ2.ConfigPath, CONFIG_FILE_NAME);
 
             Initialize();
@@ -153,14 +153,14 @@ namespace MQ2Flux.Services
                 {
                     try
                     {
-                        if (!semaphoreSlim.Wait(0))
+                        if (!semaphore.Wait(0))
                         {
                             return;
                         }
 
                         Log("Config change detected");
 
-                        await Task.Delay(1000);
+                        await Task.Delay(1000); // Need to add cancellation token here for shutdown.
 
                         LoadConfig();
 
@@ -178,7 +178,7 @@ namespace MQ2Flux.Services
                     }
                     finally
                     {
-                        semaphoreSlim.Release();
+                        semaphore.Release();
                     }
                 }
             ).ConfigureAwait(false);
@@ -199,11 +199,11 @@ namespace MQ2Flux.Services
                         watcher = null;
                     }
 
-                    if (semaphoreSlim != null)
+                    if (semaphore != null)
                     {
-                        semaphoreSlim.Dispose();
+                        semaphore.Dispose();
 
-                        semaphoreSlim = null;
+                        semaphore = null;
                     }
                 }
 
