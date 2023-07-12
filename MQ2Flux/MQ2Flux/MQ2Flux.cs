@@ -289,6 +289,7 @@ namespace MQ2Flux
                 .AddMQ2Logging()
                 .AddMQ2Config()
                 .AddMQ2CommandProvider()
+                .AddAbilityService()
                 .AddItemService()
                 .AddSpellCastingService();
         }
