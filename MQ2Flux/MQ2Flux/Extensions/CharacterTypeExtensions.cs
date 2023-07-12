@@ -6,6 +6,11 @@ namespace MQ2Flux.Extensions
 
     public static class CharacterTypeExtensions
     {
+        public static bool AmICasting(this CharacterType @this)
+        {
+            return @this.CastTimeLeft.HasValue && @this.CastTimeLeft.Value > TimeSpan.Zero;
+        }
+
         /*
          * https://www.redguides.com/community/threads/mq2feedme-questions.68357/#post-374540
          * I don't use the plugin, but the "Level" setting is connected to your toons answers to these levels of Hunger or Thirst.
@@ -31,11 +36,6 @@ namespace MQ2Flux.Extensions
             }
 
             return @this.Thirst.Value < threshold;
-        }
-
-        public static bool AmICasting(this CharacterType @this)
-        {
-            return @this.CastTimeLeft.HasValue && @this.CastTimeLeft.Value > TimeSpan.Zero;
         }
     }
 }

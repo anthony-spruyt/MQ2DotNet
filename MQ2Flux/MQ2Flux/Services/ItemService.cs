@@ -131,8 +131,8 @@ namespace MQ2Flux.Services
 
                 if (fizzled || interrupted)
                 {
-                    //var reason = fizzled ? "fizzled" : "was interrupted";
-                    //mq2Logger.Log($"{verb} [\ay{item.Name}\aw] \ar{reason}", TimeSpan.Zero);
+                    var reason = fizzled ? "fizzled" : "was interrupted";
+                    mq2Logger.Log($"{verb} [\ay{item.Name}\aw] \ar{reason}", TimeSpan.Zero);
 
                     return false;
                 }
@@ -145,8 +145,6 @@ namespace MQ2Flux.Services
             {
                 semaphore.Release();
             }
-
-            //mq2Logger.Log($"{verb} [\ay{item.Name}\aw] \agsucceeded", TimeSpan.Zero);
 
             return true;
         }

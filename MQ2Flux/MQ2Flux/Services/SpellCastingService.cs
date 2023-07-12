@@ -136,8 +136,8 @@ namespace MQ2Flux.Services
 
                 if (fizzled || interrupted)
                 {
-                    //var reason = fizzled ? "fizzled" : "was interrupted";
-                    //mq2Logger.Log($"Casting [\ay{spell.Name}\aw] \ar{reason}", TimeSpan.Zero);
+                    var reason = fizzled ? "fizzled" : "was interrupted";
+                    mq2Logger.Log($"Casting [\ay{spell.Name}\aw] \ar{reason}", TimeSpan.Zero);
                     
                     return false;
                 }
@@ -150,8 +150,6 @@ namespace MQ2Flux.Services
             {
                 semaphore.Release();
             }
-
-            //mq2Logger.Log($"Casting [\ay{spell.Name}\aw] \agsucceeded", TimeSpan.Zero);
 
             return true;
         }

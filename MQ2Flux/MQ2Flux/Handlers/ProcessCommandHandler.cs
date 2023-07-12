@@ -16,6 +16,8 @@ namespace MQ2Flux.Handlers
 
         public async Task Handle(ProcessCommand request, CancellationToken cancellationToken)
         {
+            // TODO am I camping query and return if true.
+
             await mediator.Send(new DismissAlertWindowCommand(), cancellationToken);
             await mediator.Send(new LearnALanguageCommand(), cancellationToken);
 

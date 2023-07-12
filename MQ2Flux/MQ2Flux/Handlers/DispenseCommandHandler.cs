@@ -23,10 +23,27 @@ namespace MQ2Flux.Handlers
 
         public async Task<bool> Handle(DispenseCommand request, CancellationToken cancellationToken)
         {
+            var me = request.Context.TLO.Me;
+
+            if
+            (
+                me.Moving || 
+                me.AmICasting() || 
+                me.CombatState == CombatState.Combat ||
+                (
+                    me.Spawn.Class.CanCast &&
+                    request.Context.TLO.IsSpellBookOpen()
+                )
+            )
+            {
+                return false;
+            }
+
             var dispensers = request.Character.Dispensers;
 
             AddDefaultDispensers(dispensers);
-            if (await DispenseAsync(dispensers, request.Context.TLO.Me, cancellationToken))
+
+            if (await DispenseAsync(dispensers, me, cancellationToken))
             {
                 await itemService.AutoInventoryAsync(cursor => cursor != null && dispensers.Any(i => (i.SummonID.HasValue && i.SummonID.Value == cursor.ID) || string.Compare(i.SummonName, cursor.Name) == 0), cancellationToken);
 
@@ -54,11 +71,6 @@ namespace MQ2Flux.Handlers
 
         private async Task<bool> DispenseAsync(List<FoodAndDrinkDispenser> dispensers, CharacterType me, CancellationToken cancellationToken)
         {
-            if (me.Moving || me.AmICasting() || me.CombatState == CombatState.Combat)
-            {
-                return false;
-            }
-
             var allMyInv = me.Inventory.Flatten();
 
             foreach (var dispenser in dispensers)

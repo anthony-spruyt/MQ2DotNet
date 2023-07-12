@@ -42,7 +42,13 @@ namespace MQ2Flux.Handlers
         {
             var me = request.Context.TLO.Me;
 
-            if (!me.Spawn.Class.CanCast || me.CombatState == CombatState.Combat || me.Moving || me.AmICasting())
+            if
+            (
+                !me.Spawn.Class.CanCast || 
+                me.CombatState == CombatState.Combat || 
+                me.Moving || me.AmICasting() ||
+                request.Context.TLO.IsSpellBookOpen()
+            )
             {
                 return false;
             }
