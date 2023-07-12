@@ -81,7 +81,7 @@ namespace MQ2Flux.Services
                         !cancellationToken.IsCancellationRequested
                     )
                     {
-                        await MQ2Flux.Yield;
+                        await MQ2Flux.Yield(cancellationToken);
                     }
                 }
                 catch (TimeoutException)
@@ -191,7 +191,7 @@ namespace MQ2Flux.Services
                     !cancellationToken.IsCancellationRequested
                 )
                 {
-                    await MQ2Flux.Yield;
+                    await MQ2Flux.Yield(cancellationToken);
                 }
             }
             catch (TimeoutException)

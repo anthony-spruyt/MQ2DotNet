@@ -47,13 +47,13 @@ namespace MQ2Flux.Services
 
                 if
                 (
+                    abilityID == 0 ||
+                    !me.GetAbilityReady(abilityID) ||
+                    me.AmICasting() ||
                     (
                         me.Spawn.Class.CanCast &&
                         context.TLO.IsSpellBookOpen()
-                    ) ||
-                    me.AmICasting() ||
-                    abilityID == 0 ||
-                    !me.GetAbilityReady(abilityID)
+                    )
                 )
                 {
                     return false;
@@ -61,7 +61,7 @@ namespace MQ2Flux.Services
 
                 if (string.IsNullOrWhiteSpace(successText) && string.IsNullOrWhiteSpace(failureText))
                 {
-                    DoAbilityInternal(abilityName, abilityID);
+                    DoAbilityInternal(abilityName);
 
                     return true;
                 }
@@ -96,7 +96,7 @@ namespace MQ2Flux.Services
                     )
                 );
 
-                DoAbilityInternal(abilityName, abilityID);
+                DoAbilityInternal(abilityName);
 
                 await waitForEQTask;
 
@@ -112,9 +112,9 @@ namespace MQ2Flux.Services
             }
         }
 
-        private void DoAbilityInternal(string abilityName, int abilityID)
+        private void DoAbilityInternal(string abilityName)
         {
-            context.MQ2.DoCommand($"/doability {abilityID}");
+            context.MQ2.DoCommand($"/doability {abilityName}");
 
             mq2Logger.Log($"Do ability [\ay{abilityName}\aw]", TimeSpan.Zero);
         }

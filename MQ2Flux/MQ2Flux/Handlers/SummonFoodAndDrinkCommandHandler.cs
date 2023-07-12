@@ -46,8 +46,8 @@ namespace MQ2Flux.Handlers
             (
                 !me.Spawn.Class.CanCast || 
                 me.CombatState == CombatState.Combat || 
-                me.Moving || me.AmICasting() ||
-                request.Context.TLO.IsSpellBookOpen()
+                me.Moving ||
+                me.AmICasting()
             )
             {
                 return false;

@@ -3,7 +3,6 @@ using MQ2DotNet.EQ;
 using MQ2Flux.Commands;
 using MQ2Flux.Extensions;
 using MQ2Flux.Services;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

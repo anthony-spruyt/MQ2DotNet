@@ -51,7 +51,7 @@ namespace MQ2DotNet.Services
                 _onChatEQ -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<string> _onChatEQ;
+        private event EventHandler<string> _onChatEQ;
 
         /// <summary>
         /// Fired on a line of chat from MQ2
@@ -69,7 +69,7 @@ namespace MQ2DotNet.Services
                 _onChatMQ2 -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<string> _onChatMQ2;
+        private event EventHandler<string> _onChatMQ2;
 
         /// <summary>
         /// Fired from a line of chat from either EQ or MQ2
@@ -87,7 +87,7 @@ namespace MQ2DotNet.Services
                 _onChat -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<string> _onChat;
+        private event EventHandler<string> _onChat;
 
         /// <summary>
         /// This is called when we receive the EQ_BEGIN_ZONE packet
@@ -105,7 +105,7 @@ namespace MQ2DotNet.Services
                 _beginZone -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler _beginZone;
+        private event EventHandler _beginZone;
 
         /// <summary>
         /// This is called when we receive the EQ_END_ZONE packet
@@ -123,7 +123,7 @@ namespace MQ2DotNet.Services
                 _endZone -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler _endZone;
+        private event EventHandler _endZone;
 
         /// <summary>
         /// Fired when a new ground item is added. Will be fired once for each ground item in the zone when entering a new zone
@@ -141,7 +141,7 @@ namespace MQ2DotNet.Services
                 _onAddGroundItem -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<GroundType> _onAddGroundItem;
+        private event EventHandler<GroundType> _onAddGroundItem;
 
         /// <summary>
         /// Fired when a ground item is removed. Will be fired once for each ground item in the zone when exiting a zone
@@ -159,7 +159,7 @@ namespace MQ2DotNet.Services
                 _onRemoveGroundItem -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<GroundType> _onRemoveGroundItem;
+        private event EventHandler<GroundType> _onRemoveGroundItem;
 
         /// <summary>
         /// Fired when a new spawn is added. Will be fired once for each spawn in the zone when entering a new zone
@@ -177,7 +177,7 @@ namespace MQ2DotNet.Services
                 _onAddSpawn -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<SpawnType> _onAddSpawn;
+        private event EventHandler<SpawnType> _onAddSpawn;
 
         /// <summary>
         /// Fired when a spawn is removed. Will be fired once for each spawn in the zone when exiting a zone
@@ -195,7 +195,7 @@ namespace MQ2DotNet.Services
                 _onRemoveSpawn -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<SpawnType> _onRemoveSpawn;
+        private event EventHandler<SpawnType> _onRemoveSpawn;
 
         /// <summary>
         /// Called once directly before shutdown of the new ui system, and also every time the game calls CDisplay::CleanGameUI()
@@ -213,7 +213,7 @@ namespace MQ2DotNet.Services
                 _onCleanUI -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler _onCleanUI;
+        private event EventHandler _onCleanUI;
 
         /// <summary>
         /// Called every frame that the "HUD" is drawn -- e.g. net status / packet loss bar
@@ -231,7 +231,7 @@ namespace MQ2DotNet.Services
                 _onDrawHUD -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler _onDrawHUD;
+        private event EventHandler _onDrawHUD;
 
         /// <summary>
         /// Called once directly after the game ui is reloaded, after issuing /loadskin
@@ -249,7 +249,7 @@ namespace MQ2DotNet.Services
                 _onReloadUI -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler _onReloadUI;
+        private event EventHandler _onReloadUI;
 
         /// <summary>
         /// Similar/same as EndZone ?
@@ -267,10 +267,10 @@ namespace MQ2DotNet.Services
                 _onZoned -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler _onZoned;
+        private event EventHandler _onZoned;
 
         /// <summary>
-        /// Similar/same as EndZone ?
+        /// TODO: doco
         /// </summary>
         public event EventHandler<string> OnMacroStart
         {
@@ -285,10 +285,10 @@ namespace MQ2DotNet.Services
                 _onMacroStart -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<string> _onMacroStart;
+        private event EventHandler<string> _onMacroStart;
 
         /// <summary>
-        /// Similar/same as EndZone ?
+        /// TODO: doco
         /// </summary>
         public event EventHandler<string> OnMacroStop
         {
@@ -303,10 +303,10 @@ namespace MQ2DotNet.Services
                 _onMacroStop -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<string> _onMacroStop;
+        private event EventHandler<string> _onMacroStop;
 
         /// <summary>
-        /// Similar/same as EndZone ?
+        /// TODO: doco
         /// </summary>
         public event EventHandler<string> OnLoadPlugin
         {
@@ -321,10 +321,10 @@ namespace MQ2DotNet.Services
                 _onLoadPlugin -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<string> _onLoadPlugin;
+        private event EventHandler<string> _onLoadPlugin;
 
         /// <summary>
-        /// Similar/same as EndZone ?
+        /// TODO: doco
         /// </summary>
         public event EventHandler<string> OnUnloadPlugin
         {
@@ -339,7 +339,7 @@ namespace MQ2DotNet.Services
                 _onUnloadPlugin -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<string> _onUnloadPlugin;
+        private event EventHandler<string> _onUnloadPlugin;
 
         /// <summary>
         /// Called once directly after initialization, and then every time the gamestate changes
@@ -357,7 +357,7 @@ namespace MQ2DotNet.Services
                 _setGameState -= value;
             }
         }
-        [SuppressMessage("ReSharper", "InconsistentNaming")] private event EventHandler<EQ.GameState> _setGameState;
+        private event EventHandler<EQ.GameState> _setGameState;
 
         private void SubscribeAll()
         {

@@ -49,7 +49,7 @@ namespace MQ2Flux.Services
 
             while (waitUntil >= DateTime.UtcNow && context.TLO.Cursor == null && !cancellationToken.IsCancellationRequested)
             {
-                await MQ2Flux.Yield;
+                await MQ2Flux.Yield(cancellationToken);
             }
 
             if (cancellationToken.IsCancellationRequested || (predicate != null && !predicate(context.TLO.Cursor)))
@@ -63,7 +63,7 @@ namespace MQ2Flux.Services
             {
                 context.MQ2.DoCommand("/autoinv");
 
-                await MQ2Flux.Yield;
+                await MQ2Flux.Yield(cancellationToken);
             }
         }
 

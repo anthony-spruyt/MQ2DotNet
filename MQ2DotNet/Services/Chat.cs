@@ -69,7 +69,8 @@ namespace MQ2DotNet.Services
                 while (!found)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    await Task.Yield();
+                    //await Task.Yield(); // This is causing quite a drop in FPS
+                    await Task.Delay(100);
                 }
             }
             finally

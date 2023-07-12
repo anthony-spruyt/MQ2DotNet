@@ -77,6 +77,7 @@
     <Compile Include="Commands\DismissAlertWindowCommand.cs" />
     <Compile Include="Commands\DispenseCommand.cs" />
     <Compile Include="Commands\EatAndDrinkCommand.cs" />
+    <Compile Include="Commands\FlushDataTypeErrorsCommand.cs" />
     <Compile Include="Commands\ForageCommand.cs" />
     <Compile Include="Commands\LearnALanguageCommand.cs" />
     <Compile Include="Commands\SummonFoodAndDrinkCommand.cs" />
@@ -84,9 +85,11 @@
     <Compile Include="Extensions\ItemTypeExtensions.cs" />
     <Compile Include="Extensions\SpellTypeExtensions.cs" />
     <Compile Include="Extensions\TLOExtensions.cs" />
+    <Compile Include="Handlers\CanProcessQueryHandler.cs" />
     <Compile Include="Handlers\DismissAlertWindowCommandHandler.cs" />
     <Compile Include="Handlers\DispenseCommandHandler.cs" />
     <Compile Include="Handlers\EatAndDrinkCommandHandler.cs" />
+    <Compile Include="Handlers\FlushDataTypeErrorsCommandHandler.cs" />
     <Compile Include="Handlers\ForageCommandHandler.cs" />
     <Compile Include="Handlers\LearnALanguageCommandHandler.cs" />
     <Compile Include="Handlers\LoadMQ2CommandsHandler.cs" />
@@ -102,10 +105,11 @@
     <Compile Include="Commands\ProcessCommand.cs" />
     <Compile Include="Handlers\ProcessCommandHandler.cs" />
     <Compile Include="Models\FluxConfig.cs" />
+    <Compile Include="Queries\CanProcessQuery.cs" />
     <Compile Include="Services\AbilityService.cs" />
     <Compile Include="Services\SpellCastingService.cs" />
     <Compile Include="Services\FluxMQ2AsyncCommand.cs" />
-    <Compile Include="Services\CateringService.cs" />
+    <Compile Include="Services\EventService.cs" />
     <Compile Include="Services\ItemService.cs" />
     <Compile Include="Services\LanguageService.cs" />
     <Compile Include="Services\MQ2ChatHistory.cs" />
@@ -165,8 +169,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Queries\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

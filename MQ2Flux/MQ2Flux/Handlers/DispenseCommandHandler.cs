@@ -29,11 +29,7 @@ namespace MQ2Flux.Handlers
             (
                 me.Moving || 
                 me.AmICasting() || 
-                me.CombatState == CombatState.Combat ||
-                (
-                    me.Spawn.Class.CanCast &&
-                    request.Context.TLO.IsSpellBookOpen()
-                )
+                me.CombatState == CombatState.Combat
             )
             {
                 return false;
@@ -75,7 +71,7 @@ namespace MQ2Flux.Handlers
 
             foreach (var dispenser in dispensers)
             {
-                if (dispenser.DispenserID.HasValue || !string.IsNullOrWhiteSpace(dispenser.SummonName))
+                if (dispenser.DispenserID.HasValue || !string.IsNullOrWhiteSpace(dispenser.DispenserName))
                 {
                     var actualCount = allMyInv
                         .Where(i => (dispenser.SummonID.HasValue && dispenser.SummonID.Value == i.ID) || string.Compare(dispenser.SummonName, i.Name) == 0)

@@ -9,7 +9,7 @@ namespace MQ2Flux.Extensions
     {
         public static bool IsTimerReady(this ItemType @this)
         {
-            return @this.TimerReady.HasValue && @this.TimerReady.Value > TimeSpan.Zero;
+            return !@this.TimerReady.HasValue || @this.TimerReady.Value == TimeSpan.Zero;
         }
 
         public static bool HasCastTime(this ItemType @this)

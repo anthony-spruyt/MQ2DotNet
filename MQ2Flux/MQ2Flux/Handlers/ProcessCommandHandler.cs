@@ -31,12 +31,12 @@ namespace MQ2Flux.Handlers
                 return;
             }
 
-            if (await mediator.Send(new EatAndDrinkCommand(), cancellationToken))
+            if (await mediator.Send(new ForageCommand(), cancellationToken))
             {
                 return;
             }
 
-            if (await mediator.Send(new ForageCommand(), cancellationToken))
+            if (await mediator.Send(new EatAndDrinkCommand(), cancellationToken))
             {
                 return;
             }
