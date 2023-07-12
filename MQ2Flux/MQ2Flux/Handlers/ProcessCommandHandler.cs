@@ -59,6 +59,15 @@ namespace MQ2Flux.Handlers
             {
                 return;
             }
+
+            if
+            (
+                request.Character.AutoSortInventory.GetValueOrDefault(false) &&
+                await mediator.Send(new SortInventoryCommand(), cancellationToken)
+            )
+            {
+                return;
+            }
         }
     }
 }

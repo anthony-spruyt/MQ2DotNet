@@ -90,50 +90,64 @@ namespace MQ2Flux.Extensions
             return @this.IsDrinkable() || @this.IsEdible();
         }
 
-        public static int GetNutrientScore(this ItemType @this)
+        public static int GetNutrientScore(this ItemType @this, CharacterType me = null)
         {
             var score = 0;
+            var meleeSkillModifier = 1;
+            var casterSkillModifier = 1;
+
+            if (me != null)
+            {
+                if (me.Spawn.Class.PureCaster)
+                {
+                    meleeSkillModifier = 0;
+                }
+                else
+                {
+                    casterSkillModifier = 0;
+                }
+            }
 
             if (@this.IsConsumable())
             {
-                score += (int?)@this.AC ?? 0;
-                score += (int?)@this.Accuracy ?? 0;
-                score += (int?)@this.AGI ?? 0;
-                score += (int?)@this.Attack ?? 0;
-                score += (int?)@this.Avoidance ?? 0;
-                score += (int?)@this.CHA ?? 0;
-                score += (int?)@this.Clairvoyance ?? 0;
-                score += (int?)@this.DamageShieldMitigation ?? 0;
-                score += (int?)@this.DamShield ?? 0;
-                score += (int?)@this.DEX ?? 0;
-                score += (int?)@this.DoTShielding ?? 0;
-                score += (int?)@this.Endurance ?? 0;
-                score += (int?)@this.EnduranceRegen ?? 0;
-                score += (int?)@this.Haste ?? 0;
-                score += (int?)@this.HealAmount ?? 0;
-                score += (int?)@this.HeroicAGI ?? 0;
-                score += (int?)@this.HeroicCHA ?? 0;
-                score += (int?)@this.HeroicDEX ?? 0;
-                score += (int?)@this.HeroicINT ?? 0;
-                score += (int?)@this.HeroicSTA ?? 0;
-                score += (int?)@this.HeroicSTR ?? 0;
-                score += (int?)@this.HeroicWIS ?? 0;
-                score += (int?)@this.HP ?? 0;
-                score += (int?)@this.HPRegen ?? 0;
-                score += (int?)@this.INT ?? 0;
-                score += (int?)@this.Luck ?? 0;
-                score += (int?)@this.Mana ?? 0;
-                score += (int?)@this.ManaRegen ?? 0;
-                score += (int?)@this.STA ?? 0;
-                score += (int?)@this.STR ?? 0;
-                score += (int?)@this.StunResist ?? 0;
-                score += (int?)@this.svCold ?? 0;
-                score += (int?)@this.svCorruption ?? 0;
-                score += (int?)@this.svDisease ?? 0;
-                score += (int?)@this.svFire ?? 0;
-                score += (int?)@this.svMagic ?? 0;
-                score += (int?)@this.svPoison ?? 0;
-                score += (int?)@this.WIS ?? 0;
+                score += (int)@this.AC.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.Accuracy.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.AGI.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.Attack.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.Avoidance.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.CHA.GetValueOrDefault(0) * casterSkillModifier;
+                score += (int)@this.Clairvoyance.GetValueOrDefault(0) * casterSkillModifier;
+                score += (int)@this.DamageShieldMitigation.GetValueOrDefault(0);
+                score += (int)@this.DamShield.GetValueOrDefault(0);
+                score += (int)@this.DEX.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.DoTShielding.GetValueOrDefault(0);
+                score += (int)@this.Endurance.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.EnduranceRegen.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.Haste.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.HealAmount.GetValueOrDefault(0);
+                score += (int)@this.HeroicAGI.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.HeroicCHA.GetValueOrDefault(0);
+                score += (int)@this.HeroicDEX.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.HeroicINT.GetValueOrDefault(0);
+                score += (int)@this.HeroicSTA.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.HeroicSTR.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.HeroicWIS.GetValueOrDefault(0);
+                score += (int)@this.HP.GetValueOrDefault(0) * meleeSkillModifier * 10;
+                score += (int)@this.HPRegen.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.INT.GetValueOrDefault(0) * casterSkillModifier;
+                score += (int)@this.Luck.GetValueOrDefault(0);
+                score += (int)@this.Mana.GetValueOrDefault(0) * casterSkillModifier * 10;
+                score += (int)@this.ManaRegen.GetValueOrDefault(0) * casterSkillModifier;
+                score += (int)@this.STA.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.STR.GetValueOrDefault(0) * meleeSkillModifier;
+                score += (int)@this.StunResist.GetValueOrDefault(0);
+                score += (int)@this.svCold.GetValueOrDefault(0);
+                score += (int)@this.svCorruption.GetValueOrDefault(0);
+                score += (int)@this.svDisease.GetValueOrDefault(0);
+                score += (int)@this.svFire.GetValueOrDefault(0);
+                score += (int)@this.svMagic.GetValueOrDefault(0);
+                score += (int)@this.svPoison.GetValueOrDefault(0);
+                score += (int)@this.WIS.GetValueOrDefault(0) * casterSkillModifier;
             }
 
             return score;

@@ -51,7 +51,7 @@ namespace MQ2Flux.Handlers
             {
                 var drink = allMyInv
                     .Where(i => i.IsDrinkable() && !(dontConsume.Contains(i.Name)))
-                    .OrderBy(i => i.GetNutrientScore())
+                    .OrderBy(i => i.GetNutrientScore(me))
                     .FirstOrDefault();
 
                 if (drink != null)
@@ -78,7 +78,7 @@ namespace MQ2Flux.Handlers
             {
                 var food = allMyInv
                     .Where(i => i.IsEdible() && !(dontConsume.Contains(i.Name)))
-                    .OrderBy(i => i.GetNutrientScore())
+                    .OrderBy(i => i.GetNutrientScore(me))
                     .FirstOrDefault();
 
                 if (food != null)

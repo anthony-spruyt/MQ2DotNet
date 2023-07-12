@@ -15,9 +15,15 @@ namespace MQ2Flux.Services
         /// <summary>
         /// Destroy the current item on the cursor if it matches the provided name.
         /// </summary>
-        /// <param name="itemName">To ensure you dont delete something unintended on the cursor the item name is required.</param>
+        /// <param name="itemName">To ensure you dont destroy something unintended on the cursor the item name is required.</param>
         /// <returns></returns>
         Task DestroyAsync(string itemName);
+        /// <summary>
+        /// Drops the current item on the cursor if it matches the provided name.
+        /// </summary>
+        /// <param name="itemName">To ensure you dont drop something unintended on the cursor the item name is required.</param>
+        /// <returns></returns>
+        Task DropAsync(string itemName);
         Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default);
     }
 
@@ -78,6 +84,17 @@ namespace MQ2Flux.Services
             if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
             {
                 context.MQ2.DoCommand("/destroy");
+            }
+
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task DropAsync(string itemName)
+        {
+            if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
+            {
+                context.MQ2.DoCommand("/drop");
             }
 
             return Task.CompletedTask;
@@ -178,9 +195,8 @@ namespace MQ2Flux.Services
 
         private void PurgeCache()
         {
-            var rtt = context.TLO.EverQuest.Ping > 0 ? TimeSpan.FromMilliseconds(context.TLO.EverQuest.Ping.Value * 3) : TimeSpan.FromMilliseconds(1500);
-            var purgeOlderThan = DateTime.UtcNow.Subtract(rtt);
-            var keys = cachedCommands.Where(i => i.Value < DateTime.UtcNow).Select(i => i.Key).ToArray();
+            var purgeOlderThan = DateTime.UtcNow - TimeSpan.FromMilliseconds(1000);
+            var keys = cachedCommands.Where(i => i.Value < purgeOlderThan).Select(i => i.Key).ToArray();
 
             foreach (var key in keys)
             {

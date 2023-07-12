@@ -7,6 +7,16 @@
             return @this.IsWindowOpen("SpellBookWnd");
         }
 
+        public static void CloseSpellBook(this MQ2DotNet.Services.TLO @this)
+        {
+            var spellBookWindow = @this.GetWindow("SpellBookWnd");
+
+            if (spellBookWindow?.Open ?? false)
+            {
+                spellBookWindow.DoClose();
+            }
+        }
+
         public static bool IsWindowOpen(this MQ2DotNet.Services.TLO @this, string windowName)
         {
             var window = @this.GetWindow(windowName);

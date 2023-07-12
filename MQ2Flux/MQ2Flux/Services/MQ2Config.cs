@@ -6,6 +6,7 @@ using MQ2Flux.Notifications;
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,6 +31,12 @@ namespace MQ2Flux.Services
     {
         public FluxConfig FluxConfig { get; private set; }
 
+        private static readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions()
+        {
+            WriteIndented = true,
+            MaxDepth = 64,
+            ReferenceHandler = ReferenceHandler.IgnoreCycles
+        };
         private const string CONFIG_FILE_NAME = "MQ2Flux.json";
         private readonly IMQ2Context context;
         private readonly IMQ2Logger mq2Logger;
@@ -66,11 +73,7 @@ namespace MQ2Flux.Services
                 {
                     try
                     {
-                        var json = JsonSerializer.Serialize(FluxConfig);
-
-                        File.WriteAllText(path, json);
-
-                        
+                        File.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(FluxConfig, options: jsonOptions));
                     }
                     catch (Exception ex)
                     {
@@ -120,40 +123,29 @@ namespace MQ2Flux.Services
             {
                 if (File.Exists(path))
                 {
-                    string json = File.ReadAllText(path);
-
-                    if (string.IsNullOrWhiteSpace(json))
+                    using (Stream stream = File.OpenRead(path))
                     {
-                        SaveDefaultConfig();
+                        FluxConfig = stream.Length > 0 ?
+                            JsonSerializer.Deserialize<FluxConfig>(stream, options: jsonOptions) :
+                            new FluxConfig();
                     }
-                    else
-                    {
-                        FluxConfig = JsonSerializer.Deserialize<FluxConfig>(json);
 
-                        Log("Configuration loaded from disk");
-                    }
+                    Log("Configuration loaded from disk");
                 }
                 else
                 {
-                    SaveDefaultConfig();
+                    FluxConfig = new FluxConfig();
+
+                    File.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(FluxConfig, options: jsonOptions));
+
+                    Log("Default config created and saved to disk");
                 }
             }
             catch (Exception ex)
             {
                 FluxConfig = new FluxConfig();
 
-                Log(ex, "Failed to load config, reverted to default configuration");
-            }
-
-            void SaveDefaultConfig()
-            {
-                FluxConfig = new FluxConfig();
-
-                string json = JsonSerializer.Serialize(FluxConfig);
-
-                File.WriteAllText(path, json);
-
-                Log("Default config created and saved to disk");
+                Log(ex, "Failed to load config, reverted to default configuration. Use the \"/flux save\" command to save the default config to disk and overwrite the bad configuration or manually fix it.");
             }
         }
 

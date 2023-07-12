@@ -10,7 +10,7 @@ namespace MQ2Flux.Services
     public interface ISpellCastingService
     {
         Task<bool> CastAsync(SpellType spell, CancellationToken cancellationToken = default);
-        Task<bool> MemorizeSpellAsync(int slot, string spellName, CancellationToken cancellationToken = default);
+        Task<bool> MemorizeSpellAsync(uint slot, SpellType spell, CancellationToken cancellationToken = default);
     }
 
     public static class SpellCastingServiceExtensions
@@ -72,7 +72,7 @@ namespace MQ2Flux.Services
 
                 if (gem == 0)
                 {
-                    if (!await MemorizeSpellInternalAsync((int)me.NumGems.Value, spellBookSpell.Name))
+                    if (!await MemorizeSpellInternalAsync(me.NumGems.Value, spellBookSpell))
                     {
                         return false;
                     }
@@ -162,13 +162,13 @@ namespace MQ2Flux.Services
             return true;
         }
 
-        public async Task<bool> MemorizeSpellAsync(int slot, string spellName, CancellationToken cancellationToken = default)
+        public async Task<bool> MemorizeSpellAsync(uint slot, SpellType spell, CancellationToken cancellationToken = default)
         {
             await semaphore.WaitAsync(cancellationToken);
 
             try
             {
-                return await MemorizeSpellInternalAsync(slot, spellName, cancellationToken);
+                return await MemorizeSpellInternalAsync(slot, spell, cancellationToken);
             }
             finally
             {
@@ -176,16 +176,18 @@ namespace MQ2Flux.Services
             }
         }
 
-        private async Task<bool> MemorizeSpellInternalAsync(int slot, string spellName, CancellationToken cancellationToken = default)
+        private async Task<bool> MemorizeSpellInternalAsync(uint slot, SpellType spell, CancellationToken cancellationToken = default)
         {
             var me = context.TLO.Me;
+            var spellName = spell.Name;
+
 
             if (me.GetGem(spellName) == slot)
             {
                 return true;
             }
 
-            DateTime waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(10);
+            DateTime waitUntil = DateTime.UtcNow + GetMemorizeTimeout((uint?)spell.Level ?? 0u, me.Spawn.Level.Value);
 
             context.MQ2.DoCommand($"/memspell {slot} \"{spellName}\"");
             mq2Logger.Log($"Memorizing [\ay{spellName}\aw]", TimeSpan.Zero);
@@ -206,8 +208,39 @@ namespace MQ2Flux.Services
             {
                 return false;
             }
+            finally
+            {
+                // Sometimes memming the spell fails for some reason/gets stuck so auto close the spellbook after.
+                context.TLO.CloseSpellBook();
+            }
 
             return true;
+        }
+
+        /// <summary>
+        /// TODO: tweak this, all I could find about this was that if the level difference is 0 then the memorization time is 8 seconds
+        /// and that it gets better as the difference increases.
+        /// https://forums.daybreakgames.com/eq/index.php?threads/its-time-to-consolidate-spell-memorization-with-spell-refresh.284000/
+        /// </summary>
+        /// <param name="spellLevel"></param>
+        /// <param name="casterLevel"></param>
+        /// <returns></returns>
+        private TimeSpan GetMemorizeTimeout(uint spellLevel, uint casterLevel)
+        {
+            if (casterLevel < spellLevel)
+            {
+                return TimeSpan.FromSeconds(8);
+            }
+
+            var difference = casterLevel - spellLevel;
+            var seconds = 8d - difference / 2d;
+
+            if (seconds < 1d)
+            {
+                seconds = 1d;
+            }
+
+            return TimeSpan.FromSeconds(seconds);
         }
 
         protected virtual void Dispose(bool disposing)

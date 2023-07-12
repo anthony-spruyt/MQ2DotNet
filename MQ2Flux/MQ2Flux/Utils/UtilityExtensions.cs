@@ -8,7 +8,7 @@ namespace MQ2Flux
 {
     public static class UtilityExtensions
     {
-        private static JsonSerializerOptions options = new JsonSerializerOptions()
+        private static readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions()
         {
             WriteIndented = true,
             MaxDepth = 64,
@@ -17,7 +17,7 @@ namespace MQ2Flux
 
         public static string Serialize(this object @this)
         {
-            return JsonSerializer.Serialize(@this, options: options);
+            return JsonSerializer.Serialize(@this, options: jsonOptions);
         }
 
         public static void LogDebugJson(this ILogger logger, object @object)
