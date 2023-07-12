@@ -704,7 +704,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// In combat?
         /// </summary>
-        public bool Combat => GetMember<BoolType>("Combat");
+        public bool AutoMeleeAttack => GetMember<BoolType>("Combat");
 
         /// <summary>
         /// Hit point regeneration from last tick
@@ -1484,7 +1484,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Is Autofire on?
         /// </summary>
-        public bool AutoFire => GetMember<BoolType>("AutoFire");
+        public bool AutoRangeAttack => GetMember<BoolType>("AutoFire");
 
         /// <summary>
         /// Language name by number, or number by name.

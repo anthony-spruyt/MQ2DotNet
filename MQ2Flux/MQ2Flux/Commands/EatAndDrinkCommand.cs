@@ -5,7 +5,7 @@ using MQ2Flux.Services;
 
 namespace MQ2Flux.Commands
 {
-    public class EatAndDrinkCommand : ICharacterConfigRequest, IRequest<bool>
+    public class EatAndDrinkCommand : ICharacterConfigRequest, INotWhenCastingRequest, IRequest<bool>
     {
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }

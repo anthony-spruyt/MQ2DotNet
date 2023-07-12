@@ -5,7 +5,7 @@ using MQ2Flux.Services;
 
 namespace MQ2Flux.Commands
 {
-    public class SortInventoryCommand : ICharacterConfigRequest, IRequest<bool>
+    public class SortInventoryCommand : ICharacterConfigRequest, INotWhenCastingRequest, IRequest<bool>
     {
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }

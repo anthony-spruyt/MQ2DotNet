@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MQ2DotNet.EQ;
 using MQ2DotNet.MQ2API.DataTypes;
 using MQ2Flux.Commands;
 using MQ2Flux.Extensions;
@@ -23,23 +22,11 @@ namespace MQ2Flux.Handlers
 
         public async Task<bool> Handle(DispenseCommand request, CancellationToken cancellationToken)
         {
-            var me = request.Context.TLO.Me;
-
-            if
-            (
-                me.Moving || 
-                me.AmICasting() || 
-                me.CombatState == CombatState.Combat
-            )
-            {
-                return false;
-            }
-
             var dispensers = request.Character.Dispensers;
 
             AddDefaultDispensers(dispensers);
 
-            if (await DispenseAsync(dispensers, me, cancellationToken))
+            if (await DispenseAsync(dispensers, request.Context.TLO.Me, cancellationToken))
             {
                 await itemService.AutoInventoryAsync(cursor => cursor != null && dispensers.Any(i => (i.SummonID.HasValue && i.SummonID.Value == cursor.ID) || string.Compare(i.SummonName, cursor.Name) == 0), cancellationToken);
 

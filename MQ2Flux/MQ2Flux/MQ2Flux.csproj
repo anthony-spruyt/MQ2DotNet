@@ -72,8 +72,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\BehaviorExtensions.cs" />
+    <Compile Include="Behaviors\CasterBehavior.cs" />
     <Compile Include="Behaviors\CharacterConfigBehavior.cs" />
+    <Compile Include="Behaviors\HybridBehavior.cs" />
+    <Compile Include="Behaviors\InCombatBehavior.cs" />
+    <Compile Include="Behaviors\InterruptCastingBehavior.cs" />
+    <Compile Include="Behaviors\MeleeBehavior.cs" />
     <Compile Include="Behaviors\Mq2ContextBehavior.cs" />
+    <Compile Include="Behaviors\NotInCombatBehavior.cs" />
+    <Compile Include="Behaviors\NotWhenCastingBehavior.cs" />
+    <Compile Include="Behaviors\StandingStillBehavior.cs" />
     <Compile Include="Commands\DismissAlertWindowCommand.cs" />
     <Compile Include="Commands\DispenseCommand.cs" />
     <Compile Include="Commands\EatAndDrinkCommand.cs" />

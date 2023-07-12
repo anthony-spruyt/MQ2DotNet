@@ -30,9 +30,8 @@ namespace MQ2Flux.Handlers
                     originalState == SpawnState.Sit ||
                     originalState == SpawnState.Stand
                 ) &&
-                me.Combat || 
-                me.AutoFire || 
-                me.AmICasting() ||
+                me.AutoMeleeAttack ||
+                me.AutoRangeAttack ||
                 (
                     me.Spawn.Class.CanCast &&
                     request.Context.TLO.IsSpellBookOpen()

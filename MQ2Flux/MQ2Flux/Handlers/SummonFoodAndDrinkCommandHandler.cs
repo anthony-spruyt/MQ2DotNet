@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MQ2DotNet.EQ;
 using MQ2DotNet.MQ2API.DataTypes;
 using MQ2Flux.Commands;
 using MQ2Flux.Extensions;
@@ -41,18 +40,6 @@ namespace MQ2Flux.Handlers
         public async Task<bool> Handle(SummonFoodAndDrinkCommand request, CancellationToken cancellationToken)
         {
             var me = request.Context.TLO.Me;
-
-            if
-            (
-                !me.Spawn.Class.CanCast || 
-                me.CombatState == CombatState.Combat || 
-                me.Moving ||
-                me.AmICasting()
-            )
-            {
-                return false;
-            }
-
             var allMyInv = me.Inventory.Flatten();
             var actualFoodCount = allMyInv
                 .Where(i => i.NoRent && i.IsEdible())
