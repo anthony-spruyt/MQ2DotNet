@@ -3,6 +3,7 @@ using MQ2DotNet.EQ;
 using MQ2Flux.Commands;
 using MQ2Flux.Extensions;
 using MQ2Flux.Services;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -51,7 +52,16 @@ namespace MQ2Flux.Handlers
 
             if (await abilityService.DoAbilityAsync("Forage", "You have scrounged", "You fail to locate", cancellationToken))
             {
-                await itemService.AutoInventoryAsync(null, cancellationToken);
+                var foragedItemName = request.Context.TLO.Cursor.Name;
+
+                if (request.Character.ForageBlacklist.Contains(foragedItemName))
+                {
+                    await itemService.DestroyAsync(foragedItemName);
+                }
+                else
+                {
+                    await itemService.AutoInventoryAsync(null, cancellationToken);
+                }
             }
 
             if (originalState == SpawnState.Sit)

@@ -1,15 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MQ2Flux.Services
 {
     public interface IMQ2ChatHistory
     {
-        ChatLogItem[] Chat { get; }
-        ChatLogItem[] EQChat { get; }
-        ChatLogItem[] MQ2Chat { get; }
+        IEnumerable<ChatLogItem> Chat { get; }
+        IEnumerable<ChatLogItem> EQChat { get; }
+        IEnumerable<ChatLogItem> MQ2Chat { get; }
         bool NoSpam(TimeSpan last, string text);
     }
 
@@ -30,7 +31,7 @@ namespace MQ2Flux.Services
 
     public class MQ2ChatHistory : IMQ2ChatHistory, IDisposable
     {
-        public static readonly int MAX_HISTORY_SIZE = 200;
+        public static readonly int MAX_HISTORY_SIZE = 5000;
 
         private readonly ConcurrentQueue<ChatLogItem> chat;
         private readonly ConcurrentQueue<ChatLogItem> eqChat;
@@ -39,11 +40,11 @@ namespace MQ2Flux.Services
 
         private bool disposedValue;
 
-        public ChatLogItem[] Chat => chat.OrderByDescending(i => i.Timestamp).ToArray();
+        public IEnumerable<ChatLogItem> Chat => chat.OrderByDescending(i => i.Timestamp);
 
-        public ChatLogItem[] EQChat => eqChat.OrderByDescending(i => i.Timestamp).ToArray();
+        public IEnumerable<ChatLogItem> EQChat => eqChat.OrderByDescending(i => i.Timestamp);
 
-        public ChatLogItem[] MQ2Chat => mq2Chat.OrderByDescending(i => i.Timestamp).ToArray();
+        public IEnumerable<ChatLogItem> MQ2Chat => mq2Chat.OrderByDescending(i => i.Timestamp);
 
         public MQ2ChatHistory(IMQ2Context context)
         {

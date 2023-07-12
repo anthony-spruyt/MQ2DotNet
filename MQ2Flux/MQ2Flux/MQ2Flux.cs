@@ -197,6 +197,7 @@ namespace MQ2Flux
                         config.AddFluxBehaviors();
                     }
                 )
+                .AddMemoryCache()
                 .AddMQ2Context(mq2, chat, commands, events, spawns, tlo)
                 .AddEventService()
                 .AddMQ2ChatHistory()

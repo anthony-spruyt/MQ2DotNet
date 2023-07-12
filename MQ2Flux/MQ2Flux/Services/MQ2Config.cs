@@ -122,19 +122,20 @@ namespace MQ2Flux.Services
                 {
                     string json = File.ReadAllText(path);
 
-                    FluxConfig = JsonSerializer.Deserialize<FluxConfig>(json);
+                    if (string.IsNullOrWhiteSpace(json))
+                    {
+                        SaveDefaultConfig();
+                    }
+                    else
+                    {
+                        FluxConfig = JsonSerializer.Deserialize<FluxConfig>(json);
 
-                    Log("Configuration loaded from disk");
+                        Log("Configuration loaded from disk");
+                    }
                 }
                 else
                 {
-                    FluxConfig = new FluxConfig();
-
-                    string json = JsonSerializer.Serialize(FluxConfig);
-
-                    File.WriteAllText(path, json);
-
-                    Log("Default config created and saved to disk");
+                    SaveDefaultConfig();
                 }
             }
             catch (Exception ex)
@@ -142,6 +143,17 @@ namespace MQ2Flux.Services
                 FluxConfig = new FluxConfig();
 
                 Log(ex, "Failed to load config, reverted to default configuration");
+            }
+
+            void SaveDefaultConfig()
+            {
+                FluxConfig = new FluxConfig();
+
+                string json = JsonSerializer.Serialize(FluxConfig);
+
+                File.WriteAllText(path, json);
+
+                Log("Default config created and saved to disk");
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MQ2DotNet.MQ2API.DataTypes;
-using MQ2DotNet.Utility;
 using MQ2Flux.Extensions;
 using System;
 using System.Collections.Concurrent;
@@ -13,6 +12,12 @@ namespace MQ2Flux.Services
     public interface IItemService
     {
         Task AutoInventoryAsync(Predicate<ItemType> predicate = null, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Destroy the current item on the cursor if it matches the provided name.
+        /// </summary>
+        /// <param name="itemName">To ensure you dont delete something unintended on the cursor the item name is required.</param>
+        /// <returns></returns>
+        Task DestroyAsync(string itemName);
         Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default);
     }
 
@@ -67,13 +72,35 @@ namespace MQ2Flux.Services
             }
         }
 
+        /// <inheritdoc />
+        public Task DestroyAsync(string itemName)
+        {
+            if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
+            {
+                context.MQ2.DoCommand("/destroy");
+            }
+
+            return Task.CompletedTask;
+        }
+
         public async Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default)
         {
             await semaphore.WaitAsync(cancellationToken);
 
             try
             {
-                if (!IsValid(item))
+                var me = context.TLO.Me;
+
+                if
+                (
+                    !item.CanUse ||
+                    !item.IsTimerReady() ||
+                    me.AmICasting() ||
+                    (
+                        item.HasCastTime() &&
+                        me.Moving
+                    )
+                )
                 {
                     return false;
                 }
@@ -97,7 +124,7 @@ namespace MQ2Flux.Services
                 }
 
                 var castTime = item.Clicky.CastTime.Value;
-                var timeout = castTime + TimeSpan.FromMilliseconds(500); // add some fat
+                var timeout = castTime + TimeSpan.FromMilliseconds(1000); // add some fat
                 var castOnYou = item.Clicky.Spell.CastOnYou;
                 var castOnAnother = item.Clicky.Spell.CastOnAnother;
                 var wasCastOnYou = false;
@@ -144,23 +171,6 @@ namespace MQ2Flux.Services
             finally
             {
                 semaphore.Release();
-            }
-
-            return true;
-        }
-
-        private bool IsValid(ItemType item)
-        {
-            if (!item.CanUse || !item.IsTimerReady())
-            {
-                return false;
-            }
-
-            var me = context.TLO.Me;
-
-            if (me.AmICasting() || (item.HasCastTime() && me.Moving))
-            {
-                return false;
             }
 
             return true;

@@ -47,7 +47,15 @@ namespace MQ2Flux.Services
             {
                 var me = context.TLO.Me;
 
-                if (!me.Spawn.Class.CanCast || me.AmICasting() || (me.Moving && spell.HasCastTime()))
+                if
+                (
+                    !me.Spawn.Class.CanCast || 
+                    me.AmICasting() || 
+                    (
+                        me.Moving && 
+                        spell.HasCastTime()
+                    )
+                )
                 {
                     return false;
                 }
@@ -68,27 +76,27 @@ namespace MQ2Flux.Services
                     {
                         return false;
                     }
-                }
 
-                DateTime waitForSpellReadyUntil = DateTime.UtcNow + TimeSpan.FromSeconds(5);
+                    DateTime waitForSpellReadyUntil = DateTime.UtcNow + TimeSpan.FromSeconds(5);
 
-                try
-                {
-                    while
-                    (
-                        waitForSpellReadyUntil >= DateTime.UtcNow &&
-                        !me.IsSpellReady(spellBookSpell.Name) &&
-                        !cancellationToken.IsCancellationRequested
-                    )
+                    try
                     {
-                        await MQ2Flux.Yield(cancellationToken);
+                        while
+                        (
+                            waitForSpellReadyUntil >= DateTime.UtcNow &&
+                            !me.IsSpellReady(spellBookSpell.Name) &&
+                            !cancellationToken.IsCancellationRequested
+                        )
+                        {
+                            await MQ2Flux.Yield(cancellationToken);
+                        }
+                    }
+                    catch (TimeoutException)
+                    {
+                        return false;
                     }
                 }
-                catch (TimeoutException)
-                {
-                    return false;
-                }
-
+                
                 if (!me.IsSpellReady(spellBookSpell.Name))
                 {
                     return false;
@@ -102,7 +110,7 @@ namespace MQ2Flux.Services
                 // TODO check for reagents.
 
                 var castTime = spellBookSpell.CastTime ?? TimeSpan.Zero;
-                var timeout = castTime + TimeSpan.FromMilliseconds(500); // add some fat
+                var timeout = castTime + TimeSpan.FromMilliseconds(1000); // add some fat
                 var castOnYou = spellBookSpell.CastOnYou;
                 var castOnAnother = spellBookSpell.CastOnAnother;
                 var wasCastOnYou = false;
