@@ -9,8 +9,16 @@ namespace MQ2Flux.Services
 {
     public interface ISpellCastingService
     {
-        Task<bool> CastAsync(SpellType spell, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Cast a spell. If it is not currently memorized it will be memorized in the last gem slot.
+        /// </summary>
+        /// <param name="spell"></param>
+        /// <param name="waitForSpellReady">If the spell is already memorized wait for it to be ready.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<bool> CastAsync(SpellType spell, bool waitForSpellReady = false, CancellationToken cancellationToken = default);
         Task<bool> MemorizeSpellAsync(uint slot, SpellType spell, CancellationToken cancellationToken = default);
+        Task<bool> WaitForSpellReadyAsync(SpellType spell, CancellationToken cancellationToken = default);
     }
 
     public static class SpellCastingServiceExtensions
@@ -38,7 +46,7 @@ namespace MQ2Flux.Services
             semaphore = new SemaphoreSlim(1);
         }
 
-        public async Task<bool> CastAsync(SpellType spell, CancellationToken cancellationToken = default)
+        public async Task<bool> CastAsync(SpellType spell, bool waitForSpellReady = false, CancellationToken cancellationToken = default)
         {
             // TODO add support for splash spell targets.
             await semaphore.WaitAsync(cancellationToken);
@@ -77,27 +85,20 @@ namespace MQ2Flux.Services
                         return false;
                     }
 
-                    DateTime waitForSpellReadyUntil = DateTime.UtcNow + TimeSpan.FromSeconds(5);
-
-                    try
-                    {
-                        while
-                        (
-                            waitForSpellReadyUntil >= DateTime.UtcNow &&
-                            !me.IsSpellReady(spellBookSpell.Name) &&
-                            !cancellationToken.IsCancellationRequested
-                        )
-                        {
-                            await MQ2Flux.Yield(cancellationToken);
-                        }
-                    }
-                    catch (TimeoutException)
+                    if (!await WaitForSpellReadyAsync(spellBookSpell, cancellationToken))
                     {
                         return false;
                     }
                 }
                 
-                if (!me.IsSpellReady(spellBookSpell.Name))
+                if (waitForSpellReady)
+                {
+                    if (!await WaitForSpellReadyAsync(spellBookSpell, cancellationToken))
+                    {
+                        return false;
+                    }
+                }
+                else if (!me.IsSpellReady(spellBookSpell.Name))
                 {
                     return false;
                 }
@@ -176,11 +177,35 @@ namespace MQ2Flux.Services
             }
         }
 
+        public async Task<bool> WaitForSpellReadyAsync(SpellType spell, CancellationToken cancellationToken = default)
+        {
+            var me = context.TLO.Me;
+            DateTime waitForSpellReadyUntil = DateTime.UtcNow + TimeSpan.FromSeconds(5);
+
+            try
+            {
+                while
+                (
+                    waitForSpellReadyUntil >= DateTime.UtcNow &&
+                    !me.IsSpellReady(spell.Name) &&
+                    !cancellationToken.IsCancellationRequested
+                )
+                {
+                    await MQ2Flux.Yield(cancellationToken);
+                }
+            }
+            catch (TimeoutException)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private async Task<bool> MemorizeSpellInternalAsync(uint slot, SpellType spell, CancellationToken cancellationToken = default)
         {
             var me = context.TLO.Me;
             var spellName = spell.Name;
-
 
             if (me.GetGem(spellName) == slot)
             {

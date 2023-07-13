@@ -52,7 +52,7 @@ namespace MQ2Flux.Handlers
 
             if (actualFoodCount < 10 && TryGetSummonSpell(me, summonFoodSpellNames, out var foodSpell))
             {
-                if (await spellCastingService.CastAsync(foodSpell, cancellationToken))
+                if (await spellCastingService.CastAsync(foodSpell, waitForSpellReady: true, cancellationToken))
                 {
                     await itemService.AutoInventoryAsync(cursor => cursor != null && cursor.NoRent, cancellationToken);
 
@@ -60,15 +60,13 @@ namespace MQ2Flux.Handlers
                 }
             }
 
-            // TODO: This ping pongs between the two instead of doing food first and then drinks...
-
             var actualDrinkCount = allMyInv
                 .Where(i => i.NoRent && i.IsDrinkable())
                 .Sum(i => i.StackCount);
 
             if (actualDrinkCount < 10 && TryGetSummonSpell(me, summonDrinkSpellNames, out var drinkSpell))
             {
-                if (await spellCastingService.CastAsync(drinkSpell, cancellationToken))
+                if (await spellCastingService.CastAsync(drinkSpell, waitForSpellReady: true, cancellationToken))
                 {
                     await itemService.AutoInventoryAsync(cursor => cursor != null && cursor.NoRent, cancellationToken);
 
