@@ -17,13 +17,22 @@ namespace MQ2DotNet.MQ2API.DataTypes
     [MQ2Type("character")]
     public class CharacterType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {
-        public const int NUM_INV_SLOTS = 35;
         public const int NUM_COMBAT_ABILITIES = 300;
         public const int AA_CHAR_MAX_REAL = 300;
         public const int NUM_SKILLS = 100;
         public const int NUM_BOOK_SLOTS = 1120;
         public const int MAX_BANDOLIER_ITEMS = 20;
         public const int MAX_LANGUAGES = 32;
+
+        public static int NUM_INV_SLOTS { get; private set; } = 0;
+        public static int FIRST_WORN_ITEM { get; private set; } = 0;
+        public static int LAST_WORN_ITEM { get; private set; } = 0;
+        public static int LAST_BONUS_BAG_SLOT { get; private set; } = 0;
+        public static int INV_SLOT_MAX { get; private set; } = 0;
+        public static int FIRST_BAG_SLOT { get; private set; } = 0;
+        public static int LAST_BAG_SLOT { get; private set; } = 0;
+        public static int NUM_BANK_SLOTS { get; private set; } = 0;
+        public static int NUM_SHARED_BANK_SLOTS { get; private set; } = 0;
 
         internal CharacterType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -69,6 +78,57 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _autoSkill = new IndexedMember<SkillType, int>(this, "AutoSkill");
             _bandolier = new IndexedMember<BandolierType, string, BandolierType, int>(this, "Bandolier");
             _abilityTimer = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "AbilityTimer");
+
+            if (NUM_INV_SLOTS == 0)
+            {
+                NUM_INV_SLOTS = ((ExpansionFlags | Expansion.TOL) == Expansion.TOL) ?
+                    (int)InvSlot2.InvSlot_NumInvSlots :
+                    (int)InvSlot.InvSlot_NumInvSlots;
+            }
+            if (FIRST_WORN_ITEM == 0)
+            {
+                FIRST_WORN_ITEM = ((ExpansionFlags | Expansion.TOL) == Expansion.TOL) ?
+                    (int)InvSlot2.InvSlot_FirstWornItem :
+                    (int)InvSlot.InvSlot_FirstWornItem;
+            }
+            if (LAST_WORN_ITEM == 0)
+            {
+                LAST_WORN_ITEM = ((ExpansionFlags | Expansion.TOL) == Expansion.TOL) ?
+                    (int)InvSlot2.InvSlot_LastWornItem :
+                    (int)InvSlot.InvSlot_LastWornItem;
+            }
+            if (LAST_BONUS_BAG_SLOT == 0)
+            {
+                LAST_BONUS_BAG_SLOT = ((ExpansionFlags | Expansion.TOL) == Expansion.TOL) ?
+                    (int)InvSlot2.InvSlot_LastBonusBagSlot :
+                    (int)InvSlot.InvSlot_LastBonusBagSlot;
+            }
+            if (INV_SLOT_MAX == 0)
+            {
+                INV_SLOT_MAX = ((ExpansionFlags | Expansion.TOL) == Expansion.TOL) ?
+                    (int)InvSlot2.InvSlot_Max :
+                    (int)InvSlot.InvSlot_Max;
+            }
+            if (FIRST_BAG_SLOT == 0)
+            {
+                FIRST_BAG_SLOT = ((ExpansionFlags | Expansion.TOL) == Expansion.TOL) ?
+                    (int)InvSlot2.InvSlot_FirstBagSlot :
+                    (int)InvSlot.InvSlot_FirstBagSlot;
+            }
+            if (LAST_BAG_SLOT == 0)
+            {
+                LAST_BAG_SLOT = ((ExpansionFlags | Expansion.TOL) == Expansion.TOL) ?
+                    (int)InvSlot2.InvSlot_LastBagSlot :
+                    (int)InvSlot.InvSlot_LastBagSlot;
+            }
+            if (NUM_BANK_SLOTS == 0)
+            {
+                NUM_BANK_SLOTS = ((ExpansionFlags | Expansion.POR) == Expansion.POR) ? 24 : 16;
+            }
+            if (NUM_SHARED_BANK_SLOTS == 0)
+            {
+                NUM_SHARED_BANK_SLOTS = ((ExpansionFlags | Expansion.TBL) == Expansion.TBL) ? 6 : ((ExpansionFlags | Expansion.COTF) == Expansion.COTF) ? 4 : 2;
+            }
         }
 
         /// <summary>
@@ -516,18 +576,19 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// An item from your inventory by slot name or number
-        /// https://docs.macroquest.org/reference/general/slot-names/. 
-        /// NOTE SLOT NAMES SEEMS DATED. Source shows 35 - doco shows 32
+        /// https://docs.macroquest.org/reference/general/slot-names/.
+        /// Refer to <see cref="InvSlot"/> and <seealso cref="InvSlot2"/> based on <see cref="Expansion"/> level.
         /// </summary>
         private readonly IndexedMember<ItemType, string, ItemType, int> _inventory;
 
         /// <summary>
         /// Item in this slot #
         /// Inventory[ # ]
+        /// Refer to <see cref="InvSlot"/> and <seealso cref="InvSlot2"/> based on <see cref="Expansion"/> level.
         /// </summary>
         /// <param name="slotNumber"></param>
         /// <returns></returns>
-        public ItemType GetInvetoryItem(int slotNumber) => _inventory[slotNumber];
+        public ItemType GetInventoryItem(int slotNumber) => _inventory[slotNumber];
 
         /// <summary>
         /// Item in this slotname (inventory slots only).
@@ -535,10 +596,10 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="slotName">See slot names - https://docs.macroquest.org/reference/general/slot-names/</param>
         /// <returns></returns>
-        public ItemType GetInvetoryItem(string slotName) => _inventory[slotName];
+        public ItemType GetInventoryItem(string slotName) => _inventory[slotName];
 
         /// <summary>
-        /// All equipment and top level inventory. Does not flatten content of containers.
+        /// All equipment and top level bags. Does not flatten content of containers.
         /// </summary>
         public IEnumerable<ItemType> Inventory
         {
@@ -546,7 +607,45 @@ namespace MQ2DotNet.MQ2API.DataTypes
             {
                 for (int i = 0; i < NUM_INV_SLOTS; i++)
                 {
-                    var item = GetInvetoryItem(i);
+                    var item = GetInventoryItem(i);
+
+                    if (item.ID.HasValue)
+                    {
+                        yield return item;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// All equipment. Does not flatten content of containers.
+        /// </summary>
+        public IEnumerable<ItemType> Equipment
+        {
+            get
+            {
+                for (int i = FIRST_WORN_ITEM; i <= LAST_WORN_ITEM; i++)
+                {
+                    var item = GetInventoryItem(i);
+
+                    if (item.ID.HasValue)
+                    {
+                        yield return item;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// All bags. Does not flatten content of containers.
+        /// </summary>
+        public IEnumerable<ItemType> Bags
+        {
+            get
+            {
+                for (int i = FIRST_BAG_SLOT; i <= LAST_BAG_SLOT; i++)
+                {
+                    var item = GetInventoryItem(i);
 
                     if (item.ID.HasValue)
                     {
@@ -579,9 +678,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var bankSlots = HaveExpansion("Prophecy of Ro") ? 24 : 16;
-
-                for (int i = 0; i < bankSlots; i++)
+                for (int i = 0; i < NUM_BANK_SLOTS; i++)
                 {
                     yield return GetBankItem(i + 1);
                 }
@@ -607,9 +704,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var sharedBankSlots = HaveExpansion("The Burning Lands") ? 6 : HaveExpansion("Call of the Forsaken") ? 4 : 2;
-
-                for (int i = 0; i < sharedBankSlots; i++)
+                for (int i = 0; i < NUM_SHARED_BANK_SLOTS; i++)
                 {
                     yield return GetSharedBankItem(i + 1);
                 }
@@ -2423,7 +2518,7 @@ enum ALTCURRENCY
         /// <summary>
         /// Bit mask of expansions owned
         /// </summary>
-        public uint? ExpansionFlags => GetMember<IntType>("ExpansionFlags");
+        public Expansion ExpansionFlags => GetMember<IntType>("ExpansionFlags");
 
         /// <summary>
         /// Bind location, valid indexes are 0 - 4

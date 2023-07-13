@@ -133,7 +133,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="typeVar"></param>
         public static implicit operator RaidLootType?(IntType typeVar)
         {
-            return (EQ.RaidLootType?)typeVar?.VarPtr.Dword;
+            return (RaidLootType?)typeVar?.VarPtr.Dword;
         }
 
         /// <summary>
@@ -145,6 +145,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
             // SkillType::ReuseTime
             // ItemSpellType::CastTime
             return typeVar == null ? TimeSpan.Zero : TimeSpan.FromMilliseconds(typeVar.VarPtr.Dword);
+        }
+
+        /// <summary>
+        /// Implicit conversion to an Expansion bitmask.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        public static implicit operator Expansion(IntType typeVar)
+        {
+            return (Expansion)((int?)typeVar?.VarPtr.Dword ?? 0);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// This is the type used for spell information.
-    /// Last Verified: 2023-07-03
+    /// Last Verified: 2023-07-13
     /// https://docs.macroquest.org/reference/data-types/datatype-spell/
     /// </summary>
     [PublicAPI]
@@ -710,6 +710,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <returns></returns>
         public string GetLink() => _link[""];
+
+        public int? MinCasterLevel => GetMember<IntType>("MinCasterLevel");
 
         /// <summary>
         /// Same as <see cref="Name"/>
