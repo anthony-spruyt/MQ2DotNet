@@ -39,6 +39,11 @@ namespace MQ2Flux.Handlers
 
         public async Task<bool> Handle(SummonFoodAndDrinkCommand request, CancellationToken cancellationToken)
         {
+            if (!request.Character.AutoSummonFoodAndDrink.GetValueOrDefault(false))
+            {
+                return false;
+            }
+
             var me = request.Context.TLO.Me;
             var allMyInv = me.Inventory.Flatten();
             var actualFoodCount = allMyInv
@@ -54,6 +59,8 @@ namespace MQ2Flux.Handlers
                     return true;
                 }
             }
+
+            // TODO: This ping pongs between the two instead of doing food first and then drinks...
 
             var actualDrinkCount = allMyInv
                 .Where(i => i.NoRent && i.IsDrinkable())

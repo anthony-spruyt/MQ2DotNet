@@ -6,6 +6,11 @@ namespace MQ2Flux.Extensions
 
     public static class CharacterTypeExtensions
     {
+        public static AbilityInfo GetAbilityInfo(this CharacterType @this, string name)
+        {
+            return new AbilityInfo(name, @this);
+        }
+
         public static bool AmICasting(this CharacterType @this)
         {
             return @this.CastTimeLeft.HasValue && @this.CastTimeLeft.Value > TimeSpan.Zero;

@@ -22,6 +22,11 @@ namespace MQ2Flux.Handlers
 
         public async Task<bool> Handle(DispenseCommand request, CancellationToken cancellationToken)
         {
+            if (!request.Character.AutoDispenseFoodAndDrink.GetValueOrDefault(false))
+            {
+                return false;
+            }
+
             var dispensers = request.Character.Dispensers;
 
             AddDefaultDispensers(dispensers);

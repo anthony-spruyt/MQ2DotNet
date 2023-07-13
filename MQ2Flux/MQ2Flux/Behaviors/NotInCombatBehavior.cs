@@ -16,10 +16,7 @@ namespace MQ2Flux.Behaviors
             if (request is INotInCombatRequest notInCombatRequest &&
                 notInCombatRequest.Context.TLO.Me.CombatState == MQ2DotNet.EQ.CombatState.Combat)
             {
-                // Short circuit.
-                var response = Task.FromResult(default(TResponse));
-
-                return response;
+                return Task.FromResult(default(TResponse));
             }
 
             return next();

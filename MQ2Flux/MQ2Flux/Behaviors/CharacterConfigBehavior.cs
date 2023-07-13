@@ -12,7 +12,7 @@ namespace MQ2Flux.Behaviors
     public interface ICharacterConfigRequest : IConfigRequest, IMQ2ContextRequest
     {
         /// <summary>
-        /// The effective character configuration.
+        /// The effective character configuration that is set by the middleware. Do not set this when creating a new request.
         /// </summary>
         CharacterConfig Character { get; set; }
     }

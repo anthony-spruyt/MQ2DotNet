@@ -15,7 +15,10 @@ namespace MQ2Flux.Behaviors
                 .AddOpenBehavior(typeof(StandingStillBehavior<,>))
                 .AddOpenBehavior(typeof(CasterBehavior<,>))
                 .AddOpenBehavior(typeof(NotWhenCastingBehavior<,>))
-                .AddOpenBehavior(typeof(InterruptCastingBehavior<,>));
+                .AddOpenBehavior(typeof(InterruptCastingBehavior<,>))
+                .AddOpenBehavior(typeof(NotWhenAutoAttackingBehavior<,>))
+                .AddOpenBehavior(typeof(AbilityBehavior<,>))
+                .AddOpenBehavior(typeof(NotWhenSpellbookIsOpenBehavior<,>));
         }
     }
 }

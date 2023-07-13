@@ -19,6 +19,11 @@ namespace MQ2Flux.Handlers
 
         public Task Handle(LearnALanguageCommand request, CancellationToken cancellationToken)
         {
+            if (!request.Character.AutoLearnLanguages.GetValueOrDefault(false))
+            {
+                return Task.CompletedTask;
+            }
+
             var me = request.Context.TLO.Me;
 
             if (!me.Grouped)

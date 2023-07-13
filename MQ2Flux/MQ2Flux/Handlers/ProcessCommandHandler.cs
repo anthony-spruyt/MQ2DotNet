@@ -18,56 +18,12 @@ namespace MQ2Flux.Handlers
         {
             // TODO am I camping query and return if true.
             await mediator.Send(new DismissAlertWindowCommand(), cancellationToken);
-
-            if (request.Character.AutoLearnLanguages.GetValueOrDefault(false))
-            {
-                await mediator.Send(new LearnALanguageCommand(), cancellationToken);
-            }
-
-            if
-            (
-                request.Character.AutoDispenseFoodAndDrink.GetValueOrDefault(false) &&
-                await mediator.Send(new DispenseCommand(), cancellationToken)
-            )
-            {
-                return;
-            }
-
-            if
-            (
-                request.Character.AutoSummonFoodAndDrink.GetValueOrDefault(false) &&
-                await mediator.Send(new SummonFoodAndDrinkCommand(), cancellationToken)
-            )
-            {
-                return;
-            }
-
-            if
-            (
-                request.Character.AutoForage.GetValueOrDefault(false) && 
-                await mediator.Send(new ForageCommand(), cancellationToken)
-            )
-            {
-                return;
-            }
-
-            if
-            (
-                request.Character.AutoEatAndDrink.GetValueOrDefault(false) && 
-                await mediator.Send(new EatAndDrinkCommand(), cancellationToken)
-            )
-            {
-                return;
-            }
-
-            if
-            (
-                request.Character.AutoSortInventory.GetValueOrDefault(false) &&
-                await mediator.Send(new SortInventoryCommand(), cancellationToken)
-            )
-            {
-                return;
-            }
+            await mediator.Send(new LearnALanguageCommand(), cancellationToken);
+            if (await mediator.Send(new ForageCommand(), cancellationToken)) return;
+            if (await mediator.Send(new DispenseCommand(), cancellationToken)) return;
+            if (await mediator.Send(new SummonFoodAndDrinkCommand(), cancellationToken)) return;
+            if (await mediator.Send(new EatAndDrinkCommand(), cancellationToken)) return;
+            if (await mediator.Send(new SortInventoryCommand(), cancellationToken)) return;
         }
     }
 }

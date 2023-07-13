@@ -16,10 +16,7 @@ namespace MQ2Flux.Behaviors
             if (request is ICasterRequest casterRequest &&
                 !casterRequest.Context.TLO.Me.Spawn.Class.CanCast)
             {
-                // Short circuit.
-                var response = Task.FromResult(default(TResponse));
-
-                return response;
+                return Task.FromResult(default(TResponse));
             }
 
             return next();

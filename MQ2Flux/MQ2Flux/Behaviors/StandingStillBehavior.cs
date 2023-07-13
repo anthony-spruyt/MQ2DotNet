@@ -16,10 +16,7 @@ namespace MQ2Flux.Behaviors
             if (request is IStandingStillRequest standingStillRequest &&
                 standingStillRequest.Context.TLO.Me.Moving)
             {
-                // Short circuit.
-                var response = Task.FromResult(default(TResponse));
-
-                return response;
+                return Task.FromResult(default(TResponse));
             }
 
             return next();

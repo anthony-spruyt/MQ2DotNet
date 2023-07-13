@@ -2721,16 +2721,94 @@ enum ALTCURRENCY
         /// <param name="me"></param>
         public AbilityInfo(int index, CharacterType me) : base(index, me)
         {
-            if (Level > 0 && Skill != null && Skill.Activated && Skill.ID.HasValue)
+            if (Level > 0 && Skill != null && Skill.Activated)
             {
-                var id = (int)Skill.ID.Value;
-
-                Ready = me.GetAbilityReady(id);
-                Timer = me.GetAbilityTimer(id);
+                Ready = me.GetAbilityReady(Index - 1);
+                Timer = me.GetAbilityTimer(Index - 1);
             }
             else
             {
                 Ready = false;
+            }
+        }
+
+        public AbilityInfo(string name, CharacterType me) : base(name, me)
+        {
+            if (Level > 0 && Skill != null && Skill.Activated)
+            {
+                Ready = me.GetAbilityReady(Index - 1);
+                Timer = me.GetAbilityTimer(Index - 1);
+            }
+            else
+            {
+                Ready = false;
+            }
+        }
+    }
+
+    public class SkillInfo
+    {
+        public uint? Base { get; set; }
+        public uint? Cap { get; set; }
+        /// <summary>
+        /// The base 1 index.
+        /// </summary>
+        public int Index { get; set; }
+        public uint? Level { get; set; }
+        public SkillType Skill { get; set; }
+
+        /// <summary>
+        /// Constructs a new instance of <see cref="SkillInfo"/>.
+        /// </summary>
+        /// <param name="index">The base 1 index.</param>
+        /// <param name="me"></param>
+        public SkillInfo(int index, CharacterType me)
+        {
+            Index = index;
+            Level = me.GetSkillLevel(index);
+
+            if (Level > 0)
+            {
+                Skill = TLO.Instance.GetSkill(index);
+                Base = me.GetSkillBase(index);
+                Cap = me.GetSkillCap(index);
+            }
+            else
+            {
+                Base = null;
+                Cap = null;
+                Skill = null;
+            }
+        }
+
+        public SkillInfo(string name, CharacterType me)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
+            }
+
+            var skill = TLO.Instance.GetSkill(name);
+
+            if (skill == null)
+            {
+                throw new ArgumentException("Not a valid skill name", nameof(name));
+            }
+
+            Index = (int)skill.ID.Value + 1;
+            Level = me.GetSkillLevel(Index);
+
+            if (Level > 0)
+            {
+                Skill = skill;
+                Base = me.GetSkillBase(Index);
+                Cap = me.GetSkillCap(Index);
+            }
+            else
+            {
+                Base = null;
+                Cap = null;
+                Skill = null;
             }
         }
     }
@@ -2839,42 +2917,6 @@ enum ALTCURRENCY
             Ready = me.IsSpellReady(gemSlot);
             Slot = gemSlot;
             Timer = me.GetGemTimer(gemSlot);
-        }
-    }
-
-    public class SkillInfo
-    {
-        public uint? Base { get; set; }
-        public uint? Cap { get; set; }
-        /// <summary>
-        /// The base 1 index.
-        /// </summary>
-        public int Index { get; set; }
-        public uint? Level { get; set; }
-        public SkillType Skill { get; set; }
-
-        /// <summary>
-        /// Constructs a new instance of <see cref="SkillInfo"/>.
-        /// </summary>
-        /// <param name="index">The base 1 index.</param>
-        /// <param name="me"></param>
-        public SkillInfo(int index, CharacterType me)
-        {
-            Index = index;
-            Level = me.GetSkillLevel(index);
-
-            if (Level > 0)
-            {
-                Skill = TLO.Instance.GetSkill(index);
-                Base = me.GetSkillBase(index);
-                Cap = me.GetSkillCap(index);
-            }
-            else
-            {
-                Base = null;
-                Cap = null;
-                Skill = null;
-            }
         }
     }
 }

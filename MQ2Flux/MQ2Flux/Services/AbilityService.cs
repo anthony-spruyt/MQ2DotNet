@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MQ2DotNet.MQ2API.DataTypes;
 using MQ2Flux.Extensions;
 using System;
 using System.Threading;
@@ -8,6 +9,7 @@ namespace MQ2Flux.Services
 {
     public interface IAbilityService
     {
+        Task<bool> DoAbilityAsync(AbilityInfo ability, string successText = null, string failureText = null, CancellationToken cancellationToken = default);
         Task<bool> DoAbilityAsync(string abilityName, string successText = null, string failureText = null, CancellationToken cancellationToken = default);
     }
 
@@ -36,19 +38,18 @@ namespace MQ2Flux.Services
             semaphore = new SemaphoreSlim(1);
         }
 
-        public async Task<bool> DoAbilityAsync(string abilityName, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
+        public async Task<bool> DoAbilityInternalAsync(AbilityInfo ability, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
         {
             await semaphore.WaitAsync(cancellationToken);
 
             try
             {
                 var me = context.TLO.Me;
-                var abilityID = (int?)me.GetAbilityID(abilityName) ?? 0;
 
                 if
                 (
-                    abilityID == 0 ||
-                    !me.GetAbilityReady(abilityID) ||
+                    ability == null ||
+                    !ability.Ready ||
                     me.AmICasting() ||
                     (
                         me.Spawn.Class.CanCast &&
@@ -59,9 +60,11 @@ namespace MQ2Flux.Services
                     return false;
                 }
 
+                var abilityName = ability.Skill.Name;
+
                 if (string.IsNullOrWhiteSpace(successText) && string.IsNullOrWhiteSpace(failureText))
                 {
-                    DoAbilityInternal(abilityName);
+                    DoAbility(abilityName);
 
                     return true;
                 }
@@ -88,7 +91,7 @@ namespace MQ2Flux.Services
 
                                 return true;
                             }
-                            
+
                             return false;
                         },
                         timeout,
@@ -96,7 +99,7 @@ namespace MQ2Flux.Services
                     )
                 );
 
-                DoAbilityInternal(abilityName);
+                DoAbility(abilityName);
 
                 await waitForEQTask;
 
@@ -112,7 +115,19 @@ namespace MQ2Flux.Services
             }
         }
 
-        private void DoAbilityInternal(string abilityName)
+        public async Task<bool> DoAbilityAsync(AbilityInfo ability, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
+        {
+            return await DoAbilityInternalAsync(ability, successText, failureText, cancellationToken);
+        }
+
+        public async Task<bool> DoAbilityAsync(string abilityName, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
+        {
+            var ability = context.TLO.Me.GetAbilityInfo(abilityName);
+
+            return await DoAbilityInternalAsync(ability, successText, failureText, cancellationToken);
+        }
+
+        private void DoAbility(string abilityName)
         {
             context.MQ2.DoCommand($"/doability {abilityName}");
 

@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Behaviors
 {
-    public interface INotWhenCastingRequest : IMQ2ContextRequest
+    public interface INotWhenAutoAttackingRequest : IMQ2ContextRequest
     {
 
     }
 
-    public class NotWhenCastingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class NotWhenAutoAttackingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            if (request is INotWhenCastingRequest notWhenCastingRequest &&
-                notWhenCastingRequest.Context.TLO.Me.AmICasting())
+            if (request is INotWhenAutoAttackingRequest notWhenAutoAttackingRequest &&
+                (notWhenAutoAttackingRequest.Context.TLO.Me.AutoMeleeAttack || notWhenAutoAttackingRequest.Context.TLO.Me.AutoRangeAttack))
             {
                 return Task.FromResult(default(TResponse));
             }

@@ -233,11 +233,11 @@ namespace MQ2Flux.Services
             }
 
             var difference = casterLevel - spellLevel;
-            var seconds = 8d - difference / 2d;
+            var seconds = 8d - difference / 5d;
 
-            if (seconds < 1d)
+            if (seconds < 2d)
             {
-                seconds = 1d;
+                seconds = 2d;
             }
 
             return TimeSpan.FromSeconds(seconds);

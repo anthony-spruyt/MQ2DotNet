@@ -25,6 +25,11 @@ namespace MQ2Flux.Handlers
 
         public async Task<bool> Handle(EatAndDrinkCommand request, CancellationToken cancellationToken)
         {
+            if (!request.Character.AutoEatAndDrink.GetValueOrDefault(false))
+            {
+                return false;
+            }
+
             var me = request.Context.TLO.Me;
             var amIHungry = me.AmIHungry();
             var amIThirsty = me.AmIThirsty();

@@ -41,7 +41,7 @@ namespace MQ2Flux.Extensions
                     {
                         if (item.ID.HasValue && item.ID > 0)
                         {
-                            items.Append(item);
+                            items.Add(item);
                         }
                     }
                 }

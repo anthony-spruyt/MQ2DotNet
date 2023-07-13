@@ -7,6 +7,9 @@ namespace MQ2Flux.Behaviors
 {
     public interface IMQ2ContextRequest
     {
+        /// <summary>
+        /// The context that is set by the middleware. Do not set this when creating a new request.
+        /// </summary>
         IMQ2Context Context { get; set; }
     }
 

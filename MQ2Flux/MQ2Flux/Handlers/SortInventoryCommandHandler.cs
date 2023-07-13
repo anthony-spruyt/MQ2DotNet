@@ -7,12 +7,19 @@ namespace MQ2Flux.Handlers
 {
     public class SortInventoryCommandHandler : IRequestHandler<SortInventoryCommand, bool>
     {
-        public Task<bool> Handle(SortInventoryCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(SortInventoryCommand request, CancellationToken cancellationToken)
         {
+            if (!request.Character.AutoSortInventory.GetValueOrDefault(false))
+            {
+                return false;
+            }
+
             //TODO
             // Get the most nutritious stat food and drink items.
             // If they arent in the first two slots then swap them out.
-            return Task.FromResult(false);
+            await Task.CompletedTask;
+
+            return false;
         }
     }
 }

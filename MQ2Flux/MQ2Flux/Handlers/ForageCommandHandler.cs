@@ -21,23 +21,21 @@ namespace MQ2Flux.Handlers
 
         public async Task<bool> Handle(ForageCommand request, CancellationToken cancellationToken)
         {
+            if (!request.Character.AutoForage.GetValueOrDefault(false))
+            {
+                return false;
+            }
+
             var me = request.Context.TLO.Me;
             var originalState = me.Spawn.State;
 
+            // TODO can you forage on a horse?
             if
             (
                 !(
                     originalState == SpawnState.Sit ||
                     originalState == SpawnState.Stand
-                ) &&
-                me.AutoMeleeAttack ||
-                me.AutoRangeAttack ||
-                (
-                    me.Spawn.Class.CanCast &&
-                    request.Context.TLO.IsSpellBookOpen()
-                ) ||
-                !(me.GetAbilityID("Forage") > 0) ||
-                !me.GetAbilityReady("Forage")
+                )
             )
             {
                 return false;
@@ -48,7 +46,7 @@ namespace MQ2Flux.Handlers
                 me.Stand();
             }
 
-            if (await abilityService.DoAbilityAsync("Forage", "You have scrounged", "You fail to locate", cancellationToken))
+            if (await abilityService.DoAbilityAsync(request.Ability, "You have scrounged", "You fail to locate", cancellationToken))
             {
                 var foragedItemName = request.Context.TLO.Cursor.Name;
 

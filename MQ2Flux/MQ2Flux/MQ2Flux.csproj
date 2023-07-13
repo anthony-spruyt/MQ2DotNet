@@ -71,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\AbilityBehavior.cs" />
     <Compile Include="Behaviors\BehaviorExtensions.cs" />
     <Compile Include="Behaviors\CasterBehavior.cs" />
     <Compile Include="Behaviors\CharacterConfigBehavior.cs" />
@@ -80,7 +81,9 @@
     <Compile Include="Behaviors\MeleeBehavior.cs" />
     <Compile Include="Behaviors\Mq2ContextBehavior.cs" />
     <Compile Include="Behaviors\NotInCombatBehavior.cs" />
+    <Compile Include="Behaviors\NotWhenAutoAttackingBehavior.cs" />
     <Compile Include="Behaviors\NotWhenCastingBehavior.cs" />
+    <Compile Include="Behaviors\NotWhenSpellbookIsOpenBehavior.cs" />
     <Compile Include="Behaviors\StandingStillBehavior.cs" />
     <Compile Include="Commands\DismissAlertWindowCommand.cs" />
     <Compile Include="Commands\DispenseCommand.cs" />

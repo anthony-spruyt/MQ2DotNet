@@ -8,6 +8,9 @@ namespace MQ2Flux.Behaviors
 {
     public interface IConfigRequest
     {
+        /// <summary>
+        /// The configuration that is set by the middleware. Do not set this when creating a new request.
+        /// </summary>
         FluxConfig Config { get; set; }
     }
 
