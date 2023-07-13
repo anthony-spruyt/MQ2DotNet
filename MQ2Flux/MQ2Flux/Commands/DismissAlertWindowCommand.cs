@@ -4,8 +4,8 @@ using MQ2Flux.Services;
 
 namespace MQ2Flux.Commands
 {
-    public class DismissAlertWindowCommand : IMQ2ContextRequest, IRequest
+    public class DismissAlertWindowCommand : IMQContextRequest, IRequest
     {
-        public IMQ2Context Context { get ; set; }
+        public IMQContext Context { get ; set; }
     }
 }

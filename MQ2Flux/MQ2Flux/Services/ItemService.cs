@@ -38,16 +38,16 @@ namespace MQ2Flux.Services
 
     public class ItemService : IItemService, IDisposable
     {
-        private readonly IMQ2Logger mq2Logger;
-        private readonly IMQ2Context context;
+        private readonly IMQLogger mqLogger;
+        private readonly IMQContext context;
         private readonly ConcurrentDictionary<string, DateTime> cachedCommands;
 
         private SemaphoreSlim semaphore;
         private bool disposedValue;
 
-        public ItemService(IMQ2Logger mq2Logger, IMQ2Context context)
+        public ItemService(IMQLogger mqLogger, IMQContext context)
         {
-            this.mq2Logger = mq2Logger;
+            this.mqLogger = mqLogger;
             this.context = context;
 
             cachedCommands = new ConcurrentDictionary<string, DateTime>();
@@ -60,7 +60,7 @@ namespace MQ2Flux.Services
 
             while (waitUntil >= DateTime.UtcNow && context.TLO.Cursor == null && !cancellationToken.IsCancellationRequested)
             {
-                await MQ2Flux.Yield(cancellationToken);
+                await MQFlux.Yield(cancellationToken);
             }
 
             if (cancellationToken.IsCancellationRequested || (predicate != null && !predicate(context.TLO.Cursor)))
@@ -68,13 +68,13 @@ namespace MQ2Flux.Services
                 return;
             }
 
-            mq2Logger.Log($"Putting [\ag{context.TLO.Cursor.Name}\aw] into your inventory", TimeSpan.Zero);
+            mqLogger.Log($"Putting [\ag{context.TLO.Cursor.Name}\aw] into your inventory", TimeSpan.Zero);
 
             while (context.TLO.Cursor != null && !cancellationToken.IsCancellationRequested)
             {
-                context.MQ2.DoCommand("/autoinv");
+                context.MQ.DoCommand("/autoinv");
 
-                await MQ2Flux.Yield(cancellationToken);
+                await MQFlux.Yield(cancellationToken);
             }
         }
 
@@ -83,7 +83,7 @@ namespace MQ2Flux.Services
         {
             if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
             {
-                context.MQ2.DoCommand("/destroy");
+                context.MQ.DoCommand("/destroy");
             }
 
             return Task.CompletedTask;
@@ -94,7 +94,7 @@ namespace MQ2Flux.Services
         {
             if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
             {
-                context.MQ2.DoCommand("/drop");
+                context.MQ.DoCommand("/drop");
             }
 
             return Task.CompletedTask;
@@ -133,9 +133,9 @@ namespace MQ2Flux.Services
 
                 if (!item.HasCastTime())
                 {
-                    context.MQ2.DoCommand(command);
+                    context.MQ.DoCommand(command);
 
-                    mq2Logger.Log($"{verb} [\ag{item.Name}\aw]", TimeSpan.Zero);
+                    mqLogger.Log($"{verb} [\ag{item.Name}\aw]", TimeSpan.Zero);
 
                     return true;
                 }
@@ -167,16 +167,16 @@ namespace MQ2Flux.Services
                     )
                 );
 
-                context.MQ2.DoCommand(command);
+                context.MQ.DoCommand(command);
 
-                mq2Logger.Log($"{verb} [\ag{item.Name}\aw] \austarted", TimeSpan.Zero);
+                mqLogger.Log($"{verb} [\ag{item.Name}\aw] \austarted", TimeSpan.Zero);
 
                 await waitForEQTask;
 
                 if (fizzled || interrupted)
                 {
                     var reason = fizzled ? "fizzled" : "was interrupted";
-                    mq2Logger.Log($"{verb} [\ay{item.Name}\aw] \ar{reason}", TimeSpan.Zero);
+                    mqLogger.Log($"{verb} [\ay{item.Name}\aw] \ar{reason}", TimeSpan.Zero);
 
                     return false;
                 }

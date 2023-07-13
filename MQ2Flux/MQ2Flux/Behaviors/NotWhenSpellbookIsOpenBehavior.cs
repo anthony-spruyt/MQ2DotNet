@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Behaviors
 {
-    public interface INotWhenSpellbookIsOpenRequest : IMQ2ContextRequest
+    public interface INotWhenSpellbookIsOpenRequest : IMQContextRequest
     {
     
     }

@@ -7,7 +7,7 @@ namespace MQ2Flux.Behaviors
         public static MediatRServiceConfiguration AddFluxBehaviors(this MediatRServiceConfiguration config)
         {
             return config
-                .AddOpenBehavior(typeof(MQ2ContextBehavior<,>))
+                .AddOpenBehavior(typeof(MQContextBehavior<,>))
                 .AddOpenBehavior(typeof(ConfigBehavior<,>))
                 .AddOpenBehavior(typeof(CharacterConfigBehavior<,>))
                 .AddOpenBehavior(typeof(InCombatBehavior<,>))

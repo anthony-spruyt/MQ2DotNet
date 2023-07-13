@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MQ2DotNet.EQ;
+using MQ2DotNet.MQ2API.DataTypes;
 using System;
 
 namespace MQ2Flux.Services
@@ -26,11 +27,11 @@ namespace MQ2Flux.Services
         public GameState GameState { get; private set; }
         public bool Zoning { get; private set; }
 
-        private readonly IMQ2Context context;
+        private readonly IMQContext context;
 
         private bool disposedValue;
 
-        public EventService(IMQ2Context context)
+        public EventService(IMQContext context)
         {
             this.context = context;
 
@@ -68,7 +69,7 @@ namespace MQ2Flux.Services
             Zoning = false;
         }
 
-        private void Events_OnAddGroundItem(object sender, MQ2DotNet.MQ2API.DataTypes.GroundType e)
+        private void Events_OnAddGroundItem(object sender, GroundType e)
         {
         }
 
@@ -111,7 +112,7 @@ namespace MQ2Flux.Services
         private void Events_OnReloadUI(object sender, EventArgs e)
         {
         }
-        private void Events_OnRemoveGroundItem(object sender, MQ2DotNet.MQ2API.DataTypes.GroundType e)
+        private void Events_OnRemoveGroundItem(object sender, GroundType e)
         {
         }
 

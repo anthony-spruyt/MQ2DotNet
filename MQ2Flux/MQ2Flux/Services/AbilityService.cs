@@ -24,16 +24,16 @@ namespace MQ2Flux.Services
 
     public class AbilityService : IAbilityService, IDisposable
     {
-        private IMQ2Context context;
-        private IMQ2Logger mq2Logger;
+        private IMQContext context;
+        private IMQLogger mqLogger;
 
         private SemaphoreSlim semaphore;
         private bool disposedValue;
 
-        public AbilityService(IMQ2Context context, IMQ2Logger mq2Logger)
+        public AbilityService(IMQContext context, IMQLogger mqLogger)
         {
             this.context = context;
-            this.mq2Logger = mq2Logger;
+            this.mqLogger = mqLogger;
 
             semaphore = new SemaphoreSlim(1);
         }
@@ -129,9 +129,9 @@ namespace MQ2Flux.Services
 
         private void DoAbility(string abilityName)
         {
-            context.MQ2.DoCommand($"/doability {abilityName}");
+            context.MQ.DoCommand($"/doability {abilityName}");
 
-            mq2Logger.Log($"Do ability [\ay{abilityName}\aw]", TimeSpan.Zero);
+            mqLogger.Log($"Do ability [\ay{abilityName}\aw]", TimeSpan.Zero);
         }
 
         protected virtual void Dispose(bool disposing)

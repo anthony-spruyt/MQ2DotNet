@@ -7,24 +7,24 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Services
 {
-    public interface IFluxMQ2AsyncCommand : IMQ2AsyncCommand
+    public interface IFluxMQAsyncCommand : IMQAsyncCommand
     {
 
     }
 
-    public class FluxMQ2AsyncCommand : IFluxMQ2AsyncCommand, IDisposable
+    public class FluxMQAsyncCommand : IFluxMQAsyncCommand, IDisposable
     {
         public string Command => "/flux";
 
         public CancellationToken CancellationToken => cancellationTokenSource.Token;
 
-        private readonly IMQ2Logger logger;
+        private readonly IMQLogger logger;
         private readonly IMediator mediator;
 
         private bool disposedValue;
         private CancellationTokenSource cancellationTokenSource;
 
-        public FluxMQ2AsyncCommand(IMQ2Logger logger, IMediator mediator)
+        public FluxMQAsyncCommand(IMQLogger logger, IMediator mediator)
         {
             this.logger = logger;
             this.mediator = mediator;

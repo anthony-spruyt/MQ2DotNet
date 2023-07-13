@@ -79,7 +79,7 @@
     <Compile Include="Behaviors\InCombatBehavior.cs" />
     <Compile Include="Behaviors\InterruptCastingBehavior.cs" />
     <Compile Include="Behaviors\MeleeBehavior.cs" />
-    <Compile Include="Behaviors\Mq2ContextBehavior.cs" />
+    <Compile Include="Behaviors\MQContextBehavior.cs" />
     <Compile Include="Behaviors\NotInCombatBehavior.cs" />
     <Compile Include="Behaviors\NotWhenAutoAttackingBehavior.cs" />
     <Compile Include="Behaviors\NotWhenCastingBehavior.cs" />
@@ -105,15 +105,15 @@
     <Compile Include="Handlers\FlushDataTypeErrorsCommandHandler.cs" />
     <Compile Include="Handlers\ForageCommandHandler.cs" />
     <Compile Include="Handlers\LearnALanguageCommandHandler.cs" />
-    <Compile Include="Handlers\LoadMQ2CommandsHandler.cs" />
+    <Compile Include="Handlers\LoadMQCommandsHandler.cs" />
     <Compile Include="Handlers\SaveConfigCommandHandler.cs" />
     <Compile Include="Handlers\SortInventoryCommandHandler.cs" />
     <Compile Include="Handlers\SummonFoodAndDrinkCommandHandler.cs" />
     <Compile Include="Handlers\TestCommandHandler.cs" />
-    <Compile Include="Handlers\UnloadMQ2CommandsHandler.cs" />
+    <Compile Include="Handlers\UnloadMQCommandsHandler.cs" />
     <Compile Include="Notifications\ConfigUpdateNotification.cs" />
     <Compile Include="Behaviors\ConfigBehavior.cs" />
-    <Compile Include="Commands\MQ2Commands.cs" />
+    <Compile Include="Commands\MQCommands.cs" />
     <Compile Include="Commands\SaveConfigCommand.cs" />
     <Compile Include="Commands\TestCommand.cs" />
     <Compile Include="Commands\ProcessCommand.cs" />
@@ -123,17 +123,17 @@
     <Compile Include="Services\AbilityService.cs" />
     <Compile Include="Services\MemoryCache.cs" />
     <Compile Include="Services\SpellCastingService.cs" />
-    <Compile Include="Services\FluxMQ2AsyncCommand.cs" />
+    <Compile Include="Services\FluxMQAsyncCommand.cs" />
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Services\ItemService.cs" />
-    <Compile Include="Services\MQ2ChatHistory.cs" />
-    <Compile Include="Services\MQ2CommandProvider.cs" />
-    <Compile Include="Services\MQ2Config.cs" />
-    <Compile Include="Services\MQ2Context.cs" />
-    <Compile Include="Services\IMQ2AsyncCommand.cs" />
-    <Compile Include="Services\IMQ2Command.cs" />
-    <Compile Include="Services\MQ2Logger.cs" />
-    <Compile Include="MQ2Flux.cs" />
+    <Compile Include="Services\ChatHistory.cs" />
+    <Compile Include="Services\MQCommandProvider.cs" />
+    <Compile Include="Services\MQFluxConfig.cs" />
+    <Compile Include="Services\MQContext.cs" />
+    <Compile Include="Services\IMQAsyncCommand.cs" />
+    <Compile Include="Services\IMQCommand.cs" />
+    <Compile Include="Services\MQLogger.cs" />
+    <Compile Include="MQFlux.cs" />
     <Compile Include="Utils\UtilityExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

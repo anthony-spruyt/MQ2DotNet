@@ -12,22 +12,22 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Services
 {
-    public interface IMQ2Config
+    public interface IMQFluxConfig
     {
         FluxConfig FluxConfig { get; }
 
         Task SaveAsync(bool notify = false);
     }
 
-    public static class MQ2ConfigExtensions
+    public static class MQFluxConfigExtensions
     {
-        public static IServiceCollection AddMQ2Config(this IServiceCollection services)
+        public static IServiceCollection AddMQFluxConfig(this IServiceCollection services)
         {
-            return services.AddSingleton<IMQ2Config, MQ2Config>();
+            return services.AddSingleton<IMQFluxConfig, MQFluxConfig>();
         }
     }
 
-    public class MQ2Config : IMQ2Config, IDisposable
+    public class MQFluxConfig : IMQFluxConfig, IDisposable
     {
         public FluxConfig FluxConfig { get; private set; }
 
@@ -37,25 +37,25 @@ namespace MQ2Flux.Services
             MaxDepth = 64,
             ReferenceHandler = ReferenceHandler.IgnoreCycles
         };
-        private const string CONFIG_FILE_NAME = "MQ2Flux.json";
-        private readonly IMQ2Context context;
-        private readonly IMQ2Logger mq2Logger;
+        private const string CONFIG_FILE_NAME = "MQFlux.json";
+        private readonly IMQContext context;
+        private readonly IMQLogger mqLogger;
         private readonly IMediator mediator;
-        private readonly ILogger<MQ2Config> logger;
+        private readonly ILogger<MQFluxConfig> logger;
         private readonly string path;
 
         private FileSystemWatcher watcher;
         private bool disposedValue;
         private SemaphoreSlim semaphore;
 
-        public MQ2Config(IMQ2Context context, IMQ2Logger mq2Logger, IMediator mediator, ILogger<MQ2Config> logger)
+        public MQFluxConfig(IMQContext context, IMQLogger mqLogger, IMediator mediator, ILogger<MQFluxConfig> logger)
         {
             this.context = context;
-            this.mq2Logger = mq2Logger;
+            this.mqLogger = mqLogger;
             this.mediator = mediator;
             this.logger = logger;
             semaphore = new SemaphoreSlim(0, 1);
-            path = Path.Combine(this.context.MQ2.ConfigPath, CONFIG_FILE_NAME);
+            path = Path.Combine(this.context.MQ.ConfigPath, CONFIG_FILE_NAME);
 
             Initialize();
         }
@@ -93,13 +93,13 @@ namespace MQ2Flux.Services
 
         private void Log(string text)
         {
-            mq2Logger.Log(text);
+            mqLogger.Log(text);
             logger.LogInformation(text);
         }
 
         private void Log(Exception ex, string message, params object[] args)
         {
-            mq2Logger.LogError(ex, message);
+            mqLogger.LogError(ex, message);
             logger.LogError(ex, message, args);
         }
 

@@ -12,17 +12,17 @@ namespace MQ2Flux.Handlers
     public class TestCommandHandler : IRequestHandler<TestCommand>
     {
         private readonly ILogger<TestCommandHandler> logger;
-        private readonly IMQ2Logger mQ2logger;
+        private readonly IMQLogger mqLogger;
 
-        public TestCommandHandler(ILogger<TestCommandHandler> logger, IMQ2Logger mQ2logger)
+        public TestCommandHandler(ILogger<TestCommandHandler> logger, IMQLogger mqLogger)
         {
             this.logger = logger;
-            this.mQ2logger = mQ2logger;
+            this.mqLogger = mqLogger;
         }
 
         public async Task Handle(TestCommand request, CancellationToken cancellationToken)
         {
-            mQ2logger.Log($"{nameof(TestCommandHandler)}");
+            mqLogger.Log($"{nameof(TestCommandHandler)}");
 
             try
             {
@@ -32,7 +32,7 @@ namespace MQ2Flux.Handlers
             }
             catch (Exception ex)
             {
-                mQ2logger.Log(ex.ToString());
+                mqLogger.Log(ex.ToString());
             }
 
             await Task.CompletedTask;

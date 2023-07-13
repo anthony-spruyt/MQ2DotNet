@@ -10,7 +10,7 @@ namespace MQ2Flux.Commands
     {
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
-        public IMQ2Context Context { get; set; }
+        public IMQContext Context { get; set; }
         public string AbilityName { get; } = "Forage";
         public AbilityInfo Ability { get; set; }
     }

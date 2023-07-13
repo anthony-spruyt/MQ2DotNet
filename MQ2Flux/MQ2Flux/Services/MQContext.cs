@@ -5,9 +5,9 @@ using System;
 
 namespace MQ2Flux.Services
 {
-    public interface IMQ2Context
+    public interface IMQContext
     {
-        MQ2 MQ2 { get; }
+        MQ2 MQ { get; }
         Chat Chat { get; }
         MQ2DotNet.Services.Commands Commands { get; }
         Events Events { get; }
@@ -17,19 +17,19 @@ namespace MQ2Flux.Services
 
     public static class MQ2ContextExtensions
     {
-        public static IServiceCollection AddMQ2Context(this IServiceCollection services, MQ2 mq2, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
+        public static IServiceCollection AddMQContext(this IServiceCollection services, MQ2 mq, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
         {
-            MQ2Context factory(IServiceProvider serviceProvider) => new MQ2Context(mq2, chat, commands, events, spawns, tlo);
+            MQContext factory(IServiceProvider serviceProvider) => new MQContext(mq, chat, commands, events, spawns, tlo);
 
-            services.AddSingleton<IMQ2Context, MQ2Context>(factory);
+            services.AddSingleton<IMQContext, MQContext>(factory);
 
             return services;
         }
     }
 
-    public class MQ2Context : IMQ2Context
+    public class MQContext : IMQContext
     {
-        public MQ2 MQ2 { get; private set; }
+        public MQ2 MQ { get; private set; }
 
         public Chat Chat { get; private set; }
 
@@ -41,9 +41,9 @@ namespace MQ2Flux.Services
 
         public TLO TLO { get; private set; }
 
-        public MQ2Context(MQ2 mq2, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
+        public MQContext(MQ2 mq, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
         {
-            MQ2 = mq2;
+            MQ = mq;
             Chat = chat;
             Commands = commands;
             Events = events;

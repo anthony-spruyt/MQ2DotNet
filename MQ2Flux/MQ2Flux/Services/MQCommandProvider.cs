@@ -3,39 +3,39 @@ using System.Collections.Generic;
 
 namespace MQ2Flux.Services
 {
-    public interface IMQ2CommandProvider
+    public interface IMQCommandProvider
     {
-        IEnumerable<IMQ2AsyncCommand> AsyncCommands { get; }
-        IEnumerable<IMQ2Command> Commands { get; }
+        IEnumerable<IMQAsyncCommand> AsyncCommands { get; }
+        IEnumerable<IMQCommand> Commands { get; }
         void Load();
         void Unload();
     }
 
-    public static class MQ2CommandProviderExtensions
+    public static class MQCommandProviderExtensions
     {
-        public static IServiceCollection AddMQ2CommandProvider(this IServiceCollection services)
+        public static IServiceCollection AddMQCommandProvider(this IServiceCollection services)
         {
             return services
-                .AddSingleton<IMQ2CommandProvider, MQ2CommandProvider>()
-                .AddSingleton<IFluxMQ2AsyncCommand, FluxMQ2AsyncCommand>();
+                .AddSingleton<IMQCommandProvider, MQCommandProvider>()
+                .AddSingleton<IFluxMQAsyncCommand, FluxMQAsyncCommand>();
         }
     }
 
-    public class MQ2CommandProvider : IMQ2CommandProvider
+    public class MQCommandProvider : IMQCommandProvider
     {
-        public IEnumerable<IMQ2AsyncCommand> AsyncCommands { get; private set; }
-        public IEnumerable<IMQ2Command> Commands { get; private set; }
+        public IEnumerable<IMQAsyncCommand> AsyncCommands { get; private set; }
+        public IEnumerable<IMQCommand> Commands { get; private set; }
 
-        private readonly IMQ2Context context;
+        private readonly IMQContext context;
 
-        public MQ2CommandProvider(IMQ2Context context, IFluxMQ2AsyncCommand fluxAsyncCommandService)
+        public MQCommandProvider(IMQContext context, IFluxMQAsyncCommand fluxAsyncCommandService)
         {
             this.context = context;
-            AsyncCommands = new IMQ2AsyncCommand[]
+            AsyncCommands = new IMQAsyncCommand[]
             {
                 fluxAsyncCommandService
             };
-            Commands = new IMQ2Command[]
+            Commands = new IMQCommand[]
             {
                 
             };

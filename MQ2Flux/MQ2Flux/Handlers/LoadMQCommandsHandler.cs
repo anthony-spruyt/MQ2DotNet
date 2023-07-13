@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Handlers
 {
-    public class LoadMQ2CommandsHandler : IRequestHandler<LoadMQ2Commands, CancellationToken[]>
+    public class LoadMQCommandsHandler : IRequestHandler<LoadMQCommands, CancellationToken[]>
     {
-        private readonly IMQ2CommandProvider commandProvider;
+        private readonly IMQCommandProvider commandProvider;
 
-        public LoadMQ2CommandsHandler(IMQ2CommandProvider commandProvider)
+        public LoadMQCommandsHandler(IMQCommandProvider commandProvider)
         {
             this.commandProvider = commandProvider;
         }
 
-        public Task<CancellationToken[]> Handle(LoadMQ2Commands request, CancellationToken cancellationToken)
+        public Task<CancellationToken[]> Handle(LoadMQCommands request, CancellationToken cancellationToken)
         {
             commandProvider.Load();
 

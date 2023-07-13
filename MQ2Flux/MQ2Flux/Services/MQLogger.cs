@@ -3,28 +3,28 @@ using System;
 
 namespace MQ2Flux.Services
 {
-    public interface IMQ2Logger
+    public interface IMQLogger
     {
         void Log(string text, TimeSpan? noSpam = null);
         void LogError(Exception exception, string message = null);
     }
 
-    public static class MQ2LoggerExtensions
+    public static class MQLoggerExtensions
     {
-        public static IServiceCollection AddMQ2Logging(this IServiceCollection services)
+        public static IServiceCollection AddMQLogging(this IServiceCollection services)
         {
-            return services.AddSingleton<IMQ2Logger, MQ2Logger>();
+            return services.AddSingleton<IMQLogger, MQLogger>();
         }
     }
 
-    public class MQ2Logger : IMQ2Logger
+    public class MQLogger : IMQLogger
     {
         private const int MAX_TEXT_LENGTH = 1000;
 
-        private readonly IMQ2Context context;
-        private readonly IMQ2ChatHistory chatHistory;
+        private readonly IMQContext context;
+        private readonly IChatHistory chatHistory;
 
-        public MQ2Logger(IMQ2Context context, IMQ2ChatHistory chatHistory)
+        public MQLogger(IMQContext context, IChatHistory chatHistory)
         {
             this.context = context;
             this.chatHistory = chatHistory;
@@ -49,27 +49,27 @@ namespace MQ2Flux.Services
                 return;
             }
 
-            context.MQ2?.WriteChatSafe($"\am[{nameof(MQ2Flux)}] \aw{text}");
+            context.MQ?.WriteChatSafe($"\am[{nameof(MQFlux)}] \aw{text}");
         }
 
         public void LogError(Exception exception, string message = null)
         {
-            string errorMessage = string.IsNullOrWhiteSpace(message) ? "A MQ2Flux error has occured" : message;
+            string errorMessage = string.IsNullOrWhiteSpace(message) ? "A MQFlux error has occured" : message;
 
             if (!chatHistory.NoSpam(TimeSpan.FromSeconds(5), errorMessage))
             {
                 return;
             }
 
-            context.MQ2?.WriteChatSafe($"\ar[{nameof(MQ2Flux)}] \aw{errorMessage}");
+            context.MQ?.WriteChatSafe($"\ar[{nameof(MQFlux)}] \aw{errorMessage}");
 
             if (exception == null)
             {
                 return;
             }
 
-            context.MQ2?.WriteChatSafe($"\ar[{nameof(MQ2Flux)}] \awException message: {exception.Message}");
-            context.MQ2?.WriteChatSafe($"\ar[{nameof(MQ2Flux)}] \awStack Tace: {exception.StackTrace}");
+            context.MQ?.WriteChatSafe($"\ar[{nameof(MQFlux)}] \awException message: {exception.Message}");
+            context.MQ?.WriteChatSafe($"\ar[{nameof(MQFlux)}] \awStack Tace: {exception.StackTrace}");
         }
     }
 }

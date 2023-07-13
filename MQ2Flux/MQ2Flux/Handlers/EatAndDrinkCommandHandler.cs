@@ -14,10 +14,10 @@ namespace MQ2Flux.Handlers
 {
     public class EatAndDrinkCommandHandler : IRequestHandler<EatAndDrinkCommand, bool>
     {
-        private readonly IMQ2ChatHistory chatHistory;
+        private readonly IChatHistory chatHistory;
         private readonly IItemService itemService;
 
-        public EatAndDrinkCommandHandler(IMQ2ChatHistory chatHistory, IItemService itemService)
+        public EatAndDrinkCommandHandler(IChatHistory chatHistory, IItemService itemService)
         {
             this.chatHistory = chatHistory;
             this.itemService = itemService;
@@ -40,17 +40,17 @@ namespace MQ2Flux.Handlers
             }
 
             var dontConsume = request.Character.DontConsume;
-            var mq2 = request.Context.MQ2;
+            var mq = request.Context.MQ;
             var allMyInv = me.Inventory.Flatten();
 
-            if (await HandleHungerAsync(dontConsume, mq2, me, allMyInv, cancellationToken))
+            if (await HandleHungerAsync(dontConsume, mq, me, allMyInv, cancellationToken))
             {
                 return true;
             }
-            return await HandleThirstAsync(dontConsume, mq2, me, allMyInv, cancellationToken);
+            return await HandleThirstAsync(dontConsume, mq, me, allMyInv, cancellationToken);
         }
 
-        private async Task<bool> HandleThirstAsync(IEnumerable<string> dontConsume, MQ2 mq2, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
+        private async Task<bool> HandleThirstAsync(IEnumerable<string> dontConsume, MQ2 mq, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
         {
             if (me.AmIThirsty())
             {
@@ -69,7 +69,7 @@ namespace MQ2Flux.Handlers
 
                     if (chatHistory.NoSpam(TimeSpan.FromSeconds(60), message))
                     {
-                        mq2.DoCommand($"/g {message}");
+                        mq.DoCommand($"/g {message}");
                     }
                 }
             }
@@ -77,7 +77,7 @@ namespace MQ2Flux.Handlers
             return false;
         }
 
-        private async Task<bool> HandleHungerAsync(IEnumerable<string> dontConsume, MQ2 mq2, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
+        private async Task<bool> HandleHungerAsync(IEnumerable<string> dontConsume, MQ2 mq, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
         {
             if (me.AmIHungry())
             {
@@ -96,7 +96,7 @@ namespace MQ2Flux.Handlers
 
                     if (chatHistory.NoSpam(TimeSpan.FromSeconds(60), message))
                     {
-                        mq2.DoCommand($"/g {message}");
+                        mq.DoCommand($"/g {message}");
                     }
                 }
             }

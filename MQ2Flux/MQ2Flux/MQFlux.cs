@@ -17,11 +17,11 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux
 {
-    public class MQ2Flux : IProgram
+    public class MQFlux : IProgram
     {
         public static Task Yield(CancellationToken cancellationToken) => Task.Delay(100, cancellationToken);
 
-        private readonly MQ2 mq2;
+        private readonly MQ2 mq;
         private readonly Chat chat;
         private readonly MQ2DotNet.Services.Commands commands;
         private readonly Events events;
@@ -29,16 +29,16 @@ namespace MQ2Flux
         private readonly TLO tlo;
 
         private ServiceProvider serviceProvider;
-        private ILogger<MQ2Flux> logger;
+        private ILogger<MQFlux> logger;
         private IMediator mediator;
-        private IMQ2Logger mq2logger;
+        private IMQLogger mqLogger;
         private bool disposedValue;
 
-        public MQ2Flux(MQ2 mq2, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
+        public MQFlux(MQ2 mq, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
         {
-            if (mq2 is null)
+            if (mq is null)
             {
-                throw new ArgumentNullException(nameof(mq2));
+                throw new ArgumentNullException(nameof(mq));
             }
 
             if (chat is null)
@@ -66,7 +66,7 @@ namespace MQ2Flux
                 throw new ArgumentNullException(nameof(tlo));
             }
 
-            this.mq2 = mq2;
+            this.mq = mq;
             this.chat = chat;
             this.commands = commands;
             this.events = events;
@@ -78,13 +78,13 @@ namespace MQ2Flux
         {
             Configure(args);
 
-            mq2logger.Log($"Started");
+            mqLogger.Log($"Started");
 
             try
             {
                 CancellationToken[] cancellationTokens = await mediator.Send
                 (
-                    new LoadMQ2Commands()
+                    new LoadMQCommands()
                     {
                         CancellationToken = token
                     }
@@ -114,16 +114,16 @@ namespace MQ2Flux
                     }
                 }
 
-                await mediator.Send(new UnloadMQ2Commands());
+                await mediator.Send(new UnloadMQCommands());
             }
             catch (TaskCanceledException) { }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"Error in {nameof(Main)}");
-                mq2logger.LogError(ex);
+                mqLogger.LogError(ex);
             }
 
-            mq2logger.Log($"Stopped");
+            mqLogger.Log($"Stopped");
 
             if (token.IsCancellationRequested)
             {
@@ -140,15 +140,15 @@ namespace MQ2Flux
 
                 serviceProvider = services.BuildServiceProvider();
 
-                logger = serviceProvider.GetRequiredService<ILogger<MQ2Flux>>();
+                logger = serviceProvider.GetRequiredService<ILogger<MQFlux>>();
                 mediator = serviceProvider.GetRequiredService<IMediator>();
-                mq2logger = serviceProvider.GetRequiredService<IMQ2Logger>();
+                mqLogger = serviceProvider.GetRequiredService<IMQLogger>();
 
                 // Bootstrap instances of singleton services that listen to events.
                 // If we dont they will be lazy loaded and not have any event history
                 // for current state.
                 _ = serviceProvider.GetRequiredService<IEventService>();
-                _ = serviceProvider.GetRequiredService<IMQ2ChatHistory>();
+                _ = serviceProvider.GetRequiredService<IChatHistory>();
                 
                 return configuration;
             }
@@ -193,17 +193,17 @@ namespace MQ2Flux
                 (
                     config =>
                     {
-                        config.RegisterServicesFromAssemblyContaining<MQ2Flux>();
+                        config.RegisterServicesFromAssemblyContaining<MQFlux>();
                         config.AddFluxBehaviors();
                     }
                 )
                 .AddMemoryCache()
-                .AddMQ2Context(mq2, chat, commands, events, spawns, tlo)
+                .AddMQContext(mq, chat, commands, events, spawns, tlo)
                 .AddEventService()
-                .AddMQ2ChatHistory()
-                .AddMQ2Logging()
-                .AddMQ2Config()
-                .AddMQ2CommandProvider()
+                .AddChatHistory()
+                .AddMQLogging()
+                .AddMQFluxConfig()
+                .AddMQCommandProvider()
                 .AddAbilityService()
                 .AddItemService()
                 .AddSpellCastingService();
@@ -230,7 +230,7 @@ namespace MQ2Flux
         }
 
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~MQ2Flux()
+        // ~MQFlux()
         // {
         //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         //     Dispose(disposing: false);

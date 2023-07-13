@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Behaviors
 {
-    public interface IInterruptCastingRequest : IMQ2ContextRequest
+    public interface IInterruptCastingRequest : IMQContextRequest
     {
 
     }

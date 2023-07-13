@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Behaviors
 {
-    public interface IAbilityRequest : IMQ2ContextRequest
+    public interface IAbilityRequest : IMQContextRequest
     {
         /// <summary>
         /// Readonly ability name as determined by the request implementation.

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Behaviors
 {
-    public interface ICharacterConfigRequest : IConfigRequest, IMQ2ContextRequest
+    public interface ICharacterConfigRequest : IConfigRequest, IMQContextRequest
     {
         /// <summary>
         /// The effective character configuration that is set by the middleware. Do not set this when creating a new request.

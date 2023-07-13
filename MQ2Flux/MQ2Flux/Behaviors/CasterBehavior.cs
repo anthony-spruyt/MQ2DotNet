@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MQ2Flux.Behaviors
 {
-    public interface ICasterRequest : IMQ2ContextRequest
+    public interface ICasterRequest : IMQContextRequest
     {
 
     }

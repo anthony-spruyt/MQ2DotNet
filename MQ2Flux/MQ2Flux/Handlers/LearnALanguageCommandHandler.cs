@@ -10,9 +10,9 @@ namespace MQ2Flux.Handlers
 {
     public class LearnALanguageCommandHandler : IRequestHandler<LearnALanguageCommand>
     {
-        private readonly IMQ2ChatHistory chatHistory;
+        private readonly IChatHistory chatHistory;
 
-        public LearnALanguageCommandHandler(IMQ2ChatHistory chatHistory)
+        public LearnALanguageCommandHandler(IChatHistory chatHistory)
         {
             this.chatHistory = chatHistory;
         }
@@ -52,13 +52,13 @@ namespace MQ2Flux.Handlers
 
             if (languageNumber.HasValue)
             {
-                var mq2 = request.Context.MQ2;
+                var mq = request.Context.MQ;
                 var message = $"Lets practise {language}. The time is {DateTimeOffset.Now.ToLocalTime()}. One two three four five six seven eight nine ten! Lets do it all again.";
 
                 if (chatHistory.NoSpam(TimeSpan.FromSeconds(1), message))
                 {
-                    mq2.DoCommand($"/language {languageNumber}");
-                    mq2.DoCommand($"/g {message}");
+                    mq.DoCommand($"/language {languageNumber}");
+                    mq.DoCommand($"/g {message}");
                 }
             }
 

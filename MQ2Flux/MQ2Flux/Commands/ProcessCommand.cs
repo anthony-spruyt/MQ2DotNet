@@ -8,7 +8,7 @@ namespace MQ2Flux.Commands
     public class ProcessCommand : ICharacterConfigRequest, IRequest
     {
         public string[] Args { get; set; }
-        public IMQ2Context Context { get; set; }
+        public IMQContext Context { get; set; }
         public FluxConfig Config { get; set; }
         public CharacterConfig Character { get; set; }
     }

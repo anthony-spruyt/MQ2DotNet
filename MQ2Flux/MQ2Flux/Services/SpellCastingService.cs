@@ -32,16 +32,16 @@ namespace MQ2Flux.Services
 
     public class SpellCastingService : ISpellCastingService, IDisposable
     {
-        private readonly IMQ2Context context;
-        private readonly IMQ2Logger mq2Logger;
+        private readonly IMQContext context;
+        private readonly IMQLogger mqLogger;
 
         private SemaphoreSlim semaphore;
         private bool disposedValue;
 
-        public SpellCastingService(IMQ2Context context, IMQ2Logger mq2Logger)
+        public SpellCastingService(IMQContext context, IMQLogger mqLogger)
         {
             this.context = context;
-            this.mq2Logger = mq2Logger;
+            this.mqLogger = mqLogger;
 
             semaphore = new SemaphoreSlim(1);
         }
@@ -137,16 +137,16 @@ namespace MQ2Flux.Services
                     )
                 );
 
-                context.MQ2.DoCommand($"/cast {spellBookSpell.Name}");
+                context.MQ.DoCommand($"/cast {spellBookSpell.Name}");
 
-                mq2Logger.Log($"Casting [\ay{spellBookSpell.Name}\aw]", TimeSpan.Zero);
+                mqLogger.Log($"Casting [\ay{spellBookSpell.Name}\aw]", TimeSpan.Zero);
 
                 await waitForEQTask;
 
                 if (fizzled || interrupted)
                 {
                     var reason = fizzled ? "fizzled" : "was interrupted";
-                    mq2Logger.Log($"Casting [\ay{spell.Name}\aw] \ar{reason}", TimeSpan.Zero);
+                    mqLogger.Log($"Casting [\ay{spell.Name}\aw] \ar{reason}", TimeSpan.Zero);
                     
                     return false;
                 }
@@ -191,7 +191,7 @@ namespace MQ2Flux.Services
                     !cancellationToken.IsCancellationRequested
                 )
                 {
-                    await MQ2Flux.Yield(cancellationToken);
+                    await MQFlux.Yield(cancellationToken);
                 }
             }
             catch (TimeoutException)
@@ -214,8 +214,8 @@ namespace MQ2Flux.Services
 
             DateTime waitUntil = DateTime.UtcNow + GetMemorizeTimeout((uint?)spell.Level ?? 0u, me.Spawn.Level.Value);
 
-            context.MQ2.DoCommand($"/memspell {slot} \"{spellName}\"");
-            mq2Logger.Log($"Memorizing [\ay{spellName}\aw]", TimeSpan.Zero);
+            context.MQ.DoCommand($"/memspell {slot} \"{spellName}\"");
+            mqLogger.Log($"Memorizing [\ay{spellName}\aw]", TimeSpan.Zero);
 
             try
             {
@@ -226,7 +226,7 @@ namespace MQ2Flux.Services
                     !cancellationToken.IsCancellationRequested
                 )
                 {
-                    await MQ2Flux.Yield(cancellationToken);
+                    await MQFlux.Yield(cancellationToken);
                 }
             }
             catch (TimeoutException)

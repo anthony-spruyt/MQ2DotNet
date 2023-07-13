@@ -16,7 +16,7 @@ namespace MQ2Flux.Handlers
             // Once DBG gave ported all UI components to the new framework the throttling can be removed.
             if (me.SubscriptionDays == null || me.SubscriptionDays == 0 && DateTime.UtcNow.Second % 5 == 0)
             {
-                request.Context.MQ2.DoCommand("/notify AlertWnd ALW_Dismiss_Button leftmouseup");
+                request.Context.MQ.DoCommand("/notify AlertWnd ALW_Dismiss_Button leftmouseup");
             }
 
             return Task.CompletedTask;

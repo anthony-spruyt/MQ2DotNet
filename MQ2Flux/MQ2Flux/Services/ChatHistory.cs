@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace MQ2Flux.Services
 {
-    public interface IMQ2ChatHistory
+    public interface IChatHistory
     {
         IEnumerable<ChatLogItem> Chat { get; }
         IEnumerable<ChatLogItem> EQChat { get; }
-        IEnumerable<ChatLogItem> MQ2Chat { get; }
+        IEnumerable<ChatLogItem> MQChat { get; }
         bool NoSpam(TimeSpan last, string text);
     }
 
@@ -20,23 +20,23 @@ namespace MQ2Flux.Services
         public string Message { get; set; }
     }
 
-    public static class MQ2ChatHistoryExtensions
+    public static class ChatHistoryExtensions
     {
-        public static IServiceCollection AddMQ2ChatHistory(this IServiceCollection services)
+        public static IServiceCollection AddChatHistory(this IServiceCollection services)
         {
             return services
-                .AddSingleton<IMQ2ChatHistory, MQ2ChatHistory>();
+                .AddSingleton<IChatHistory, ChatHistory>();
         }
     }
 
-    public class MQ2ChatHistory : IMQ2ChatHistory, IDisposable
+    public class ChatHistory : IChatHistory, IDisposable
     {
         public static readonly int MAX_HISTORY_SIZE = 5000;
 
         private readonly ConcurrentQueue<ChatLogItem> chat;
         private readonly ConcurrentQueue<ChatLogItem> eqChat;
-        private readonly ConcurrentQueue<ChatLogItem> mq2Chat;
-        private readonly IMQ2Context context;
+        private readonly ConcurrentQueue<ChatLogItem> mqChat;
+        private readonly IMQContext context;
 
         private bool disposedValue;
 
@@ -44,13 +44,13 @@ namespace MQ2Flux.Services
 
         public IEnumerable<ChatLogItem> EQChat => eqChat.OrderByDescending(i => i.Timestamp);
 
-        public IEnumerable<ChatLogItem> MQ2Chat => mq2Chat.OrderByDescending(i => i.Timestamp);
+        public IEnumerable<ChatLogItem> MQChat => mqChat.OrderByDescending(i => i.Timestamp);
 
-        public MQ2ChatHistory(IMQ2Context context)
+        public ChatHistory(IMQContext context)
         {
             chat = new ConcurrentQueue<ChatLogItem>();
             eqChat = new ConcurrentQueue<ChatLogItem>();
-            mq2Chat = new ConcurrentQueue<ChatLogItem>();
+            mqChat = new ConcurrentQueue<ChatLogItem>();
 
             this.context = context;
 
@@ -96,7 +96,7 @@ namespace MQ2Flux.Services
         
         private void Events_OnChatMQ2(object sender, string e)
         {
-            AddToQueue(sender, e, mq2Chat);
+            AddToQueue(sender, e, mqChat);
         }
 
         protected virtual void Dispose(bool disposing)

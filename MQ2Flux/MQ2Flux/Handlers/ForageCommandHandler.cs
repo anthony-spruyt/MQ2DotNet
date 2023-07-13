@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using MQ2DotNet.EQ;
 using MQ2Flux.Commands;
-using MQ2Flux.Extensions;
 using MQ2Flux.Services;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,7 +55,7 @@ namespace MQ2Flux.Handlers
                 }
                 else
                 {
-                    await itemService.AutoInventoryAsync(null, cancellationToken);
+                    await itemService.AutoInventoryAsync(cancellationToken: cancellationToken);
                 }
             }
 
