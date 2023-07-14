@@ -41,7 +41,7 @@ namespace MQFlux.Handlers
 
             var dontConsume = request.Character.DontConsume;
             var mq = request.Context.MQ;
-            var allMyInv = me.Inventory.Flatten();
+            var allMyInv = me.Bags.Flatten();
 
             if (await HandleHungerAsync(dontConsume, mq, me, allMyInv, cancellationToken))
             {
@@ -54,10 +54,22 @@ namespace MQFlux.Handlers
         {
             if (me.AmIThirsty())
             {
+                // First get summoned ordered from least to most nutritious.
                 var drink = allMyInv
-                    .Where(i => i.IsDrinkable() && !(dontConsume.Contains(i.Name)))
+                    .Where(i => i.NoRent && i.IsDrinkable() && !(dontConsume.Contains(i.Name)))
                     .OrderBy(i => i.GetNutrientScore(me))
+                    .ThenBy(i => i.Stack)
                     .FirstOrDefault();
+
+                // If no summoned get non summoned ordered from least to most nutritious.
+                if (drink == null)
+                {
+                    drink = allMyInv
+                        .Where(i => i.IsDrinkable() && !(dontConsume.Contains(i.Name)))
+                        .OrderBy(i => i.GetNutrientScore(me))
+                        .ThenBy(i => i.Stack)
+                        .FirstOrDefault();
+                }
 
                 if (drink != null)
                 {
@@ -81,10 +93,22 @@ namespace MQFlux.Handlers
         {
             if (me.AmIHungry())
             {
+                // First get summoned ordered from least to most nutritious.
                 var food = allMyInv
-                    .Where(i => i.IsEdible() && !(dontConsume.Contains(i.Name)))
+                    .Where(i => i.NoRent && i.IsEdible() && !(dontConsume.Contains(i.Name)))
                     .OrderBy(i => i.GetNutrientScore(me))
+                    .ThenBy(i => i.Stack)
                     .FirstOrDefault();
+
+                // If no summoned get non summoned ordered from least to most nutritious.
+                if (food == null)
+                {
+                    food = allMyInv
+                        .Where(i => i.IsEdible() && !(dontConsume.Contains(i.Name)))
+                        .OrderBy(i => i.GetNutrientScore(me))
+                        .ThenBy(i => i.Stack)
+                        .FirstOrDefault();
+                }
 
                 if (food != null)
                 {

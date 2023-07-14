@@ -9,13 +9,13 @@ namespace MQFlux.Behaviors
     public interface IAbilityRequest : IMQContextRequest
     {
         /// <summary>
-        /// Readonly ability name as determined by the request implementation.
-        /// </summary>
-        string AbilityName { get; }
-        /// <summary>
         /// This is set by the middleware, do not set when creating a request.
         /// </summary>
         AbilityInfo Ability { get; set; }
+        /// <summary>
+        /// Readonly ability name as determined by the request implementation.
+        /// </summary>
+        string AbilityName { get; }
     }
 
     public class AbilityBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>

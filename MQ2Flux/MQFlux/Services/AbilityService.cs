@@ -131,7 +131,7 @@ namespace MQFlux.Services
         {
             context.MQ.DoCommand($"/doability {abilityName}");
 
-            mqLogger.Log($"Do ability [\ay{abilityName}\aw]", TimeSpan.Zero);
+            mqLogger.Log($"Do ability [\au{abilityName}\aw]", TimeSpan.Zero);
         }
 
         protected virtual void Dispose(bool disposing)

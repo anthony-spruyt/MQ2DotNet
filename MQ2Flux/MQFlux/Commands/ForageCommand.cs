@@ -8,10 +8,11 @@ namespace MQFlux.Commands
 {
     public class ForageCommand : ICharacterConfigRequest, INotWhenCastingRequest, IAbilityRequest, INotWhenAutoAttackingRequest, INotWhenSpellbookIsOpenRequest, IRequest<bool>
     {
+        public AbilityInfo Ability { get; set; }
+        public string AbilityName => "Forage";
+        public bool AllowBard => false;
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
         public IMQContext Context { get; set; }
-        public string AbilityName { get; } = "Forage";
-        public AbilityInfo Ability { get; set; }
     }
 }

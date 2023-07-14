@@ -45,7 +45,7 @@ namespace MQFlux.Handlers
             }
 
             var me = request.Context.TLO.Me;
-            var allMyInv = me.Inventory.Flatten();
+            var allMyInv = me.Bags.Flatten();
             var actualFoodCount = allMyInv
                 .Where(i => i.NoRent && i.IsEdible())
                 .Sum(i => i.StackCount);

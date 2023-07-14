@@ -226,15 +226,36 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public InvSlotType InvSlot => GetMember<InvSlotType>("InvSlot");
 
         /// <summary>
-        /// Item Slot number see https://docs.macroquest.org/reference/general/slot-names/
+        /// Refer to <see cref="InvSlot"/> and <seealso cref="InvSlot2"/> based on <see cref="Expansion"/> level.
         /// </summary>
         public int? ItemSlot => GetMember<IntType>("ItemSlot");
 
         /// <summary>
-        /// Item Slot subnumber see https://docs.macroquest.org/reference/general/slot-names/
-        /// If the item is in a container, the index (0 based) of the slot within the container
+        /// If the item is in a container, the index (1 based) of the slot within the container.
+        /// This is different than the standard API which is 0 based, but everything else like itemnotify expects a 1 based sub slot so
+        /// this has been changed to make it easier to work with.
         /// </summary>
-        public int? ItemSlot2 => GetMember<IntType>("ItemSlot2");
+        public int? ItemSlot2
+        {
+            get
+            {
+                int? itemSlot2 = GetMember<IntType>("ItemSlot2");
+
+                if (itemSlot2 >= 0)
+                {
+                    return itemSlot2 + 1;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public bool IsInAContainer()
+        {
+            return ItemSlot2 > 0;
+        }
 
         /// <summary>
         /// The cost to buy this item from active merchant

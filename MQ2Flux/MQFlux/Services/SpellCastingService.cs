@@ -182,21 +182,14 @@ namespace MQFlux.Services
             var me = context.TLO.Me;
             DateTime waitForSpellReadyUntil = DateTime.UtcNow + TimeSpan.FromSeconds(5);
 
-            try
+            while (!me.IsSpellReady(spell.Name))
             {
-                while
-                (
-                    waitForSpellReadyUntil >= DateTime.UtcNow &&
-                    !me.IsSpellReady(spell.Name) &&
-                    !cancellationToken.IsCancellationRequested
-                )
+                await MQFlux.Yield(cancellationToken);
+
+                if (waitForSpellReadyUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
                 {
-                    await MQFlux.Yield(cancellationToken);
+                    return false;
                 }
-            }
-            catch (TimeoutException)
-            {
-                return false;
             }
 
             return true;
@@ -219,19 +212,15 @@ namespace MQFlux.Services
 
             try
             {
-                while
-                (
-                    waitUntil >= DateTime.UtcNow &&
-                    me.GetGem(spellName) != slot &&
-                    !cancellationToken.IsCancellationRequested
-                )
+                while (me.GetGem(spellName) != slot)
                 {
                     await MQFlux.Yield(cancellationToken);
+
+                    if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
+                    {
+                        return false;
+                    }
                 }
-            }
-            catch (TimeoutException)
-            {
-                return false;
             }
             finally
             {

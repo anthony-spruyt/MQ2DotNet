@@ -47,15 +47,19 @@ namespace MQFlux.Handlers
 
             if (await abilityService.DoAbilityAsync(request.Ability, "You have scrounged", "You fail to locate", cancellationToken))
             {
-                var foragedItemName = request.Context.TLO.Cursor.Name;
+                // Make sure there is something on the cursor, it is possible for something to ninja it.
+                if (request.Context.TLO.Cursor != null)
+                {
+                    var foragedItemName = request.Context.TLO.Cursor.Name;
 
-                if (request.Character.ForageBlacklist.Contains(foragedItemName))
-                {
-                    await itemService.DestroyAsync(foragedItemName);
-                }
-                else
-                {
-                    await itemService.AutoInventoryAsync(cancellationToken: cancellationToken);
+                    if (request.Character.ForageBlacklist.Contains(foragedItemName))
+                    {
+                        await itemService.DestroyAsync(foragedItemName);
+                    }
+                    else
+                    {
+                        await itemService.AutoInventoryAsync(cancellationToken: cancellationToken);
+                    }
                 }
             }
 

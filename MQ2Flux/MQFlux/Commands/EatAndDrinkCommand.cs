@@ -7,6 +7,7 @@ namespace MQFlux.Commands
 {
     public class EatAndDrinkCommand : ICharacterConfigRequest, INotWhenCastingRequest, IRequest<bool>
     {
+        public bool AllowBard => true;
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
         public IMQContext Context { get; set; }

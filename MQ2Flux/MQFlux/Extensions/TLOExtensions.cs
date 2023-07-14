@@ -9,6 +9,10 @@ namespace MQFlux.Extensions
             return @this.IsWindowOpen("SpellBookWnd");
         }
 
+        /// <summary>
+        /// Closes the spellbook if it is iopen.
+        /// </summary>
+        /// <param name="this"></param>
         public static void CloseSpellBook(this TLO @this)
         {
             var spellBookWindow = @this.GetWindow("SpellBookWnd");

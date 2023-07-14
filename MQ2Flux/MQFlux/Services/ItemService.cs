@@ -24,6 +24,15 @@ namespace MQFlux.Services
         /// <param name="itemName">To ensure you dont drop something unintended on the cursor the item name is required.</param>
         /// <returns></returns>
         Task DropAsync(string itemName);
+        /// <summary>
+        /// Move an item.
+        /// </summary>
+        /// <param name="item">The item to move.</param>
+        /// <param name="invSlot">The inventory slot. See <see cref="MQ2DotNet.EQ.InvSlot"/>, <seealso cref="MQ2DotNet.EQ.InvSlot2"/>, <seealso cref="MQ2DotNet.EQ.Expansion"/> and <see cref="CharacterType.FIRST_BAG_SLOT"/> etc.</param>
+        /// <param name="invSubSlot">The optional base 1 container slot number if moving into a container.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<bool> MoveItemAsync(ItemType item, int invSlot, int? invSubSlot = null, CancellationToken cancellationToken = default);
         Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default);
     }
 
@@ -58,6 +67,7 @@ namespace MQFlux.Services
         {
             DateTime waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
 
+            // Wait for something to hit the cursor up to a timeout.
             while (waitUntil >= DateTime.UtcNow && context.TLO.Cursor == null && !cancellationToken.IsCancellationRequested)
             {
                 await MQFlux.Yield(cancellationToken);
@@ -78,7 +88,6 @@ namespace MQFlux.Services
             }
         }
 
-        /// <inheritdoc />
         public Task DestroyAsync(string itemName)
         {
             if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
@@ -89,7 +98,6 @@ namespace MQFlux.Services
             return Task.CompletedTask;
         }
 
-        /// <inheritdoc />
         public Task DropAsync(string itemName)
         {
             if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
@@ -98,6 +106,122 @@ namespace MQFlux.Services
             }
 
             return Task.CompletedTask;
+        }
+
+        public async Task<bool> MoveItemAsync(ItemType item, int invSlot, int? invSubSlot, CancellationToken cancellationToken = default)
+        {
+            if (!IsValidMove(item, invSlot, invSubSlot))
+            {
+                return false;
+            }
+
+            var itemSlot = item.ItemSlot.Value;
+            var itemSlot2 = item.ItemSlot2;
+            string command;
+            int packNumber;
+            int packSlotNumber;
+
+            // Move item onto cursor.
+            if (item.IsInAContainer())
+            {
+                // In a container
+                packNumber = GetPackNumber(item.ItemSlot.Value);
+                packSlotNumber = item.ItemSlot2.Value;
+                mqLogger.Log($"Moving [\ag{item.Name}\aw] in pack {packNumber} slot {packSlotNumber} to cursor", TimeSpan.Zero);
+                command = $"/nomodkey /shiftkey /itemnotify in pack{packNumber} {packSlotNumber} leftmouseup";
+            }
+            else
+            {
+                // Directly in a slot
+                mqLogger.Log($"Moving [\ag{item.Name}\aw] in inv slot {item.ItemSlot} to cursor", TimeSpan.Zero);
+                command = $"/nomodkey /shiftkey /itemnotify {item.ItemSlot} leftmouseup";
+            }
+
+            context.MQ.DoCommand(command);
+
+            var waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+
+            // Check if we picked the item up successfully.
+            while (context.TLO.Cursor == null && context.TLO.Cursor.ID.Value != item.ID.Value)
+            {
+                await MQFlux.Yield(cancellationToken);
+
+                if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
+                {
+                    mqLogger.Log("foooooooo 1");
+                    return false;
+                }
+            }
+
+            // Move item from cursor into target slot
+            if (invSubSlot.HasValue && invSubSlot.Value > 0)
+            {
+                // In a container
+                packNumber = GetPackNumber(invSlot);
+                packSlotNumber = invSubSlot.Value;
+                mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to pack {packNumber} slot {packSlotNumber}", TimeSpan.Zero);
+                command = $"/nomodkey /shiftkey /itemnotify in pack{packNumber} {packSlotNumber} leftmouseup";
+            }
+            else
+            {
+                // Directly in a slot
+                mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to inv slot {invSlot}", TimeSpan.Zero);
+                command = $"/nomodkey /shiftkey /itemnotify {invSlot} leftmouseup";
+            }
+
+            context.MQ.DoCommand(command);
+
+            waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+
+            // Make sure the item we picked up is not still on the cursor.
+            while (context.TLO.Cursor != null && context.TLO.Cursor.ID.Value == item.ID.Value)
+            {
+                await MQFlux.Yield(cancellationToken);
+
+                if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
+                {
+                    mqLogger.Log("foooooooo 2");
+                    return false;
+                }
+            }
+
+            // Check if we need to move what was in the target slot back to the source slot.
+            if (context.TLO.Cursor != null)
+            {
+                // Move item from cursor into source slot
+                if (itemSlot2.HasValue && itemSlot2.Value > 0)
+                {
+                    // In a container
+                    packNumber = GetPackNumber(itemSlot);
+                    packSlotNumber = itemSlot2.Value;
+                    mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to pack {packNumber} slot {packSlotNumber}", TimeSpan.Zero);
+                    command = $"/nomodkey /shiftkey /itemnotify in pack{packNumber} {packSlotNumber} leftmouseup";
+                }
+                else
+                {
+                    // Directly in a slot
+                    mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to inv slot {itemSlot}", TimeSpan.Zero);
+                    command = $"/nomodkey /shiftkey /itemnotify {itemSlot} leftmouseup";
+                }
+
+                context.MQ.DoCommand(command);
+
+                waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+
+                // Make sure the cursor is now empty.
+                while (context.TLO.Cursor != null)
+                {
+                    await MQFlux.Yield(cancellationToken);
+
+                    if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
+                    {
+                        mqLogger.Log("foooooooo 3");
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         public async Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default)
@@ -169,14 +293,15 @@ namespace MQFlux.Services
 
                 context.MQ.DoCommand(command);
 
-                mqLogger.Log($"{verb} [\ag{item.Name}\aw] \austarted", TimeSpan.Zero);
+                mqLogger.Log($"{verb} [\ag{item.Name}\aw]", TimeSpan.Zero);
 
                 await waitForEQTask;
 
                 if (fizzled || interrupted)
                 {
                     var reason = fizzled ? "fizzled" : "was interrupted";
-                    mqLogger.Log($"{verb} [\ay{item.Name}\aw] \ar{reason}", TimeSpan.Zero);
+
+                    mqLogger.Log($"{verb} [\ag{item.Name}\aw] \ar{reason}", TimeSpan.Zero);
 
                     return false;
                 }
@@ -191,6 +316,25 @@ namespace MQFlux.Services
             }
 
             return true;
+        }
+
+        private bool IsValidMove(ItemType item, int invSlot, int? invSubSlot)
+        {
+            // We cant move if there is something already on the cursor.
+            if (context.TLO.Cursor != null)
+            {
+                mqLogger.Log($"Moving [\ag{item.Name}\aw] \arcancelled - cursor is not empty", TimeSpan.FromSeconds(5));
+
+                return false;
+            }
+
+            // TODO
+            return true;
+        }
+
+        private int GetPackNumber(int slot)
+        {
+            return slot - CharacterType.FIRST_BAG_SLOT + 1;
         }
 
         private void PurgeCache()
