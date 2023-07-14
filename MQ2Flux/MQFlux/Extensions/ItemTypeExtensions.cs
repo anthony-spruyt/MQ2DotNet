@@ -35,14 +35,11 @@ namespace MQFlux.Extensions
 
             foreach (var container in containers)
             {
-                if (container.ContentSize > 0)
+                foreach (var item in container.Contents)
                 {
-                    foreach (var item in container.Contents)
+                    if (item.ID.HasValue && item.ID > 0)
                     {
-                        if (item.ID.HasValue && item.ID > 0)
-                        {
-                            items.Add(item);
-                        }
+                        items.Add(item);
                     }
                 }
             }
@@ -88,6 +85,11 @@ namespace MQFlux.Extensions
         public static bool IsConsumable(this ItemType @this)
         {
             return @this.IsDrinkable() || @this.IsEdible();
+        }
+
+        public static bool IsAContainer(this ItemType @this)
+        {
+            return @this.Container > 0;
         }
 
         public static int GetNutrientScore(this ItemType @this, CharacterType me = null)

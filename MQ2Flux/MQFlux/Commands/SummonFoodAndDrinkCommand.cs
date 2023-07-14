@@ -5,7 +5,14 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class SummonFoodAndDrinkCommand : ICharacterConfigRequest, INotInCombatRequest, IStandingStillRequest, ICasterRequest, INotWhenCastingRequest, IRequest<bool>
+    public class SummonFoodAndDrinkCommand : 
+        ICharacterConfigRequest, 
+        INotInCombatRequest, 
+        IStandingStillRequest, 
+        ICasterRequest, 
+        INotWhenCastingRequest, 
+        INoItemOnCursorRequest, 
+        IRequest<bool>
     {
         public bool AllowBard => false;
         public CharacterConfig Character { get; set; }

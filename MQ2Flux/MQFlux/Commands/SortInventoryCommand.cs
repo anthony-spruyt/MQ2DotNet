@@ -5,7 +5,11 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class SortInventoryCommand : ICharacterConfigRequest, INotWhenCastingRequest, IRequest<bool>
+    public class SortInventoryCommand : 
+        ICharacterConfigRequest, 
+        INotWhenCastingRequest, 
+        INoItemOnCursorRequest, 
+        IRequest<bool>
     {
         public bool AllowBard => true;
         public CharacterConfig Character { get; set; }

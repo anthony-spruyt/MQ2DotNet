@@ -5,7 +5,13 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class DispenseCommand : ICharacterConfigRequest, INotInCombatRequest, IStandingStillRequest, INotWhenCastingRequest, IRequest<bool>
+    public class DispenseCommand : 
+        ICharacterConfigRequest, 
+        INotInCombatRequest, 
+        IStandingStillRequest, 
+        INotWhenCastingRequest, 
+        INoItemOnCursorRequest, 
+        IRequest<bool>
     {
         public bool AllowBard => false;
         public CharacterConfig Character { get; set; }

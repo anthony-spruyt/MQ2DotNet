@@ -202,12 +202,16 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = (int?)Items ?? 0;
+                var count = (int?)Container ?? 0;
                 List<ItemType> items = new List<ItemType>(count);
 
                 for (int i = 0; i < count; i++)
                 {
-                    items.Add(GetItem(i + 1));
+                    var item = GetItem(i + 1);
+
+                    if (item != null && item.ID > 0)
+
+                    items.Add(item);
                 }
 
                 return items;

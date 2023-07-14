@@ -6,7 +6,14 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class ForageCommand : ICharacterConfigRequest, INotWhenCastingRequest, IAbilityRequest, INotWhenAutoAttackingRequest, INotWhenSpellbookIsOpenRequest, IRequest<bool>
+    public class ForageCommand : 
+        ICharacterConfigRequest, 
+        INotWhenCastingRequest, 
+        IAbilityRequest, 
+        INotWhenAutoAttackingRequest, 
+        INotWhenSpellbookIsOpenRequest, 
+        INoItemOnCursorRequest, 
+        IRequest<bool>
     {
         public AbilityInfo Ability { get; set; }
         public string AbilityName => "Forage";

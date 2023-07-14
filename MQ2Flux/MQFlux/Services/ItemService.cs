@@ -142,7 +142,7 @@ namespace MQFlux.Services
             var waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
 
             // Check if we picked the item up successfully.
-            while (context.TLO.Cursor == null && context.TLO.Cursor.ID.Value != item.ID.Value)
+            while (context.TLO.Cursor == null || context.TLO.Cursor.ID.Value != item.ID.Value)
             {
                 await MQFlux.Yield(cancellationToken);
 
