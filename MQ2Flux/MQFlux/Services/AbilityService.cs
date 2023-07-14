@@ -69,10 +69,10 @@ namespace MQFlux.Services
                     return true;
                 }
 
-                var timeout = TimeSpan.FromMilliseconds(1000);
-                var result = false;
+                var timeout = TimeSpan.FromMilliseconds(2000);
+                var success = false;
 
-                Task waitForEQTask = Task.Run
+                Task<bool> waitForEQTask = Task.Run
                 (
                     () => context.Chat.WaitForEQ
                     (
@@ -80,14 +80,14 @@ namespace MQFlux.Services
                         {
                             if (!string.IsNullOrWhiteSpace(successText) && text.Contains(successText))
                             {
-                                result = true;
+                                success = true;
 
                                 return true;
                             }
 
                             if (!string.IsNullOrWhiteSpace(failureText) && text.Contains(failureText))
                             {
-                                result = false;
+                                success = false;
 
                                 return true;
                             }
@@ -101,17 +101,20 @@ namespace MQFlux.Services
 
                 DoAbility(abilityName);
 
-                await waitForEQTask;
+                var foundAbilityResult = await waitForEQTask;
 
-                return result;
-            }
-            catch (TimeoutException)
-            {
-                return false;
+                return foundAbilityResult && success;
             }
             finally
             {
                 semaphore.Release();
+            }
+
+            void DoAbility(string abilityName)
+            {
+                context.MQ.DoCommand($"/doability {abilityName}");
+
+                mqLogger.Log($"Do ability [\au{abilityName}\aw]", TimeSpan.Zero);
             }
         }
 
@@ -125,13 +128,6 @@ namespace MQFlux.Services
             var ability = context.TLO.Me.GetAbilityInfo(abilityName);
 
             return await DoAbilityInternalAsync(ability, successText, failureText, cancellationToken);
-        }
-
-        private void DoAbility(string abilityName)
-        {
-            context.MQ.DoCommand($"/doability {abilityName}");
-
-            mqLogger.Log($"Do ability [\au{abilityName}\aw]", TimeSpan.Zero);
         }
 
         protected virtual void Dispose(bool disposing)

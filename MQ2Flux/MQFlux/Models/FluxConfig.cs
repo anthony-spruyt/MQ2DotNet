@@ -23,7 +23,7 @@ namespace MQFlux.Models
         public bool? AutoSummonFoodAndDrink { get; set; } = true;
         public bool? AutoForage { get; set; } = true;
         public bool? AutoEatAndDrink { get; set; } = true;
-        public bool? AutoSortInventory { get; set; } = true;
+        public bool? AutoPutStatFoodInTopSlots { get; set; } = true;
         /// <summary>
         /// Food and drink that should not be consumed, IE stat food and drink.
         /// </summary>
@@ -128,9 +128,9 @@ namespace MQFlux.Models
                 effective.AutoSummonFoodAndDrink = defaults.AutoSummonFoodAndDrink;
             }
 
-            if (!effective.AutoSortInventory.HasValue)
+            if (!effective.AutoPutStatFoodInTopSlots.HasValue)
             {
-                effective.AutoSortInventory = defaults.AutoSortInventory;
+                effective.AutoPutStatFoodInTopSlots = defaults.AutoPutStatFoodInTopSlots;
             }
 
             if (!(effective.DontConsume?.Any() ?? false) && (defaults.DontConsume?.Any() ?? false))

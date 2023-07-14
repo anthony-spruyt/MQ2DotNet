@@ -92,6 +92,8 @@ namespace MQFlux.Services
         {
             if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
             {
+                mqLogger.Log($"\arDestroying \aw[\ag{context.TLO.Cursor.Name}\aw]", TimeSpan.Zero);
+
                 context.MQ.DoCommand("/destroy");
             }
 
@@ -102,6 +104,8 @@ namespace MQFlux.Services
         {
             if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
             {
+                mqLogger.Log($"\arDropping \aw[\ag{context.TLO.Cursor.Name}\aw]", TimeSpan.Zero);
+
                 context.MQ.DoCommand("/drop");
             }
 
@@ -114,7 +118,7 @@ namespace MQFlux.Services
             {
                 return false;
             }
-
+            var debug = false;
             var itemSlot = item.ItemSlot.Value;
             var itemSlot2 = item.ItemSlot2;
             string command;
@@ -127,13 +131,13 @@ namespace MQFlux.Services
                 // In a container
                 packNumber = GetPackNumber(item.ItemSlot.Value);
                 packSlotNumber = item.ItemSlot2.Value;
-                mqLogger.Log($"Moving [\ag{item.Name}\aw] in pack {packNumber} slot {packSlotNumber} to cursor", TimeSpan.Zero);
+                if (debug) mqLogger.Log($"Moving [\ag{item.Name}\aw] in pack {packNumber} slot {packSlotNumber} to cursor", TimeSpan.Zero);
                 command = $"/nomodkey /shiftkey /itemnotify in pack{packNumber} {packSlotNumber} leftmouseup";
             }
             else
             {
                 // Directly in a slot
-                mqLogger.Log($"Moving [\ag{item.Name}\aw] in inv slot {item.ItemSlot} to cursor", TimeSpan.Zero);
+                if (debug) mqLogger.Log($"Moving [\ag{item.Name}\aw] in inv slot {item.ItemSlot} to cursor", TimeSpan.Zero);
                 command = $"/nomodkey /shiftkey /itemnotify {item.ItemSlot} leftmouseup";
             }
 
@@ -148,7 +152,6 @@ namespace MQFlux.Services
 
                 if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
                 {
-                    mqLogger.Log("foooooooo 1");
                     return false;
                 }
             }
@@ -159,13 +162,13 @@ namespace MQFlux.Services
                 // In a container
                 packNumber = GetPackNumber(invSlot);
                 packSlotNumber = invSubSlot.Value;
-                mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to pack {packNumber} slot {packSlotNumber}", TimeSpan.Zero);
+                if (debug) mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to pack {packNumber} slot {packSlotNumber}", TimeSpan.Zero);
                 command = $"/nomodkey /shiftkey /itemnotify in pack{packNumber} {packSlotNumber} leftmouseup";
             }
             else
             {
                 // Directly in a slot
-                mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to inv slot {invSlot}", TimeSpan.Zero);
+                if (debug) mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to inv slot {invSlot}", TimeSpan.Zero);
                 command = $"/nomodkey /shiftkey /itemnotify {invSlot} leftmouseup";
             }
 
@@ -180,7 +183,6 @@ namespace MQFlux.Services
 
                 if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
                 {
-                    mqLogger.Log("foooooooo 2");
                     return false;
                 }
             }
@@ -194,13 +196,13 @@ namespace MQFlux.Services
                     // In a container
                     packNumber = GetPackNumber(itemSlot);
                     packSlotNumber = itemSlot2.Value;
-                    mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to pack {packNumber} slot {packSlotNumber}", TimeSpan.Zero);
+                    if (debug) mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to pack {packNumber} slot {packSlotNumber}", TimeSpan.Zero);
                     command = $"/nomodkey /shiftkey /itemnotify in pack{packNumber} {packSlotNumber} leftmouseup";
                 }
                 else
                 {
                     // Directly in a slot
-                    mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to inv slot {itemSlot}", TimeSpan.Zero);
+                    if (debug) mqLogger.Log($"Moving [\ag{context.TLO.Cursor.Name}\aw] on cursor to inv slot {itemSlot}", TimeSpan.Zero);
                     command = $"/nomodkey /shiftkey /itemnotify {itemSlot} leftmouseup";
                 }
 
@@ -215,7 +217,6 @@ namespace MQFlux.Services
 
                     if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
                     {
-                        mqLogger.Log("foooooooo 3");
                         return false;
                     }
                 }
@@ -273,7 +274,7 @@ namespace MQFlux.Services
                 var fizzled = false;
                 var interrupted = false;
 
-                Task waitForEQTask = Task.Run
+                Task<bool> waitForEQTask = Task.Run
                 (
                     () => context.Chat.WaitForEQ
                     (
@@ -295,7 +296,8 @@ namespace MQFlux.Services
 
                 mqLogger.Log($"{verb} [\ag{item.Name}\aw]", TimeSpan.Zero);
 
-                await waitForEQTask;
+                // Some spells dont write a message so assume it was successful if it timed out.
+                _ = await waitForEQTask;
 
                 if (fizzled || interrupted)
                 {
@@ -305,10 +307,6 @@ namespace MQFlux.Services
 
                     return false;
                 }
-            }
-            catch (TimeoutException)
-            {
-                // Some spells dont write a message so assume it was successful if it timed out.
             }
             finally
             {
@@ -323,12 +321,47 @@ namespace MQFlux.Services
             // We cant move if there is something already on the cursor.
             if (context.TLO.Cursor != null)
             {
-                mqLogger.Log($"Moving [\ag{item.Name}\aw] \arcancelled - cursor is not empty", TimeSpan.FromSeconds(5));
+                mqLogger.Log($"Move [\ag{item.Name}\aw] \arcancelled \awcursor is not empty", TimeSpan.FromSeconds(5));
 
                 return false;
             }
 
-            // TODO
+            // if slot is wearable slot
+            if (invSlot >= CharacterType.FIRST_WORN_ITEM && invSlot <= CharacterType.LAST_WORN_ITEM)
+            {
+                // TODO can use covers all these
+                // can i wear it
+                // - race
+                // - diety
+                // - level
+                // - size
+                if (!item.CanUse)
+                {
+                    return false;
+                }
+            }
+            // if slot is inventory slot
+            else if (invSlot >= CharacterType.FIRST_BAG_SLOT && invSlot <= CharacterType.LAST_BAG_SLOT)
+            {
+                // if target slot is a bag
+                var targetSlotItem = context.TLO.Me.GetInventoryItem(invSlot);
+
+                if (targetSlotItem != null && targetSlotItem.IsAContainer())
+                {
+                    // does it fit (size)
+                    if (targetSlotItem.SizeCapacity < item.Size)
+                    {
+                        return false;
+                    }
+                    // TODO validate if can use Type == "Ammo"
+                    // XOR - if not both ammo or neither ammo
+                    if ((string.Compare(item.Type, "Ammo", true) == 0) ^ (string.Compare(targetSlotItem.Type, "Ammo", true) == 0))
+                    {
+                        return false;
+                    }
+                }
+            }
+
             return true;
         }
 

@@ -5,7 +5,7 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class SortInventoryCommand : 
+    public class PutStatFoodInTopSlotsCommand : 
         ICharacterConfigRequest, 
         INotWhenCastingRequest, 
         INoItemOnCursorRequest, 

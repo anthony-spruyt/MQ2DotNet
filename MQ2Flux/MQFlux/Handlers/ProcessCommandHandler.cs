@@ -23,7 +23,7 @@ namespace MQFlux.Handlers
             if (await mediator.Send(new DispenseCommand(), cancellationToken)) return;
             if (await mediator.Send(new SummonFoodAndDrinkCommand(), cancellationToken)) return;
             if (await mediator.Send(new EatAndDrinkCommand(), cancellationToken)) return;
-            if (await mediator.Send(new SortInventoryCommand(), cancellationToken)) return;
+            if (await mediator.Send(new PutStatFoodInTopSlotsCommand(), cancellationToken)) return;
         }
     }
 }

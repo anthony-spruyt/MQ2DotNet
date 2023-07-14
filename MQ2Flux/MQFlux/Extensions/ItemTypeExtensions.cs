@@ -37,7 +37,7 @@ namespace MQFlux.Extensions
             {
                 foreach (var item in container.Contents)
                 {
-                    if (item.ID.HasValue && item.ID > 0)
+                    if (item.ID.GetValueOrDefault(0) > 0)
                     {
                         items.Add(item);
                     }
@@ -54,7 +54,7 @@ namespace MQFlux.Extensions
         /// <returns></returns>
         public static IEnumerable<ItemType> Containers(this IEnumerable<ItemType> @this)
         {
-            return @this.Where(i => i.ID.HasValue && i.ID > 0 && i.Container > 0);
+            return @this.Where(i => i.IsAContainer());
         }
 
         /// <summary>

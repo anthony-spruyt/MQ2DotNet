@@ -92,7 +92,7 @@
     <Compile Include="Commands\FlushDataTypeErrorsCommand.cs" />
     <Compile Include="Commands\ForageCommand.cs" />
     <Compile Include="Commands\LearnALanguageCommand.cs" />
-    <Compile Include="Commands\SortInventoryCommand.cs" />
+    <Compile Include="Commands\PutStatFoodInTopSlotsCommand.cs" />
     <Compile Include="Commands\SummonFoodAndDrinkCommand.cs" />
     <Compile Include="Extensions\CharacterTypeExtensions.cs" />
     <Compile Include="Extensions\ItemTypeExtensions.cs" />
@@ -108,7 +108,7 @@
     <Compile Include="Handlers\LearnALanguageCommandHandler.cs" />
     <Compile Include="Handlers\LoadMQCommandsHandler.cs" />
     <Compile Include="Handlers\SaveConfigCommandHandler.cs" />
-    <Compile Include="Handlers\SortInventoryCommandHandler.cs" />
+    <Compile Include="Handlers\PutStatFoodInTopSlotsCommandHandler.cs" />
     <Compile Include="Handlers\SummonFoodAndDrinkCommandHandler.cs" />
     <Compile Include="Handlers\TestCommandHandler.cs" />
     <Compile Include="Handlers\UnloadMQCommandsHandler.cs" />

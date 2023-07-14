@@ -119,7 +119,7 @@ namespace MQFlux.Services
                 var fizzled = false;
                 var interrupted = false;
 
-                Task waitForEQTask = Task.Run
+                Task<bool> waitForEQTask = Task.Run
                 (
                     () => context.Chat.WaitForEQ
                     (
@@ -141,7 +141,8 @@ namespace MQFlux.Services
 
                 mqLogger.Log($"Casting [\ay{spellBookSpell.Name}\aw]", TimeSpan.Zero);
 
-                await waitForEQTask;
+                // Some spells dont write a message so assume it was successful if it timed out.
+                _ = await waitForEQTask;
 
                 if (fizzled || interrupted)
                 {
@@ -150,10 +151,6 @@ namespace MQFlux.Services
                     
                     return false;
                 }
-            }
-            catch (TimeoutException)
-            {
-                // Some spells dont write a message so assume it was successful if it timed out.
             }
             finally
             {

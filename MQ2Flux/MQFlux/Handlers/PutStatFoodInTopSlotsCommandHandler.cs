@@ -11,48 +11,61 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Handlers
 {
-    public class SortInventoryCommandHandler : IRequestHandler<SortInventoryCommand, bool>
+    public class PutStatFoodInTopSlotsCommandHandler : IRequestHandler<PutStatFoodInTopSlotsCommand, bool>
     {
         private readonly IItemService itemService;
         private readonly IMQLogger mqLogger;
 
-        public SortInventoryCommandHandler(IItemService itemService, IMQLogger mqLogger)
+        public PutStatFoodInTopSlotsCommandHandler(IItemService itemService, IMQLogger mqLogger)
         {
             this.itemService = itemService;
             this.mqLogger = mqLogger;
         }
 
-        public Task<bool> Handle(SortInventoryCommand request, CancellationToken cancellationToken)
+        public Task<bool> Handle(PutStatFoodInTopSlotsCommand request, CancellationToken cancellationToken)
         {
-            if (!request.Character.AutoSortInventory.GetValueOrDefault(false))
+            if (!request.Character.AutoPutStatFoodInTopSlots.GetValueOrDefault(false))
             {
                 return Task.FromResult(false);
             }
 
             var me = request.Context.TLO.Me;
             var bagsAndContents = me.Bags.Flatten();
-            var firstBagSlot = me.GetInventoryItem(CharacterType.FIRST_BAG_SLOT);
-            var isBagInSlot1 = firstBagSlot != null && firstBagSlot.IsAContainer();
-            var secondBagSlot = me.GetInventoryItem(CharacterType.FIRST_BAG_SLOT + 1);
-            var isBagInSlot2 = secondBagSlot != null && secondBagSlot.IsAContainer();
             var statFood = GetStatFood(bagsAndContents, me);
-            bool moveStatFood = statFood != null &&
-                !(
-                    // stat food is already in slot 1 or slot 1 and sub slot 1
-                    (
-                        !statFood.IsInAContainer() || 
-                        statFood.ItemSlot2 == 1
-                    ) && 
-                    statFood.ItemSlot == CharacterType.FIRST_BAG_SLOT
-                );
-
-            if (moveStatFood)
+            
+            if (statFood != null)
             {
-                return MoveStatConsumableAsync(statFood, me, isBagInSlot1, isBagInSlot2, cancellationToken);
+                bool moveStatFood =
+                    !(
+                        // stat food is already in slot 1 or slot 1 and sub slot 1
+                        (
+                            !statFood.IsInAContainer() ||
+                            statFood.ItemSlot2 == 1
+                        ) &&
+                        statFood.ItemSlot == CharacterType.FIRST_BAG_SLOT
+                    );
+
+                if (moveStatFood)
+                {
+                    var firstBagSlot = me.GetInventoryItem(CharacterType.FIRST_BAG_SLOT);
+                    var isBagInSlot1 = firstBagSlot != null && firstBagSlot.IsAContainer();
+                    var secondBagSlot = me.GetInventoryItem(CharacterType.FIRST_BAG_SLOT + 1);
+                    var isBagInSlot2 = secondBagSlot != null && secondBagSlot.IsAContainer();
+
+                    return MoveStatConsumableAsync(statFood, me, isBagInSlot1, isBagInSlot2, cancellationToken);
+                }
             }
 
             var statDrink = GetStatDrink(bagsAndContents, me);
-            var moveStatDrink = statDrink != null &&
+
+            if (statDrink != null)
+            {
+                var firstBagSlot = me.GetInventoryItem(CharacterType.FIRST_BAG_SLOT);
+                var isBagInSlot1 = firstBagSlot != null && firstBagSlot.IsAContainer();
+                var secondBagSlot = me.GetInventoryItem(CharacterType.FIRST_BAG_SLOT + 1);
+                var isBagInSlot2 = secondBagSlot != null && secondBagSlot.IsAContainer();
+
+                var moveStatDrink =
                 !(
                     // stat drink is in bag 1 slot 2
                     (
@@ -65,7 +78,7 @@ namespace MQFlux.Handlers
                         // and no bag in slot 2 and stat drink is in slot 2
                         (
                             !isBagInSlot2 &&
-                            statDrink.ItemSlot == CharacterType.FIRST_BAG_SLOT + 1 && 
+                            statDrink.ItemSlot == CharacterType.FIRST_BAG_SLOT + 1 &&
                             !statDrink.IsInAContainer()
                         ) ||
                         // or a bag in slot 2 and stat drink is in slot 2 sub slot 1
@@ -77,9 +90,10 @@ namespace MQFlux.Handlers
                     )
                 );
 
-            if (moveStatDrink)
-            {
-                return MoveStatConsumableAsync(statDrink, me, isBagInSlot1, isBagInSlot2, cancellationToken);
+                if (moveStatDrink)
+                {
+                    return MoveStatConsumableAsync(statDrink, me, isBagInSlot1, isBagInSlot2, cancellationToken);
+                }
             }
 
             return Task.FromResult(false);
@@ -128,22 +142,26 @@ namespace MQFlux.Handlers
         {
             return items
                 .Where(i => i.IsDrinkable())
-                .OrderByDescending(i => i.GetNutrientScore(me))
-                .ThenBy(i => i.ID)
-                .ThenBy(i => i.ItemSlot)
-                .ThenBy(i => i.IsInAContainer() ? i.ItemSlot2.Value : 0)
-                .FirstOrDefault();
+                .Select(i => new { Item = i, Score = i.GetNutrientScore(me) })
+                .Where(i => i.Score > 0)
+                .OrderByDescending(i => i.Score)
+                .ThenBy(i => i.Item.ID)
+                .ThenBy(i => i.Item.ItemSlot)
+                .ThenBy(i => i.Item.IsInAContainer() ? i.Item.ItemSlot2.Value : 0)
+                .FirstOrDefault()?.Item;
         }
 
         private ItemType GetStatFood(IEnumerable<ItemType> items, CharacterType me)
         {
             return items
                 .Where(i => i.IsEdible())
-                .OrderByDescending(i => i.GetNutrientScore(me))
-                .ThenBy(i => i.ID)
-                .ThenBy(i => i.ItemSlot)
-                .ThenBy(i => i.IsInAContainer() ? i.ItemSlot2.Value : 0)
-                .FirstOrDefault();
+                .Select(i => new { Item = i, Score = i.GetNutrientScore(me) })
+                .Where(i => i.Score > 0)
+                .OrderByDescending(i => i.Score)
+                .ThenBy(i => i.Item.ID)
+                .ThenBy(i => i.Item.ItemSlot)
+                .ThenBy(i => i.Item.IsInAContainer() ? i.Item.ItemSlot2.Value : 0)
+                .FirstOrDefault()?.Item;
         }
     }
 }
