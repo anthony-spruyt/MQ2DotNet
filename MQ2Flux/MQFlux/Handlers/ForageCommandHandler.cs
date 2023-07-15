@@ -29,13 +29,7 @@ namespace MQFlux.Handlers
             var originalState = me.Spawn.State;
 
             // TODO can you forage on a horse?
-            if
-            (
-                !(
-                    originalState == SpawnState.Sit ||
-                    originalState == SpawnState.Stand
-                )
-            )
+            if (originalState != SpawnState.Sit && originalState != SpawnState.Stand)
             {
                 return false;
             }
@@ -54,6 +48,7 @@ namespace MQFlux.Handlers
 
                     if (request.Character.ForageBlacklist.Contains(foragedItemName))
                     {
+                        //await itemService.DropAsync(foragedItemName);
                         await itemService.DestroyAsync(foragedItemName);
                     }
                     else

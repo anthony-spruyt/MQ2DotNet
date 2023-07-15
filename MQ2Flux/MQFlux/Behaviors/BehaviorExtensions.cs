@@ -19,7 +19,9 @@ namespace MQFlux.Behaviors
                 .AddOpenBehavior(typeof(InterruptCastingBehavior<,>))
                 .AddOpenBehavior(typeof(NotWhenAutoAttackingBehavior<,>))
                 .AddOpenBehavior(typeof(AbilityBehavior<,>))
-                .AddOpenBehavior(typeof(NotWhenSpellbookIsOpenBehavior<,>));
+                .AddOpenBehavior(typeof(NotWhenSpellbookIsOpenBehavior<,>))
+                .AddOpenBehavior(typeof(GroupedBehavior<,>))
+                .AddOpenBehavior(typeof(GroupLeaderBehavior<,>));
         }
     }
 }

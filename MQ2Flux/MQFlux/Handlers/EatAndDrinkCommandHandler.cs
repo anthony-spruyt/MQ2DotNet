@@ -43,89 +43,94 @@ namespace MQFlux.Handlers
             var mq = request.Context.MQ;
             var allMyInv = me.Bags.Flatten();
 
-            if (await HandleHungerAsync(dontConsume, mq, me, allMyInv, cancellationToken))
+            if (amIHungry && await HandleHungerAsync(dontConsume, mq, me, allMyInv, cancellationToken))
             {
                 return true;
             }
-            return await HandleThirstAsync(dontConsume, mq, me, allMyInv, cancellationToken);
+
+            if (amIThirsty && await HandleThirstAsync(dontConsume, mq, me, allMyInv, cancellationToken))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private ItemType GetLeastNutritiousConsumable(IEnumerable<ItemType> items, CharacterType me)
+        {
+            return items.OrderBy(i => i.GetNutrientScore(me))
+                .ThenBy(i => i.Stack)
+                .FirstOrDefault();
         }
 
         private async Task<bool> HandleThirstAsync(IEnumerable<string> dontConsume, MQ2 mq, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
         {
-            if (me.AmIThirsty())
+            ItemType drink = GetDrink(dontConsume, me, allMyInv);
+
+            if (drink != null)
             {
-                // First get summoned ordered from least to most nutritious.
-                var drink = allMyInv
-                    .Where(i => i.NoRent && i.IsDrinkable() && !(dontConsume.Contains(i.Name)))
-                    .OrderBy(i => i.GetNutrientScore(me))
-                    .ThenBy(i => i.Stack)
-                    .FirstOrDefault();
-
-                // If no summoned get non summoned ordered from least to most nutritious.
-                if (drink == null)
-                {
-                    drink = allMyInv
-                        .Where(i => i.IsDrinkable() && !(dontConsume.Contains(i.Name)))
-                        .OrderBy(i => i.GetNutrientScore(me))
-                        .ThenBy(i => i.Stack)
-                        .FirstOrDefault();
-                }
-
-                if (drink != null)
-                {
-                    return await itemService.UseItemAsync(drink, "Drinking", cancellationToken);
-                }
-                else if (me.Grouped)
-                {
-                    var message = "I am thirsty and out of drink. Can anyone please help me out?";
-
-                    if (chatHistory.NoSpam(TimeSpan.FromSeconds(60), message))
-                    {
-                        mq.DoCommand($"/g {message}");
-                    }
-                }
+                return await itemService.UseItemAsync(drink, "Drinking", cancellationToken);
+            }
+            else if (me.Grouped)
+            {
+                NotifyGroup(mq, "thirsty", "drink");
             }
 
             return false;
         }
 
+        private ItemType GetDrink(IEnumerable<string> dontConsume, CharacterType me, IEnumerable<ItemType> allMyInv)
+        {
+            // First get summoned least nutritious.
+            var drink = GetLeastNutritiousConsumable(allMyInv.Where(i => i.NoRent && i.IsDrinkable() && !(dontConsume.Contains(i.Name))), me);
+
+            // If no summoned get non summoned least nutritious.
+            if (drink == null)
+            {
+                drink = GetLeastNutritiousConsumable(allMyInv.Where(i => i.IsDrinkable() && !(dontConsume.Contains(i.Name))), me);
+            }
+
+            return drink;
+        }
+
         private async Task<bool> HandleHungerAsync(IEnumerable<string> dontConsume, MQ2 mq, CharacterType me, IEnumerable<ItemType> allMyInv, CancellationToken cancellationToken)
         {
-            if (me.AmIHungry())
+            ItemType food = GetFood(dontConsume, me, allMyInv);
+
+            if (food != null)
             {
-                // First get summoned ordered from least to most nutritious.
-                var food = allMyInv
-                    .Where(i => i.NoRent && i.IsEdible() && !(dontConsume.Contains(i.Name)))
-                    .OrderBy(i => i.GetNutrientScore(me))
-                    .ThenBy(i => i.Stack)
-                    .FirstOrDefault();
-
-                // If no summoned get non summoned ordered from least to most nutritious.
-                if (food == null)
-                {
-                    food = allMyInv
-                        .Where(i => i.IsEdible() && !(dontConsume.Contains(i.Name)))
-                        .OrderBy(i => i.GetNutrientScore(me))
-                        .ThenBy(i => i.Stack)
-                        .FirstOrDefault();
-                }
-
-                if (food != null)
-                {
-                    return await itemService.UseItemAsync(food, "Eating", cancellationToken);
-                }
-                else if (me.Grouped)
-                {
-                    var message = "I am hungry and out of food. Can anyone please help me out?";
-
-                    if (chatHistory.NoSpam(TimeSpan.FromSeconds(60), message))
-                    {
-                        mq.DoCommand($"/g {message}");
-                    }
-                }
+                return await itemService.UseItemAsync(food, "Eating", cancellationToken);
+            }
+            else if (me.Grouped)
+            {
+                NotifyGroup(mq, "hungry", "food");
             }
 
             return false;
+        }
+
+        private ItemType GetFood(IEnumerable<string> dontConsume, CharacterType me, IEnumerable<ItemType> allMyInv)
+        {
+            // First get summoned least nutritious.
+            var food = GetLeastNutritiousConsumable(allMyInv.Where(i => i.NoRent && i.IsEdible() && !(dontConsume.Contains(i.Name))), me);
+
+            // If no summoned get non summoned least nutritious.
+            if (food == null)
+            {
+                food = GetLeastNutritiousConsumable(allMyInv.Where(i => i.IsEdible() && !(dontConsume.Contains(i.Name))), me);
+            }
+
+            return food;
+        }
+
+        private void NotifyGroup(MQ2 mq, string adjective, string noun)
+        {
+            var message = $"I am {adjective} and out of {noun}. Can anyone please help me out?";
+
+            if (chatHistory.NoSpam(TimeSpan.FromSeconds(60), message))
+            {
+                mq.DoCommand($"/g {message}");
+            }
         }
     }
 }

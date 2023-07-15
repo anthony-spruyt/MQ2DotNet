@@ -52,17 +52,22 @@ namespace MQFlux.Handlers
 
             if (languageNumber.HasValue)
             {
-                var mq = request.Context.MQ;
-                var message = $"Lets practise {language}. The time is {DateTimeOffset.Now.ToLocalTime()}. One two three four five six seven eight nine ten! Lets do it all again.";
-
-                if (chatHistory.NoSpam(TimeSpan.FromSeconds(1), message))
-                {
-                    mq.DoCommand($"/language {languageNumber}");
-                    mq.DoCommand($"/g {message}");
-                }
+                Practise(request, language, languageNumber.Value);
             }
 
             return Task.CompletedTask;
+        }
+
+        private void Practise(LearnALanguageCommand request, string language, int languageNumber)
+        {
+            var mq = request.Context.MQ;
+            var message = $"Lets practise {language}. The time is {DateTimeOffset.Now.ToLocalTime()}. One two three four five six seven eight nine ten! Lets do it all again.";
+
+            if (chatHistory.NoSpam(TimeSpan.FromSeconds(1), message))
+            {
+                mq.DoCommand($"/language {languageNumber}");
+                mq.DoCommand($"/g {message}");
+            }
         }
     }
 }

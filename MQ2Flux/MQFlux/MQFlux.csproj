@@ -75,6 +75,8 @@
     <Compile Include="Behaviors\BehaviorExtensions.cs" />
     <Compile Include="Behaviors\CasterBehavior.cs" />
     <Compile Include="Behaviors\CharacterConfigBehavior.cs" />
+    <Compile Include="Behaviors\GroupedBehavior.cs" />
+    <Compile Include="Behaviors\GroupLeaderBehavior.cs" />
     <Compile Include="Behaviors\HybridBehavior.cs" />
     <Compile Include="Behaviors\InCombatBehavior.cs" />
     <Compile Include="Behaviors\InterruptCastingBehavior.cs" />
