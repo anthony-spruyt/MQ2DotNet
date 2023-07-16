@@ -3,8 +3,9 @@
     <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), src\Common.props))\src\Common.props" Condition=" '$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), src\Common.props))' != '' " />
   </ImportGroup>
   <PropertyGroup>
-    <OutDir>$(MQ2BuildDirectory)bin\$(MQ2BinaryDirName)\resources\$(MSBuildProjectName)</OutDir>
-    <OutputPath>$(MQ2BuildDirectory)bin\$(MQ2BinaryDirName)\resources\$(MSBuildProjectName)</OutputPath>
+	  <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <OutDir>$(MQ2BuildDirectory)bin\release\resources\$(MSBuildProjectName)</OutDir>
+    <OutputPath>$(MQ2BuildDirectory)bin\release\resources\$(MSBuildProjectName)</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)' == 'x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -25,6 +26,7 @@
     <TargetFramework>net48</TargetFramework>
     <Platforms>x64;x86</Platforms>
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+    <BaseOutputPath>$(MQ2BuildDirectory)bin\release\resources\$(MSBuildProjectName)</BaseOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Costura.Fody">

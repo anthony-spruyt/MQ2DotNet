@@ -137,7 +137,7 @@ namespace MQFlux.Services
                     )
                 );
 
-                context.MQ.DoCommand($"/cast {spellBookSpell.Name}");
+                context.MQ.DoCommand($"/cast {gem}");
 
                 mqLogger.Log($"Casting [\ay{spellBookSpell.Name}\aw]", TimeSpan.Zero);
 
@@ -205,7 +205,7 @@ namespace MQFlux.Services
             DateTime waitUntil = DateTime.UtcNow + GetMemorizeTimeout((uint?)spell.Level ?? 0u, me.Spawn.Level.Value);
 
             context.MQ.DoCommand($"/memspell {slot} \"{spellName}\"");
-            mqLogger.Log($"Memorizing [\ay{spellName}\aw]", TimeSpan.Zero);
+            mqLogger.Log($"Memorizing [\ay{spellName}\aw] in slot \ay{slot}", TimeSpan.Zero);
 
             try
             {

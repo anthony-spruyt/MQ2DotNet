@@ -26,7 +26,7 @@ namespace MQFlux.Behaviors
             {
                 abilityRequest.Ability = abilityRequest.Context.TLO.Me.GetAbilityInfo(abilityRequest.AbilityName);
             
-                if (abilityRequest.Ability == null || !abilityRequest.Ability.Ready)
+                if (abilityRequest.Ability == null || abilityRequest.Ability.Level == 0 || !abilityRequest.Ability.Ready)
                 {
                     return Task.FromResult(default(TResponse));
                 }

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQ2DotNet", "MQ2DotNet\MQ2DotNet.csproj", "{158B70BD-4F02-4A0B-9F8C-B56E9E422B24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQ2DotNet", "MQ2DotNet\MQ2DotNet.csproj", "{158B70BD-4F02-4A0B-9F8C-B56E9E422B24}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQ2DotNetLoader", "MQ2DotNetLoader\MQ2DotNetLoader.vcxproj", "{72CC4B9C-0157-4D1A-8AE0-490BBEABC1BF}"
 EndProject
