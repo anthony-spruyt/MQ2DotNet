@@ -19,7 +19,7 @@ namespace MQFlux
 {
     public class MQFlux : IProgram
     {
-        public static Task Yield(CancellationToken cancellationToken) => Task.Delay(100, cancellationToken);
+        public static Task Yield(CancellationToken cancellationToken) => Task.Delay(200, cancellationToken);
 
         private readonly MQ2 mq;
         private readonly Chat chat;

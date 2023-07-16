@@ -5,8 +5,9 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class DispenseCommand : 
-        ICharacterConfigRequest, 
+    public class DispenseCommand :
+        ICharacterConfigRequest,
+        IConsciousRequest,
         INotInCombatRequest, 
         IStandingStillRequest, 
         INotWhenCastingRequest, 

@@ -249,7 +249,7 @@ namespace MQFlux.Services
 
                 PurgeCache();
 
-                string command = $"/useitem {item.Name}";
+                string command = $"/useitem \"{item.Name}\"";
 
                 if (!cachedCommands.TryAdd(command, DateTime.UtcNow))
                 {

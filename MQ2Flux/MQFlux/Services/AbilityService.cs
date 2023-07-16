@@ -50,7 +50,10 @@ namespace MQFlux.Services
                 (
                     ability == null ||
                     !ability.Ready ||
-                    me.AmICasting() ||
+                    (
+                        me.AmICasting() && 
+                        me.Spawn.Class.ShortName != "BRD"
+                    ) ||
                     (
                         me.Spawn.Class.CanCast &&
                         context.TLO.IsSpellBookOpen()

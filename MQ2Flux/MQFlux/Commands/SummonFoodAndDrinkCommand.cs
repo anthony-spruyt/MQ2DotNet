@@ -6,7 +6,8 @@ using MQFlux.Services;
 namespace MQFlux.Commands
 {
     public class SummonFoodAndDrinkCommand : 
-        ICharacterConfigRequest, 
+        ICharacterConfigRequest,
+        IConsciousRequest,
         INotInCombatRequest, 
         IStandingStillRequest, 
         ICasterRequest, 

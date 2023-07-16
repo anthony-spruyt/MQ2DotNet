@@ -10,6 +10,7 @@ namespace MQFlux.Behaviors
                 .AddOpenBehavior(typeof(MQContextBehavior<,>))
                 .AddOpenBehavior(typeof(ConfigBehavior<,>))
                 .AddOpenBehavior(typeof(CharacterConfigBehavior<,>))
+                .AddOpenBehavior(typeof(ConsciousBehavior<,>))
                 .AddOpenBehavior(typeof(NoItemOnCursorBehavior<,>))
                 .AddOpenBehavior(typeof(InCombatBehavior<,>))
                 .AddOpenBehavior(typeof(NotInCombatBehavior<,>))

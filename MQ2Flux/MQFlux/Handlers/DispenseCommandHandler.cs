@@ -67,7 +67,7 @@ namespace MQFlux.Handlers
                 {
                     var actualCount = allMyInv
                         .Where(i => (dispenser.SummonID.HasValue && dispenser.SummonID.Value == i.ID) || string.Compare(dispenser.SummonName, i.Name) == 0)
-                        .Sum(i => i.StackCount);
+                        .Sum(i => i.Stack);
 
                     if (actualCount < dispenser.TargetCount)
                     {

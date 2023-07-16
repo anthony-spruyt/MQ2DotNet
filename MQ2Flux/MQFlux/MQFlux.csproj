@@ -17,9 +17,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>..\..\..\..\build\bin\release\resources\MQ2DotNet\Programs\MQFlux\</OutputPath>
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>DEBUG;WIN64;</DefineConstants>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DefineConstants>WIN64;</DefineConstants>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
@@ -75,6 +76,7 @@
     <Compile Include="Behaviors\BehaviorExtensions.cs" />
     <Compile Include="Behaviors\CasterBehavior.cs" />
     <Compile Include="Behaviors\CharacterConfigBehavior.cs" />
+    <Compile Include="Behaviors\ConsciousBehavior.cs" />
     <Compile Include="Behaviors\GroupedBehavior.cs" />
     <Compile Include="Behaviors\GroupLeaderBehavior.cs" />
     <Compile Include="Behaviors\HybridBehavior.cs" />
