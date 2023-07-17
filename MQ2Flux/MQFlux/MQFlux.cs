@@ -7,7 +7,6 @@ using MQ2DotNet.Program;
 using MQ2DotNet.Services;
 using MQFlux.Behaviors;
 using MQFlux.Commands;
-using MQFlux.Queries;
 using MQFlux.Services;
 using System;
 using System.IO;
@@ -92,24 +91,12 @@ namespace MQFlux
 
                 using (CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokens))
                 {
+                    await mediator.Send(new InitializeCommand(), linkedTokenSource.Token);
+
                     while (!linkedTokenSource.IsCancellationRequested)
                     {
-                        var canProcess = await mediator.Send(new CanProcessQuery(), linkedTokenSource.Token);
-
-                        if (canProcess)
-                        {
-                            await mediator.Send
-                            (
-                                new ProcessCommand()
-                                {
-                                    Args = args
-                                },
-                                linkedTokenSource.Token
-                            );
-                        }
-
+                        _ = await mediator.Send(new ProcessCommand(),linkedTokenSource.Token);
                         await mediator.Send(new FlushDataTypeErrorsCommand(), linkedTokenSource.Token);
-
                         await Yield(linkedTokenSource.Token);
                     }
                 }

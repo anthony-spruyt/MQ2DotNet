@@ -18,7 +18,7 @@ namespace MQFlux.Handlers
 
         public Task Handle(ConfigUpdateNotification notification, CancellationToken cancellationToken)
         {
-            cache.TryRemove(CharacterConfig.CacheKey, out CharacterConfig _);
+            cache.TryRemove(CacheKeys.CharacterConfig, out CharacterConfig _);
 
             return Task.CompletedTask;
         }

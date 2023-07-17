@@ -24,8 +24,8 @@ namespace MQFlux.Services
 
     public class AbilityService : IAbilityService, IDisposable
     {
-        private IMQContext context;
-        private IMQLogger mqLogger;
+        private readonly IMQContext context;
+        private readonly IMQLogger mqLogger;
 
         private SemaphoreSlim semaphore;
         private bool disposedValue;
@@ -51,8 +51,8 @@ namespace MQFlux.Services
                     ability == null ||
                     !ability.Ready ||
                     (
-                        me.AmICasting() && 
-                        me.Spawn.Class.ShortName != "BRD"
+                        me.AmICasting() &&
+                        string.Compare(me.Spawn.Class.ShortName, "BRD") != 0
                     ) ||
                     (
                         me.Spawn.Class.CanCast &&

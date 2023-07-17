@@ -23,7 +23,7 @@ namespace MQFlux.Behaviors
                 notWhenCastingRequest.Context.TLO.Me.AmICasting() &&
                 !(
                     notWhenCastingRequest.AllowBard &&
-                    notWhenCastingRequest.Context.TLO.Me.Spawn.Class.ShortName == "BRD"
+                    string.Compare(notWhenCastingRequest.Context.TLO.Me.Spawn.Class.ShortName, "BRD") == 0
                 )
             )
             {

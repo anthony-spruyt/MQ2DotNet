@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MQFlux.Handlers;
 using MQFlux.Models;
 using MQFlux.Services;
 using System;
@@ -45,7 +46,7 @@ namespace MQFlux.Behaviors
                 var name = charConfigRequest.Context.TLO.Me.Name;
                 var server = charConfigRequest.Context.TLO.EverQuest.Server;
 
-                if (cache.TryGetValue(CharacterConfig.CacheKey, out CharacterConfig value))
+                if (cache.TryGetValue(CacheKeys.CharacterConfig, out CharacterConfig value))
                 {
                     characterConfig = value;
                 }
@@ -60,7 +61,7 @@ namespace MQFlux.Behaviors
 
                     characterConfig = characterConfig.Effective(charConfigRequest.Config?.Defaults);
 
-                    cache.TryAdd(CharacterConfig.CacheKey, characterConfig);
+                    cache.TryAdd(CacheKeys.CharacterConfig, characterConfig);
                 }
             }
             catch (Exception ex)

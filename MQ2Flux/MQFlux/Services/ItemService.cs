@@ -4,6 +4,7 @@ using MQFlux.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -68,23 +69,45 @@ namespace MQFlux.Services
             DateTime waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
 
             // Wait for something to hit the cursor up to a timeout.
-            while (waitUntil >= DateTime.UtcNow && context.TLO.Cursor == null && !cancellationToken.IsCancellationRequested)
+            while (context.TLO.Cursor == null)
             {
                 await MQFlux.Yield(cancellationToken);
+
+                if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
             }
 
-            if (cancellationToken.IsCancellationRequested || (predicate != null && !predicate(context.TLO.Cursor)))
+            if (predicate != null && !predicate(context.TLO.Cursor))
             {
                 return;
             }
 
             mqLogger.Log($"Putting [\ag{context.TLO.Cursor.Name}\aw] into your inventory", TimeSpan.Zero);
 
-            while (context.TLO.Cursor != null && !cancellationToken.IsCancellationRequested)
+            waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+
+            while (context.TLO.Cursor != null)
             {
                 context.MQ.DoCommand("/autoinv");
 
                 await MQFlux.Yield(cancellationToken);
+
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                if (waitUntil < DateTime.UtcNow)
+                {
+                    if (context.TLO.Cursor != null && context.TLO.Me.FreeInventory.GetValueOrDefault(0u) == 0u)
+                    {
+                        mqLogger.Log($"Cannot put [\ag{context.TLO.Cursor.Name}\aw] into your inventory because it is full", TimeSpan.Zero);
+                    }
+
+                    break;
+                }
             }
         }
 

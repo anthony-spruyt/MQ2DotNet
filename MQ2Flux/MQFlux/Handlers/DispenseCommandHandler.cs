@@ -73,7 +73,7 @@ namespace MQFlux.Handlers
                     {
                         var dispenserItem = allMyInv.FirstOrDefault(i => (dispenser.DispenserID.HasValue && dispenser.DispenserID.Value == i.ID) || string.Compare(dispenser.DispenserName, i.Name) == 0);
 
-                        if (dispenserItem != null)
+                        if (dispenserItem != null && dispenserItem.IsTimerReady())
                         {
                             return await itemService.UseItemAsync(dispenserItem, "Dispensing", cancellationToken);
                         }

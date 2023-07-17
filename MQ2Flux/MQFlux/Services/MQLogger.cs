@@ -49,7 +49,7 @@ namespace MQFlux.Services
                 return;
             }
 
-            context.MQ?.WriteChatSafe($"\am[{nameof(MQFlux)}] \aw{text}");
+            context.MQ?.WriteChatSafe($"\am[{nameof(MQFlux)}]{Now()} \aw{text}");
         }
 
         public void LogError(Exception exception, string message = null)
@@ -61,7 +61,7 @@ namespace MQFlux.Services
                 return;
             }
 
-            context.MQ?.WriteChatSafe($"\ar[{nameof(MQFlux)}] \aw{errorMessage}");
+            context.MQ?.WriteChatSafe($"\ar[{nameof(MQFlux)}]{Now()} \aw{errorMessage}");
 
             if (exception == null)
             {
@@ -70,6 +70,11 @@ namespace MQFlux.Services
 
             context.MQ?.WriteChatSafe($"\ar[{nameof(MQFlux)}] \awException message: {exception.Message}");
             context.MQ?.WriteChatSafe($"\ar[{nameof(MQFlux)}] \awStack Tace: {exception.StackTrace}");
+        }
+
+        private static string Now()
+        {
+            return $"\a-y[{DateTime.Now:HH:mm:ss}]";
         }
     }
 }

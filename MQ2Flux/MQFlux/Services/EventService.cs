@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using MQ2DotNet.EQ;
 using MQ2DotNet.MQ2API.DataTypes;
+using MQFlux.Commands;
 using System;
+using System.Threading.Tasks;
 
 namespace MQFlux.Services
 {
     public interface IEventService
     {
-        bool Camping { get; }
-        GameState GameState { get; }
-        bool Zoning { get; }
+        
     }
 
     public static class EventServiceExtensions
@@ -23,21 +24,14 @@ namespace MQFlux.Services
 
     public class EventService : IEventService, IDisposable
     {
-        public bool Camping { get; private set; }
-        public GameState GameState { get; private set; }
-        public bool Zoning { get; private set; }
-
         private readonly IMQContext context;
-
+        private readonly IMediator mediator;
         private bool disposedValue;
 
-        public EventService(IMQContext context)
+        public EventService(IMQContext context, IMediator mediator)
         {
             this.context = context;
-
-            Camping = false;
-            GameState = context.TLO?.EverQuest?.GameState ?? GameState.Unknown;
-            Zoning = false;
+            this.mediator = mediator;
 
             var events = context.Events;
 
@@ -61,12 +55,12 @@ namespace MQFlux.Services
 
         private void Events_BeginZone(object sender, EventArgs e)
         {
-            Zoning = true;
+            _ = Task.Run(() => mediator.Send(new SetZoningCommand(true)));
         }
 
         private void Events_EndZone(object sender, EventArgs e)
         {
-            Zoning = false;
+            _ = Task.Run(() => mediator.Send(new SetZoningCommand(false)));
         }
 
         private void Events_OnAddGroundItem(object sender, GroundType e)
@@ -79,13 +73,13 @@ namespace MQFlux.Services
 
         private void Events_OnChatEQ(object sender, string e)
         {
-            if (!Camping && e.EndsWith("seconds to prepare your camp."))
+            if (e.EndsWith("seconds to prepare your camp."))
             {
-                Camping = true;
+                _ = Task.Run(() => mediator.Send(new SetCampingCommand(true)));
             }
-            else if (Camping && e.StartsWith("You abandon your preparations to camp"))
+            else if (e.StartsWith("You abandon your preparations to camp"))
             {
-                Camping = false;
+                _ = Task.Run(() => mediator.Send(new SetCampingCommand(false)));
             }
         }
 
@@ -130,7 +124,7 @@ namespace MQFlux.Services
 
         private void Events_SetGameState(object sender, GameState e)
         {
-            GameState = e;
+            _ = Task.Run(() => mediator.Send(new SetGameStateCommand(e)));
         }
 
         protected virtual void Dispose(bool disposing)

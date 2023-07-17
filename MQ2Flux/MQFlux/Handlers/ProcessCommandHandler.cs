@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Handlers
 {
-    public class ProcessCommandHandler : IRequestHandler<ProcessCommand>
+    public class ProcessCommandHandler : IRequestHandler<ProcessCommand, bool>
     {
         private readonly IMediator mediator;
 
@@ -14,16 +14,17 @@ namespace MQFlux.Handlers
             this.mediator = mediator;
         }
 
-        public async Task Handle(ProcessCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(ProcessCommand request, CancellationToken cancellationToken)
         {
-            // TODO am I camping query and return if true.
             await mediator.Send(new DismissAlertWindowCommand(), cancellationToken);
             await mediator.Send(new LearnALanguageCommand(), cancellationToken);
-            if (await mediator.Send(new ForageCommand(), cancellationToken)) return;
-            if (await mediator.Send(new DispenseCommand(), cancellationToken)) return;
-            if (await mediator.Send(new SummonFoodAndDrinkCommand(), cancellationToken)) return;
-            if (await mediator.Send(new EatAndDrinkCommand(), cancellationToken)) return;
-            if (await mediator.Send(new PutStatFoodInTopSlotsCommand(), cancellationToken)) return;
+
+            return 
+                await mediator.Send(new ForageCommand(), cancellationToken) ||
+                await mediator.Send(new DispenseCommand(), cancellationToken) ||
+                await mediator.Send(new SummonFoodAndDrinkCommand(), cancellationToken) ||
+                await mediator.Send(new EatAndDrinkCommand(), cancellationToken) ||
+                await mediator.Send(new PutStatFoodInTopSlotsCommand(), cancellationToken);
         }
     }
 }

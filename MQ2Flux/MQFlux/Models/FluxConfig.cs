@@ -48,8 +48,6 @@ namespace MQFlux.Models
         /// A list of food and drink dispensers.
         /// </summary>
         public List<FoodAndDrinkDispenser> Dispensers { get; set; } = new List<FoodAndDrinkDispenser>();
-
-        internal static readonly string CacheKey = nameof(CharacterConfig);
     }
 
     public class FoodAndDrinkDispenser

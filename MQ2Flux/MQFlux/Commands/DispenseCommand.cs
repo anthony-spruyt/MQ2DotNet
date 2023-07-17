@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MQ2DotNet.EQ;
 using MQFlux.Behaviors;
 using MQFlux.Models;
 using MQFlux.Services;
@@ -8,10 +9,10 @@ namespace MQFlux.Commands
     public class DispenseCommand :
         ICharacterConfigRequest,
         IConsciousRequest,
-        INotInCombatRequest, 
-        IStandingStillRequest, 
-        INotWhenCastingRequest, 
-        INoItemOnCursorRequest, 
+        INotInCombatRequest,
+        IStandingStillRequest,
+        INotWhenCastingRequest,
+        INoItemOnCursorRequest,
         IRequest<bool>
     {
         public bool AllowBard => false;
