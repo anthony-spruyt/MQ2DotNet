@@ -6,6 +6,7 @@ using MQ2DotNet.MQ2API;
 using MQ2DotNet.Program;
 using MQ2DotNet.Services;
 using MQFlux.Behaviors;
+using MQFlux.Behaviors.CombatCommandBehaviors;
 using MQFlux.Commands;
 using MQFlux.Services;
 using System;

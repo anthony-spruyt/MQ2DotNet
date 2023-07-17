@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MQFlux.Commands;
+using MQFlux.Commands.CombatCommands;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +21,7 @@ namespace MQFlux.Handlers
             await mediator.Send(new LearnALanguageCommand(), cancellationToken);
 
             return 
+                await mediator.Send(new MeleeAutoAttackCommand(), cancellationToken) ||
                 await mediator.Send(new ForageCommand(), cancellationToken) ||
                 await mediator.Send(new DispenseCommand(), cancellationToken) ||
                 await mediator.Send(new SummonFoodAndDrinkCommand(), cancellationToken) ||

@@ -1,14 +1,9 @@
 ﻿using MediatR;
-using MQFlux.Behaviors;
-using MQFlux.Models;
-using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class ProcessCommand : ICharacterConfigRequest, IRequest<bool>
+    public class ProcessCommand : IRequest<bool>
     {
-        public IMQContext Context { get; set; }
-        public FluxConfig Config { get; set; }
-        public CharacterConfig Character { get; set; }
+        
     }
 }

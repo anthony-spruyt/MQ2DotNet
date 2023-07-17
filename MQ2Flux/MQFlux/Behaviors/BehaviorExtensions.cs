@@ -1,6 +1,9 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using MQFlux.Behaviors.CombatCommandBehaviors;
+using MQFlux.Behaviors.ProcessCommandBehaviors;
 using MQFlux.Commands;
+using MQFlux.Commands.CombatCommands;
 
 namespace MQFlux.Behaviors
 {
@@ -9,7 +12,9 @@ namespace MQFlux.Behaviors
         public static MediatRServiceConfiguration AddFluxBehaviors(this MediatRServiceConfiguration config)
         {
             return config
-                .AddBehavior<IPipelineBehavior<ProcessCommand, bool>, PCActiveBehavior>()
+                .AddBehavior<IPipelineBehavior<ProcessCommand, bool>, InGameBehavior>()
+                .AddBehavior<IPipelineBehavior<ProcessCommand, bool>, NotZoningBehavior>()
+                .AddBehavior<IPipelineBehavior<ProcessCommand, bool>, NotCampingBehavior>()
                 .AddOpenBehavior(typeof(MQContextBehavior<,>))
                 .AddOpenBehavior(typeof(ConfigBehavior<,>))
                 .AddOpenBehavior(typeof(CharacterConfigBehavior<,>))
@@ -28,7 +33,8 @@ namespace MQFlux.Behaviors
                 .AddOpenBehavior(typeof(NotWhenSpellbookIsOpenBehavior<,>))
                 .AddOpenBehavior(typeof(GroupedBehavior<,>))
                 .AddOpenBehavior(typeof(GroupLeaderBehavior<,>))
-                .AddOpenBehavior(typeof(FreeInventorySlotBehavior<,>));
+                .AddOpenBehavior(typeof(FreeInventorySlotBehavior<,>))
+                .AddOpenBehavior(typeof(MainAssistBehavior<,>));
         }
     }
 }

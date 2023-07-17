@@ -352,8 +352,8 @@ namespace MQFlux.Services
             // if slot is wearable slot
             if (invSlot >= CharacterType.FIRST_WORN_ITEM && invSlot <= CharacterType.LAST_WORN_ITEM)
             {
-                // TODO can use covers all these
-                // can i wear it
+                // TODO validate if CanUse covers all these
+                // can i wear it IE
                 // - race
                 // - diety
                 // - level

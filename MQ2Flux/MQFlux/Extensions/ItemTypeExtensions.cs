@@ -9,18 +9,14 @@ namespace MQFlux.Extensions
     {
         public static bool IsTimerReady(this ItemType @this)
         {
-            return !@this.TimerReady.HasValue || @this.TimerReady.Value == TimeSpan.Zero;
+            return @this.TimerReady.GetValueOrDefault(TimeSpan.Zero) == TimeSpan.Zero;
         }
 
         public static bool HasCastTime(this ItemType @this)
         {
             return @this.CastTime.HasValue ?
                 @this.CastTime.Value > TimeSpan.Zero :
-                @this.Clicky == null ?
-                    false :
-                    @this.Clicky.CastTime.HasValue ?
-                        @this.Clicky.CastTime.Value > TimeSpan.Zero :
-                        false;
+                @this.Clicky != null && @this.Clicky.CastTime.GetValueOrDefault(TimeSpan.Zero) > TimeSpan.Zero;
         }
 
         /// <summary>

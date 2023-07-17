@@ -83,7 +83,7 @@
     <Compile Include="Behaviors\HybridBehavior.cs" />
     <Compile Include="Behaviors\InCombatBehavior.cs" />
     <Compile Include="Behaviors\InterruptCastingBehavior.cs" />
-    <Compile Include="Behaviors\MainAssistBehavior.cs" />
+    <Compile Include="Behaviors\CombatCommandBehaviors\MainAssistBehavior.cs" />
     <Compile Include="Behaviors\MeleeBehavior.cs" />
     <Compile Include="Behaviors\MQContextBehavior.cs" />
     <Compile Include="Behaviors\NoItemOnCursorBehavior.cs" />
@@ -91,8 +91,11 @@
     <Compile Include="Behaviors\NotWhenAutoAttackingBehavior.cs" />
     <Compile Include="Behaviors\NotWhenCastingBehavior.cs" />
     <Compile Include="Behaviors\NotWhenSpellbookIsOpenBehavior.cs" />
-    <Compile Include="Behaviors\PCActiveBehavior.cs" />
+    <Compile Include="Behaviors\ProcessCommandBehaviors\NotCampingBehavior.cs" />
+    <Compile Include="Behaviors\ProcessCommandBehaviors\NotZoningBehavior.cs" />
+    <Compile Include="Behaviors\ProcessCommandBehaviors\InGameBehavior.cs" />
     <Compile Include="Behaviors\StandingStillBehavior.cs" />
+    <Compile Include="Commands\CombatCommands\CombatCommand.cs" />
     <Compile Include="Commands\DismissAlertWindowCommand.cs" />
     <Compile Include="Commands\DispenseCommand.cs" />
     <Compile Include="Commands\EatAndDrinkCommand.cs" />
@@ -101,6 +104,7 @@
     <Compile Include="Commands\InitializeCommand.cs" />
     <Compile Include="Commands\ISetCacheCommand.cs" />
     <Compile Include="Commands\LearnALanguageCommand.cs" />
+    <Compile Include="Commands\CombatCommands\MeleeAutoAttackCommand.cs" />
     <Compile Include="Commands\PutStatFoodInTopSlotsCommand.cs" />
     <Compile Include="Commands\SetCampingCommand.cs" />
     <Compile Include="Commands\SetGameStateCommand.cs" />
@@ -110,6 +114,7 @@
     <Compile Include="Extensions\ItemTypeExtensions.cs" />
     <Compile Include="Extensions\SpellTypeExtensions.cs" />
     <Compile Include="Extensions\TLOExtensions.cs" />
+    <Compile Include="Handlers\CombatCommandHandlers\MeleeAutoAttackCommandHandler.cs" />
     <Compile Include="Handlers\SetCacheCommandHandler.cs" />
     <Compile Include="Handlers\CacheKeys.cs" />
     <Compile Include="Handlers\GetCacheQueryHandler.cs" />
