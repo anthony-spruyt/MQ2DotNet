@@ -24,11 +24,11 @@ namespace MQFlux.Services
 
     public class EventService : IEventService, IDisposable
     {
-        private readonly IMQContext context;
+        private readonly IContext context;
         private readonly IMediator mediator;
         private bool disposedValue;
 
-        public EventService(IMQContext context, IMediator mediator)
+        public EventService(IContext context, IMediator mediator)
         {
             this.context = context;
             this.mediator = mediator;

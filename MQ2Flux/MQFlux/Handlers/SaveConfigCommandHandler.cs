@@ -8,9 +8,9 @@ namespace MQFlux.Handlers.Handlers
 {
     public class SaveConfigCommandHandler : IRequestHandler<SaveConfigCommand>
     {
-        private readonly IMQFluxConfig config;
+        private readonly IConfig config;
 
-        public SaveConfigCommandHandler(IMQFluxConfig config)
+        public SaveConfigCommandHandler(IConfig config)
         {
             this.config = config;
         }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Behaviors
 {
-    public interface IInCombatRequest : IMQContextRequest
+    public interface IInCombatRequest : IContextRequest
     {
         
     }

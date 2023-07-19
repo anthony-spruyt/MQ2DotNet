@@ -4,8 +4,8 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class DismissAlertWindowCommand : IMQContextRequest, IRequest
+    public class DismissAlertWindowCommand : IContextRequest, IRequest
     {
-        public IMQContext Context { get ; set; }
+        public IContext Context { get ; set; }
     }
 }

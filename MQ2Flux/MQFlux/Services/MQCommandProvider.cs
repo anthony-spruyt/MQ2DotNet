@@ -17,7 +17,7 @@ namespace MQFlux.Services
         {
             return services
                 .AddSingleton<IMQCommandProvider, MQCommandProvider>()
-                .AddSingleton<IFluxMQAsyncCommand, FluxMQAsyncCommand>();
+                .AddSingleton<IFluxAsyncCommand, FluxAsyncCommand>();
         }
     }
 
@@ -26,9 +26,9 @@ namespace MQFlux.Services
         public IEnumerable<IMQAsyncCommand> AsyncCommands { get; private set; }
         public IEnumerable<IMQCommand> Commands { get; private set; }
 
-        private readonly IMQContext context;
+        private readonly IContext context;
 
-        public MQCommandProvider(IMQContext context, IFluxMQAsyncCommand fluxAsyncCommandService)
+        public MQCommandProvider(IContext context, IFluxAsyncCommand fluxAsyncCommandService)
         {
             this.context = context;
             AsyncCommands = new IMQAsyncCommand[]

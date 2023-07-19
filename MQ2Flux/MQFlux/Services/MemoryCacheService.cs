@@ -3,6 +3,14 @@ using System.Collections.Concurrent;
 
 namespace MQFlux.Services
 {
+    public static class CacheKeys
+    {
+        public static readonly string Camping = nameof(Camping);
+        public static readonly string Zoning = nameof(Zoning);
+        public static readonly string GameState = nameof(GameState);
+        public static readonly string CharacterConfig = nameof(CharacterConfig);
+    }
+
     public interface ICache
     {
         T AddOrUpdate<T>(string key, T value);
@@ -11,20 +19,20 @@ namespace MQFlux.Services
         bool TryRemove<T>(string key, out T value);
     }
 
-    public static class MemoryCacheExtensions
+    public static class MemoryCacheServiceExtensions
     {
-        public static IServiceCollection AddMemoryCache(this IServiceCollection services)
+        public static IServiceCollection AddCache(this IServiceCollection services)
         {
             return services
-                .AddSingleton<ICache, MemoryCache>();
+                .AddSingleton<ICache, MemoryCacheService>();
         }
     }
 
-    public class MemoryCache : ICache
+    public class MemoryCacheService : ICache
     {
         private readonly ConcurrentDictionary<string, object> cache;
 
-        public MemoryCache()
+        public MemoryCacheService()
         {
             cache = new ConcurrentDictionary<string, object>();
         }

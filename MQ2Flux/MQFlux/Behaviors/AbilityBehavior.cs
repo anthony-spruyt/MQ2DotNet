@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Behaviors
 {
-    public interface IAbilityRequest : IMQContextRequest
+    public interface IAbilityRequest : IContextRequest
     {
         /// <summary>
         /// This is set by the middleware, do not set when creating a request.

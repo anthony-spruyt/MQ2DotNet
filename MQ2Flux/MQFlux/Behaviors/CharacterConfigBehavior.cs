@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Behaviors
 {
-    public interface ICharacterConfigRequest : IConfigRequest, IMQContextRequest
+    public interface ICharacterConfigRequest : IConfigRequest, IContextRequest
     {
         /// <summary>
         /// The effective character configuration that is set by the middleware. Do not set this when creating a new request.

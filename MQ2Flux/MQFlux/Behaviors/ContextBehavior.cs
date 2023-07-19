@@ -5,26 +5,26 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Behaviors
 {
-    public interface IMQContextRequest
+    public interface IContextRequest
     {
         /// <summary>
         /// The context that is set by the middleware. Do not set this when creating a new request.
         /// </summary>
-        IMQContext Context { get; set; }
+        IContext Context { get; set; }
     }
 
-    public class MQContextBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class ContextBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly IMQContext context;
+        private readonly IContext context;
 
-        public MQContextBehavior(IMQContext context)
+        public ContextBehavior(IContext context)
         {
             this.context = context;
         }
 
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            if (request is IMQContextRequest contextRequest)
+            if (request is IContextRequest contextRequest)
             {
                 contextRequest.Context = context;
             }

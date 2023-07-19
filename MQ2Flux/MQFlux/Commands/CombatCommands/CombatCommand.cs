@@ -4,8 +4,8 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands.CombatCommands
 {
-    public abstract class CombatCommand<TResponse> : IMQContextRequest, IRequest<TResponse>
+    public abstract class CombatCommand<TResponse> : IContextRequest, IRequest<TResponse>
     {
-        public abstract IMQContext Context { get; set; }
+        public abstract IContext Context { get; set; }
     }
 }

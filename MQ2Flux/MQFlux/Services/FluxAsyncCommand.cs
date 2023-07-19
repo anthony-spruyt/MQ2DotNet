@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Services
 {
-    public interface IFluxMQAsyncCommand : IMQAsyncCommand
+    public interface IFluxAsyncCommand : IMQAsyncCommand
     {
 
     }
 
-    public class FluxMQAsyncCommand : IFluxMQAsyncCommand, IDisposable
+    public class FluxAsyncCommand : IFluxAsyncCommand, IDisposable
     {
         public string Command => "/flux";
 
@@ -24,7 +24,7 @@ namespace MQFlux.Services
         private bool disposedValue;
         private CancellationTokenSource cancellationTokenSource;
 
-        public FluxMQAsyncCommand(IMQLogger logger, IMediator mediator)
+        public FluxAsyncCommand(IMQLogger logger, IMediator mediator)
         {
             this.logger = logger;
             this.mediator = mediator;

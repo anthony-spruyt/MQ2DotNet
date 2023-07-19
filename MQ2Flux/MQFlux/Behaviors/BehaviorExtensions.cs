@@ -15,7 +15,7 @@ namespace MQFlux.Behaviors
                 .AddBehavior<IPipelineBehavior<ProcessCommand, bool>, InGameBehavior>()
                 .AddBehavior<IPipelineBehavior<ProcessCommand, bool>, NotZoningBehavior>()
                 .AddBehavior<IPipelineBehavior<ProcessCommand, bool>, NotCampingBehavior>()
-                .AddOpenBehavior(typeof(MQContextBehavior<,>))
+                .AddOpenBehavior(typeof(ContextBehavior<,>))
                 .AddOpenBehavior(typeof(ConfigBehavior<,>))
                 .AddOpenBehavior(typeof(CharacterConfigBehavior<,>))
                 .AddOpenBehavior(typeof(ConsciousBehavior<,>))

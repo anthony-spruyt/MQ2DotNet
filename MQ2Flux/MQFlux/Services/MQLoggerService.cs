@@ -9,22 +9,22 @@ namespace MQFlux.Services
         void LogError(Exception exception, string message = null);
     }
 
-    public static class MQLoggerExtensions
+    public static class MQLoggerServiceExtensions
     {
         public static IServiceCollection AddMQLogging(this IServiceCollection services)
         {
-            return services.AddSingleton<IMQLogger, MQLogger>();
+            return services.AddSingleton<IMQLogger, MQLoggerService>();
         }
     }
 
-    public class MQLogger : IMQLogger
+    public class MQLoggerService : IMQLogger
     {
         private const int MAX_TEXT_LENGTH = 1000;
 
-        private readonly IMQContext context;
+        private readonly IContext context;
         private readonly IChatHistory chatHistory;
 
-        public MQLogger(IMQContext context, IChatHistory chatHistory)
+        public MQLoggerService(IContext context, IChatHistory chatHistory)
         {
             this.context = context;
             this.chatHistory = chatHistory;

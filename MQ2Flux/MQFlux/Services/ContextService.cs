@@ -5,7 +5,7 @@ using System;
 
 namespace MQFlux.Services
 {
-    public interface IMQContext
+    public interface IContext
     {
         MQ2 MQ { get; }
         Chat Chat { get; }
@@ -15,19 +15,19 @@ namespace MQFlux.Services
         TLO TLO { get; }
     }
 
-    public static class MQ2ContextExtensions
+    public static class ContextServiceExtensions
     {
-        public static IServiceCollection AddMQContext(this IServiceCollection services, MQ2 mq, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
+        public static IServiceCollection AddContext(this IServiceCollection services, MQ2 mq, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
         {
-            MQContext factory(IServiceProvider serviceProvider) => new MQContext(mq, chat, commands, events, spawns, tlo);
+            ContextService factory(IServiceProvider serviceProvider) => new ContextService(mq, chat, commands, events, spawns, tlo);
 
-            services.AddSingleton<IMQContext, MQContext>(factory);
+            services.AddSingleton<IContext, ContextService>(factory);
 
             return services;
         }
     }
 
-    public class MQContext : IMQContext
+    public class ContextService : IContext
     {
         public MQ2 MQ { get; private set; }
 
@@ -41,7 +41,7 @@ namespace MQFlux.Services
 
         public TLO TLO { get; private set; }
 
-        public MQContext(MQ2 mq, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
+        public ContextService(MQ2 mq, Chat chat, MQ2DotNet.Services.Commands commands, Events events, Spawns spawns, TLO tlo)
         {
             MQ = mq;
             Chat = chat;

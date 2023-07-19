@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Behaviors
 {
-    public interface INotWhenCastingRequest : IMQContextRequest
+    public interface INotWhenCastingRequest : IContextRequest
     {
         /// <summary>
         /// If <see cref="true"/> then this behaviour will not short circuit for bards.

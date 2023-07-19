@@ -4,7 +4,6 @@ using MQFlux.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,13 +48,13 @@ namespace MQFlux.Services
     public class ItemService : IItemService, IDisposable
     {
         private readonly IMQLogger mqLogger;
-        private readonly IMQContext context;
+        private readonly IContext context;
         private readonly ConcurrentDictionary<string, DateTime> cachedCommands;
 
         private SemaphoreSlim semaphore;
         private bool disposedValue;
 
-        public ItemService(IMQLogger mqLogger, IMQContext context)
+        public ItemService(IMQLogger mqLogger, IContext context)
         {
             this.mqLogger = mqLogger;
             this.context = context;

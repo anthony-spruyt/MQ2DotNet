@@ -18,6 +18,6 @@ namespace MQFlux.Commands
         public bool AllowBard => false;
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
-        public IMQContext Context { get; set; }
+        public IContext Context { get; set; }
     }
 }

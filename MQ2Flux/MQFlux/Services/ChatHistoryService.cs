@@ -20,23 +20,23 @@ namespace MQFlux.Services
         public string Message { get; set; }
     }
 
-    public static class ChatHistoryExtensions
+    public static class ChatHistoryServiceExtensions
     {
         public static IServiceCollection AddChatHistory(this IServiceCollection services)
         {
             return services
-                .AddSingleton<IChatHistory, ChatHistory>();
+                .AddSingleton<IChatHistory, ChatHistoryService>();
         }
     }
 
-    public class ChatHistory : IChatHistory, IDisposable
+    public class ChatHistoryService : IChatHistory, IDisposable
     {
         public static readonly int MAX_HISTORY_SIZE = 5000;
 
         private readonly ConcurrentQueue<ChatLogItem> chat;
         private readonly ConcurrentQueue<ChatLogItem> eqChat;
         private readonly ConcurrentQueue<ChatLogItem> mqChat;
-        private readonly IMQContext context;
+        private readonly IContext context;
 
         private bool disposedValue;
 
@@ -46,7 +46,7 @@ namespace MQFlux.Services
 
         public IEnumerable<ChatLogItem> MQChat => mqChat.OrderByDescending(i => i.Timestamp);
 
-        public ChatHistory(IMQContext context)
+        public ChatHistoryService(IContext context)
         {
             chat = new ConcurrentQueue<ChatLogItem>();
             eqChat = new ConcurrentQueue<ChatLogItem>();

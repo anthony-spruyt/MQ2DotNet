@@ -11,7 +11,7 @@ namespace MQFlux.Commands
         IConsciousRequest,
         IRequest
     {
-        public IMQContext Context { get; set; }
+        public IContext Context { get; set; }
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
     }

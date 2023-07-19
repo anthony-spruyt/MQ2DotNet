@@ -24,13 +24,13 @@ namespace MQFlux.Services
 
     public class AbilityService : IAbilityService, IDisposable
     {
-        private readonly IMQContext context;
+        private readonly IContext context;
         private readonly IMQLogger mqLogger;
 
         private SemaphoreSlim semaphore;
         private bool disposedValue;
 
-        public AbilityService(IMQContext context, IMQLogger mqLogger)
+        public AbilityService(IContext context, IMQLogger mqLogger)
         {
             this.context = context;
             this.mqLogger = mqLogger;

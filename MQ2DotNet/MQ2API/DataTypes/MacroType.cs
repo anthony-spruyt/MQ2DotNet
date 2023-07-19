@@ -29,11 +29,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         public string Name => GetMember<StringType>("Name");
 
-        /// <summary>
-        /// How long the macro has been running.
-        /// Doco states seconds, but source looks like milliseconds.
-        /// </summary>
-        public TimeSpan? RunTime => GetMember<Int64Type>("RunTime");
+        // This causes a stack overflow.
+        ///// <summary>
+        ///// How long the macro has been running.
+        ///// Doco states seconds, but source looks like milliseconds.
+        ///// </summary>
+        //public long? RunTime => GetMember<Int64Type>("RunTime");
         
         /// <summary>
         /// NULL if no macro running, FALSE if mqpause is off, TRUE if mqpause is on

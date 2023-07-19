@@ -6,7 +6,6 @@ using MQ2DotNet.MQ2API;
 using MQ2DotNet.Program;
 using MQ2DotNet.Services;
 using MQFlux.Behaviors;
-using MQFlux.Behaviors.CombatCommandBehaviors;
 using MQFlux.Commands;
 using MQFlux.Services;
 using System;
@@ -185,12 +184,12 @@ namespace MQFlux
                         config.AddFluxBehaviors();
                     }
                 )
-                .AddMemoryCache()
-                .AddMQContext(mq, chat, commands, events, spawns, tlo)
+                .AddCache()
+                .AddContext(mq, chat, commands, events, spawns, tlo)
                 .AddEventService()
                 .AddChatHistory()
                 .AddMQLogging()
-                .AddMQFluxConfig()
+                .AddConfig()
                 .AddMQCommandProvider()
                 .AddAbilityService()
                 .AddItemService()

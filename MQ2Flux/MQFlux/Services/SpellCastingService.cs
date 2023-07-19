@@ -19,6 +19,7 @@ namespace MQFlux.Services
         Task<bool> CastAsync(SpellType spell, bool waitForSpellReady = false, CancellationToken cancellationToken = default);
         Task<bool> MemorizeSpellAsync(uint slot, SpellType spell, CancellationToken cancellationToken = default);
         Task<bool> WaitForSpellReadyAsync(SpellType spell, CancellationToken cancellationToken = default);
+        Task<bool> WaitForSpellReadyAsync(int gem, CancellationToken cancellationToken = default);
     }
 
     public static class SpellCastingServiceExtensions
@@ -32,13 +33,13 @@ namespace MQFlux.Services
 
     public class SpellCastingService : ISpellCastingService, IDisposable
     {
-        private readonly IMQContext context;
+        private readonly IContext context;
         private readonly IMQLogger mqLogger;
 
         private SemaphoreSlim semaphore;
         private bool disposedValue;
 
-        public SpellCastingService(IMQContext context, IMQLogger mqLogger)
+        public SpellCastingService(IContext context, IMQLogger mqLogger)
         {
             this.context = context;
             this.mqLogger = mqLogger;
@@ -76,34 +77,27 @@ namespace MQFlux.Services
                     return false;
                 }
 
-                var gem = me.GetGem(spellBookSpell.Name) ?? 0;
+                var gem = (int)me.GetGem(spellBookSpell.Name).GetValueOrDefault(0u);
 
-                if (gem == 0)
-                {
-                    if (!await MemorizeSpellInternalAsync(me.NumGems.Value, spellBookSpell))
-                    {
-                        return false;
-                    }
-
-                    if (!await WaitForSpellReadyAsync(spellBookSpell, cancellationToken))
-                    {
-                        return false;
-                    }
-                }
-                
-                if (waitForSpellReady)
-                {
-                    if (!await WaitForSpellReadyAsync(spellBookSpell, cancellationToken))
-                    {
-                        return false;
-                    }
-                }
-                else if (!me.IsSpellReady(spellBookSpell.Name))
+                if
+                (
+                    gem == 0 &&
+                    (
+                        !await MemorizeSpellInternalAsync(me.NumGems.GetValueOrDefault(8), spellBookSpell) ||
+                        !await WaitForSpellReadyAsync(gem, cancellationToken)
+                    )
+                )
                 {
                     return false;
                 }
 
-                if (spellBookSpell.Mana > me.CurrentMana || spellBookSpell.EnduranceCost > me.CurrentEndurance)
+                if
+                (
+                    waitForSpellReady && !await WaitForSpellReadyAsync(gem, cancellationToken) ||
+                    !me.IsSpellReady(gem) ||
+                    spellBookSpell.Mana > me.CurrentMana ||
+                    spellBookSpell.EnduranceCost > me.CurrentEndurance
+                )
                 {
                     return false;
                 }
@@ -177,9 +171,28 @@ namespace MQFlux.Services
         public async Task<bool> WaitForSpellReadyAsync(SpellType spell, CancellationToken cancellationToken = default)
         {
             var me = context.TLO.Me;
-            DateTime waitForSpellReadyUntil = DateTime.UtcNow + TimeSpan.FromSeconds(5);
+            string name = spell.Name;
 
-            while (!me.IsSpellReady(spell.Name))
+            return await WaitForSpellReadyInternalAsync(() => me.IsSpellReady(name), cancellationToken);
+        }
+
+        public async Task<bool> WaitForSpellReadyAsync(int gem, CancellationToken cancellationToken = default)
+        {
+            var me = context.TLO.Me;
+
+            return await WaitForSpellReadyInternalAsync(() => me.IsSpellReady(gem), cancellationToken);
+        }
+
+        private async Task<bool> WaitForSpellReadyInternalAsync(Func<bool> isSpellReady, CancellationToken cancellationToken)
+        {
+            if (isSpellReady())
+            {
+                return true;
+            }
+
+            DateTime waitForSpellReadyUntil = DateTime.UtcNow + TimeSpan.FromSeconds(8);
+
+            while (!isSpellReady())
             {
                 await MQFlux.Yield(cancellationToken);
 
@@ -188,6 +201,9 @@ namespace MQFlux.Services
                     return false;
                 }
             }
+
+            // spell ready evaluates to true but there is some delay observed - guessing this is due to some server client latency
+            await Task.Delay(500);
 
             return true;
         }
@@ -202,7 +218,7 @@ namespace MQFlux.Services
                 return true;
             }
 
-            DateTime waitUntil = DateTime.UtcNow + GetMemorizeTimeout((uint?)spell.Level ?? 0u, me.Spawn.Level.Value);
+            DateTime waitUntil = DateTime.UtcNow +TimeSpan.FromSeconds(8);
 
             context.MQ.DoCommand($"/memspell {slot} \"{spellName}\"");
             mqLogger.Log($"Memorizing [\ay{spellName}\aw] in slot \ay{slot}", TimeSpan.Zero);
@@ -226,32 +242,6 @@ namespace MQFlux.Services
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// TODO: tweak this, all I could find about this was that if the level difference is 0 then the memorization time is 8 seconds
-        /// and that it gets better as the difference increases.
-        /// https://forums.daybreakgames.com/eq/index.php?threads/its-time-to-consolidate-spell-memorization-with-spell-refresh.284000/
-        /// </summary>
-        /// <param name="spellLevel"></param>
-        /// <param name="casterLevel"></param>
-        /// <returns></returns>
-        private TimeSpan GetMemorizeTimeout(uint spellLevel, uint casterLevel)
-        {
-            if (casterLevel < spellLevel)
-            {
-                return TimeSpan.FromSeconds(8);
-            }
-
-            var difference = casterLevel - spellLevel;
-            var seconds = 8d - difference / 5d;
-
-            if (seconds < 2d)
-            {
-                seconds = 2d;
-            }
-
-            return TimeSpan.FromSeconds(seconds);
         }
 
         protected virtual void Dispose(bool disposing)

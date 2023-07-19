@@ -12,22 +12,22 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Services
 {
-    public interface IMQFluxConfig
+    public interface IConfig
     {
         FluxConfig FluxConfig { get; }
 
         Task SaveAsync(bool notify = false);
     }
 
-    public static class MQFluxConfigExtensions
+    public static class ConfigServiceExtensions
     {
-        public static IServiceCollection AddMQFluxConfig(this IServiceCollection services)
+        public static IServiceCollection AddConfig(this IServiceCollection services)
         {
-            return services.AddSingleton<IMQFluxConfig, MQFluxConfig>();
+            return services.AddSingleton<IConfig, ConfigService>();
         }
     }
 
-    public class MQFluxConfig : IMQFluxConfig, IDisposable
+    public class ConfigService : IConfig, IDisposable
     {
         public FluxConfig FluxConfig { get; private set; }
 
@@ -38,17 +38,17 @@ namespace MQFlux.Services
             ReferenceHandler = ReferenceHandler.IgnoreCycles
         };
         private const string CONFIG_FILE_NAME = "MQFlux.json";
-        private readonly IMQContext context;
+        private readonly IContext context;
         private readonly IMQLogger mqLogger;
         private readonly IMediator mediator;
-        private readonly ILogger<MQFluxConfig> logger;
+        private readonly ILogger<ConfigService> logger;
         private readonly string path;
 
         private FileSystemWatcher watcher;
         private bool disposedValue;
         private SemaphoreSlim semaphore;
 
-        public MQFluxConfig(IMQContext context, IMQLogger mqLogger, IMediator mediator, ILogger<MQFluxConfig> logger)
+        public ConfigService(IContext context, IMQLogger mqLogger, IMediator mediator, ILogger<ConfigService> logger)
         {
             this.context = context;
             this.mqLogger = mqLogger;

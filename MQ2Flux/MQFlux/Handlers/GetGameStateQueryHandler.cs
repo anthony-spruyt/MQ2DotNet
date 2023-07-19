@@ -11,9 +11,9 @@ namespace MQFlux.Handlers
         public override GameState Default => GameState.Unknown;
         public override string Key => CacheKeys.GameState;
 
-        private readonly IMQContext context;
+        private readonly IContext context;
 
-        public GetGameStateQueryHandler(ICache cache, IMQContext context) : base(cache)
+        public GetGameStateQueryHandler(ICache cache, IContext context) : base(cache)
         {
             this.context = context;
         }

@@ -37,14 +37,15 @@ namespace MQ2DotNet.MQ2API.DataTypes
             return typeVar?.VarPtr.Int64;
         }
 
-        /// <summary>
-        /// Implicit conversion to a nullable TimeSpan
-        /// </summary>
-        /// <param name="typeVar"></param>
-        public static implicit operator TimeSpan?(Int64Type typeVar)
-        {
-            // MacroType::RunTime
-            return typeVar?.VarPtr.Int64 == null ? (TimeSpan?)null : TimeSpan.FromMilliseconds(typeVar.VarPtr.Int64);
-        }
+        // causes stack overflow
+        ///// <summary>
+        ///// Implicit conversion to a nullable TimeSpan
+        ///// </summary>
+        ///// <param name="typeVar"></param>
+        //public static implicit operator TimeSpan?(Int64Type typeVar)
+        //{
+        //    // MacroType::RunTime
+        //    return typeVar?.VarPtr.Int64 == null ? (TimeSpan?)null : TimeSpan.FromMilliseconds(typeVar.VarPtr.Int64);
+        //}
     }
 }

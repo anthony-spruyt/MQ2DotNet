@@ -16,9 +16,9 @@ namespace MQFlux.Behaviors
 
     public class ConfigBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly IMQFluxConfig config;
+        private readonly IConfig config;
 
-        public ConfigBehavior(IMQFluxConfig config)
+        public ConfigBehavior(IConfig config)
         {
             this.config = config;
         }

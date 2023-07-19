@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Behaviors
 {
-    public interface IFreeInventorySlotsRequest : IMQContextRequest
+    public interface IFreeInventorySlotsRequest : IContextRequest
     {
         int MinimumEmptySlots { get; }
         ItemSize MinimumSize { get; }

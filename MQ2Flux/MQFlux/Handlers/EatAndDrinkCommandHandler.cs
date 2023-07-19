@@ -82,14 +82,9 @@ namespace MQFlux.Handlers
         private ItemType GetDrink(IEnumerable<string> dontConsume, CharacterType me, IEnumerable<ItemType> allMyInv)
         {
             // First get summoned least nutritious.
-            var drink = GetLeastNutritiousConsumable(allMyInv.Where(i => i.NoRent && i.IsDrinkable() && !(dontConsume.Contains(i.Name))), me);
-
-            // If no summoned get non summoned least nutritious.
-            if (drink == null)
-            {
-                drink = GetLeastNutritiousConsumable(allMyInv.Where(i => i.IsDrinkable() && !(dontConsume.Contains(i.Name))), me);
-            }
-
+            var drink = GetLeastNutritiousConsumable(allMyInv.Where(i => i.NoRent && i.IsDrinkable() && !dontConsume.Contains(i.Name)), me) ??
+                // If no summoned get non summoned least nutritious.
+                GetLeastNutritiousConsumable(allMyInv.Where(i => i.IsDrinkable() && !dontConsume.Contains(i.Name)), me);
             return drink;
         }
 
@@ -112,14 +107,9 @@ namespace MQFlux.Handlers
         private ItemType GetFood(IEnumerable<string> dontConsume, CharacterType me, IEnumerable<ItemType> allMyInv)
         {
             // First get summoned least nutritious.
-            var food = GetLeastNutritiousConsumable(allMyInv.Where(i => i.NoRent && i.IsEdible() && !(dontConsume.Contains(i.Name))), me);
-
-            // If no summoned get non summoned least nutritious.
-            if (food == null)
-            {
-                food = GetLeastNutritiousConsumable(allMyInv.Where(i => i.IsEdible() && !(dontConsume.Contains(i.Name))), me);
-            }
-
+            var food = GetLeastNutritiousConsumable(allMyInv.Where(i => i.NoRent && i.IsEdible() && !dontConsume.Contains(i.Name)), me) ??
+                // If no summoned get non summoned least nutritious.
+                GetLeastNutritiousConsumable(allMyInv.Where(i => i.IsEdible() && !dontConsume.Contains(i.Name)), me);
             return food;
         }
 
