@@ -193,7 +193,8 @@ namespace MQFlux
                 .AddMQCommandProvider()
                 .AddAbilityService()
                 .AddItemService()
-                .AddSpellCastingService();
+                .AddSpellCastingService()
+                .AddMacroService();
         }
 
         protected virtual void Dispose(bool disposing)

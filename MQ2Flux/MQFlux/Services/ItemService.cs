@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MQ2DotNet.MQ2API.DataTypes;
 using MQFlux.Extensions;
+using MQFlux.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -65,17 +66,9 @@ namespace MQFlux.Services
 
         public async Task AutoInventoryAsync(Predicate<ItemType> predicate = null, CancellationToken cancellationToken = default)
         {
-            DateTime waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
-
-            // Wait for something to hit the cursor up to a timeout.
-            while (context.TLO.Cursor == null)
+            if (!await Wait.While(() => context.TLO.Cursor == null, TimeSpan.FromSeconds(2), cancellationToken))
             {
-                await MQFlux.Yield(cancellationToken);
-
-                if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
+                return;
             }
 
             if (predicate != null && !predicate(context.TLO.Cursor))
@@ -85,28 +78,26 @@ namespace MQFlux.Services
 
             mqLogger.Log($"Putting [\ag{context.TLO.Cursor.Name}\aw] into your inventory", TimeSpan.Zero);
 
-            waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
-
-            while (context.TLO.Cursor != null)
-            {
-                context.MQ.DoCommand("/autoinv");
-
-                await MQFlux.Yield(cancellationToken);
-
-                if (cancellationToken.IsCancellationRequested)
+            var timedoutOrCancelled = !await Wait.While
+            (
+                () =>
                 {
-                    return;
-                }
+                    var stillOnCursor = context.TLO.Cursor != null;
 
-                if (waitUntil < DateTime.UtcNow)
-                {
-                    if (context.TLO.Cursor != null && context.TLO.Me.FreeInventory.GetValueOrDefault(0u) == 0u)
+                    if (stillOnCursor)
                     {
-                        mqLogger.Log($"Cannot put [\ag{context.TLO.Cursor.Name}\aw] into your inventory because it is full", TimeSpan.Zero);
+                        context.MQ.DoCommand("/autoinv");
                     }
 
-                    break;
-                }
+                    return stillOnCursor;
+                }, 
+                TimeSpan.FromSeconds(2), 
+                cancellationToken
+            );
+
+            if (timedoutOrCancelled && context.TLO.Cursor != null && context.TLO.Me.FreeInventory.GetValueOrDefault(0u) == 0u)
+            {
+                mqLogger.Log($"Cannot put [\ag{context.TLO.Cursor.Name}\aw] into your inventory because it is full", TimeSpan.Zero);
             }
         }
 
@@ -165,17 +156,10 @@ namespace MQFlux.Services
 
             context.MQ.DoCommand(command);
 
-            var waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
-
-            // Check if we picked the item up successfully.
-            while (context.TLO.Cursor == null || context.TLO.Cursor.ID.Value != item.ID.Value)
+            // Make sure the item we picked up is on the cursor.
+            if (!await Wait.While(() => context.TLO.Cursor == null || context.TLO.Cursor.ID.Value != item.ID.Value, TimeSpan.FromSeconds(2), cancellationToken))
             {
-                await MQFlux.Yield(cancellationToken);
-
-                if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
-                {
-                    return false;
-                }
+                return false;
             }
 
             // Move item from cursor into target slot
@@ -196,17 +180,10 @@ namespace MQFlux.Services
 
             context.MQ.DoCommand(command);
 
-            waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
-
             // Make sure the item we picked up is not still on the cursor.
-            while (context.TLO.Cursor != null && context.TLO.Cursor.ID.Value == item.ID.Value)
+            if (!await Wait.While(() => context.TLO.Cursor != null && context.TLO.Cursor.ID.Value == item.ID.Value, TimeSpan.FromSeconds(2), cancellationToken))
             {
-                await MQFlux.Yield(cancellationToken);
-
-                if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
-                {
-                    return false;
-                }
+                return false;
             }
 
             // Check if we need to move what was in the target slot back to the source slot.
@@ -230,17 +207,10 @@ namespace MQFlux.Services
 
                 context.MQ.DoCommand(command);
 
-                waitUntil = DateTime.UtcNow + TimeSpan.FromSeconds(2);
-
                 // Make sure the cursor is now empty.
-                while (context.TLO.Cursor != null)
+                if (!await Wait.While(() => context.TLO.Cursor != null, TimeSpan.FromSeconds(2), cancellationToken))
                 {
-                    await MQFlux.Yield(cancellationToken);
-
-                    if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 

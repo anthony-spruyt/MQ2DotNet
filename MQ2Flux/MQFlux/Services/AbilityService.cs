@@ -13,7 +13,7 @@ namespace MQFlux.Services
         Task<bool> DoAbilityAsync(string abilityName, string successText = null, string failureText = null, CancellationToken cancellationToken = default);
     }
 
-    public static class IAbilityServiceExtensions
+    public static class AbilityServiceExtensions
     {
         public static IServiceCollection AddAbilityService(this IServiceCollection services)
         {

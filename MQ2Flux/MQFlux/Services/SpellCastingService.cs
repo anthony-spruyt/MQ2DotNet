@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MQ2DotNet.MQ2API.DataTypes;
 using MQFlux.Extensions;
+using MQFlux.Utils;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace MQFlux.Services
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<bool> CastAsync(SpellType spell, bool waitForSpellReady = false, CancellationToken cancellationToken = default);
-        Task<bool> MemorizeSpellAsync(uint slot, SpellType spell, CancellationToken cancellationToken = default);
+        Task<bool> MemorizeSpellAsync(int slot, SpellType spell, CancellationToken cancellationToken = default);
         Task<bool> WaitForSpellReadyAsync(SpellType spell, CancellationToken cancellationToken = default);
         Task<bool> WaitForSpellReadyAsync(int gem, CancellationToken cancellationToken = default);
     }
@@ -79,21 +80,28 @@ namespace MQFlux.Services
 
                 var gem = (int)me.GetGem(spellBookSpell.Name).GetValueOrDefault(0u);
 
-                if
-                (
-                    gem == 0 &&
-                    (
-                        !await MemorizeSpellInternalAsync(me.NumGems.GetValueOrDefault(8), spellBookSpell) ||
-                        !await WaitForSpellReadyAsync(gem, cancellationToken)
-                    )
-                )
+                if (gem == 0)
+                {
+                    gem = (int)me.NumGems.GetValueOrDefault(8u);
+
+                    if (!await MemorizeSpellInternalAsync(gem, spellBookSpell))
+                    {
+                        return false;
+                    }
+
+                    if (!await WaitForSpellReadyAsync(gem, cancellationToken))
+                    {
+                        return false;
+                    }
+                }
+
+                if (waitForSpellReady && !await WaitForSpellReadyAsync(gem, cancellationToken))
                 {
                     return false;
                 }
 
                 if
                 (
-                    waitForSpellReady && !await WaitForSpellReadyAsync(gem, cancellationToken) ||
                     !me.IsSpellReady(gem) ||
                     spellBookSpell.Mana > me.CurrentMana ||
                     spellBookSpell.EnduranceCost > me.CurrentEndurance
@@ -104,7 +112,7 @@ namespace MQFlux.Services
 
                 // TODO check for reagents.
 
-                var castTime = spellBookSpell.CastTime ?? TimeSpan.Zero;
+                var castTime = spellBookSpell.CastTime.GetValueOrDefault(TimeSpan.Zero);
                 var timeout = castTime + TimeSpan.FromMilliseconds(1000); // add some fat
                 var castOnYou = spellBookSpell.CastOnYou;
                 var castOnAnother = spellBookSpell.CastOnAnother;
@@ -141,7 +149,8 @@ namespace MQFlux.Services
                 if (fizzled || interrupted)
                 {
                     var reason = fizzled ? "fizzled" : "was interrupted";
-                    mqLogger.Log($"Casting [\ay{spell.Name}\aw] \ar{reason}", TimeSpan.Zero);
+
+                    mqLogger.Log($"Casting [\ay{spellBookSpell.Name}\aw] \ar{reason}", TimeSpan.Zero);
                     
                     return false;
                 }
@@ -154,7 +163,7 @@ namespace MQFlux.Services
             return true;
         }
 
-        public async Task<bool> MemorizeSpellAsync(uint slot, SpellType spell, CancellationToken cancellationToken = default)
+        public async Task<bool> MemorizeSpellAsync(int slot, SpellType spell, CancellationToken cancellationToken = default)
         {
             await semaphore.WaitAsync(cancellationToken);
 
@@ -185,54 +194,38 @@ namespace MQFlux.Services
 
         private async Task<bool> WaitForSpellReadyInternalAsync(Func<bool> isSpellReady, CancellationToken cancellationToken)
         {
+            // Check if it is not already ready because waiting is expensive.
             if (isSpellReady())
             {
                 return true;
             }
 
-            DateTime waitForSpellReadyUntil = DateTime.UtcNow + TimeSpan.FromSeconds(8);
-
-            while (!isSpellReady())
+            if (!await Wait.While(() => !isSpellReady(), TimeSpan.FromSeconds(8), cancellationToken))
             {
-                await MQFlux.Yield(cancellationToken);
-
-                if (waitForSpellReadyUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
-                {
-                    return false;
-                }
+                return false;
             }
-
-            // spell ready evaluates to true but there is some delay observed - guessing this is due to some server client latency
-            await Task.Delay(500);
 
             return true;
         }
 
-        private async Task<bool> MemorizeSpellInternalAsync(uint slot, SpellType spell, CancellationToken cancellationToken = default)
+        private async Task<bool> MemorizeSpellInternalAsync(int slot, SpellType spell, CancellationToken cancellationToken = default)
         {
             var me = context.TLO.Me;
             var spellName = spell.Name;
 
-            if (me.GetGem(spellName) == slot)
+            if (me.GetGem(spellName).GetValueOrDefault(0u) == slot)
             {
                 return true;
             }
-
-            DateTime waitUntil = DateTime.UtcNow +TimeSpan.FromSeconds(8);
 
             context.MQ.DoCommand($"/memspell {slot} \"{spellName}\"");
             mqLogger.Log($"Memorizing [\ay{spellName}\aw] in slot \ay{slot}", TimeSpan.Zero);
 
             try
             {
-                while (me.GetGem(spellName) != slot)
+                if (!await Wait.While(() => me.GetGem(spellName).GetValueOrDefault(0) != slot, TimeSpan.FromSeconds(8), cancellationToken))
                 {
-                    await MQFlux.Yield(cancellationToken);
-
-                    if (waitUntil < DateTime.UtcNow || cancellationToken.IsCancellationRequested)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
             finally

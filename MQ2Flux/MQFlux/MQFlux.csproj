@@ -114,7 +114,6 @@
     <Compile Include="Commands\SummonFoodAndDrinkCommand.cs" />
     <Compile Include="Extensions\CharacterTypeExtensions.cs" />
     <Compile Include="Extensions\ItemTypeExtensions.cs" />
-    <Compile Include="Extensions\MacroTypeExtensions.cs" />
     <Compile Include="Extensions\SpellTypeExtensions.cs" />
     <Compile Include="Extensions\TLOExtensions.cs" />
     <Compile Include="Handlers\CombatCommandHandlers\AutoAttackCommandHandler.cs" />
@@ -154,6 +153,7 @@
     <Compile Include="Queries\GetCampingQuery.cs" />
     <Compile Include="Queries\GetGameStateQuery.cs" />
     <Compile Include="Queries\GetZoningQuery.cs" />
+    <Compile Include="Services\MacroService.cs" />
     <Compile Include="Services\AbilityService.cs" />
     <Compile Include="Services\MemoryCacheService.cs" />
     <Compile Include="Services\SpellCastingService.cs" />
@@ -169,6 +169,7 @@
     <Compile Include="Services\MQLoggerService.cs" />
     <Compile Include="MQFlux.cs" />
     <Compile Include="Utils\UtilityExtensions.cs" />
+    <Compile Include="Utils\Wait.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Karambolo.Extensions.Logging.File.Json">

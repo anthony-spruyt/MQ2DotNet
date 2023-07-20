@@ -30,13 +30,13 @@ namespace MQFlux.Handlers
         };
         private readonly IItemService itemService;
         private readonly ISpellCastingService spellCastingService;
-        private readonly IMQLogger mqLogger;
+        private readonly IMacroService macroService;
 
-        public SummonFoodAndDrinkCommandHandler(IItemService itemService, ISpellCastingService spellCastingService, IMQLogger mqLogger)
+        public SummonFoodAndDrinkCommandHandler(IItemService itemService, ISpellCastingService spellCastingService, IMacroService macroService)
         {
             this.itemService = itemService;
             this.spellCastingService = spellCastingService;
-            this.mqLogger = mqLogger;
+            this.macroService = macroService;
         }
 
         public async Task<bool> Handle(SummonFoodAndDrinkCommand request, CancellationToken cancellationToken)
@@ -54,15 +54,9 @@ namespace MQFlux.Handlers
 
             if (actualFoodCount < 10 && TryGetSummonSpell(me, summonFoodSpellNames, out var foodSpell))
             {
-                var macro = request.Context.TLO.Macro;
-
                 try
                 {
-                    if (macro.IsRunning())
-                    {   
-                        macro.Pause();
-                        mqLogger.Log("Pausing macro to summon consumable", TimeSpan.Zero);
-                    }
+                    macroService.Pause();
 
                     if (await spellCastingService.CastAsync(foodSpell, waitForSpellReady: true, cancellationToken))
                     {
@@ -73,11 +67,7 @@ namespace MQFlux.Handlers
                 }
                 finally
                 {
-                    if (macro.IsPaused())
-                    {
-                        macro.Resume();
-                        mqLogger.Log("Macro resumed", TimeSpan.Zero);
-                    }
+                    macroService.Resume();
                 }
             }
 
@@ -87,15 +77,9 @@ namespace MQFlux.Handlers
 
             if (actualDrinkCount < 10 && TryGetSummonSpell(me, summonDrinkSpellNames, out var drinkSpell))
             {
-                var macro = request.Context.TLO.Macro;
-
                 try
                 {
-                    if (macro.IsRunning())
-                    {
-                        macro.Pause();
-                        mqLogger.Log("Pausing macro to summon consumable", TimeSpan.Zero);
-                    }
+                    macroService.Pause();
 
                     if (await spellCastingService.CastAsync(drinkSpell, waitForSpellReady: true, cancellationToken))
                     {
@@ -106,11 +90,7 @@ namespace MQFlux.Handlers
                 }
                 finally
                 {
-                    if (macro.IsPaused())
-                    {
-                        macro.Resume();
-                        mqLogger.Log("Macro resumed", TimeSpan.Zero);
-                    }
+                    macroService.Resume();
                 }
             }
 
