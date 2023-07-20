@@ -87,6 +87,7 @@
     <Compile Include="Behaviors\MeleeBehavior.cs" />
     <Compile Include="Behaviors\ContextBehavior.cs" />
     <Compile Include="Behaviors\NoItemOnCursorBehavior.cs" />
+    <Compile Include="Behaviors\NotFeignedDeathBehavior.cs" />
     <Compile Include="Behaviors\NotInCombatBehavior.cs" />
     <Compile Include="Behaviors\NotWhenAutoAttackingBehavior.cs" />
     <Compile Include="Behaviors\NotWhenCastingBehavior.cs" />

@@ -5,14 +5,15 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class SummonFoodAndDrinkCommand : 
+    public class SummonFoodAndDrinkCommand :
         ICharacterConfigRequest,
         IConsciousRequest,
-        INotInCombatRequest, 
-        IStandingStillRequest, 
-        ICasterRequest, 
-        INotWhenCastingRequest, 
-        INoItemOnCursorRequest, 
+        INotInCombatRequest,
+        IStandingStillRequest,
+        ICasterRequest,
+        INotWhenCastingRequest,
+        INoItemOnCursorRequest,
+        INotFeignedDeathRequest,
         IRequest<bool>
     {
         public bool AllowBard => false;

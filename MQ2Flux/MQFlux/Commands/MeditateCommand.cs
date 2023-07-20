@@ -7,8 +7,9 @@ namespace MQFlux.Commands
     public class MeditateCommand :
         IStandingStillRequest, 
         INotWhenCastingRequest, 
-        ICasterRequest, 
+        ICasterRequest,
         IConsciousRequest,
+        INotFeignedDeathRequest,
         IRequest<bool>
     {
         public IContext Context { get; set; }

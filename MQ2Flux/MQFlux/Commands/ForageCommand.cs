@@ -13,7 +13,8 @@ namespace MQFlux.Commands
         IAbilityRequest, 
         INotWhenAutoAttackingRequest, 
         INotWhenSpellbookIsOpenRequest, 
-        INoItemOnCursorRequest, 
+        INoItemOnCursorRequest,
+        INotFeignedDeathRequest,
         IRequest<bool>
     {
         public AbilityInfo Ability { get; set; }

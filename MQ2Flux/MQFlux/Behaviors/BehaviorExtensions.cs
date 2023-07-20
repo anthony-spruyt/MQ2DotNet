@@ -31,6 +31,7 @@ namespace MQFlux.Behaviors
                 .AddOpenBehavior(typeof(NotWhenAutoAttackingBehavior<,>))
                 .AddOpenBehavior(typeof(AbilityBehavior<,>))
                 .AddOpenBehavior(typeof(NotWhenSpellbookIsOpenBehavior<,>))
+                .AddOpenBehavior(typeof(NotFeignedDeathBehavior<,>))
                 .AddOpenBehavior(typeof(GroupedBehavior<,>))
                 .AddOpenBehavior(typeof(GroupLeaderBehavior<,>))
                 .AddOpenBehavior(typeof(FreeInventorySlotBehavior<,>))

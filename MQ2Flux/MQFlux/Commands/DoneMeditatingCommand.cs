@@ -10,6 +10,7 @@ namespace MQFlux.Commands
         INotWhenCastingRequest,
         ICasterRequest,
         INotWhenSpellbookIsOpenRequest,
+        INotFeignedDeathRequest,
         IRequest<bool>
     {
         public IContext Context { get; set; }

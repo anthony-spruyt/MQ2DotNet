@@ -13,6 +13,7 @@ namespace MQFlux.Commands
         IStandingStillRequest,
         INotWhenCastingRequest,
         INoItemOnCursorRequest,
+        INotFeignedDeathRequest,
         IRequest<bool>
     {
         public bool AllowBard => false;

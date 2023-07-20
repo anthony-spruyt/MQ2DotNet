@@ -9,7 +9,8 @@ namespace MQFlux.Commands
         ICharacterConfigRequest,
         IConsciousRequest, 
         INotWhenCastingRequest, 
-        INoItemOnCursorRequest, 
+        INoItemOnCursorRequest,
+        INotFeignedDeathRequest,
         IRequest<bool>
     {
         public bool AllowBard => true;
