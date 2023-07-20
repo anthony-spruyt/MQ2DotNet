@@ -14,7 +14,12 @@ namespace MQFlux.Utils
                 {
                     while (thisIsTrue())
                     {
-                        await MQFlux.Yield(linkedCancellationTokenSource.Token);
+
+                        try
+                        {
+                            await MQFlux.Yield(linkedCancellationTokenSource.Token);
+                        }
+                        catch (TaskCanceledException) { }
 
                         if (linkedCancellationTokenSource.Token.IsCancellationRequested)
                         {

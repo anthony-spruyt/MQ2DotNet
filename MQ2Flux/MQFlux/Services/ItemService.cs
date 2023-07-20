@@ -131,6 +131,7 @@ namespace MQFlux.Services
             {
                 return false;
             }
+
             var debug = false;
             var itemSlot = item.ItemSlot.Value;
             var itemSlot2 = item.ItemSlot2;
@@ -156,8 +157,10 @@ namespace MQFlux.Services
 
             context.MQ.DoCommand(command);
 
+            var timeout = TimeSpan.FromSeconds(3);
+
             // Make sure the item we picked up is on the cursor.
-            if (!await Wait.While(() => context.TLO.Cursor == null || context.TLO.Cursor.ID.Value != item.ID.Value, TimeSpan.FromSeconds(2), cancellationToken))
+            if (!await Wait.While(() => context.TLO.Cursor == null || context.TLO.Cursor.ID.Value != item.ID.Value, timeout, cancellationToken))
             {
                 return false;
             }
@@ -181,7 +184,7 @@ namespace MQFlux.Services
             context.MQ.DoCommand(command);
 
             // Make sure the item we picked up is not still on the cursor.
-            if (!await Wait.While(() => context.TLO.Cursor != null && context.TLO.Cursor.ID.Value == item.ID.Value, TimeSpan.FromSeconds(2), cancellationToken))
+            if (!await Wait.While(() => context.TLO.Cursor != null && context.TLO.Cursor.ID.Value == item.ID.Value, timeout, cancellationToken))
             {
                 return false;
             }
@@ -208,7 +211,7 @@ namespace MQFlux.Services
                 context.MQ.DoCommand(command);
 
                 // Make sure the cursor is now empty.
-                if (!await Wait.While(() => context.TLO.Cursor != null, TimeSpan.FromSeconds(2), cancellationToken))
+                if (!await Wait.While(() => context.TLO.Cursor != null, timeout, cancellationToken))
                 {
                     return false;
                 }
