@@ -4,7 +4,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Represents a discrete item being looted in an AdvLoot window.
-    /// Last Verified: 2023-07-01
+    /// Last Verified: 2023-07-19
     /// https://docs.macroquest.org/reference/top-level-objects/tlo-advloot/#advlootitem-type
     /// </summary>
     [PublicAPI]
@@ -84,6 +84,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Indicates if the item is NO DROP.
         /// </summary>
         public bool NoDrop => GetMember<BoolType>("NoDrop");
+
+        /// <summary>
+        /// TODO: doco new member 2023-07-19
+        /// </summary>
+        public bool FreeGrab => GetMember<BoolType>("FreeGrab");
 
         /// <summary>
         /// Same as <see cref="Name"/>
