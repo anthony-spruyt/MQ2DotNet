@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 
 namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// 1 = AutoRoll, 2 = Need, 4 = Greed, 8 = Never
     /// </summary>
-    [PublicAPI]
     [Flags]
     public enum ItemFilterSetting : uint
     {

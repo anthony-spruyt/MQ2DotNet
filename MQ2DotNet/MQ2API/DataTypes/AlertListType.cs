@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Provides access to the properties of a spawn search associated with an alert. For a spawn to be entered into an alert it must match all the criteria specified by the alert list.
@@ -8,7 +6,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// https://docs.macroquest.org/reference/top-level-objects/tlo-alert/#alertlist-type
     /// </summary>
     /// <remarks>VarPtr identifies a SPAWNSEARCH struct on an alert list</remarks>
-    [PublicAPI]
     [MQ2Type("alertlist")]
     public class AlertListType : MQ2DataType
     {

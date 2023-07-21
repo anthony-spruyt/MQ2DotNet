@@ -1,12 +1,10 @@
 ﻿using System;
-using JetBrains.Annotations;
 
 namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// A character class
     /// </summary>
-    [PublicAPI]
     [Flags]
     public enum Class : int
     {

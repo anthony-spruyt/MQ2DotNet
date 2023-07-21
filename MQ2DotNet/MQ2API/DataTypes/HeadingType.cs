@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Represents a direction on a compass.
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-heading/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("heading")]
     public class HeadingType : MQ2DataType
     {

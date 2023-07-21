@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using MQ2DotNet.MQ2API;
+﻿using MQ2DotNet.MQ2API;
 using MQ2DotNet.MQ2API.DataTypes;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,6 @@ namespace MQ2DotNet.Services
     /// Last Verified: 2023-07-02 WIP...
     /// https://docs.macroquest.org/reference/top-level-objects/
     /// </summary>
-    [PublicAPI]
     public class TLO
     {
         private readonly MQ2TypeFactory _typeFactory;

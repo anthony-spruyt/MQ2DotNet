@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Contains data on a specific group member.
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-groupmember/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("groupmember")]
     public class GroupMemberType : MQ2DataType
     {

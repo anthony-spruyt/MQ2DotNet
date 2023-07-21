@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -13,7 +12,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// MQ2 system gets around this by finding the spell before calling the base class, but we don't have that luxury here.
     /// Use .Spell instead 
     /// </remarks>
-    [PublicAPI]
     [MQ2Type("buff")]
     public class BuffType : MQ2DataType
     {

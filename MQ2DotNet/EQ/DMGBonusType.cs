@@ -1,9 +1,7 @@
-﻿using JetBrains.Annotations;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace MQ2DotNet.EQ
 {
-    [PublicAPI]
     public enum DMGBonusType
     {
         [EnumMember(Value = "None")]

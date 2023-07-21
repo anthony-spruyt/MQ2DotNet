@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Provides information about the character list.
     /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/data-types/datatype-charselectlist/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("charselectlist")]
     public class CharSelectListType : MQ2DataType
     {

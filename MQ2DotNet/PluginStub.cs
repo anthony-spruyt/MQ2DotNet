@@ -1,9 +1,7 @@
-﻿using JetBrains.Annotations;
-using MQ2DotNet.EQ;
+﻿using MQ2DotNet.EQ;
 using MQ2DotNet.MQ2API;
 using MQ2DotNet.Plugin;
 using MQ2DotNet.Program;
-using MQ2DotNet.Script;
 using MQ2DotNet.Services;
 using MQ2DotNet.Utility;
 using System;
@@ -113,17 +111,11 @@ namespace MQ2DotNet
             .Cast<ProgramAppDomain>()
             .ToDictionary(p => p.Name, p => p));
 
-        private static IReadOnlyList<ScriptAppDomain> ScriptDomains =>  _appDomains.Where(d => d is ScriptAppDomain).Cast<ScriptAppDomain>().ToList().AsReadOnly();
-
-        private static ReadOnlyDictionary<string, ScriptAppDomain> ActiveScripts =>
-            new ReadOnlyDictionary<string, ScriptAppDomain>(ScriptDomains.Where(d => d.Active).ToDictionary(s => s.Name, s => s));
-
         /// <summary>
         /// Entrypoint, called by MQ2DotNetLoader
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        [PublicAPI]
         public static int InitializePlugin(string arg)
         {
             // This will be the first managed function that gets called. 
@@ -157,18 +149,13 @@ namespace MQ2DotNet
 #else
                 MQ2.WriteChatGeneral($"Loaded version {GitVersionInformation.MajorMinorPatch} ({GitVersionInformation.ShortSha})");
 #endif
-                
+
                 // Add command to load/unload .net plugins
                 _commands.AddCommand("/netplugin", NetPluginCommand);
 
                 // And command to run/end .net programs
                 _commands.AddCommand("/netrun", NetRunCommand);
                 _commands.AddCommand("/netend", NetEndCommand);
-
-                // And C# scripts
-                _commands.AddCommand("/cs", CsCommand);
-                _commands.AddCommand("/csend", EndCsCommand);
-                _commands.AddCommand("/csreload", CsReloadCommand);
 
                 // Load any plugins that are set to autoload. Fuck ini files
                 try
@@ -286,133 +273,6 @@ namespace MQ2DotNet
             else
             {
                 MQ2.WriteChatPlugin($"{pluginName} is not loaded");
-            }
-        }
-#endregion
-
-#region C# script commands
-        private static void CsCommand(params string[] args)
-        {
-            if (args.Length == 0)
-            {
-                MQ2.WriteChatScript("Usage: /cs <file> [<arg1> <arg2> ...]");
-                return;
-            }
-
-            StartScript(args[0], args.Skip(1).ToArray());
-        }
-
-        private static void EndCsCommand(params string[] args)
-        {
-            if (ScriptDomains.Count == 0)
-            {
-                MQ2.WriteChatScript("No C# scripts running");
-                return;
-            }
-
-            if (args.Length == 0)
-            {
-                if (ScriptDomains.Count(s => s.Active) == 1)
-                {
-                    EndScript(ScriptDomains.First(s => s.Active).Name);
-                    return;
-                }
-
-                MQ2.WriteChatScript("Usage: /endcs [<script|*>]");
-                MQ2.WriteChatScript("If multiple scripts are running, an argument is mandatory");
-                return;
-            }
-
-            var scriptName = args[0];
-
-            if (scriptName == "*")
-            {
-                foreach (var kvp in ActiveScripts.ToArray())
-                    EndScript(kvp.Key);
-            }
-            else
-            {
-                if (ActiveScripts.ContainsKey(scriptName))
-                    EndScript(scriptName);
-                else
-                    MQ2.WriteChatScript($"{scriptName} is not running");
-            }
-        }
-
-        private static void CsReloadCommand(params string[] args)
-        {
-            var count = 0;
-
-            // Force unload on each inactive domain, and load a new one in its place
-            foreach (var scriptAppDomain in ScriptDomains.Where(d => !d.Active).ToList())
-            {
-                count++;
-                scriptAppDomain.Dispose();
-                _appDomains.Remove(scriptAppDomain);
-                _appDomains.Add(ScriptAppDomain.Load("ScriptDomain" + Guid.NewGuid()));
-            }
-
-            MQ2.WriteChatScript($"Unloaded {count} idle app domains");
-        }
-
-        private static void StartScript(string scriptName, params string[] args)
-        {
-            if (ActiveScripts.ContainsKey(scriptName))
-            {
-                MQ2.WriteChatScript($"{scriptName} already running");
-                return;
-            }
-
-            try
-            {
-                // Find the file
-                var scriptFilePath = _resourcePath + "\\Scripts\\" + scriptName;
-                if (!scriptFilePath.EndsWith(".csx"))
-                    scriptFilePath += ".csx";
-
-                if (!File.Exists(scriptFilePath))
-                    throw new FileNotFoundException();
-
-                // Grab the first available script domain
-                var scriptDomain = ScriptDomains.FirstOrDefault(s => !s.Active);
-
-                // Or in a loaded one if there's none available
-                if (scriptDomain == null)
-                {
-                    scriptDomain = ScriptAppDomain.Load("ScriptDomain" + Guid.NewGuid());
-                    _appDomains.Add(scriptDomain);
-                }
-
-                scriptDomain.Start(scriptFilePath, args);
-            }
-            catch (Exception e)
-            {
-                MQ2.WriteChatScriptError($"Error running C# script {scriptName}:");
-                MQ2.WriteChatScriptError(e.ToString());
-            }
-        }
-
-        private static void EndScript(string scriptName)
-        {
-            if (ActiveScripts.TryGetValue(scriptName, out var scriptAppDomain))
-            {
-                // Try to cancel cleanly
-                scriptAppDomain.Cancel();
-                
-                // If it doesn't work, force unload the app domain
-                if (scriptAppDomain.Status != TaskStatus.Canceled)
-                {
-                    MQ2.WriteChatScriptWarning($"{scriptName} did not respond to cancellation");
-
-                    scriptAppDomain.Dispose();
-                    _appDomains.Remove(scriptAppDomain);
-                }
-
-                MQ2.WriteChatScript($"{scriptName} stopped");
-            }
-            else
-            {
-                MQ2.WriteChatScript($"{scriptName} is not running");
             }
         }
 #endregion
@@ -562,13 +422,6 @@ namespace MQ2DotNet
                     MQ2.WriteChatPluginError($"Exception in OnPulse in {appDomain.Name}");
                     MQ2.WriteChatPluginError(e.ToString());
                 }
-            }
-
-            // Make sure there's 2 available script domains
-            if (ScriptDomains.Count(d => !d.Active) < 2)
-            {
-                _appDomains.Add(ScriptAppDomain.Load("ScriptDomain" + Guid.NewGuid()));
-                _appDomains.Add(ScriptAppDomain.Load("ScriptDomain" + Guid.NewGuid()));
             }
         }
 

@@ -1,11 +1,8 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.Plugin
+﻿namespace MQ2DotNet.Plugin
 {
     /// <summary>
     /// Interface which a plugin must implement
     /// </summary>
-    [PublicAPI]
     public interface IPlugin
     {
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -8,7 +7,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/data-types/datatype-corpse/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("corpse")]
     public class CorpseType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {

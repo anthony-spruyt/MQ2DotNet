@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -10,7 +9,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-13
     /// https://docs.macroquest.org/reference/data-types/datatype-spell/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("spell")]
     public class SpellType : MQ2DataType
     {

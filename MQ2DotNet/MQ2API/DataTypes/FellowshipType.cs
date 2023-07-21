@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace MQ2DotNet.MQ2API.DataTypes
@@ -9,7 +8,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-fellowship/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("fellowship")]
     public class FellowshipType : MQ2DataType
     {

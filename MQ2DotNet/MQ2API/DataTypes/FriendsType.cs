@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -8,7 +7,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/top-level-objects/tlo-friends/#friends-type
     /// </summary>
-    [PublicAPI]
     [MQ2Type("friend")]
     public class FriendsType : MQ2DataType
     {

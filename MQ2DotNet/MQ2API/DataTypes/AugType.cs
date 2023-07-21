@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Describes data about an augmentation slot in an item.
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-augtype/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("augtype")]
     public class AugType : MQ2DataType
     {

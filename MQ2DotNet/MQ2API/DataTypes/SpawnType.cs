@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using MQ2DotNet.EQ;
+﻿using MQ2DotNet.EQ;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -19,7 +18,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/data-types/datatype-spawn/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("spawn")]
     public class SpawnType : MQ2DataType
     {

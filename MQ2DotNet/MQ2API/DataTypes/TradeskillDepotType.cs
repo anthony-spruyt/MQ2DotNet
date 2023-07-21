@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// This contains information related to a tradeskill depot.
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-tradeskilldepot/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("tradeskilldepot")]
     public class TradeskillDepotType : MQ2DataType
     {

@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// STAND, SIT, DUCK, BIND, FEIGN, DEAD, STUN, HOVER, MOUNT, UNKNOWN
     /// </summary>
-    [PublicAPI]
     public enum SpawnState
     {
         [EnumMember(Value = "STAND")]

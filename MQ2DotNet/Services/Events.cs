@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using MQ2DotNet.MQ2API.DataTypes;
 
 namespace MQ2DotNet.Services
@@ -8,7 +6,6 @@ namespace MQ2DotNet.Services
     /// <summary>
     /// Contains events a plugin/program/script can subscribe to
     /// </summary>
-    [PublicAPI]
     public sealed class Events : IDisposable
     {
         private readonly LoadedAppDomainBase _appDomainBase;

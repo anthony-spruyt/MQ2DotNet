@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Contains data about spawn body types.
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-body/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("body")]
     public class BodyType : MQ2DataType
     {

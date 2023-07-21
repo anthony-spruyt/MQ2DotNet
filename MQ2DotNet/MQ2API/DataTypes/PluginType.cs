@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Data for the specified plugin.
     /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/data-types/datatype-plugin/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("plugin")]
     public class PluginType : MQ2DataType
     {

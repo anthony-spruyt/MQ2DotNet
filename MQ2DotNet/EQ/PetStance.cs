@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// Current stance, either "FOLLOW" or "GUARD"
     /// </summary>
-    [PublicAPI]
     public enum PetStance
     {
         [EnumMember(Value = "FOLLOW")]

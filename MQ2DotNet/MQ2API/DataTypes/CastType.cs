@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// TODO: Update members and methods according to doco and implement indexed member wrapper methods and properties.
@@ -8,7 +6,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-06-25
     /// TODO: Invalidate this and make member calls throw if MQ2Cast isn't loaded
     /// </summary>
-    [PublicAPI]
     [MQ2Type("Cast")]
     public class CastType : MQ2DataType
     {

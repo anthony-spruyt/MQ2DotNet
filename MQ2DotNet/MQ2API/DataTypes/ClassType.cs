@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using MQ2DotNet.EQ;
+﻿using MQ2DotNet.EQ;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -8,7 +7,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/data-types/datatype-class/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("class")]
     public class ClassType : MQ2DataType
     {

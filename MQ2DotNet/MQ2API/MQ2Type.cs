@@ -1,48 +1,11 @@
-﻿using JetBrains.Annotations;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MQ2DotNet.MQ2API
 {
-    [PublicAPI]
     public class MQ2Type
     {
-        #region Cache members, not sure if this is a good idea... So far not a good idea from testing, strange behaviour with StringType, but might be just strings dont like lazy loading, because of shared temp var in MQ2 client.
-        public static readonly bool IsMemberCachingEnabled = false;
-
-        private struct MemberKey
-        {
-            public IntPtr IntPtr;
-            public string Name;
-            public string Index;
-
-            public MemberKey(IntPtr intPtr, string name, string index)
-            {
-                IntPtr = intPtr;
-                Name = name;
-                Index = index;
-            }
-
-            public override bool Equals(object obj)
-            {
-                MemberKey memberKey = (MemberKey)obj;
-
-                return IntPtr == memberKey.IntPtr &&
-                    string.Compare(Name, memberKey.Name) == 0 &&
-                    string.Compare(Index, memberKey.Index) == 0;
-            }
-
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
-        }
-
-        private readonly ConcurrentDictionary<MemberKey, MQ2TypeVar> _members;
-        #endregion
-
         public IntPtr IntPtr { get; }
 
         public MQ2Type(IntPtr intPtr)
@@ -53,8 +16,6 @@ namespace MQ2DotNet.MQ2API
             }
 
             IntPtr = intPtr;
-
-            _members = new ConcurrentDictionary<MemberKey, MQ2TypeVar>();
         }
 
         public bool TryGetMember(MQ2VarPtr varPtr, string memberName, string index, out MQ2TypeVar typeVar)
@@ -66,24 +27,14 @@ namespace MQ2DotNet.MQ2API
                 return false;
             }
 
-            MemberKey memberKey = new MemberKey(IntPtr, memberName, index);
-
-            if (!_members.TryGetValue(memberKey, out typeVar))
+            if (!NativeMethods.MQ2Type__GetMember(IntPtr, varPtr.VarPtr, memberName, index, out var nativeTypeVar))
             {
-                if (!NativeMethods.MQ2Type__GetMember(IntPtr, varPtr.VarPtr, memberName, index, out var nativeTypeVar))
-                {
-                    typeVar = null;
+                typeVar = null;
 
-                    return false;
-                }
-
-                typeVar = new MQ2TypeVar(nativeTypeVar);
-
-                if (IsMemberCachingEnabled)
-                {
-                    _members.TryAdd(memberKey, typeVar);
-                }
+                return false;
             }
+
+            typeVar = new MQ2TypeVar(nativeTypeVar);
 
             return true;
         }

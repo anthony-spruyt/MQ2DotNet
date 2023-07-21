@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -9,7 +8,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-ground/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("ground")]
     public class GroundType : MQ2DataType
     {

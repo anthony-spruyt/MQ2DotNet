@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// The status of the member - one of the following: Unknown, Online, Offline, In Dynamic Zone, Link Dead.
     /// </summary>
-    [PublicAPI]
     public enum DZStatus
     {
         [EnumMember(Value = "Unknown")]

@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for the current target.
@@ -8,9 +6,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// There is no online doco for this, according to doco here https://docs.macroquest.org/reference/top-level-objects/tlo-target/ it returns a standard spawn.
     /// The MQ client however has this type and it inherits from spawn.
     /// </summary>
-    [PublicAPI]
     [MQ2Type("target")]
-    public class TargetType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
+    public class TargetType : SpawnType
     {
         internal TargetType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {

@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// State of the game, e.g. char select, in game
     /// </summary>
-    [PublicAPI]
     public enum GameState : uint
     {
         [EnumMember(Value = "CHARSELECT")]

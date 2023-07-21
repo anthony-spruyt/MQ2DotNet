@@ -1,7 +1,4 @@
-﻿using JetBrains.Annotations;
-using MQ2DotNet.Services;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -10,7 +7,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-merchant/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("merchant")]
     public class MerchantType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {

@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Drawing;
 
 namespace MQ2DotNet.MQ2API.DataTypes
@@ -9,7 +8,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-argb/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("argb")]
     public class ArgbType : MQ2DataType
     {

@@ -117,6 +117,7 @@
     <Compile Include="Extensions\CharacterTypeExtensions.cs" />
     <Compile Include="Extensions\ItemTypeExtensions.cs" />
     <Compile Include="Extensions\SpellTypeExtensions.cs" />
+    <Compile Include="Extensions\TestExtensions.cs" />
     <Compile Include="Extensions\TLOExtensions.cs" />
     <Compile Include="Handlers\CombatCommandHandlers\AutoAttackCommandHandler.cs" />
     <Compile Include="Handlers\DoneMeditatingCommandHandler.cs" />
@@ -226,6 +227,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

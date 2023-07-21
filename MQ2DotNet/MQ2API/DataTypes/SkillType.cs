@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -8,7 +7,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-skill/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("skill")]
     public class SkillType : MQ2DataType
     {

@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -13,7 +12,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-cachedbuff/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("cachedbuff")]
     [Obsolete]
     public class CachedBuffType : MQ2DataType//SpellType inheritence is an issue in this implementation.

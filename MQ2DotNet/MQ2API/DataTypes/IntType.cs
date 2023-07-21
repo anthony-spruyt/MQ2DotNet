@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 using MQ2DotNet.EQ;
 
 namespace MQ2DotNet.MQ2API.DataTypes
@@ -9,7 +8,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-int/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("int")]
     public class IntType : MQ2DataType
     {

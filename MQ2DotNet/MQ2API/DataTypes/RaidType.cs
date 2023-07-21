@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using MQ2DotNet.EQ;
+﻿using MQ2DotNet.EQ;
 using System.Collections.Generic;
 
 namespace MQ2DotNet.MQ2API.DataTypes
@@ -9,7 +8,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-raid/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("raid")]
     public class RaidType : MQ2DataType
     {

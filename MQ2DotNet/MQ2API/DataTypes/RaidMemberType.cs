@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Data related to the specified raid member.
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-raidmember/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("raidmember")]
     public class RaidMemberType : MQ2DataType
     {

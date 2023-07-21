@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using MQ2DotNet.MQ2API;
 using MQ2DotNet.Utility;
 
@@ -15,7 +14,6 @@ namespace MQ2DotNet.Services
     /// <summary>
     /// Plugin functions for adding or removing commands
     /// </summary>
-    [PublicAPI]
     public sealed class Commands : CriticalFinalizerObject, IDisposable
     {
         private readonly EventLoopContext _eventLoopContext;

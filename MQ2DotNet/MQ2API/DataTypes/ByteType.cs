@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Represents an 8 bit integer, with values randing from 0 to 255. This is a pure DataType and has no members.
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-byte/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("byte")]
     public class ByteType : MQ2DataType
     {

@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using MQ2DotNet.EQ;
+﻿using MQ2DotNet.EQ;
 using MQ2DotNet.Utility;
 using System;
 using System.Runtime.InteropServices;
@@ -12,7 +11,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// https://docs.macroquest.org/reference/data-types/datatype-string/
     /// </summary>
     /// <remarks>Since most MQ2 strings share the same storage (DataTypeTemp), lazy evaluation is a bad idea.</remarks>
-    [PublicAPI]
     [MQ2Type("string")]
     public class StringType : MQ2DataType
     {

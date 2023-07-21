@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using MQFlux.Commands;
+using MQFlux.Extensions;
 using MQFlux.Services;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +26,7 @@ namespace MQFlux.Handlers
 
             try
             {
-                var x = request.Context.TLO.Target;
+                var spawnId = request.Context.TLO.Target.ID();
 
                 mqLogger.Log("aa");
             }

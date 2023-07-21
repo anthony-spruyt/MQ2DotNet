@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Represents a discrete item being looted in an AdvLoot window.
     /// Last Verified: 2023-07-19
     /// https://docs.macroquest.org/reference/top-level-objects/tlo-advloot/#advlootitem-type
     /// </summary>
-    [PublicAPI]
     [MQ2Type("advlootitem")]
     public class AdvLootItemType : MQ2DataType
     {

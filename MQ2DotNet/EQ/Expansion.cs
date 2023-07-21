@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 
 namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// BuildType.h
     /// </summary>
-    [PublicAPI]
     [Flags]
     public enum Expansion
     {

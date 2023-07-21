@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Text.Json.Serialization;
 
@@ -14,7 +13,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-window/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("window")]
     public class WindowType : MQ2DataType
     {

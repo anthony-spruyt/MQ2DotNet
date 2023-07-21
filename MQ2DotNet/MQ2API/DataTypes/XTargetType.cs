@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using MQ2DotNet.Services;
+﻿using MQ2DotNet.Services;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -8,7 +7,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-xtarget/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("xtarget")]
     public class XTargetType : MQ2DataType
     {

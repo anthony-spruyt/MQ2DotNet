@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace MQ2DotNet.MQ2API
@@ -7,7 +6,6 @@ namespace MQ2DotNet.MQ2API
     [StructLayout(LayoutKind.Explicit, Size = 40)]
     public struct NativeMQ2TypeVar { }
 
-    [PublicAPI]
     public class MQ2TypeVar
     {
         public MQ2Type Type { get; }

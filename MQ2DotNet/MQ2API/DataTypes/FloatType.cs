@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Represents a single precision (32-bit) floatiang point number.
@@ -10,7 +8,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-float/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("float")]
     public class FloatType : MQ2DataType
     {

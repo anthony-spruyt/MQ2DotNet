@@ -1,12 +1,9 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.EQ
+﻿namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// Pre <see cref="Expansion.TOL"/> item slot numbers.
     /// </summary>
     /// <remarks>Constants.h</remarks>
-    [PublicAPI]
     public enum InvSlot
     {
         InvSlot_Charm = 0,
@@ -57,7 +54,6 @@ namespace MQ2DotNet.EQ
     /// Post <see cref="Expansion.TOL"/> item slot numbers.
     /// </summary>
     /// <remarks>Constants.h</remarks>
-    [PublicAPI]
     public enum InvSlot2
     {
         InvSlot_Charm = 0,

@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for a task objective.
     /// Last Verified: 2023-07-02
     /// This type does not exist in doco of task type child here -> https://docs.macroquest.org/reference/data-types/datatype-task/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("taskobjectivemember")]
     public class TaskObjectiveType : MQ2DataType
     {

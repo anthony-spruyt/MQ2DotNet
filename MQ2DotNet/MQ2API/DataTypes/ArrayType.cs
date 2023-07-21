@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Data related to arrays. Not well supported.
@@ -8,7 +6,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-array/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("array")]
     public class ArrayType : MQ2DataType
     {

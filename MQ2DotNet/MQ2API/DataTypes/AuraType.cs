@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Describes an aura.
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-auratype/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("auratype")]
     public class AuraType : MQ2DataType
     {

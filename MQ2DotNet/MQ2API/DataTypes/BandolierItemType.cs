@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// MQ2 type for an item in a bandolier set.
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-bandolier/#bandolieritem-datatype
     /// </summary>
-    [PublicAPI]
     [MQ2Type("bandolieritem")]
     public class BandolierItemType : MQ2DataType
     {

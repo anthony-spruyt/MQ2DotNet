@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// This datatype represents information about a keyring (a.k.a. a collection of mounts, illusions, etc)
     /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/data-types/datatype-keyring/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("keyring")]
     public class KeyRingType : MQ2DataType
     {

@@ -1,14 +1,10 @@
-﻿using JetBrains.Annotations;
-using System;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// The Macro DataType deals with the macro currently running, and nothing else.
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-macro/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("macro")]
     public class MacroType : MQ2DataType
     {

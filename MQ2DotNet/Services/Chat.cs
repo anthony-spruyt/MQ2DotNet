@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using MQ2DotNet.Utility;
 
 namespace MQ2DotNet.Services
@@ -9,7 +8,6 @@ namespace MQ2DotNet.Services
     /// <summary>
     /// Contains utility methods and properties relating to ingame chat (messages in a chat window, from EQ or MQ2)
     /// </summary>
-    [PublicAPI]
     public class Chat
     {
         private readonly Events _events;

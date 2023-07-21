@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using JetBrains.Annotations;
 using MQ2DotNet.MQ2API;
 using MQ2DotNet.MQ2API.DataTypes;
 using MQ2DotNet.Utility;
@@ -11,7 +10,6 @@ namespace MQ2DotNet.Services
     /// <summary>
     /// Contains utility methods and properties relating to spawns
     /// </summary>
-    [PublicAPI]
     public class Spawns
     {
 # if WIN64

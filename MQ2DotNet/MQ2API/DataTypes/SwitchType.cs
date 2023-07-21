@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Data related to switches (levers, buttons, etc) in the zone
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-switch/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("switch")]
     public class SwitchType : MQ2DataType
     {

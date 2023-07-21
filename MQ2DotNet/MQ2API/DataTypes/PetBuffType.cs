@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -8,7 +7,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-02.
     /// There is no doco for this type. Only have pet doco here -> https://docs.macroquest.org/reference/data-types/datatype-pet/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("petbuff")]
     public class PetBuffType : MQ2DataType
     {

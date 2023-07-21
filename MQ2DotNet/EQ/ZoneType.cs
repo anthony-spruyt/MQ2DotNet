@@ -1,11 +1,8 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.EQ
+﻿namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// Zone type:0=Indoor Dungeon 1=Outdoor 2=Outdoor City 3=Dungeon City 4=Indoor City 5=Outdoor Dungeon
     /// </summary>
-    [PublicAPI]
     public enum ZoneType : uint
     {
         IndoorDungeon = 0U,

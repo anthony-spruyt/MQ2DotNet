@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Provides access to world locations such as a character's bound location.
@@ -8,7 +6,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// https://docs.macroquest.org/reference/data-types/datatype-worldlocation/
     /// </summary>
     /// <remarks>This type is only used for character's bound locations, VarPtr.Dword is an index in CHARINFO2::BoundLocations</remarks>
-    [PublicAPI]
     [MQ2Type("worldlocation")]
     public class WorldLocationType : MQ2DataType
     {

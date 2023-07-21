@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// This datatype deals strictly with information items on a keyring.
     /// Last Verified: 2023-07-01
     /// https://docs.macroquest.org/reference/data-types/datatype-keyringitem/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("keyringitem")]
     public class KeyRingItemType : MQ2DataType
     {

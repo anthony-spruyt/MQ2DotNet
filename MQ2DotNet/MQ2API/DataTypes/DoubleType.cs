@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Represents a double precision (64-bit) floating point number.
@@ -10,7 +8,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-double/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("double")]
     public class DoubleType : MQ2DataType
     {

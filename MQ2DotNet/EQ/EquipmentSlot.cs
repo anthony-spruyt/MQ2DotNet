@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.EQ
+﻿namespace MQ2DotNet.EQ
 {
     // /*0x00*/ ARMOR Head;
     // /*0x14*/ ARMOR Chest;
@@ -15,7 +13,6 @@ namespace MQ2DotNet.EQ
     /// <summary>
     /// 
     /// </summary>
-    [PublicAPI]
     public enum EquipmentSlot
     {
         Head = 0,

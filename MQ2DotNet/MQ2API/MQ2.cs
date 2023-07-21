@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -8,7 +7,6 @@ namespace MQ2DotNet.MQ2API
     /// <summary>
     /// Contains methods and properties relating to MQ2 functionality
     /// </summary>
-    [PublicAPI]
     public class MQ2
     {
         /// <summary>

@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// GREY, GREEN, LIGHT BLUE, BLUE, WHITE, YELLOW, RED
     /// </summary>
-    [PublicAPI]
     public enum ConColor
     {
         [EnumMember(Value = "GREY")]

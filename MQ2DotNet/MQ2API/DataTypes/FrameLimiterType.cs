@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Represents the state of the frame limiter.
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/top-level-objects/tlo-framelimiter/#framelimiter-type
     /// </summary>
-    [PublicAPI]
     [MQ2Type("framelimiter")]
     public class FrameLimiterType : MQ2DataType
     {

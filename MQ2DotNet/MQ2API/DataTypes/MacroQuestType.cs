@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Data types related to the current MacroQuest2 session. These also inherit from the EverQuest Type.
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-macroquest/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("macroquest")]
     public class MacroQuestType : MQ2DataType//EverQuestType inheritence is an issue in this implementation.
     {

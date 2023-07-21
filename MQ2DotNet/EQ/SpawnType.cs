@@ -1,8 +1,5 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.EQ
+﻿namespace MQ2DotNet.EQ
 {
-    [PublicAPI]
     public enum SpawnType : uint
     {
         NONE = 0U,

@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// COMBAT, DEBUFFED, COOLDOWN, ACTIVE, RESTING, UNKNOWN
     /// </summary>
-    [PublicAPI]
     public enum CombatState
     {
         [EnumMember(Value = "COMBAT")]

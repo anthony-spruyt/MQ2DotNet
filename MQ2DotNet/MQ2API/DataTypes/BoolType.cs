@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// A Boolean expression is one that has just two possible outcomes: 1 (TRUE) and 0 (FALSE). Technically TRUE doesn't have to be 1, but it's always treated that way.
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-bool/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("bool")]
     public class BoolType : MQ2DataType
     {

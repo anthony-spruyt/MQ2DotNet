@@ -1,13 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Describes a member in your current task.
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-taskmember/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("taskmember")]
     public class TaskMemberType : MQ2DataType
     {

@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using MQ2DotNet.EQ;
+﻿using MQ2DotNet.EQ;
 using MQ2DotNet.Services;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-06-30
     /// https://docs.macroquest.org/reference/data-types/datatype-character/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("character")]
     public class CharacterType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {

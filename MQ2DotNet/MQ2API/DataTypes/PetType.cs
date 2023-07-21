@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using MQ2DotNet.EQ;
+﻿using MQ2DotNet.EQ;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -11,7 +10,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-02
     /// https://docs.macroquest.org/reference/data-types/datatype-pet/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("pet")]
     public class PetType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
     {

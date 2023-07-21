@@ -1,12 +1,11 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace MQ2DotNet.MQ2API
 {
     [StructLayout(LayoutKind.Explicit, Size = 32)]
     public struct NativeMQ2VarPtr { }
-    [PublicAPI]
+
     public class MQ2VarPtr
     {
         public NativeMQ2VarPtr VarPtr { get; }

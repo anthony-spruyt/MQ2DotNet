@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 
 namespace MQ2DotNet.EQ
 {
@@ -7,7 +6,6 @@ namespace MQ2DotNet.EQ
     /// In game race
     /// TODO: Add other races
     /// </summary>
-    [PublicAPI]
     [Flags]
     public enum Race
     {

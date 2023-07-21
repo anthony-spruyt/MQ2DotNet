@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// TODO: new data type
@@ -8,7 +6,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// While not required to access achievements, categories may be useful for enumerating lists of achievements.
     /// https://docs.macroquest.org/reference/data-types/datatype-achievementcat/
     /// </summary>
-    [PublicAPI]
     [MQ2Type("achievementcat")]
     public class AchievementCatType : MQ2DataType
     {

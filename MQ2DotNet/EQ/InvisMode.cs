@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace MQ2DotNet.EQ
+﻿namespace MQ2DotNet.EQ
 {
     /// <summary>
     /// Any = 0,
@@ -9,7 +7,6 @@ namespace MQ2DotNet.EQ
 	///	Animal = 3,
 	///	SoS = 4,
     /// </summary>
-    [PublicAPI]
     public enum InvisMode
     {
         Any = 0,
