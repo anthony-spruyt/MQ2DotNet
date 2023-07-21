@@ -69,7 +69,7 @@ namespace MQ2DotNet.MQ2API
         /// <param name="index"></param>
         /// <returns>The member if the call succeeded and was able to be cast to the <typeparamref name="T"/>, otherwise null</returns>
         /// <exception cref="InvalidCastException" />
-        protected T GetMember<T>(string name, string index = "") where T : MQ2DataType
+        public T GetMember<T>(string name, string index = "") where T : MQ2DataType
         {
             if (!_typeVar.TryGetMember(name, index, out var memberTypeVar))
                 return null;

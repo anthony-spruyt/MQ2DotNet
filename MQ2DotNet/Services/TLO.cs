@@ -1318,7 +1318,13 @@ namespace MQ2DotNet.Services
             }
             catch (Exception ex)
             {
-                MQ2DataType.DataTypeErrors.TryAdd($"{name}_{index}_{typeof(T).DeclaringType ?? typeof(T)}", ex);
+                var thisType = GetType().DeclaringType ?? GetType();
+                var memberType = typeof(T).DeclaringType ?? typeof(T);
+                var key = string.IsNullOrWhiteSpace(index) ?
+                    $"Data Type: \"{thisType}\" Member Name: \"{name}\" Member Type: \"{memberType}\"" :
+                    $"Date Type: \"{thisType}\" Member Name: \"{name}\" Member Index: \"{index}\" Member Type: \"{memberType}\"";
+
+                MQ2DataType.DataTypeErrors.TryAdd(key, ex);
 
                 tlo = null;
             }
