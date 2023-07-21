@@ -139,62 +139,62 @@ namespace MQ2DotNet.MQ2API
         // TODO: Move these to where they should be
         internal static void WriteChatGeneralError(string text)
         {
-            new MQ2().WriteChat($"\ag[.NET] \arError: \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[.NET] \arError: \aw{text}");
         }
 
         internal static void WriteChatGeneralWarning(string text)
         {
-            new MQ2().WriteChat($"\ag[.NET] \ayWarning: \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[.NET] \ayWarning: \aw{text}");
         }
 
         internal static void WriteChatGeneral(string text)
         {
-            new MQ2().WriteChat($"\ag[.NET] \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[.NET] \aw{text}");
         }
 
         internal static void WriteChatPluginError(string text)
         {
-            new MQ2().WriteChat($"\ag[.NET Plugin] \arError: \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[.NET Plugin] \arError: \aw{text}");
         }
 
         internal static void WriteChatPluginWarning(string text)
         {
-            new MQ2().WriteChat($"\ag[.NET Plugin] \ayWarning: \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[.NET Plugin] \ayWarning: \aw{text}");
         }
 
         internal static void WriteChatPlugin(string text)
         {
-            new MQ2().WriteChat($"\ag[.NET Plugin] \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[.NET Plugin] \aw{text}");
         }
 
         internal static void WriteChatProgramError(string text)
         {
-            new MQ2().WriteChat($"\ag[.NET Program] \arError: \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[.NET Program] \arError: \aw{text}");
         }
 
         internal static void WriteChatProgramWarning(string text)
         {
-            new MQ2().WriteChat($"\ag[.NET Program] \ayWarning: \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[.NET Program] \ayWarning: \aw{text}");
         }
 
         internal static void WriteChatProgram(string text)
         {
-            new MQ2().WriteChat($"\ag[.NET Program] \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[.NET Program] \aw{text}");
         }
 
         internal static void WriteChatScriptError(string text)
         {
-            new MQ2().WriteChat($"\ag[C# Script] \arError: \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[C# Script] \arError: \aw{text}");
         }
 
         internal static void WriteChatScriptWarning(string text)
         {
-            new MQ2().WriteChat($"\ag[C# Script] \ayWarning: \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[C# Script] \ayWarning: \aw{text}");
         }
 
         internal static void WriteChatScript(string text)
         {
-            new MQ2().WriteChat($"\ag[C# Script] \aw{text}");
+            new MQ2().WriteChatSafe($"\ag[C# Script] \aw{text}");
         }
         #endregion
 

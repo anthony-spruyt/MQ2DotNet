@@ -1,20 +1,20 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using MQ2DotNet.EQ;
+using MQ2DotNet.MQ2API;
+using MQ2DotNet.Plugin;
+using MQ2DotNet.Program;
+using MQ2DotNet.Script;
+using MQ2DotNet.Services;
+using MQ2DotNet.Utility;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
-using MQ2DotNet.EQ;
-using MQ2DotNet.MQ2API;
-using MQ2DotNet.MQ2API.DataTypes;
-using MQ2DotNet.Plugin;
-using MQ2DotNet.Program;
-using MQ2DotNet.Script;
-using MQ2DotNet.Services;
-using MQ2DotNet.Utility;
 
 namespace MQ2DotNet
 {
@@ -498,23 +498,38 @@ namespace MQ2DotNet
 
         private static void EndProgram(string programName)
         {
-            if (Programs.TryGetValue(programName, out var programAppDomain))
-            {
-                // Try to cancel cleanly
-                programAppDomain.Cancel();
-                if (programAppDomain.Status != TaskStatus.Canceled)
-                    MQ2.WriteChatProgramWarning($"{programName} did not respond to cancellation");
+            _ = Task.Run
+            (
+                async () => 
+                {
+                    if (Programs.TryGetValue(programName, out var programAppDomain))
+                    {
+                        // Try to cancel cleanly
+                        programAppDomain.Cancel();
 
-                // Regardless, unload the AppDomain which will shut everything down
-                programAppDomain.Dispose();
-                _appDomains.Remove(programAppDomain);
-                
-                MQ2.WriteChatProgram($"{programName} stopped");
-            }
-            else
-            {
-                MQ2.WriteChatProgram($"{programName} is not running");
-            }
+                        using (CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+                        {
+                            while (!programAppDomain.Finished || !cancellationTokenSource.Token.IsCancellationRequested)
+                            {
+                                await Task.Yield();
+                            }
+                        }
+
+                        if (programAppDomain.Status != TaskStatus.Canceled)
+                            MQ2.WriteChatProgramWarning($"{programName} did not respond to cancellation");
+
+                        // Regardless, unload the AppDomain which will shut everything down
+                        programAppDomain.Dispose();
+                        _appDomains.Remove(programAppDomain);
+
+                        MQ2.WriteChatProgram($"{programName} stopped");
+                    }
+                    else
+                    {
+                        MQ2.WriteChatProgram($"{programName} is not running");
+                    }
+                }
+            ).ConfigureAwait(false);
         }
 #endregion
 

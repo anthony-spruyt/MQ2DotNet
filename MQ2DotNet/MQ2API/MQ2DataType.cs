@@ -82,7 +82,13 @@ namespace MQ2DotNet.MQ2API
             }
             catch (Exception ex)
             {
-                DataTypeErrors.TryAdd($"{name}_{index}_{typeof(T).DeclaringType ?? typeof(T)}", ex);
+                var thisType = GetType().DeclaringType ?? GetType();
+                var memberType = typeof(T).DeclaringType ?? typeof(T);
+                var key = string.IsNullOrWhiteSpace(index) ?
+                    $"Data Type: \"{thisType}\" Member Name: \"{name}\" Member Type: \"{memberType}\"" :
+                    $"Date Type: \"{thisType}\" Member Name: \"{name}\" Member Index: \"{index}\" Member Type: \"{memberType}\"";
+
+                DataTypeErrors.TryAdd(key, ex);
 
                 member = null;
             }

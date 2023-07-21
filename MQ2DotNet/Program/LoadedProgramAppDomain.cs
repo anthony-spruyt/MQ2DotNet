@@ -83,14 +83,6 @@ namespace MQ2DotNet.Program
             
             // Give the program a chance to respond to the cancellation
             EventLoopContext.DoEvents(true);
-
-            using (CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
-            {
-                while (!Finished || !cancellationTokenSource.Token.IsCancellationRequested)
-                {
-                    Task.Delay(10).Wait();
-                }
-            }
         }
 
         #region IDisposable

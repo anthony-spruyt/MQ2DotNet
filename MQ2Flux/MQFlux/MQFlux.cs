@@ -77,10 +77,10 @@ namespace MQFlux
         {
             Configure(args);
 
-            mqLogger.Log($"Started");
-
             try
             {
+                mqLogger.Log($"Started");
+
                 CancellationToken[] cancellationTokens = await mediator.Send
                 (
                     new LoadMQCommands()
@@ -96,14 +96,22 @@ namespace MQFlux
                     while (!linkedTokenSource.IsCancellationRequested)
                     {
                         _ = await mediator.Send(new ProcessCommand(),linkedTokenSource.Token);
-                        await mediator.Send(new FlushDataTypeErrorsCommand(), linkedTokenSource.Token);
                         await Yield(linkedTokenSource.Token);
                     }
                 }
-
-                await mediator.Send(new UnloadMQCommands());
             }
             catch (TaskCanceledException) { }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error in {nameof(Main)}");
+                mqLogger.LogError(ex);
+            }
+
+            try
+            {
+                await mediator.Send(new UnloadMQCommands());
+                await mediator.Send(new FlushDataTypeErrorsCommand());
+            }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"Error in {nameof(Main)}");
