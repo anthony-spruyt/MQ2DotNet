@@ -7,9 +7,10 @@ namespace MQFlux.Commands
     public class DoneMeditatingCommand :
         IConsciousRequest,
         IStandingStillRequest,
-        INotWhenCastingRequest,
+        INotCastingRequest,
         ICasterRequest,
-        INotWhenSpellbookIsOpenRequest,
+        ISpellbookNotOpenRequest,
+        IBankWindowNotOpenRequest,
         INotFeignedDeathRequest,
         IRequest<bool>
     {

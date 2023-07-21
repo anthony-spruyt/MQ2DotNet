@@ -1,19 +1,17 @@
-﻿using System;
+﻿using MQ2DotNet.MQ2API;
+using Ninject;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
-using MQ2DotNet.MQ2API;
-using Ninject;
 
 namespace MQ2DotNet.Program
 {
     internal class LoadedProgramAppDomain : LoadedAppDomainBase
     {
         private IProgram _program;
-        private CancellationTokenSource _cts = new CancellationTokenSource();
         private Task _task;
 
         public LoadedProgramAppDomain(string assemblyFilePath)
@@ -39,20 +37,24 @@ namespace MQ2DotNet.Program
 
         protected override void AfterPulse()
         {
-            // If it's faulted, show some details
-            if (_task.IsFaulted)
+            try
             {
-                Debug.Assert(_task.Exception != null);
-                var stackFrame = (new StackTrace(_task.Exception, true)).GetFrame(0);
-                if (stackFrame != null)
+                // If it's faulted, show some details
+                if (_task.IsFaulted)
                 {
-                    var file = stackFrame.GetFileName();
-                    var line = stackFrame.GetFileLineNumber();
-                    MQ2.WriteChatProgramError($"Exception in \ag{Name}\ax at \ag{file}:{line}\ax: {Exception}");
+                    Debug.Assert(_task.Exception != null);
+                    var stackFrame = (new StackTrace(_task.Exception, true)).GetFrame(0);
+                    if (stackFrame != null)
+                    {
+                        var file = stackFrame.GetFileName();
+                        var line = stackFrame.GetFileLineNumber();
+                        MQ2.WriteChatProgramError($"Exception in \ag{Name}\ax at \ag{file}:{line}\ax: {Exception}");
+                    }
+                    else
+                        MQ2.WriteChatProgramError($"Exception in \ag{Name}\ax: {Exception}");
                 }
-                else
-                    MQ2.WriteChatProgramError($"Exception in \ag{Name}\ax: {Exception}");
             }
+            catch (AppDomainUnloadedException) { }
         }
 
         public Exception Exception => _task.Exception?.InnerException;

@@ -28,8 +28,7 @@ namespace MQFlux.Handlers
             (
                 DateTime.UtcNow.Second % 2 != 0 || 
                 !me.Spawn.Standing || 
-                me.XTargets.Any(i => i.PctAggro > 80u) ||
-                request.Context.TLO.IsWindowOpen("BigBankWnd") || request.Context.TLO.IsWindowOpen("GuildBankWnd")
+                me.XTargets.Any(i => i.PctAggro == 100u)
             )
             {
                 return Task.FromResult(false);
@@ -39,7 +38,9 @@ namespace MQFlux.Handlers
 
             if (me.CombatState == CombatState.Combat)
             {
-                medBreak = me.PctMana < 90 && me.PctHPs > 75;
+                medBreak = 
+                    me.PctMana < 90 && me.PctHPs > 75 ||
+                    me.PctMana < 33;
             }
             else
             {

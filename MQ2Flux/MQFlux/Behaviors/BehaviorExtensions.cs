@@ -24,17 +24,18 @@ namespace MQFlux.Behaviors
                 .AddOpenBehavior(typeof(NotInCombatBehavior<,>))
                 .AddOpenBehavior(typeof(StandingStillBehavior<,>))
                 .AddOpenBehavior(typeof(CasterBehavior<,>))
-                .AddOpenBehavior(typeof(NotWhenCastingBehavior<,>))
+                .AddOpenBehavior(typeof(NotCastingBehavior<,>))
                 .AddOpenBehavior(typeof(InterruptCastingBehavior<,>))
                 .AddOpenBehavior(typeof(HybridBehavior<,>))
                 .AddOpenBehavior(typeof(MeleeBehavior<,>))
-                .AddOpenBehavior(typeof(NotWhenAutoAttackingBehavior<,>))
+                .AddOpenBehavior(typeof(NotAutoAttackingBehavior<,>))
                 .AddOpenBehavior(typeof(AbilityBehavior<,>))
-                .AddOpenBehavior(typeof(NotWhenSpellbookIsOpenBehavior<,>))
+                .AddOpenBehavior(typeof(SpellbookNotOpenBehavior<,>))
                 .AddOpenBehavior(typeof(NotFeignedDeathBehavior<,>))
                 .AddOpenBehavior(typeof(GroupedBehavior<,>))
                 .AddOpenBehavior(typeof(GroupLeaderBehavior<,>))
                 .AddOpenBehavior(typeof(FreeInventorySlotBehavior<,>))
+                .AddOpenBehavior(typeof(BankWindowNotOpenBehavior<,>))
                 .AddOpenBehavior(typeof(MainAssistBehavior<,>));
         }
     }

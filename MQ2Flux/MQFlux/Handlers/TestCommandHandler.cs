@@ -26,9 +26,9 @@ namespace MQFlux.Handlers
 
             try
             {
-                var x = request.Context.TLO.Me.Inventory.ToArray();
-                var y = x.FirstOrDefault(i => i.Name?.Contains("Tea") ?? false);
-                var z = y.Type;
+                var x = request.Context.TLO.Target;
+
+                mqLogger.Log("aa");
             }
             catch (Exception ex)
             {

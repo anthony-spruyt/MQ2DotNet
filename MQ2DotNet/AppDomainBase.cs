@@ -1,13 +1,9 @@
-﻿using System;
+﻿using MQ2DotNet.EQ;
+using MQ2DotNet.MQ2API;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using MQ2DotNet.EQ;
-using MQ2DotNet.MQ2API;
-using MQ2DotNet.MQ2API.DataTypes;
 
 namespace MQ2DotNet
 {

@@ -504,25 +504,30 @@ namespace MQ2DotNet
                 {
                     if (Programs.TryGetValue(programName, out var programAppDomain))
                     {
-                        // Try to cancel cleanly
-                        programAppDomain.Cancel();
-
-                        using (CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+                        try
                         {
-                            while (!programAppDomain.Finished || !cancellationTokenSource.Token.IsCancellationRequested)
+                            // Try to cancel cleanly
+                            programAppDomain.Cancel();
+
+                            using (CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30)))
                             {
-                                await Task.Yield();
+                                while (!programAppDomain.Finished || !cancellationTokenSource.Token.IsCancellationRequested)
+                                {
+                                    await Task.Yield();
+                                }
                             }
+
+                            if (programAppDomain.Status != TaskStatus.Canceled)
+                                MQ2.WriteChatProgramWarning($"{programName} did not respond to cancellation");
                         }
+                        finally
+                        {
+                            // Regardless, unload the AppDomain which will shut everything down
+                            programAppDomain.Dispose();
+                            _appDomains.Remove(programAppDomain);
 
-                        if (programAppDomain.Status != TaskStatus.Canceled)
-                            MQ2.WriteChatProgramWarning($"{programName} did not respond to cancellation");
-
-                        // Regardless, unload the AppDomain which will shut everything down
-                        programAppDomain.Dispose();
-                        _appDomains.Remove(programAppDomain);
-
-                        MQ2.WriteChatProgram($"{programName} stopped");
+                            MQ2.WriteChatProgram($"{programName} stopped");
+                        }
                     }
                     else
                     {
@@ -551,6 +556,7 @@ namespace MQ2DotNet
                         _appDomains.Remove(appDomain);
                     }
                 }
+                catch (AppDomainUnloadedException) { }
                 catch (Exception e)
                 {
                     MQ2.WriteChatPluginError($"Exception in OnPulse in {appDomain.Name}");

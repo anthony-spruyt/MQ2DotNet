@@ -1,23 +1,21 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
+﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using MQ2DotNet.MQ2API;
 using MQ2DotNet.Services;
 using MQ2DotNet.Utility;
 using Ninject;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MQ2DotNet.Script
 {
     internal class LoadedScriptAppDomain : LoadedAppDomainBase
     {
-        private CancellationTokenSource _cts;
         private Task _task;
         private Task<object> _runTask;
 
@@ -43,7 +41,6 @@ namespace MQ2DotNet.Script
             if (Active)
                 throw new InvalidOperationException("A script is already running");
 
-            _cts = new CancellationTokenSource();
             _task = EventLoopContext.SetExecuteRestore(() => CompileAndRun(scriptFilePath, args));
             Name = Path.GetFileNameWithoutExtension(scriptFilePath);
         }

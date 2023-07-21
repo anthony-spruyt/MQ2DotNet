@@ -9,10 +9,10 @@ namespace MQFlux.Commands
     public class ForageCommand : 
         ICharacterConfigRequest,
         IConsciousRequest,
-        INotWhenCastingRequest, 
+        INotCastingRequest, 
         IAbilityRequest, 
-        INotWhenAutoAttackingRequest, 
-        INotWhenSpellbookIsOpenRequest, 
+        INotAutoAttackingRequest, 
+        ISpellbookNotOpenRequest, 
         INoItemOnCursorRequest,
         INotFeignedDeathRequest,
         IRequest<bool>

@@ -95,7 +95,7 @@ namespace MQ2DotNet.Utility
         {
             var count = 0;
 
-            while (_queue.TryDequeue(out var continuation))
+            while (_queue.TryDequeue(out var _))
                 count++;
 
             return count;

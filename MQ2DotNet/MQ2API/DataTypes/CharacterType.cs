@@ -2883,12 +2883,7 @@ enum ALTCURRENCY
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             }
 
-            var skill = TLO.Instance.GetSkill(name);
-
-            if (skill == null)
-            {
-                throw new ArgumentException("Not a valid skill name", nameof(name));
-            }
+            var skill = TLO.Instance.GetSkill(name) ?? throw new ArgumentException("Not a valid skill name", nameof(name));
 
             Index = (int)skill.ID.Value + 1;
             Level = me.GetSkillLevel(Index);

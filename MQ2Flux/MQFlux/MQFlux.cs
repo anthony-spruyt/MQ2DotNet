@@ -8,6 +8,7 @@ using MQ2DotNet.Services;
 using MQFlux.Behaviors;
 using MQFlux.Commands;
 using MQFlux.Services;
+using Serilog;
 using System;
 using System.IO;
 using System.Reflection;
@@ -156,9 +157,10 @@ namespace MQFlux
         private static IConfiguration ConfigureConfigProviders(string[] args)
         {
             return new ConfigurationBuilder()
+                .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
                 .AddJsonFile
                 (
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "appsettings.json"),
+                    "appsettings.json",
                     optional: true,
                     reloadOnChange: true
                 )
@@ -169,19 +171,23 @@ namespace MQFlux
 
         private IServiceCollection ConfigureServices(IConfiguration configuration)
         {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .WriteTo.File
+                (
+                    path: Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..\\..\\..\\..\\Logs\\MQFlux.log"),
+                    rollOnFileSizeLimit: true,
+                    fileSizeLimitBytes: 1048576L, // 1MB
+                    retainedFileCountLimit: 1
+                )
+                .CreateLogger();
+
             return new ServiceCollection()
                 .AddLogging
                 (
-                    loggingConfig =>
+                    config =>
                     {
-                        loggingConfig.AddConfiguration(configuration.GetSection("Logging"));
-                        loggingConfig.AddFile
-                        (
-                            fileLoggingConfig =>
-                            {
-                                fileLoggingConfig.RootPath = Path.GetDirectoryName(Path.Combine(Assembly.GetExecutingAssembly().Location, "../../../../../"));
-                            }
-                        );
+                        config.AddSerilog(dispose: true);
                     }
                 )
                 .AddMediatR

@@ -11,7 +11,7 @@ namespace MQFlux.Commands
         INotInCombatRequest,
         IStandingStillRequest,
         ICasterRequest,
-        INotWhenCastingRequest,
+        INotCastingRequest,
         INoItemOnCursorRequest,
         INotFeignedDeathRequest,
         IRequest<bool>

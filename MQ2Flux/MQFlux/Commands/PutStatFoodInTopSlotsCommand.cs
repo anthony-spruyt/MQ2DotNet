@@ -8,7 +8,7 @@ namespace MQFlux.Commands
     public class PutStatFoodInTopSlotsCommand : 
         ICharacterConfigRequest,
         IConsciousRequest,
-        INotWhenCastingRequest, 
+        INotCastingRequest, 
         INoItemOnCursorRequest, 
         IRequest<bool>
     {

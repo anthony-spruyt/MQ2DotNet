@@ -3,6 +3,7 @@ using MQ2DotNet.MQ2API.DataTypes;
 using MQ2DotNet.Utility;
 using Ninject;
 using System;
+using System.Threading;
 using WeakEvent;
 
 namespace MQ2DotNet
@@ -12,6 +13,7 @@ namespace MQ2DotNet
     /// </summary>
     internal class LoadedAppDomainBase : MarshalByRefObject, IDisposable
     {
+        protected readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private readonly MQ2TypeFactory _typeFactory = new MQ2TypeFactory();
 
         protected LoadedAppDomainBase()
@@ -41,6 +43,11 @@ namespace MQ2DotNet
         {
             if (_disposed)
                 throw new ObjectDisposedException(nameof(LoadedAppDomainBase));
+
+            if ((_cts?.Token.IsCancellationRequested).GetValueOrDefault(true))
+            {
+                return;
+            }
 
             EventLoopContext.SetExecuteRestore(() =>
             {

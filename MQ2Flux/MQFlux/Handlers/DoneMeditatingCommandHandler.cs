@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using MQFlux.Commands;
-using MQFlux.Extensions;
 using MQFlux.Services;
 using System;
 using System.Threading;
@@ -21,7 +20,7 @@ namespace MQFlux.Handlers
 
         public Task<bool> Handle(DoneMeditatingCommand request, CancellationToken cancellationToken)
         {
-            if (request.Context.TLO.IsWindowOpen("BigBankWnd") || request.Context.TLO.IsWindowOpen("GuildBankWnd"))
+            if (DateTime.UtcNow.Second % 2 != 0)
             {
                 return Task.FromResult(false);
             }
