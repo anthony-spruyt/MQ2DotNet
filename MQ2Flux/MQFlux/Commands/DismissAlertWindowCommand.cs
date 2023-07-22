@@ -4,7 +4,7 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class DismissAlertWindowCommand : Command<Unit>, IContextRequest
+    public class DismissAlertWindowCommand : PCCommand<Unit>, IContextRequest
     {
         public IContext Context { get; set; }
     }

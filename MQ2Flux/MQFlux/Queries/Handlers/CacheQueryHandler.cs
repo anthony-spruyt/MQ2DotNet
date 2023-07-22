@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Queries.Handlers
 {
-    public abstract class GetCacheQueryHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse> where TRequest : IRequest<TResponse>
+    public abstract class CacheQueryHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse> where TRequest : Query<TResponse>
     {
         public abstract TResponse Default { get; }
         public abstract string Key { get; }
 
         private readonly ICache cache;
 
-        protected GetCacheQueryHandler(ICache cache)
+        protected CacheQueryHandler(ICache cache)
         {
             this.cache = cache;
         }

@@ -5,7 +5,7 @@ using MQFlux.Services;
 namespace MQFlux.Commands
 {
     public class PutStatFoodInTopSlotsCommand :
-        Command<bool>,
+        PCCommand<bool>,
         ICharacterConfigRequest,
         IConsciousRequest,
         INotCastingRequest,

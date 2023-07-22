@@ -20,14 +20,14 @@ namespace MQFlux.Commands.Handlers
         {
             if (!request.Character.AutoLearnLanguages.GetValueOrDefault(false))
             {
-                return Task.FromResult<Unit>(default);
+                return Task.FromResult(Unit.Value);
             }
 
             var me = request.Context.TLO.Me;
 
             if (!me.Grouped)
             {
-                return Task.FromResult<Unit>(default);
+                return Task.FromResult(Unit.Value);
             }
 
             // Assume the /language help command returns only languages you have 1 or more points in and in the same order
@@ -54,7 +54,7 @@ namespace MQFlux.Commands.Handlers
                 Practise(request, language, languageNumber.Value);
             }
 
-            return Task.FromResult<Unit>(default);
+            return Task.FromResult(Unit.Value);
         }
 
         private void Practise(LearnALanguageCommand request, string language, int languageNumber)

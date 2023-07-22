@@ -4,7 +4,7 @@ using MQFlux.Services;
 namespace MQFlux.Commands
 {
     public class DoneMeditatingCommand :
-        Command<bool>,
+        PCCommand<bool>,
         IConsciousRequest,
         IStandingStillRequest,
         INotCastingRequest,

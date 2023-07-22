@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class UnloadMQCommandsHandler : IRequestHandler<UnloadMQCommands>
+    public class UnloadMQCommandsHandler : IRequestHandler<UnloadMQCommands, Unit>
     {
         private readonly IMQCommandProvider commandProvider;
 
@@ -14,11 +14,11 @@ namespace MQFlux.Commands.Handlers
             this.commandProvider = commandProvider;
         }
 
-        public Task Handle(UnloadMQCommands request, CancellationToken cancellationToken)
+        public Task<Unit> Handle(UnloadMQCommands request, CancellationToken cancellationToken)
         {
             commandProvider.Unload();
 
-            return Task.CompletedTask;
+            return Task.FromResult(Unit.Value);
         }
     }
 }

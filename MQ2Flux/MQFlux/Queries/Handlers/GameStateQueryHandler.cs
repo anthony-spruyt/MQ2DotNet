@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Queries.Handlers
 {
-    public class GetGameStateQueryHandler : GetCacheQueryHandler<GetGameStateQuery, GameState>
+    public class GameStateQueryHandler : CacheQueryHandler<GameStateQuery, GameState>
     {
         public override GameState Default => GameState.Unknown;
         public override string Key => CacheKeys.GameState;
 
         private readonly IContext context;
 
-        public GetGameStateQueryHandler(ICache cache, IContext context) : base(cache)
+        public GameStateQueryHandler(ICache cache, IContext context) : base(cache)
         {
             this.context = context;
         }
 
-        public override async Task<GameState> Handle(GetGameStateQuery request, CancellationToken cancellationToken)
+        public override async Task<GameState> Handle(GameStateQuery request, CancellationToken cancellationToken)
         {
             var result = await base.Handle(request, cancellationToken);
 

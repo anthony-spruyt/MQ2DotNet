@@ -18,7 +18,7 @@ namespace MQFlux.Commands.Handlers
                 request.Context.MQ.DoCommand("/notify AlertWnd ALW_Dismiss_Button leftmouseup");
             }
 
-            return Task.FromResult<Unit>(default);
+            return Task.FromResult(Unit.Value);
         }
     }
 }

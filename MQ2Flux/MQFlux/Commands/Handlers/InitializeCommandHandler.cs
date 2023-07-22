@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class InitializeCommandHandler : IRequestHandler<InitializeCommand>
+    public class InitializeCommandHandler : IRequestHandler<InitializeCommand, Unit>
     {
-        public Task Handle(InitializeCommand request, CancellationToken cancellationToken)
+        public Task<Unit> Handle(InitializeCommand request, CancellationToken cancellationToken)
         {
             request.Context.MQ.DoCommand("/assist off");
 
-            return Task.CompletedTask;
+            return Task.FromResult(Unit.Value);
         }
     }
 }

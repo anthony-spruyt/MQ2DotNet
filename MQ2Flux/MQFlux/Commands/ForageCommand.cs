@@ -6,7 +6,7 @@ using MQFlux.Services;
 namespace MQFlux.Commands
 {
     public class ForageCommand :
-        Command<bool>,
+        PCCommand<bool>,
         ICharacterConfigRequest,
         IConsciousRequest,
         INotCastingRequest,

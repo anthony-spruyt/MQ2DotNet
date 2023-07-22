@@ -2,12 +2,12 @@
 
 namespace MQFlux.Queries.Handlers
 {
-    public class GetCampingQueryHandler : GetCacheQueryHandler<GetCampingQuery, bool>
+    public class CampingQueryHandler : CacheQueryHandler<CampingQuery, bool>
     {
         public override bool Default => false;
         public override string Key => CacheKeys.Camping;
 
-        public GetCampingQueryHandler(ICache cache) : base(cache)
+        public CampingQueryHandler(ICache cache) : base(cache)
         {
         }
     }

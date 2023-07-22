@@ -55,12 +55,12 @@ namespace MQFlux.Services
 
         private void Events_BeginZone(object sender, EventArgs e)
         {
-            _ = Task.Run(() => mediator.Send(new SetZoningCommand(true)));
+            _ = Task.Run(() => mediator.Send(new ZoningCommand(true)));
         }
 
         private void Events_EndZone(object sender, EventArgs e)
         {
-            _ = Task.Run(() => mediator.Send(new SetZoningCommand(false)));
+            _ = Task.Run(() => mediator.Send(new ZoningCommand(false)));
         }
 
         private void Events_OnAddGroundItem(object sender, GroundType e)
@@ -75,11 +75,11 @@ namespace MQFlux.Services
         {
             if (e.EndsWith("seconds to prepare your camp."))
             {
-                _ = Task.Run(() => mediator.Send(new SetCampingCommand(true)));
+                _ = Task.Run(() => mediator.Send(new CampingCommand(true)));
             }
             else if (e.StartsWith("You abandon your preparations to camp"))
             {
-                _ = Task.Run(() => mediator.Send(new SetCampingCommand(false)));
+                _ = Task.Run(() => mediator.Send(new CampingCommand(false)));
             }
         }
 
@@ -124,7 +124,7 @@ namespace MQFlux.Services
 
         private void Events_SetGameState(object sender, GameState e)
         {
-            _ = Task.Run(() => mediator.Send(new SetGameStateCommand(e)));
+            _ = Task.Run(() => mediator.Send(new GameStateCommand(e)));
         }
 
         protected virtual void Dispose(bool disposing)

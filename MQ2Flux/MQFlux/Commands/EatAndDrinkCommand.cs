@@ -5,7 +5,7 @@ using MQFlux.Services;
 namespace MQFlux.Commands
 {
     public class EatAndDrinkCommand :
-        Command<bool>,
+        PCCommand<bool>,
         ICharacterConfigRequest,
         IConsciousRequest,
         INotCastingRequest,

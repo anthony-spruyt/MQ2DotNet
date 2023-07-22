@@ -24,7 +24,7 @@ namespace MQFlux.Commands.Handlers
             // TODO
             if
             (
-                DateTime.UtcNow.Second % 2 != 0 ||
+                //DateTime.UtcNow.Second % 2 != 0 ||
                 !me.Standing ||
                 me.XTargets.Any(i => i.PctAggro == 100u)
             )

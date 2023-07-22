@@ -1,10 +1,10 @@
 ﻿namespace MQFlux.Commands
 {
-    public class SetZoningCommand : ISetCacheCommand<bool>
+    public class CampingCommand : ISetCacheCommand<bool>
     {
         public bool Value { get; set; }
 
-        public SetZoningCommand(bool value)
+        public CampingCommand(bool value)
         {
             Value = value;
         }

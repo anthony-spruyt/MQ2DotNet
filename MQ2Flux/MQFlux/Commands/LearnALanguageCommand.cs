@@ -6,7 +6,7 @@ using MQFlux.Services;
 namespace MQFlux.Commands
 {
     public class LearnALanguageCommand :
-        Command<Unit>,
+        PCCommand<Unit>,
         ICharacterConfigRequest,
         IGroupedRequest,
         IConsciousRequest

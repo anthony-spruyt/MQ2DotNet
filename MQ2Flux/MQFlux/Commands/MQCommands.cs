@@ -4,11 +4,11 @@ using System.Threading;
 
 namespace MQFlux.Commands
 {
-    public class LoadMQCommands : IRequest<IEnumerable<CancellationToken>>
+    public class LoadMQCommands : Command<IEnumerable<CancellationToken>>
     {
     }
 
-    public class UnloadMQCommands : IRequest
+    public class UnloadMQCommands : Command<Unit>
     {
     }
 }

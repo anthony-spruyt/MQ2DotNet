@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Behaviors
 {
-    public class InGameBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : Command<TResponse>
+    public class InGameBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : PCCommand<TResponse>
     {
         private readonly IMediator mediator;
 
@@ -18,7 +18,7 @@ namespace MQFlux.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            if (await mediator.Send(new GetGameStateQuery(), cancellationToken) != GameState.InGame)
+            if (await mediator.Send(new GameStateQuery(), cancellationToken) != GameState.InGame)
             {
                 return default;
             }

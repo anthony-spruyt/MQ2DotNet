@@ -1,11 +1,12 @@
 ﻿using MQFlux.Behaviors;
 using MQFlux.Models;
 using MQFlux.Services;
+using System;
 
 namespace MQFlux.Commands
 {
     public class SummonFoodAndDrinkCommand :
-        Command<bool>,
+        PCCommand<bool>,
         ICharacterConfigRequest,
         IConsciousRequest,
         INotInCombatRequest,
@@ -13,11 +14,13 @@ namespace MQFlux.Commands
         ICasterRequest,
         INotCastingRequest,
         INoItemOnCursorRequest,
-        INotFeignedDeathRequest
+        INotFeignedDeathRequest,
+        IIdleTimeRequest
     {
         public bool AllowBard => false;
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
         public IContext Context { get; set; }
+        public TimeSpan IdleTime => TimeSpan.FromSeconds(1);
     }
 }

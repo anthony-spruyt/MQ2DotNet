@@ -34,7 +34,7 @@ namespace MQFlux.Commands.Handlers
                 mqLogger.Log(ex.ToString());
             }
 
-            return Task.FromResult<Unit>(default);
+            return Task.FromResult(Unit.Value);
         }
     }
 }

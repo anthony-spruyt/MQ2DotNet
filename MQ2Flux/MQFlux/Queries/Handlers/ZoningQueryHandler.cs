@@ -2,12 +2,12 @@
 
 namespace MQFlux.Queries.Handlers
 {
-    public class GetZoningQueryHandler : GetCacheQueryHandler<GetZoningQuery, bool>
+    public class ZoningQueryHandler : CacheQueryHandler<ZoningQuery, bool>
     {
         public override bool Default => false;
         public override string Key => CacheKeys.Zoning;
 
-        public GetZoningQueryHandler(ICache cache) : base(cache)
+        public ZoningQueryHandler(ICache cache) : base(cache)
         {
         }
     }

@@ -6,7 +6,7 @@ using MQFlux.Services;
 namespace MQFlux.Commands
 {
     public class TestCommand :
-        Command<Unit>,
+        PCCommand<Unit>,
         ICharacterConfigRequest
     {
         public CharacterConfig Character { get; set; }

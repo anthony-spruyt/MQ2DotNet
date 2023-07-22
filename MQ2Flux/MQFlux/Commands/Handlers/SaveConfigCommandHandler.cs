@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers.Handlers
 {
-    public class SaveConfigCommandHandler : IRequestHandler<SaveConfigCommand>
+    public class SaveConfigCommandHandler : IRequestHandler<SaveConfigCommand, Unit>
     {
         private readonly IConfig config;
 
@@ -14,9 +14,11 @@ namespace MQFlux.Commands.Handlers.Handlers
             this.config = config;
         }
 
-        public async Task Handle(SaveConfigCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(SaveConfigCommand request, CancellationToken cancellationToken)
         {
             await config.SaveAsync(request.Notify);
+
+            return Unit.Value;
         }
     }
 }

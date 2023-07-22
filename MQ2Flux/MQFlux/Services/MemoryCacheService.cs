@@ -6,9 +6,10 @@ namespace MQFlux.Services
     public static class CacheKeys
     {
         public static readonly string Camping = nameof(Camping);
-        public static readonly string Zoning = nameof(Zoning);
-        public static readonly string GameState = nameof(GameState);
         public static readonly string CharacterConfig = nameof(CharacterConfig);
+        public static readonly string GameState = nameof(GameState);
+        public static readonly string IdleSince = nameof(IdleSince);
+        public static readonly string Zoning = nameof(Zoning);
     }
 
     public interface ICache

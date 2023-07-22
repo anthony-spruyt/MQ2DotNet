@@ -91,7 +91,7 @@ namespace MQFlux
 
                     while (!linkedTokenSource.IsCancellationRequested)
                     {
-                        _ = await mediator.Send(new PulseCommand(), linkedTokenSource.Token);
+                        await mediator.Send(new PulseCommand(), linkedTokenSource.Token);
                         await Yield(linkedTokenSource.Token);
                     }
                 }

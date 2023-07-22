@@ -2,11 +2,11 @@
 
 namespace MQFlux.Commands
 {
-    public class SetGameStateCommand : ISetCacheCommand<GameState>
+    public class GameStateCommand : ISetCacheCommand<GameState>
     {
         public GameState Value { get; set; }
 
-        public SetGameStateCommand(GameState value)
+        public GameStateCommand(GameState value)
         {
             Value = value;
         }

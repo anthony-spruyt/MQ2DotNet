@@ -2,7 +2,7 @@
 
 namespace MQFlux.Queries
 {
-    public class GetGameStateQuery : Query<GameState>
+    public class GameStateQuery : Query<GameState>
     {
     }
 }

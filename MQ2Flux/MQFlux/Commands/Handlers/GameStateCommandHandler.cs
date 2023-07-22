@@ -3,11 +3,11 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class SetGameStateCommandHandler : SetCacheCommandHandler<SetGameStateCommand, GameState>
+    public class GameStateCommandHandler : SetCacheCommandHandler<GameStateCommand, GameState>
     {
         public override string Key => CacheKeys.GameState;
 
-        public SetGameStateCommandHandler(ICache cache) : base(cache)
+        public GameStateCommandHandler(ICache cache) : base(cache)
         {
         }
     }

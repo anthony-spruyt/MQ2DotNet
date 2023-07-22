@@ -1,6 +1,8 @@
-﻿namespace MQFlux.Commands
+﻿using MediatR;
+
+namespace MQFlux.Commands
 {
-    public class PulseCommand : Command<bool>
+    public class PulseCommand : Command<Unit>
     {
 
     }

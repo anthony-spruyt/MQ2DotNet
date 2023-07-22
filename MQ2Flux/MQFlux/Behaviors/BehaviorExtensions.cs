@@ -31,7 +31,8 @@ namespace MQFlux.Behaviors
                 .AddOpenBehavior(typeof(GroupLeaderBehavior<,>))
                 .AddOpenBehavior(typeof(FreeInventorySlotBehavior<,>))
                 .AddOpenBehavior(typeof(BankWindowNotOpenBehavior<,>))
-                .AddOpenBehavior(typeof(MainAssistBehavior<,>));
+                .AddOpenBehavior(typeof(MainAssistBehavior<,>))
+                .AddOpenBehavior(typeof(IdleTimeBehavior<,>));
         }
     }
 }

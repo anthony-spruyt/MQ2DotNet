@@ -21,7 +21,7 @@ namespace MQFlux.Commands.Handlers
         {
             if (!MQ2DataType.DataTypeErrors.Any())
             {
-                return Task.FromResult<Unit>(default);
+                return Task.FromResult(Unit.Value);
             }
 
             try
@@ -41,7 +41,7 @@ namespace MQFlux.Commands.Handlers
                 logger.LogError(ex, "Failed to dump MQ2DataType errors.");
             }
 
-            return Task.FromResult<Unit>(default);
+            return Task.FromResult(Unit.Value);
         }
     }
 }

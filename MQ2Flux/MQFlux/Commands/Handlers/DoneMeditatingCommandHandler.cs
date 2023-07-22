@@ -19,14 +19,14 @@ namespace MQFlux.Commands.Handlers
 
         public Task<bool> Handle(DoneMeditatingCommand request, CancellationToken cancellationToken)
         {
-            if (DateTime.UtcNow.Second % 2 != 0)
-            {
-                return Task.FromResult(false);
-            }
+            //if (DateTime.UtcNow.Second % 2 != 0)
+            //{
+            //    return Task.FromResult(false);
+            //}
 
             var me = context.TLO.Me;
 
-            if (!me.Standing && me.PctMana == 100 && me.PctHPs == 100)
+            if (!me.Standing && me.PctMana >= 99 && me.PctHPs >= 99)
             {
                 me.Stand();
 
