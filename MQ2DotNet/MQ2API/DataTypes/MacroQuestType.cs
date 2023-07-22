@@ -6,7 +6,7 @@
     /// https://docs.macroquest.org/reference/data-types/datatype-macroquest/
     /// </summary>
     [MQ2Type("macroquest")]
-    public class MacroQuestType : MQ2DataType//EverQuestType inheritence is an issue in this implementation.
+    public class MacroQuestType : EverQuestType
     {
         internal MacroQuestType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MQFlux.Commands;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace MQFlux.Behaviors
 
     }
 
-    public class HybridBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class HybridBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : Command<TResponse>
     {
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
@@ -17,8 +18,8 @@ namespace MQFlux.Behaviors
             (
                 request is IHybridRequest hybridRequest &&
                 (
-                    !hybridRequest.Context.TLO.Me.Spawn.Class.CanCast || 
-                    hybridRequest.Context.TLO.Me.Spawn.Class.PureCaster
+                    !hybridRequest.Context.TLO.Me.Class.CanCast ||
+                    hybridRequest.Context.TLO.Me.Class.PureCaster
                 )
             )
             {

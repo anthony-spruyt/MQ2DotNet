@@ -14,21 +14,22 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// </summary>
     [MQ2Type("cachedbuff")]
     [Obsolete]
-    public class CachedBuffType : MQ2DataType//SpellType inheritence is an issue in this implementation.
+    public class CachedBuffType : SpellType
     {
         internal CachedBuffType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
         }
 
         /// <summary>
-        /// Returns the name of the caster who applied the buff
+        /// Returns the name of the caster who applied the buff, same as <see cref="Caster"/>
         /// </summary>
-        public string CasterName => GetMember<StringType>("CasterName");
+        [Obsolete]
+        public string CasterName => Caster;
 
         /// <summary>
-        /// Same as <see cref="CasterName"/>, added for consistency.
+        /// Returns the name of the caster who applied the buff
         /// </summary>
-        public string Caster => CasterName;
+        public string Caster => GetMember<StringType>("Caster");
 
         /// <summary>
         /// Returns the amount of buffs catched, or -1 it none
@@ -58,7 +59,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Returns the duration of the buff.
         /// </summary>
-        public TimeSpan? Duration => GetMember<TimeStampType>("Duration");
+        public new TimeSpan? Duration => GetMember<TimeStampType>("Duration");
 
         /// <summary>
         /// How long it has been since this information was refreshed.

@@ -1,11 +1,11 @@
-﻿using MediatR;
-using MQFlux.Behaviors;
+﻿using MQFlux.Behaviors;
 using MQFlux.Models;
 using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
     public class SummonFoodAndDrinkCommand :
+        Command<bool>,
         ICharacterConfigRequest,
         IConsciousRequest,
         INotInCombatRequest,
@@ -13,8 +13,7 @@ namespace MQFlux.Commands
         ICasterRequest,
         INotCastingRequest,
         INoItemOnCursorRequest,
-        INotFeignedDeathRequest,
-        IRequest<bool>
+        INotFeignedDeathRequest
     {
         public bool AllowBard => false;
         public CharacterConfig Character { get; set; }

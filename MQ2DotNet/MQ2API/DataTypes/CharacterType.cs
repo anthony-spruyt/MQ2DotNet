@@ -13,7 +13,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// https://docs.macroquest.org/reference/data-types/datatype-character/
     /// </summary>
     [MQ2Type("character")]
-    public class CharacterType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
+    public class CharacterType : SpawnType
     {
         public const int NUM_COMBAT_ABILITIES = 300;
         public const int AA_CHAR_MAX_REAL = 300;
@@ -132,7 +132,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The player name.
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public new string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// The player origin zone.
@@ -197,38 +197,38 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The character's spawn
         /// </summary>
-        public SpawnType Spawn => GetMember<SpawnType>("Spawn");
+        //public SpawnType Spawn => GetMember<SpawnType>("Spawn");
 
         /// <summary>
         /// Current hit points
         /// Override this as the spawn has a different data type for the member.
         /// </summary>
-        public uint? CurrentHPs => GetMember<IntType>("CurrentHPs");
+        public new uint? CurrentHPs => GetMember<IntType>("CurrentHPs");
 
         /// <summary>
         /// Maximum hit points
         /// </summary>
-        public int? MaxHPs => GetMember<IntType>("MaxHPs");
+        public new int? MaxHPs => GetMember<IntType>("MaxHPs");
 
         /// <summary>
         /// HP as a percentage
         /// </summary>
-        public int? PctHPs => GetMember<IntType>("PctHPs");
+        public new int? PctHPs => GetMember<IntType>("PctHPs");
 
         /// <summary>
         /// Current Mana points (only updates when target/group)
         /// </summary>
-        public uint? CurrentMana => GetMember<IntType>("CurrentMana");
+        public new uint? CurrentMana => GetMember<IntType>("CurrentMana");
 
         /// <summary>
         /// Maximum Mana points (only updates when target/group)
         /// </summary>
-        public uint? MaxMana => GetMember<IntType>("MaxMana");
+        public new uint? MaxMana => GetMember<IntType>("MaxMana");
 
         /// <summary>
         /// Mana as a percentage
         /// </summary>
-        public uint? PctMana => GetMember<IntType>("PctMana");
+        public new uint? PctMana => GetMember<IntType>("PctMana");
 
         /// <summary>
         /// Number of buffs you have, not including short duration buffs (songs)
@@ -283,7 +283,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public BuffType GetBuff(string name) => _buff[name];
+        public new BuffType GetBuff(string name) => _buff[name];
 
         /// <summary>
         /// The buff in this slot #
@@ -291,12 +291,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="slotNumber"></param>
         /// <returns></returns>
-        public BuffType GetBuff(int slotNumber) => _buff[slotNumber];
+        public new BuffType GetBuff(int slotNumber) => _buff[slotNumber];
 
         /// <summary>
         /// All buffs. Based on <see cref="GetBuff(int)"/>
         /// </summary>
-        public IEnumerable<BuffType> Buffs
+        public new IEnumerable<BuffType> Buffs
         {
             get
             {
@@ -356,7 +356,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public BuffType FindBuff(string predicate) => _findBuff[predicate];
+        public new BuffType FindBuff(string predicate) => _findBuff[predicate];
 
         /// <summary>
         /// Hit point bonus from gear and spells
@@ -520,17 +520,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current Endurance points
         /// </summary>
-        public uint? CurrentEndurance => GetMember<IntType>("CurrentEndurance");
+        public new uint? CurrentEndurance => GetMember<IntType>("CurrentEndurance");
 
         /// <summary>
         /// Maximum Endurance points
         /// </summary>
-        public uint? MaxEndurance => GetMember<IntType>("MaxEndurance");
+        public new uint? MaxEndurance => GetMember<IntType>("MaxEndurance");
 
         /// <summary>
         /// Endurance as a percentage (0-100)
         /// </summary>
-        public uint? PctEndurance => GetMember<IntType>("PctEndurance");
+        public new uint? PctEndurance => GetMember<IntType>("PctEndurance");
 
         /// <summary>
         /// Total points earned in Deepest Guk LDoN missions
@@ -618,7 +618,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// All equipment. Does not flatten content of containers.
         /// </summary>
-        public IEnumerable<ItemType> Equipment
+        public new IEnumerable<ItemType> Equipment
         {
             get
             {
@@ -982,7 +982,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: new member
         /// </summary>
-        public bool Moving => GetMember<BoolType>("Moving");
+        public new bool Moving => GetMember<BoolType>("Moving");
 
         /// <summary>
         /// Hunger level
@@ -1248,7 +1248,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var canCast = Spawn?.Class?.CanCast ?? false;
+                var canCast = Class?.CanCast ?? false;
 
                 if (canCast)
                 {
@@ -1356,7 +1356,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Stunned?
         /// </summary>
-        public bool Stunned => GetMember<BoolType>("Stunned");
+        public new bool Stunned => GetMember<BoolType>("Stunned");
 
         /// <summary>
         /// Size of your largest free inventory slot (4 = Giant)
@@ -1376,7 +1376,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Target of this spawn's target
         /// </summary>
-        public SpawnType TargetOfTarget => GetMember<SpawnType>("TargetOfTarget");
+        public new SpawnType TargetOfTarget => GetMember<SpawnType>("TargetOfTarget");
 
         /// <summary>
         /// Current raid assist target (1-3)

@@ -8,7 +8,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// https://docs.macroquest.org/reference/data-types/datatype-currentzone/
     /// </summary>
     [MQ2Type("currentzone")]
-    public class CurrentZoneType : MQ2DataType//ZoneType inheritence is an issue in this implementation.
+    public class CurrentZoneType : ZoneType
     {
         internal CurrentZoneType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -17,17 +17,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// ID of the zone
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public new int? ID => GetMember<IntType>("ID");
         
         /// <summary>
         /// Full zone name e.g. "The Plane of Knowledge"
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public new string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Short zone name e.g. "PoKnowledge"
         /// </summary>
-        public string ShortName => GetMember<StringType>("ShortName");
+        public new string ShortName => GetMember<StringType>("ShortName");
 
         /// <summary>
         /// Zone type:0=Indoor Dungeon 1=Outdoor 2=Outdoor City 3=Dungeon City 4=Indoor City 5=Outdoor Dungeon.

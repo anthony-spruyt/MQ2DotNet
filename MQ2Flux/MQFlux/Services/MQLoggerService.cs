@@ -49,7 +49,7 @@ namespace MQFlux.Services
                 return;
             }
 
-            context.MQ?.WriteChatSafe($"\am[{nameof(MQFlux)}]{Now()} \aw{text}");
+            context.MQ?.WriteChatSafe($"{Now()}\am[{nameof(MQFlux)}] \aw{text}");
         }
 
         public void LogError(Exception exception, string message = null)
@@ -61,7 +61,7 @@ namespace MQFlux.Services
                 return;
             }
 
-            context.MQ?.WriteChatSafe($"\ar[{nameof(MQFlux)}]{Now()} \aw{errorMessage}");
+            context.MQ?.WriteChatSafe($"{Now()}\ar[{nameof(MQFlux)}] \aw{errorMessage}");
 
             if (exception == null)
             {

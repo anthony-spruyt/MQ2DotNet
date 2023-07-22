@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MQ2DotNet.MQ2API.DataTypes;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MQFlux.Services
 {
@@ -9,7 +11,7 @@ namespace MQFlux.Services
         MacroType GetMacro();
         bool IsRunning();
         bool IsPaused();
-        void Pause();
+        Task<bool> PauseAsync(CancellationToken cancellationToken = default);
         void Resume();
     }
 
@@ -52,16 +54,29 @@ namespace MQFlux.Services
             return macro != null && macro.Paused.HasValue;
         }
 
-        public void Pause()
+        public async Task<bool> PauseAsync(CancellationToken cancellationToken = default)
         {
             if (!IsRunning() ||
                 IsPaused())
             {
-                return;
+                return true;
             }
+
+            var pausedText = "Macro is paused.";
+            Task<bool> waitForEQTask = Task.Run
+            (
+                () => context.Chat.WaitForMQ2
+                (
+                    text => string.Compare(text, pausedText) == 0,
+                    TimeSpan.FromMilliseconds(2000),
+                    cancellationToken
+                )
+            );
 
             mqLogger.Log("Pausing macro...", TimeSpan.Zero);
             context.MQ.DoCommand("/mqp");
+
+            return await waitForEQTask;
         }
 
         public void Resume()

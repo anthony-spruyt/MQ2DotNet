@@ -1,9 +1,4 @@
-﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using MQFlux.Behaviors.CombatCommandBehaviors;
-using MQFlux.Behaviors.ProcessCommandBehaviors;
-using MQFlux.Commands;
-using MQFlux.Commands.CombatCommands;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace MQFlux.Behaviors
 {
@@ -12,9 +7,9 @@ namespace MQFlux.Behaviors
         public static MediatRServiceConfiguration AddFluxBehaviors(this MediatRServiceConfiguration config)
         {
             return config
-                .AddBehavior<IPipelineBehavior<ProcessCommand, bool>, InGameBehavior>()
-                .AddBehavior<IPipelineBehavior<ProcessCommand, bool>, NotZoningBehavior>()
-                .AddBehavior<IPipelineBehavior<ProcessCommand, bool>, NotCampingBehavior>()
+                .AddOpenBehavior(typeof(InGameBehavior<,>))
+                .AddOpenBehavior(typeof(NotZoningBehavior<,>))
+                .AddOpenBehavior(typeof(NotCampingBehavior<,>))
                 .AddOpenBehavior(typeof(ContextBehavior<,>))
                 .AddOpenBehavior(typeof(ConfigBehavior<,>))
                 .AddOpenBehavior(typeof(CharacterConfigBehavior<,>))

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MQFlux.Commands;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,12 +10,12 @@ namespace MQFlux.Behaviors
 
     }
 
-    public class MeleeBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class MeleeBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : Command<TResponse>
     {
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             if (request is IMeleeRequest meleeRequest &&
-                meleeRequest.Context.TLO.Me.Spawn.Class.PureCaster)
+                meleeRequest.Context.TLO.Me.Class.PureCaster)
             {
                 return Task.FromResult(default(TResponse));
             }

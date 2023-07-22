@@ -1,8 +1,6 @@
-﻿using MediatR;
-
-namespace MQFlux.Queries
+﻿namespace MQFlux.Queries
 {
-    public class GetCampingQuery : IRequest<bool>
+    public class GetCampingQuery : Query<bool>
     {
     }
 }

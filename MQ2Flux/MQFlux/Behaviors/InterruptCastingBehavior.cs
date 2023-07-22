@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MQFlux.Commands;
 using MQFlux.Extensions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace MQFlux.Behaviors
 
     }
 
-    public class InterruptCastingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class InterruptCastingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : Command<TResponse>
     {
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {

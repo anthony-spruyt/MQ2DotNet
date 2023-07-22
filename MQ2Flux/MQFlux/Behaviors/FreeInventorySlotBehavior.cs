@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MQ2DotNet.EQ;
+using MQFlux.Commands;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace MQFlux.Behaviors
         ItemSize MinimumSize { get; }
     }
 
-    public class FreeInventorySlotBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class FreeInventorySlotBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : Command<TResponse>
     {
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {

@@ -1,6 +1,4 @@
-﻿using MQ2DotNet.Services;
-
-namespace MQ2DotNet.MQ2API.DataTypes
+﻿namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// This is the type used for mercenaries.
@@ -8,7 +6,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// https://docs.macroquest.org/reference/data-types/datatype-mercenary/
     /// </summary>
     [MQ2Type("mercenary")]
-    public class MercenaryType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
+    public class MercenaryType : SpawnType
     {
         internal MercenaryType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -28,7 +26,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Current state of the mercenary (returns "DEAD","SUSPENDED","ACTIVE", or "UNKNOWN")
         /// </summary>
-        public string State => GetMember<StringType>("State");
+        public new string State => GetMember<StringType>("State");
 
         /// <summary>
         /// Current state ID of the mercenary as a number.
@@ -43,12 +41,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Name of the mercenary
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
-
-        /// <summary>
-        /// Does a spawn search for a merc with same name since inheritence is wonky here.
-        /// </summary>
-        public SpawnType Spawn => TLO.Instance?.GetSpawn($"mercenary {Name}");
+        public new string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Same as <see cref="Name"/>

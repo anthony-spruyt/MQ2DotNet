@@ -10,7 +10,7 @@ namespace MQFlux.Services
 {
     public interface IEventService
     {
-        
+
     }
 
     public static class EventServiceExtensions

@@ -5,7 +5,7 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class InitializeCommand : ICharacterConfigRequest, IRequest
+    public class InitializeCommand : IRequest, ICharacterConfigRequest
     {
         public IContext Context { get; set; }
         public FluxConfig Config { get; set; }

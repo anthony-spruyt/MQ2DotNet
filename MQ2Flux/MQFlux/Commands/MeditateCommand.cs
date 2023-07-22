@@ -1,17 +1,16 @@
-﻿using MediatR;
-using MQFlux.Behaviors;
+﻿using MQFlux.Behaviors;
 using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
     public class MeditateCommand :
-        IStandingStillRequest, 
-        INotCastingRequest, 
+        Command<bool>,
+        IStandingStillRequest,
+        INotCastingRequest,
         ICasterRequest,
         IConsciousRequest,
         INotFeignedDeathRequest,
-        IBankWindowNotOpenRequest,
-        IRequest<bool>
+        IBankWindowNotOpenRequest
     {
         public IContext Context { get; set; }
         public bool AllowBard => false;

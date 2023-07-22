@@ -33,9 +33,36 @@ namespace MQ2DotNet
             AppDomain.Unload(AppDomain);
         }
 
-        public string Name => LoadedAppDomain.Name;
+        public string Name
+        { 
+            get 
+            {
+                try
+                {
+                    return LoadedAppDomain.Name;
+                }
+                catch (AppDomainUnloadedException)
+                {
+                    return $"{Guid.NewGuid()}";
+                }
+            } 
+        }
 
-        public bool Finished => LoadedAppDomain.Finished;
+        public bool Finished
+        {
+            get
+            {
+                try
+                {
+                    return LoadedAppDomain.Finished;
+                }
+                catch (AppDomainUnloadedException)
+                {
+                    return true;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Allow's the AppDomain to resolve the currently executing assembly, e.g. to load in a new AppDomain

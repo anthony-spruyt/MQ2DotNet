@@ -96,7 +96,7 @@ namespace MQFlux.Extensions
 
             if (me != null)
             {
-                if (me.Spawn.Class.PureCaster)
+                if (me.Class.PureCaster)
                 {
                     meleeSkillModifier = 0;
                 }

@@ -1,8 +1,6 @@
-﻿using MediatR;
-
-namespace MQFlux.Queries
+﻿namespace MQFlux.Queries
 {
-    public class GetZoningQuery : IRequest<bool>
+    public class GetZoningQuery : Query<bool>
     {
     }
 }

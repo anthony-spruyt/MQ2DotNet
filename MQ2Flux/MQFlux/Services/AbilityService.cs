@@ -52,10 +52,10 @@ namespace MQFlux.Services
                     !ability.Ready ||
                     (
                         me.AmICasting() &&
-                        string.Compare(me.Spawn.Class.ShortName, "BRD") != 0
+                        string.Compare(me.Class.ShortName, "BRD") != 0
                     ) ||
                     (
-                        me.Spawn.Class.CanCast &&
+                        me.Class.CanCast &&
                         context.TLO.IsSpellBookOpen()
                     )
                 )
@@ -72,7 +72,6 @@ namespace MQFlux.Services
                     return true;
                 }
 
-                var timeout = TimeSpan.FromMilliseconds(2000);
                 var success = false;
 
                 Task<bool> waitForEQTask = Task.Run
@@ -97,7 +96,7 @@ namespace MQFlux.Services
 
                             return false;
                         },
-                        timeout,
+                        TimeSpan.FromMilliseconds(2000),
                         cancellationToken
                     )
                 );

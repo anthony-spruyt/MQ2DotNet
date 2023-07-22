@@ -5,11 +5,11 @@ using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class LearnALanguageCommand : 
-        ICharacterConfigRequest, 
+    public class LearnALanguageCommand :
+        Command<Unit>,
+        ICharacterConfigRequest,
         IGroupedRequest,
-        IConsciousRequest,
-        IRequest
+        IConsciousRequest
     {
         public IContext Context { get; set; }
         public CharacterConfig Character { get; set; }

@@ -64,11 +64,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Spawn in the XTarget slot
         /// </summary>
-        public SpawnType GetSpawn(TLO tlo) => tlo.GetSpawn($"id {ID}");
+        public SpawnType GetSpawn(TLO tlo) => tlo.GetSpawn((int)ID);
 
         /// <summary>
         /// Spawn in the XTarget slot
         /// </summary>
-        public SpawnType Spawn => TLO.Instance?.GetSpawn($"id {ID}");
+        public SpawnType Spawn => TLO.Instance?.GetSpawn((int)ID);
     }
 }

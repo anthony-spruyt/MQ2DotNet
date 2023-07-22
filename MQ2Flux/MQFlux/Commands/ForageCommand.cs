@@ -1,21 +1,20 @@
-﻿using MediatR;
-using MQ2DotNet.MQ2API.DataTypes;
+﻿using MQ2DotNet.MQ2API.DataTypes;
 using MQFlux.Behaviors;
 using MQFlux.Models;
 using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class ForageCommand : 
+    public class ForageCommand :
+        Command<bool>,
         ICharacterConfigRequest,
         IConsciousRequest,
-        INotCastingRequest, 
-        IAbilityRequest, 
-        INotAutoAttackingRequest, 
-        ISpellbookNotOpenRequest, 
+        INotCastingRequest,
+        IAbilityRequest,
+        INotAutoAttackingRequest,
+        ISpellbookNotOpenRequest,
         INoItemOnCursorRequest,
-        INotFeignedDeathRequest,
-        IRequest<bool>
+        INotFeignedDeathRequest
     {
         public AbilityInfo Ability { get; set; }
         public string AbilityName => "Forage";

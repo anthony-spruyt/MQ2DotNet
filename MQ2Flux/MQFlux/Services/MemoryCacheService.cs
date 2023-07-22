@@ -39,7 +39,7 @@ namespace MQFlux.Services
 
         public T AddOrUpdate<T>(string key, T value)
         {
-            return (T)cache.AddOrUpdate(key, value, (k,v) => value);
+            return (T)cache.AddOrUpdate(key, value, (k, v) => value);
         }
 
         public bool TryAdd<T>(string key, T value)

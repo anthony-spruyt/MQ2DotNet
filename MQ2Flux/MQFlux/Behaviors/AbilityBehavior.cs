@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MQ2DotNet.MQ2API.DataTypes;
+using MQFlux.Commands;
 using MQFlux.Extensions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,14 +19,14 @@ namespace MQFlux.Behaviors
         string AbilityName { get; }
     }
 
-    public class AbilityBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class AbilityBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : Command<TResponse>
     {
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             if (request is IAbilityRequest abilityRequest)
             {
                 abilityRequest.Ability = abilityRequest.Context.TLO.Me.GetAbilityInfo(abilityRequest.AbilityName);
-            
+
                 if (abilityRequest.Ability == null || abilityRequest.Ability.Level == 0 || !abilityRequest.Ability.Ready)
                 {
                     return Task.FromResult(default(TResponse));

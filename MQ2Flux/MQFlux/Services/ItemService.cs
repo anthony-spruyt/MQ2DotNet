@@ -66,7 +66,9 @@ namespace MQFlux.Services
 
         public async Task AutoInventoryAsync(Predicate<ItemType> predicate = null, CancellationToken cancellationToken = default)
         {
-            if (!await Wait.While(() => context.TLO.Cursor == null, TimeSpan.FromSeconds(2), cancellationToken))
+            var timeout = TimeSpan.FromSeconds(5);
+
+            if (!await Wait.While(() => context.TLO.Cursor == null, timeout, cancellationToken))
             {
                 return;
             }
@@ -90,8 +92,8 @@ namespace MQFlux.Services
                     }
 
                     return stillOnCursor;
-                }, 
-                TimeSpan.FromSeconds(2), 
+                },
+                timeout,
                 cancellationToken
             );
 
@@ -157,7 +159,7 @@ namespace MQFlux.Services
 
             context.MQ.DoCommand(command);
 
-            var timeout = TimeSpan.FromSeconds(3);
+            var timeout = TimeSpan.FromSeconds(5);
 
             // Make sure the item we picked up is on the cursor.
             if (!await Wait.While(() => context.TLO.Cursor == null || context.TLO.Cursor.ID.Value != item.ID.Value, timeout, cancellationToken))

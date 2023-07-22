@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MQFlux.Handlers;
 using MQFlux.Models;
 using MQFlux.Services;
 using System;

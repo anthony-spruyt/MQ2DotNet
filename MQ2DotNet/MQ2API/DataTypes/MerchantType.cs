@@ -8,7 +8,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// https://docs.macroquest.org/reference/data-types/datatype-merchant/
     /// </summary>
     [MQ2Type("merchant")]
-    public class MerchantType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
+    public class MerchantType : SpawnType
     {
         internal MerchantType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {

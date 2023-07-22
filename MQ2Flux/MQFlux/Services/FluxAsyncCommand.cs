@@ -23,16 +23,25 @@ namespace MQFlux.Services
 
         private bool disposedValue;
         private CancellationTokenSource cancellationTokenSource;
+        private SemaphoreSlim semaphore;
 
         public FluxAsyncCommand(IMQLogger logger, IMediator mediator)
         {
             this.logger = logger;
             this.mediator = mediator;
+
             cancellationTokenSource = new CancellationTokenSource();
+            semaphore = new SemaphoreSlim(1);
+
         }
 
         public async Task HandleAsync(string[] args)
         {
+            if (semaphore == null || !await semaphore.WaitAsync(0))
+            {
+                return;
+            }
+
             try
             {
                 if (args == null || args.Length == 0)
@@ -84,6 +93,10 @@ namespace MQFlux.Services
             {
                 logger.LogError(ex);
             }
+            finally
+            {
+                semaphore.Release();
+            }
         }
 
         //private void Mediate(IRequest request, CancellationToken token)
@@ -115,6 +128,12 @@ namespace MQFlux.Services
                     {
                         cancellationTokenSource.Dispose();
                         cancellationTokenSource = null;
+                    }
+
+                    if (semaphore != null)
+                    {
+                        semaphore.Dispose();
+                        semaphore = null;
                     }
                 }
 

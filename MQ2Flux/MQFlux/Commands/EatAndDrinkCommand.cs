@@ -1,18 +1,17 @@
-﻿using MediatR;
-using MQFlux.Behaviors;
+﻿using MQFlux.Behaviors;
 using MQFlux.Models;
 using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
     public class EatAndDrinkCommand :
+        Command<bool>,
         ICharacterConfigRequest,
         IConsciousRequest,
         INotCastingRequest,
         INoItemOnCursorRequest,
         INotFeignedDeathRequest,
-        IBankWindowNotOpenRequest,
-        IRequest<bool>
+        IBankWindowNotOpenRequest
     {
         public bool AllowBard => true;
         public CharacterConfig Character { get; set; }

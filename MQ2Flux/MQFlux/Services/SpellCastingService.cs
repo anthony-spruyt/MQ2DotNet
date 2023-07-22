@@ -59,10 +59,10 @@ namespace MQFlux.Services
 
                 if
                 (
-                    !me.Spawn.Class.CanCast || 
-                    me.AmICasting() || 
+                    !me.Class.CanCast ||
+                    me.AmICasting() ||
                     (
-                        me.Moving && 
+                        me.Moving &&
                         spell.HasCastTime()
                     )
                 )
@@ -151,7 +151,7 @@ namespace MQFlux.Services
                     var reason = fizzled ? "fizzled" : "was interrupted";
 
                     mqLogger.Log($"Casting [\ay{spellBookSpell.Name}\aw] \ar{reason}", TimeSpan.Zero);
-                    
+
                     return false;
                 }
             }

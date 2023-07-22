@@ -2,7 +2,7 @@
 
 namespace MQFlux.Commands
 {
-    public class FlushDataTypeErrorsCommand : IRequest
+    public class FlushDataTypeErrorsCommand : Command<Unit>
     {
     }
 }

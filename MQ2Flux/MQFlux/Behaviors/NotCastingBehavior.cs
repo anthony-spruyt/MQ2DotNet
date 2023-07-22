@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MQFlux.Commands;
 using MQFlux.Extensions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace MQFlux.Behaviors
         bool AllowBard { get; }
     }
 
-    public class NotCastingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class NotCastingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : Command<TResponse>
     {
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
@@ -23,7 +24,7 @@ namespace MQFlux.Behaviors
                 notCastingRequest.Context.TLO.Me.AmICasting() &&
                 !(
                     notCastingRequest.AllowBard &&
-                    string.Compare(notCastingRequest.Context.TLO.Me.Spawn.Class.ShortName, "BRD") == 0
+                    string.Compare(notCastingRequest.Context.TLO.Me.Class.ShortName, "BRD") == 0
                 )
             )
             {

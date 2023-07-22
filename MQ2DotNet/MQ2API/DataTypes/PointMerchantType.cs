@@ -8,7 +8,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Not documented at https://docs.macroquest.org
     /// </summary>
     [MQ2Type("pointmerchant")]
-    public class PointMerchantType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
+    public class PointMerchantType : SpawnType
     {
         public const int MAX_ITEMS = 1000;
 

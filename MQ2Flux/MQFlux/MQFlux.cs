@@ -11,6 +11,7 @@ using MQFlux.Services;
 using Serilog;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -82,21 +83,15 @@ namespace MQFlux
             {
                 mqLogger.Log($"Started");
 
-                CancellationToken[] cancellationTokens = await mediator.Send
-                (
-                    new LoadMQCommands()
-                    {
-                        CancellationToken = token
-                    }
-                );
-
-                using (CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokens))
+                var commandTokens = await mediator.Send(new LoadMQCommands());
+                var allTokens = commandTokens.Append(token);
+                using (CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(allTokens.ToArray()))
                 {
                     await mediator.Send(new InitializeCommand(), linkedTokenSource.Token);
 
                     while (!linkedTokenSource.IsCancellationRequested)
                     {
-                        _ = await mediator.Send(new ProcessCommand(),linkedTokenSource.Token);
+                        _ = await mediator.Send(new PulseCommand(), linkedTokenSource.Token);
                         await Yield(linkedTokenSource.Token);
                     }
                 }
@@ -145,7 +140,7 @@ namespace MQFlux
                 // for current state.
                 _ = serviceProvider.GetRequiredService<IEventService>();
                 _ = serviceProvider.GetRequiredService<IChatHistory>();
-                
+
                 return configuration;
             }
             catch (Exception ex)

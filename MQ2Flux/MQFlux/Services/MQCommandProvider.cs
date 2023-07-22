@@ -37,7 +37,7 @@ namespace MQFlux.Services
             };
             Commands = new IMQCommand[]
             {
-                
+
             };
         }
 

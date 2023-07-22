@@ -7,13 +7,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// Last Verified: 2023-07-03
     /// https://docs.macroquest.org/reference/data-types/datatype-buff/
     /// </summary>
-    /// <remarks>
-    /// SpellType inheritance would be nice but is problematic. BuffType.VarPtr is a PSPELLBUFF, but SpellType.VarPtr requires a PSPELL
-    /// MQ2 system gets around this by finding the spell before calling the base class, but we don't have that luxury here.
-    /// Use .Spell instead 
-    /// </remarks>
     [MQ2Type("buff")]
-    public class BuffType : MQ2DataType
+    public class BuffType : SpellType
     {
         internal BuffType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
@@ -22,12 +17,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The ID of the buff or shortbuff slot.
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public new int? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// The level of the person that cast the buff on you (not the level of the spell).
         /// </summary>
-        public uint? Level => GetMember<IntType>("Level");
+        public new uint? Level => GetMember<IntType>("Level");
 
         /// <summary>
         /// The spell.
@@ -42,7 +37,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The time remaining before the buff fades (not total duration).
         /// </summary>
-        public TimeSpan? Duration => GetMember<TimeStampType>("Duration");
+        public new TimeSpan? Duration => GetMember<TimeStampType>("Duration");
 
         /// <summary>
         /// The remaining damage absorption of the buff (if any).

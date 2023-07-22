@@ -132,7 +132,6 @@ extern "C" __declspec(dllexport) void MQ2Type__FreeVariable(MQ2Type* type, MQVar
 extern "C" __declspec(dllexport) bool MQ2Type__GetMember(MQ2Type* type, MQVarPtr& varPtr, const char* memberName, char* index, MQTypeVar& typeVar)
 {
 	return type != nullptr && 
-		//type->CanEvaluateMethodOrMember(memberName) &&
 		type->GetMember(varPtr, memberName, index, typeVar) &&
 		typeVar.Type != nullptr;
 }

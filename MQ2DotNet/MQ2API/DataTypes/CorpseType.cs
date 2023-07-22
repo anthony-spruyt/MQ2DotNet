@@ -8,7 +8,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// https://docs.macroquest.org/reference/data-types/datatype-corpse/
     /// </summary>
     [MQ2Type("corpse")]
-    public class CorpseType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
+    public class CorpseType : SpawnType
     {
         internal CorpseType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {

@@ -11,7 +11,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// https://docs.macroquest.org/reference/data-types/datatype-pet/
     /// </summary>
     [MQ2Type("pet")]
-    public class PetType : MQ2DataType//SpawnType inheritence is an issue in this implementation.
+    public class PetType : SpawnType
     {
         public const int MAX_PET_BUFFS = 100;
 
@@ -129,7 +129,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="buffName"></param>
         /// <returns></returns>
-        public BuffType FindBuff2(string buffName) => _findBuff[buffName];
+        public new BuffType FindBuff(string buffName) => _findBuff[buffName];
 
         /// <summary>
         /// All the current pet buffs.

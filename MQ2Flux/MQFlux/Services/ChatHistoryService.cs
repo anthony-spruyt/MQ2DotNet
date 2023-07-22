@@ -88,12 +88,12 @@ namespace MQFlux.Services
         {
             AddToQueue(sender, e, chat);
         }
-        
+
         private void Events_OnChatEQ(object sender, string e)
         {
             AddToQueue(sender, e, eqChat);
         }
-        
+
         private void Events_OnChatMQ2(object sender, string e)
         {
             AddToQueue(sender, e, mqChat);

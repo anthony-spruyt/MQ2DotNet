@@ -1,16 +1,15 @@
-﻿using MediatR;
-using MQFlux.Behaviors;
+﻿using MQFlux.Behaviors;
 using MQFlux.Models;
 using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
-    public class PutStatFoodInTopSlotsCommand : 
+    public class PutStatFoodInTopSlotsCommand :
+        Command<bool>,
         ICharacterConfigRequest,
         IConsciousRequest,
-        INotCastingRequest, 
-        INoItemOnCursorRequest, 
-        IRequest<bool>
+        INotCastingRequest,
+        INoItemOnCursorRequest
     {
         public bool AllowBard => true;
         public CharacterConfig Character { get; set; }

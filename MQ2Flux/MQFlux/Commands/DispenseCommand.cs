@@ -1,20 +1,18 @@
-﻿using MediatR;
-using MQ2DotNet.EQ;
-using MQFlux.Behaviors;
+﻿using MQFlux.Behaviors;
 using MQFlux.Models;
 using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
     public class DispenseCommand :
+        Command<bool>,
         ICharacterConfigRequest,
         IConsciousRequest,
         INotInCombatRequest,
         IStandingStillRequest,
         INotCastingRequest,
         INoItemOnCursorRequest,
-        INotFeignedDeathRequest,
-        IRequest<bool>
+        INotFeignedDeathRequest
     {
         public bool AllowBard => false;
         public CharacterConfig Character { get; set; }
