@@ -6,6 +6,13 @@ namespace MQFlux.Utils
 {
     public static class Wait
     {
+        /// <summary>
+        /// Wait until a condition evaluates as false with a timeout.
+        /// </summary>
+        /// <param name="thisIsTrue"></param>
+        /// <param name="timeout"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>False if timed out, otherwise True</returns>
         public static async Task<bool> While(Func<bool> thisIsTrue, TimeSpan timeout, CancellationToken cancellationToken)
         {
             using (CancellationTokenSource timeOutCancellationTokenSource = new CancellationTokenSource(timeout))

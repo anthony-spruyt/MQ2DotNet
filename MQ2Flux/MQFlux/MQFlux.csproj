@@ -133,6 +133,7 @@
     <Compile Include="Core\Response.cs" />
     <Compile Include="Core\ResponseWithResult.cs" />
     <Compile Include="Extensions\CharacterTypeExtensions.cs" />
+    <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\ItemTypeExtensions.cs" />
     <Compile Include="Extensions\SpellTypeExtensions.cs" />
     <Compile Include="Extensions\TestExtensions.cs" />

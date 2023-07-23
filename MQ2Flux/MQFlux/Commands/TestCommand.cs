@@ -23,45 +23,28 @@ namespace MQFlux.Commands
     {
         private readonly ILogger<TestCommandHandler> logger;
         private readonly IMQLogger mqLogger;
+        private readonly ITargetService targetService;
 
-        public TestCommandHandler(ILogger<TestCommandHandler> logger, IMQLogger mqLogger)
+        public TestCommandHandler(ILogger<TestCommandHandler> logger, IMQLogger mqLogger, ITargetService targetService)
         {
             this.logger = logger;
             this.mqLogger = mqLogger;
+            this.targetService = targetService;
         }
 
-        public override Task<CommandResponse<bool>> Handle(TestCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<bool>> Handle(TestCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var target = request.Context.TLO.Target;
-
-                if (target == null)
-                {
-                    request.Context.TLO.Me.DoTarget();
-                }
-
-                var meBuffs = request.Context.TLO.Me.Buffs;
-                var meBuffDurations = meBuffs.Select(i => i.Duration.GetValueOrDefault(TimeSpan.Zero));
-                var spawnBuffs = request.Context.TLO.Me.Spawn.Buffs;
-                var spawnBuffDurations = spawnBuffs.Select(i => i.Duration.GetValueOrDefault(TimeSpan.Zero));
-
-                foreach (var buff in meBuffs)
-                {
-                    mqLogger.Log($"{buff.Name} {buff.Duration}");
-                }
-
-                foreach (var buff in spawnBuffs)
-                {
-                    mqLogger.Log($"{buff.Name} {buff.Duration}");
-                }
+                var x = request.Context.Spawns.All.Select(i => $"{i.ID} {i.Name}").ToArray();
+                var y = x.Length;
             }
             catch (Exception ex)
             {
                 mqLogger.Log(ex.ToString());
             }
 
-            return CommandResponse.FromResultTask(true);
+            return CommandResponse.FromResult(true);
         }
     }
 }

@@ -64,59 +64,48 @@ namespace MQFlux.Services
                 }
 
                 var abilityName = ability.Skill.Name;
+                var command = $"/doability {abilityName}";
+
+                mqLogger.Log($"Do ability [\au{abilityName}\aw]", TimeSpan.Zero);
 
                 if (string.IsNullOrWhiteSpace(successText) && string.IsNullOrWhiteSpace(failureText))
                 {
-                    DoAbility(abilityName);
+                    context.MQ.DoCommand(command);
 
                     return true;
                 }
 
                 var success = false;
-
-                Task<bool> waitForEQTask = Task.Run
+                var commandResultFound = await context.DoCommandAndWaitForEQ
                 (
-                    () => context.Chat.WaitForEQ
-                    (
-                        text =>
+                    command,
+                    text =>
+                    {
+                        if (!string.IsNullOrWhiteSpace(successText) && text.Contains(successText))
                         {
-                            if (!string.IsNullOrWhiteSpace(successText) && text.Contains(successText))
-                            {
-                                success = true;
+                            success = true;
 
-                                return true;
-                            }
+                            return true;
+                        }
 
-                            if (!string.IsNullOrWhiteSpace(failureText) && text.Contains(failureText))
-                            {
-                                success = false;
+                        if (!string.IsNullOrWhiteSpace(failureText) && text.Contains(failureText))
+                        {
+                            success = false;
 
-                                return true;
-                            }
+                            return true;
+                        }
 
-                            return false;
-                        },
-                        TimeSpan.FromMilliseconds(2000),
-                        cancellationToken
-                    )
+                        return false;
+                    }, 
+                    TimeSpan.FromMilliseconds(2000), 
+                    cancellationToken
                 );
 
-                DoAbility(abilityName);
-
-                var foundAbilityResult = await waitForEQTask;
-
-                return foundAbilityResult && success;
+                return commandResultFound && success;
             }
             finally
             {
                 semaphore.Release();
-            }
-
-            void DoAbility(string abilityName)
-            {
-                context.MQ.DoCommand($"/doability {abilityName}");
-
-                mqLogger.Log($"Do ability [\au{abilityName}\aw]", TimeSpan.Zero);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using MQFlux.Behaviors;
+﻿using MediatR;
+using MQFlux.Behaviors;
 using MQFlux.Core;
 using MQFlux.Models;
 using MQFlux.Services;
@@ -16,11 +17,20 @@ namespace MQFlux.Commands
 
     public class InitializeCommandHandler : PCCommandHandler<InitializeCommand>
     {
-        public override Task<CommandResponse<bool>> Handle(InitializeCommand request, CancellationToken cancellationToken)
+        private readonly IMediator mediator;
+
+        public InitializeCommandHandler(IMediator mediator)
+        {
+            this.mediator = mediator;
+        }
+
+        public override async Task<CommandResponse<bool>> Handle(InitializeCommand request, CancellationToken cancellationToken)
         {
             request.Context.MQ.DoCommand("/assist off");
 
-            return CommandResponse.FromResultTask(true);
+            await mediator.Send(new IdleSinceCommand(), cancellationToken);
+
+            return CommandResponse.FromResult(true);
         }
     }
 }

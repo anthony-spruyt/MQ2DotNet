@@ -121,30 +121,24 @@ namespace MQFlux.Services
                 var fizzled = false;
                 var interrupted = false;
 
-                Task<bool> waitForEQTask = Task.Run
-                (
-                    () => context.Chat.WaitForEQ
-                    (
-                        text =>
-                        {
-                            wasCastOnYou = string.Compare(text, castOnYou) == 0;
-                            wasCastOnAnother = text.Contains(castOnAnother);
-                            fizzled = text.Contains("Your") && text.Contains("spell fizzles");
-                            interrupted = text.Contains("Your") && text.Contains("spell is interrupted");
-
-                            return wasCastOnYou || wasCastOnAnother || fizzled || interrupted;
-                        },
-                        timeout,
-                        cancellationToken
-                    )
-                );
-
-                context.MQ.DoCommand($"/cast {gem}");
-
                 mqLogger.Log($"Casting [\ay{spellBookSpell.Name}\aw]", TimeSpan.Zero);
 
                 // Some spells dont write a message so assume it was successful if it timed out.
-                _ = await waitForEQTask;
+                _ = context.DoCommandAndWaitForEQ
+                (
+                    $"/cast {gem}",
+                    text =>
+                    {
+                        wasCastOnYou = string.Compare(text, castOnYou) == 0;
+                        wasCastOnAnother = text.Contains(castOnAnother);
+                        fizzled = text.Contains("Your") && text.Contains("spell fizzles");
+                        interrupted = text.Contains("Your") && text.Contains("spell is interrupted");
+
+                        return wasCastOnYou || wasCastOnAnother || fizzled || interrupted;
+                    },
+                    timeout,
+                    cancellationToken
+                );
 
                 if (fizzled || interrupted)
                 {
