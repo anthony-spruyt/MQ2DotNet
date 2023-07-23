@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MQFlux.Core;
 
 namespace MQFlux.Commands
 {

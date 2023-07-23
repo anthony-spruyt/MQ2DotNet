@@ -1,9 +1,9 @@
 ﻿using MQFlux.Behaviors;
 using MQFlux.Services;
 
-namespace MQFlux.Commands
+namespace MQFlux.Core
 {
-    public abstract class CombatCommand<TResponse> : PCCommand<TResponse>, IContextRequest
+    public abstract class CombatCommand : PCCommand, IContextRequest
     {
         public abstract IContext Context { get; set; }
     }

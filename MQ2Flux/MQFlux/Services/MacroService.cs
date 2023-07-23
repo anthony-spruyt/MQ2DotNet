@@ -11,7 +11,7 @@ namespace MQFlux.Services
         MacroType GetMacro();
         bool IsRunning();
         bool IsPaused();
-        Task<bool> PauseAsync(CancellationToken cancellationToken = default);
+        Task<bool> Pause(CancellationToken cancellationToken = default);
         void Resume();
     }
 
@@ -54,7 +54,7 @@ namespace MQFlux.Services
             return macro != null && macro.Paused.HasValue;
         }
 
-        public async Task<bool> PauseAsync(CancellationToken cancellationToken = default)
+        public async Task<bool> Pause(CancellationToken cancellationToken = default)
         {
             if (!IsRunning() ||
                 IsPaused())

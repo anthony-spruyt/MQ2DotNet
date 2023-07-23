@@ -11,7 +11,7 @@ namespace MQFlux.Services
 
     public static class MQLoggerServiceExtensions
     {
-        public static IServiceCollection AddMQLogging(this IServiceCollection services)
+        public static IServiceCollection AddMQLogger(this IServiceCollection services)
         {
             return services.AddSingleton<IMQLogger, MQLoggerService>();
         }

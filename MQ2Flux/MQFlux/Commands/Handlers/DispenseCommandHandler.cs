@@ -1,5 +1,5 @@
-﻿using MediatR;
-using MQ2DotNet.MQ2API.DataTypes;
+﻿using MQ2DotNet.MQ2API.DataTypes;
+using MQFlux.Core;
 using MQFlux.Extensions;
 using MQFlux.Models;
 using MQFlux.Services;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class DispenseCommandHandler : IRequestHandler<DispenseCommand, bool>
+    public class DispenseCommandHandler : PCCommandHandler<DispenseCommand>
     {
         private readonly IItemService itemService;
         private readonly IMacroService macroService;
@@ -21,25 +21,25 @@ namespace MQFlux.Commands.Handlers
             this.macroService = macroService;
         }
 
-        public async Task<bool> Handle(DispenseCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<bool>> Handle(DispenseCommand request, CancellationToken cancellationToken)
         {
             if (!request.Character.AutoDispenseFoodAndDrink.GetValueOrDefault(false))
             {
-                return false;
+                return CommandResponse.FromResult(false);
             }
 
             var dispensers = request.Character.Dispensers;
 
             AddDefaultDispensers(dispensers);
 
-            if (await DispenseAsync(dispensers, request.Context.TLO.Me, cancellationToken))
+            if (await Dispense(dispensers, request.Context.TLO.Me, cancellationToken))
             {
-                await itemService.AutoInventoryAsync(cursor => cursor != null && dispensers.Any(i => (i.SummonID.HasValue && i.SummonID.Value == cursor.ID) || string.Compare(i.SummonName, cursor.Name) == 0), cancellationToken);
+                await itemService.AutoInventory(cursor => cursor != null && dispensers.Any(i => (i.SummonID.HasValue && i.SummonID.Value == cursor.ID) || string.Compare(i.SummonName, cursor.Name) == 0), cancellationToken);
 
-                return true;
+                return CommandResponse.FromResult(true);
             }
 
-            return false;
+            return CommandResponse.FromResult(false);
         }
 
         private static void AddDefaultDispensers(List<FoodAndDrinkDispenser> dispensers)
@@ -58,7 +58,7 @@ namespace MQFlux.Commands.Handlers
             }
         }
 
-        private async Task<bool> DispenseAsync(List<FoodAndDrinkDispenser> dispensers, CharacterType me, CancellationToken cancellationToken)
+        private async Task<bool> Dispense(List<FoodAndDrinkDispenser> dispensers, CharacterType me, CancellationToken cancellationToken)
         {
             var allMyInv = me.Inventory.Flatten();
 
@@ -78,9 +78,9 @@ namespace MQFlux.Commands.Handlers
                         {
                             try
                             {
-                                await macroService.PauseAsync(cancellationToken);
+                                await macroService.Pause(cancellationToken);
 
-                                return await itemService.UseItemAsync(dispenserItem, "Dispensing", cancellationToken);
+                                return await itemService.UseItem(dispenserItem, "Dispensing", cancellationToken);
                             }
                             finally
                             {

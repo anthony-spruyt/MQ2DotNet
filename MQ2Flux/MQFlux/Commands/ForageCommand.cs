@@ -1,12 +1,13 @@
 ﻿using MQ2DotNet.MQ2API.DataTypes;
 using MQFlux.Behaviors;
+using MQFlux.Core;
 using MQFlux.Models;
 using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
     public class ForageCommand :
-        PCCommand<bool>,
+        PCCommand,
         ICharacterConfigRequest,
         IConsciousRequest,
         INotCastingRequest,

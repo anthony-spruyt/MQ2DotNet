@@ -1,4 +1,6 @@
-﻿namespace MQFlux.Commands
+﻿using MQFlux.Core;
+
+namespace MQFlux.Commands
 {
     public class ZoningCommand : ISetCacheCommand<bool>
     {

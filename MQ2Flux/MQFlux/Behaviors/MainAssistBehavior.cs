@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MQFlux.Commands;
+using MQFlux.Core;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,9 +10,9 @@ namespace MQFlux.Behaviors
 
     }
 
-    public class MainAssistBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : CombatCommand<TResponse>
+    public class MainAssistBehavior<TRequest, TResponse> : CombatCommandBehavior<TRequest> where TRequest : CombatCommand
     {
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public override Task<CommandResponse<bool>> Handle(TRequest request, RequestHandlerDelegate<CommandResponse<bool>> next, CancellationToken cancellationToken)
         {
             if (request is IMainAssistRequest)
             {
@@ -21,7 +21,7 @@ namespace MQFlux.Behaviors
 
                 if (mainAssistSpawnId == 0u || mySpawnId != mainAssistSpawnId)
                 {
-                    return Task.FromResult(default(TResponse));
+                    return ShortCircuitResultTask();
                 }
             }
 

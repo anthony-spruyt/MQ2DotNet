@@ -1,11 +1,12 @@
 ﻿using MQFlux.Behaviors;
+using MQFlux.Core;
 using MQFlux.Services;
 using System;
 
 namespace MQFlux.Commands
 {
     public class MeditateCommand :
-        PCCommand<bool>,
+        PCCommand,
         IStandingStillRequest,
         INotCastingRequest,
         ICasterRequest,
@@ -16,6 +17,6 @@ namespace MQFlux.Commands
     {
         public bool AllowBard => false;
         public IContext Context { get; set; }
-        public TimeSpan IdleTime => TimeSpan.FromSeconds(5);
+        public TimeSpan IdleTime => TimeSpan.FromSeconds(1);
     }
 }

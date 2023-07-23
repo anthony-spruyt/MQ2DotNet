@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using MQFlux.Core;
 using MQFlux.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class UnloadMQCommandsHandler : IRequestHandler<UnloadMQCommands, Unit>
+    public class UnloadMQCommandsHandler : CommandHandler<UnloadMQCommands, Unit>
     {
         private readonly IMQCommandProvider commandProvider;
 
@@ -14,11 +15,11 @@ namespace MQFlux.Commands.Handlers
             this.commandProvider = commandProvider;
         }
 
-        public Task<Unit> Handle(UnloadMQCommands request, CancellationToken cancellationToken)
+        public override Task<CommandResponse<Unit>> Handle(UnloadMQCommands request, CancellationToken cancellationToken)
         {
             commandProvider.Unload();
 
-            return Task.FromResult(Unit.Value);
+            return CommandResponse.FromResultTask(Unit.Value);
         }
     }
 }

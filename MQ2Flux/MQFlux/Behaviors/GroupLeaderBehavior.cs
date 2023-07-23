@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MQFlux.Commands;
+using MQFlux.Core;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,14 +10,14 @@ namespace MQFlux.Behaviors
 
     }
 
-    public class GroupLeaderBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : PCCommand<TResponse>
+    public class GroupLeaderBehavior<TRequest, TResponse> : PCCommandBehavior<TRequest> where TRequest : PCCommand
     {
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public override Task<CommandResponse<bool>> Handle(TRequest request, RequestHandlerDelegate<CommandResponse<bool>> next, CancellationToken cancellationToken)
         {
             if (request is IGroupLeaderRequest groupLeaderRequest &&
                 !groupLeaderRequest.Context.TLO.Me.AmIGroupLeader)
             {
-                return Task.FromResult(default(TResponse));
+                return ShortCircuitResultTask();
             }
 
             return next();

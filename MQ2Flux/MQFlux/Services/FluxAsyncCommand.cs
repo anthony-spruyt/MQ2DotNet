@@ -35,7 +35,7 @@ namespace MQFlux.Services
 
         }
 
-        public async Task HandleAsync(string[] args)
+        public async Task Handle(string[] args)
         {
             if (semaphore == null || !await semaphore.WaitAsync(0))
             {

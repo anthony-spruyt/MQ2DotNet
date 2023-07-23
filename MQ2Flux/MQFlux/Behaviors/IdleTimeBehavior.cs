@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MQFlux.Commands;
+using MQFlux.Core;
 using MQFlux.Queries;
 using System;
 using System.Threading;
@@ -15,7 +15,7 @@ namespace MQFlux.Behaviors
         TimeSpan IdleTime { get; }
     }
 
-    public class IdleTimeBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : PCCommand<TResponse>
+    public class IdleTimeBehavior<TRequest, TResponse> : PCCommandBehavior<TRequest> where TRequest : PCCommand
     {
         private readonly IMediator mediator;
 
@@ -24,15 +24,16 @@ namespace MQFlux.Behaviors
             this.mediator = mediator;
         }
 
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<bool>> Handle(TRequest request, RequestHandlerDelegate<CommandResponse<bool>> next, CancellationToken cancellationToken)
         {
             if (request is IIdleTimeRequest idleTimeRequest)
             {
-                var dateTime = await mediator.Send(new IdleSinceQuery(), cancellationToken);
+                var response = await mediator.Send(new IdleSinceQuery(), cancellationToken);
+                var lastIdle = response.Result;
 
-                if (DateTime.UtcNow - dateTime < idleTimeRequest.IdleTime)
+                if (DateTime.UtcNow - lastIdle < idleTimeRequest.IdleTime)
                 {
-                    return default;
+                    return ShortCircuitResult();
                 }
             }
 

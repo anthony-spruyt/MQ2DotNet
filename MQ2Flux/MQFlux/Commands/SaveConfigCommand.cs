@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MQFlux.Behaviors;
+using MQFlux.Core;
 using MQFlux.Models;
 
 namespace MQFlux.Commands

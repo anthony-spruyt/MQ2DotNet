@@ -7,6 +7,8 @@ namespace MQFlux.Behaviors
         public static MediatRServiceConfiguration AddFluxBehaviors(this MediatRServiceConfiguration config)
         {
             return config
+                .AddOpenBehavior(typeof(QueryExceptionBehavior<,>))
+                .AddOpenBehavior(typeof(CommandExceptionBehavior<,>))
                 .AddOpenBehavior(typeof(InGameBehavior<,>))
                 .AddOpenBehavior(typeof(NotZoningBehavior<,>))
                 .AddOpenBehavior(typeof(NotCampingBehavior<,>))

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MQFlux.Core;
 using System.Collections.Generic;
 using System.Threading;
 

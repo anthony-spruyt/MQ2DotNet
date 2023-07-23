@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using MQ2DotNet.EQ;
-using MQFlux.Commands;
+using MQFlux.Core;
 using MQFlux.Queries;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQFlux.Behaviors
 {
-    public class InGameBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : PCCommand<TResponse>
+    public class InGameBehavior<TRequest, TResponse> : PCCommandBehavior<TRequest> where TRequest : PCCommand
     {
         private readonly IMediator mediator;
 
@@ -16,11 +16,13 @@ namespace MQFlux.Behaviors
             this.mediator = mediator;
         }
 
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<bool>> Handle(TRequest request, RequestHandlerDelegate<CommandResponse<bool>> next, CancellationToken cancellationToken)
         {
-            if (await mediator.Send(new GameStateQuery(), cancellationToken) != GameState.InGame)
+            var response = await mediator.Send(new GameStateQuery(), cancellationToken);
+
+            if (response.Result != GameState.InGame)
             {
-                return default;
+                return ShortCircuitResult();
             }
 
             return await next();

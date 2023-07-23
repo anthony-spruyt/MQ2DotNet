@@ -1,4 +1,6 @@
-﻿namespace MQFlux.Queries
+﻿using MQFlux.Core;
+
+namespace MQFlux.Queries
 {
     public class CampingQuery : Query<bool>
     {

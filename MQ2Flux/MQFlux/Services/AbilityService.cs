@@ -9,8 +9,8 @@ namespace MQFlux.Services
 {
     public interface IAbilityService
     {
-        Task<bool> DoAbilityAsync(AbilityInfo ability, string successText = null, string failureText = null, CancellationToken cancellationToken = default);
-        Task<bool> DoAbilityAsync(string abilityName, string successText = null, string failureText = null, CancellationToken cancellationToken = default);
+        Task<bool> DoAbility(AbilityInfo ability, string successText = null, string failureText = null, CancellationToken cancellationToken = default);
+        Task<bool> DoAbility(string abilityName, string successText = null, string failureText = null, CancellationToken cancellationToken = default);
     }
 
     public static class AbilityServiceExtensions
@@ -38,7 +38,7 @@ namespace MQFlux.Services
             semaphore = new SemaphoreSlim(1);
         }
 
-        public async Task<bool> DoAbilityInternalAsync(AbilityInfo ability, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
+        public async Task<bool> DoAbilityInternal(AbilityInfo ability, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
         {
             await semaphore.WaitAsync(cancellationToken);
 
@@ -120,16 +120,16 @@ namespace MQFlux.Services
             }
         }
 
-        public async Task<bool> DoAbilityAsync(AbilityInfo ability, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
+        public async Task<bool> DoAbility(AbilityInfo ability, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
         {
-            return await DoAbilityInternalAsync(ability, successText, failureText, cancellationToken);
+            return await DoAbilityInternal(ability, successText, failureText, cancellationToken);
         }
 
-        public async Task<bool> DoAbilityAsync(string abilityName, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
+        public async Task<bool> DoAbility(string abilityName, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
         {
             var ability = context.TLO.Me.GetAbilityInfo(abilityName);
 
-            return await DoAbilityInternalAsync(ability, successText, failureText, cancellationToken);
+            return await DoAbilityInternal(ability, successText, failureText, cancellationToken);
         }
 
         protected virtual void Dispose(bool disposing)

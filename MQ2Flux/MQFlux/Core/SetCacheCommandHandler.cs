@@ -3,7 +3,7 @@ using MQFlux.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQFlux.Commands.Handlers
+namespace MQFlux.Core
 {
     public abstract class SetCacheCommandHandler<TRequest, TValue> : IRequestHandler<TRequest> where TRequest : ISetCacheCommand<TValue>
     {

@@ -17,10 +17,10 @@ namespace MQFlux.Services
         /// <param name="waitForSpellReady">If the spell is already memorized wait for it to be ready.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> CastAsync(SpellType spell, bool waitForSpellReady = false, CancellationToken cancellationToken = default);
-        Task<bool> MemorizeSpellAsync(int slot, SpellType spell, CancellationToken cancellationToken = default);
-        Task<bool> WaitForSpellReadyAsync(SpellType spell, CancellationToken cancellationToken = default);
-        Task<bool> WaitForSpellReadyAsync(int gem, CancellationToken cancellationToken = default);
+        Task<bool> Cast(SpellType spell, bool waitForSpellReady = false, CancellationToken cancellationToken = default);
+        Task<bool> MemorizeSpell(int slot, SpellType spell, CancellationToken cancellationToken = default);
+        Task<bool> WaitForSpellReady(SpellType spell, CancellationToken cancellationToken = default);
+        Task<bool> WaitForSpellReady(int gem, CancellationToken cancellationToken = default);
     }
 
     public static class SpellCastingServiceExtensions
@@ -48,7 +48,7 @@ namespace MQFlux.Services
             semaphore = new SemaphoreSlim(1);
         }
 
-        public async Task<bool> CastAsync(SpellType spell, bool waitForSpellReady = false, CancellationToken cancellationToken = default)
+        public async Task<bool> Cast(SpellType spell, bool waitForSpellReady = false, CancellationToken cancellationToken = default)
         {
             // TODO add support for splash spell targets.
             await semaphore.WaitAsync(cancellationToken);
@@ -84,18 +84,18 @@ namespace MQFlux.Services
                 {
                     gem = (int)me.NumGems.GetValueOrDefault(8u);
 
-                    if (!await MemorizeSpellInternalAsync(gem, spellBookSpell))
+                    if (!await MemorizeSpellInternal(gem, spellBookSpell))
                     {
                         return false;
                     }
 
-                    if (!await WaitForSpellReadyAsync(gem, cancellationToken))
+                    if (!await WaitForSpellReady(gem, cancellationToken))
                     {
                         return false;
                     }
                 }
 
-                if (waitForSpellReady && !await WaitForSpellReadyAsync(gem, cancellationToken))
+                if (waitForSpellReady && !await WaitForSpellReady(gem, cancellationToken))
                 {
                     return false;
                 }
@@ -163,13 +163,13 @@ namespace MQFlux.Services
             return true;
         }
 
-        public async Task<bool> MemorizeSpellAsync(int slot, SpellType spell, CancellationToken cancellationToken = default)
+        public async Task<bool> MemorizeSpell(int slot, SpellType spell, CancellationToken cancellationToken = default)
         {
             await semaphore.WaitAsync(cancellationToken);
 
             try
             {
-                return await MemorizeSpellInternalAsync(slot, spell, cancellationToken);
+                return await MemorizeSpellInternal(slot, spell, cancellationToken);
             }
             finally
             {
@@ -177,22 +177,22 @@ namespace MQFlux.Services
             }
         }
 
-        public async Task<bool> WaitForSpellReadyAsync(SpellType spell, CancellationToken cancellationToken = default)
+        public async Task<bool> WaitForSpellReady(SpellType spell, CancellationToken cancellationToken = default)
         {
             var me = context.TLO.Me;
             string name = spell.Name;
 
-            return await WaitForSpellReadyInternalAsync(() => me.IsSpellReady(name), cancellationToken);
+            return await WaitForSpellReadyInternal(() => me.IsSpellReady(name), cancellationToken);
         }
 
-        public async Task<bool> WaitForSpellReadyAsync(int gem, CancellationToken cancellationToken = default)
+        public async Task<bool> WaitForSpellReady(int gem, CancellationToken cancellationToken = default)
         {
             var me = context.TLO.Me;
 
-            return await WaitForSpellReadyInternalAsync(() => me.IsSpellReady(gem), cancellationToken);
+            return await WaitForSpellReadyInternal(() => me.IsSpellReady(gem), cancellationToken);
         }
 
-        private async Task<bool> WaitForSpellReadyInternalAsync(Func<bool> isSpellReady, CancellationToken cancellationToken)
+        private async Task<bool> WaitForSpellReadyInternal(Func<bool> isSpellReady, CancellationToken cancellationToken)
         {
             // Check if it is not already ready because waiting is expensive.
             if (isSpellReady())
@@ -208,7 +208,7 @@ namespace MQFlux.Services
             return true;
         }
 
-        private async Task<bool> MemorizeSpellInternalAsync(int slot, SpellType spell, CancellationToken cancellationToken = default)
+        private async Task<bool> MemorizeSpellInternal(int slot, SpellType spell, CancellationToken cancellationToken = default)
         {
             var me = context.TLO.Me;
             var spellName = spell.Name;

@@ -1,5 +1,5 @@
-﻿using MediatR;
-using MQ2DotNet.MQ2API.DataTypes;
+﻿using MQ2DotNet.MQ2API.DataTypes;
+using MQFlux.Core;
 using MQFlux.Extensions;
 using MQFlux.Services;
 using System;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class SummonFoodAndDrinkCommandHandler : IRequestHandler<SummonFoodAndDrinkCommand, bool>
+    public class SummonFoodAndDrinkCommandHandler : PCCommandHandler<SummonFoodAndDrinkCommand>
     {
         private static readonly string[] summonFoodSpellNames = new string[]
         {
@@ -38,11 +38,11 @@ namespace MQFlux.Commands.Handlers
             this.macroService = macroService;
         }
 
-        public async Task<bool> Handle(SummonFoodAndDrinkCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<bool>> Handle(SummonFoodAndDrinkCommand request, CancellationToken cancellationToken)
         {
             if (!request.Character.AutoSummonFoodAndDrink.GetValueOrDefault(false))
             {
-                return false;
+                return CommandResponse.FromResult(false);
             }
 
             var me = request.Context.TLO.Me;
@@ -55,13 +55,13 @@ namespace MQFlux.Commands.Handlers
             {
                 try
                 {
-                    await macroService.PauseAsync(cancellationToken);
+                    await macroService.Pause(cancellationToken);
 
-                    if (await spellCastingService.CastAsync(foodSpell, waitForSpellReady: true, cancellationToken))
+                    if (await spellCastingService.Cast(foodSpell, waitForSpellReady: true, cancellationToken))
                     {
-                        await itemService.AutoInventoryAsync(cursor => cursor != null && cursor.NoRent, cancellationToken);
+                        await itemService.AutoInventory(cursor => cursor != null && cursor.NoRent, cancellationToken);
 
-                        return true;
+                        return CommandResponse.FromResult(true);
                     }
                 }
                 finally
@@ -78,13 +78,13 @@ namespace MQFlux.Commands.Handlers
             {
                 try
                 {
-                    await macroService.PauseAsync(cancellationToken);
+                    await macroService.Pause(cancellationToken);
 
-                    if (await spellCastingService.CastAsync(drinkSpell, waitForSpellReady: true, cancellationToken))
+                    if (await spellCastingService.Cast(drinkSpell, waitForSpellReady: true, cancellationToken))
                     {
-                        await itemService.AutoInventoryAsync(cursor => cursor != null && cursor.NoRent, cancellationToken);
+                        await itemService.AutoInventory(cursor => cursor != null && cursor.NoRent, cancellationToken);
 
-                        return true;
+                        return CommandResponse.FromResult(true);
                     }
                 }
                 finally
@@ -93,7 +93,7 @@ namespace MQFlux.Commands.Handlers
                 }
             }
 
-            return false;
+            return CommandResponse.FromResult(false);
         }
 
         private static bool TryGetSummonSpell(CharacterType me, string[] summonSpellNames, out SpellType spell)

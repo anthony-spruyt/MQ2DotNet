@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using MQFlux.Core;
 using MQFlux.Services;
 using System.Collections.Generic;
 using System.Threading;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class LoadMQCommandsHandler : IRequestHandler<LoadMQCommands, IEnumerable<CancellationToken>>
+    public class LoadMQCommandsHandler : CommandHandler<LoadMQCommands, IEnumerable<CancellationToken>>
     {
         private readonly IMQCommandProvider commandProvider;
 
@@ -15,11 +15,11 @@ namespace MQFlux.Commands.Handlers
             this.commandProvider = commandProvider;
         }
 
-        public Task<IEnumerable<CancellationToken>> Handle(LoadMQCommands request, CancellationToken cancellationToken)
+        public override Task<CommandResponse<IEnumerable<CancellationToken>>> Handle(LoadMQCommands request, CancellationToken cancellationToken)
         {
             commandProvider.Load();
 
-            return Task.FromResult(GetLinkedTokens());
+            return CommandResponse.FromResultTask(GetLinkedTokens());
         }
 
         private IEnumerable<CancellationToken> GetLinkedTokens()

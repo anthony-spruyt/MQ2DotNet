@@ -1,5 +1,5 @@
-﻿using MediatR;
-using MQ2DotNet.EQ;
+﻿using MQ2DotNet.EQ;
+using MQFlux.Core;
 using MQFlux.Services;
 using System;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class MeditateCommandHandler : IRequestHandler<MeditateCommand, bool>
+    public class MeditateCommandHandler : PCCommandHandler<MeditateCommand>
     {
         private readonly IMQLogger mqLogger;
 
@@ -17,7 +17,7 @@ namespace MQFlux.Commands.Handlers
             this.mqLogger = mqLogger;
         }
 
-        public Task<bool> Handle(MeditateCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<bool>> Handle(MeditateCommand request, CancellationToken cancellationToken)
         {
             var me = request.Context.TLO.Me;
 
@@ -29,7 +29,7 @@ namespace MQFlux.Commands.Handlers
                 me.XTargets.Any(i => i.PctAggro == 100u)
             )
             {
-                return Task.FromResult(false);
+                return CommandResponse.FromResult(false);
             }
 
             bool medBreak;
@@ -42,19 +42,23 @@ namespace MQFlux.Commands.Handlers
             }
             else
             {
-                medBreak = me.PctMana < 98;
+                medBreak = me.PctMana < 90;
             }
 
             if (medBreak)
             {
-                me.Sit();
+                await Task.Delay(1000);
 
                 mqLogger.Log("Sitting down to med", TimeSpan.Zero);
 
-                return Task.FromResult(true);
+                me.Sit();
+
+                await Task.Delay(1000);
+
+                return CommandResponse.FromResult(true);
             }
 
-            return Task.FromResult(false);
+            return CommandResponse.FromResult(false);
         }
     }
 }

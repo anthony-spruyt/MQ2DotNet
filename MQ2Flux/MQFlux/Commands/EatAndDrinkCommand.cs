@@ -1,11 +1,12 @@
 ﻿using MQFlux.Behaviors;
+using MQFlux.Core;
 using MQFlux.Models;
 using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
     public class EatAndDrinkCommand :
-        PCCommand<bool>,
+        PCCommand,
         ICharacterConfigRequest,
         IConsciousRequest,
         INotCastingRequest,

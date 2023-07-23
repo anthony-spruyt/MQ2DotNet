@@ -1,12 +1,12 @@
-﻿using MediatR;
-using MQFlux.Behaviors;
+﻿using MQFlux.Behaviors;
+using MQFlux.Core;
 using MQFlux.Models;
 using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
     public class TestCommand :
-        PCCommand<Unit>,
+        PCCommand,
         ICharacterConfigRequest
     {
         public CharacterConfig Character { get; set; }

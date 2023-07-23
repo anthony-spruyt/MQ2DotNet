@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MQ2DotNet.EQ;
-using MQFlux.Commands;
+using MQFlux.Core;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,15 +12,15 @@ namespace MQFlux.Behaviors
         ItemSize MinimumSize { get; }
     }
 
-    public class FreeInventorySlotBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : PCCommand<TResponse>
+    public class FreeInventorySlotBehavior<TRequest, TResponse> : PCCommandBehavior<TRequest> where TRequest : PCCommand
     {
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public override Task<CommandResponse<bool>> Handle(TRequest request, RequestHandlerDelegate<CommandResponse<bool>> next, CancellationToken cancellationToken)
         {
             if (request is IFreeInventorySlotsRequest freeInventorySlotsRequest &&
                 freeInventorySlotsRequest.Context.TLO.Me.FreeInventory.GetValueOrDefault(0) < freeInventorySlotsRequest.MinimumEmptySlots &&
                 freeInventorySlotsRequest.Context.TLO.Me.LargestFreeInventory < (uint)freeInventorySlotsRequest.MinimumSize)
             {
-                return Task.FromResult(default(TResponse));
+                return ShortCircuitResultTask();
             }
 
             return next();

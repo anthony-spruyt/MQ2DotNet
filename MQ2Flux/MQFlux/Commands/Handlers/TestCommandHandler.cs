@@ -1,6 +1,5 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
-using MQFlux.Extensions;
+﻿using Microsoft.Extensions.Logging;
+using MQFlux.Core;
 using MQFlux.Services;
 using System;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class TestCommandHandler : IRequestHandler<TestCommand, Unit>
+    public class TestCommandHandler : PCCommandHandler<TestCommand>
     {
         private readonly ILogger<TestCommandHandler> logger;
         private readonly IMQLogger mqLogger;
@@ -20,7 +19,7 @@ namespace MQFlux.Commands.Handlers
             this.mqLogger = mqLogger;
         }
 
-        public Task<Unit> Handle(TestCommand request, CancellationToken cancellationToken)
+        public override Task<CommandResponse<bool>> Handle(TestCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -30,13 +29,13 @@ namespace MQFlux.Commands.Handlers
                 {
                     request.Context.TLO.Me.DoTarget();
                 }
-                
+
                 var meBuffs = request.Context.TLO.Me.Buffs;
                 var meBuffDurations = meBuffs.Select(i => i.Duration.GetValueOrDefault(TimeSpan.Zero));
                 var spawnBuffs = request.Context.TLO.Me.Spawn.Buffs;
                 var spawnBuffDurations = spawnBuffs.Select(i => i.Duration.GetValueOrDefault(TimeSpan.Zero));
 
-                foreach ( var buff in meBuffs)
+                foreach (var buff in meBuffs)
                 {
                     mqLogger.Log($"{buff.Name} {buff.Duration}");
                 }
@@ -51,7 +50,7 @@ namespace MQFlux.Commands.Handlers
                 mqLogger.Log(ex.ToString());
             }
 
-            return Task.FromResult(Unit.Value);
+            return CommandResponse.FromResultTask(true);
         }
     }
 }

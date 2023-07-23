@@ -16,7 +16,7 @@ namespace MQFlux.Services
     {
         FluxConfig FluxConfig { get; }
 
-        Task SaveAsync(bool notify = false);
+        Task Save(bool notify = false);
     }
 
     public static class ConfigServiceExtensions
@@ -60,7 +60,7 @@ namespace MQFlux.Services
             Initialize();
         }
 
-        public async Task SaveAsync(bool notify = true)
+        public async Task Save(bool notify = true)
         {
             if (!notify)
             {

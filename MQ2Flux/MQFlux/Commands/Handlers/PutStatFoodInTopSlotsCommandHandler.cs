@@ -1,5 +1,5 @@
-﻿using MediatR;
-using MQ2DotNet.MQ2API.DataTypes;
+﻿using MQ2DotNet.MQ2API.DataTypes;
+using MQFlux.Core;
 using MQFlux.Extensions;
 using MQFlux.Services;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class PutStatFoodInTopSlotsCommandHandler : IRequestHandler<PutStatFoodInTopSlotsCommand, bool>
+    public class PutStatFoodInTopSlotsCommandHandler : PCCommandHandler<PutStatFoodInTopSlotsCommand>
     {
         private readonly IItemService itemService;
         private readonly IMQLogger mqLogger;
@@ -21,11 +21,11 @@ namespace MQFlux.Commands.Handlers
             this.mqLogger = mqLogger;
         }
 
-        public Task<bool> Handle(PutStatFoodInTopSlotsCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<bool>> Handle(PutStatFoodInTopSlotsCommand request, CancellationToken cancellationToken)
         {
             if (!request.Character.AutoPutStatFoodInTopSlots.GetValueOrDefault(false))
             {
-                return Task.FromResult(false);
+                return CommandResponse.FromResult(false);
             }
 
             var me = request.Context.TLO.Me;
@@ -37,7 +37,9 @@ namespace MQFlux.Commands.Handlers
                 var firstBagSlot = me.GetInventoryItem(CharacterType.FIRST_BAG_SLOT);
                 var isBagInSlot1 = firstBagSlot != null && firstBagSlot.IsAContainer();
 
-                return MoveStatFoodAsync(statFood, isBagInSlot1, cancellationToken);
+                var moved = await MoveStatFoodAsync(statFood, isBagInSlot1, cancellationToken);
+
+                return CommandResponse.FromResult(moved);
             }
 
             var statDrink = GetMostNutritiousConsumable(bagsAndContents.Where(i => i.IsDrinkable()), me);
@@ -51,11 +53,13 @@ namespace MQFlux.Commands.Handlers
 
                 if (!IsInSecondBagSlot(statDrink, isBagInSlot1, isBagInSlot2))
                 {
-                    return MoveStatDrinkAsync(statDrink, isBagInSlot1, isBagInSlot2, cancellationToken);
+                    var moved = await MoveStatDrinkAsync(statDrink, isBagInSlot1, isBagInSlot2, cancellationToken);
+
+                    return CommandResponse.FromResult(moved);
                 }
             }
 
-            return Task.FromResult(false);
+            return CommandResponse.FromResult(false);
         }
 
         private static bool IsInFirstBagSlot(ItemType item)
@@ -101,17 +105,17 @@ namespace MQFlux.Commands.Handlers
 
             if (isBagInSlot1)
             {
-                return itemService.MoveItemAsync(item, CharacterType.FIRST_BAG_SLOT, 2, cancellationToken);
+                return itemService.MoveItem(item, CharacterType.FIRST_BAG_SLOT, 2, cancellationToken);
             }
             else
             {
                 if (isBagInSlot2)
                 {
-                    return itemService.MoveItemAsync(item, CharacterType.FIRST_BAG_SLOT + 1, 1, cancellationToken);
+                    return itemService.MoveItem(item, CharacterType.FIRST_BAG_SLOT + 1, 1, cancellationToken);
                 }
                 else
                 {
-                    return itemService.MoveItemAsync(item, CharacterType.FIRST_BAG_SLOT + 1, cancellationToken: cancellationToken);
+                    return itemService.MoveItem(item, CharacterType.FIRST_BAG_SLOT + 1, cancellationToken: cancellationToken);
                 }
             }
         }
@@ -122,11 +126,11 @@ namespace MQFlux.Commands.Handlers
 
             if (isBagInSlot1)
             {
-                return itemService.MoveItemAsync(item, CharacterType.FIRST_BAG_SLOT, 1, cancellationToken);
+                return itemService.MoveItem(item, CharacterType.FIRST_BAG_SLOT, 1, cancellationToken);
             }
             else
             {
-                return itemService.MoveItemAsync(item, CharacterType.FIRST_BAG_SLOT, cancellationToken: cancellationToken);
+                return itemService.MoveItem(item, CharacterType.FIRST_BAG_SLOT, cancellationToken: cancellationToken);
             }
         }
 

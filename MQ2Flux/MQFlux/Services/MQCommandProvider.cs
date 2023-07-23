@@ -45,7 +45,7 @@ namespace MQFlux.Services
         {
             foreach (var command in AsyncCommands)
             {
-                context.Commands.AddAsyncCommand(command.Command, command.HandleAsync);
+                context.Commands.AddAsyncCommand(command.Command, command.Handle);
             }
 
             foreach (var command in Commands)

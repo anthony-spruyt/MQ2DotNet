@@ -1,10 +1,11 @@
 ﻿using MQFlux.Behaviors;
+using MQFlux.Core;
 using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
     public class DoneMeditatingCommand :
-        PCCommand<bool>,
+        PCCommand,
         IConsciousRequest,
         IStandingStillRequest,
         INotCastingRequest,

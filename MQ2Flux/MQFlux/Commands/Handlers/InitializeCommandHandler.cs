@@ -1,16 +1,16 @@
-﻿using MediatR;
+﻿using MQFlux.Core;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class InitializeCommandHandler : IRequestHandler<InitializeCommand, Unit>
+    public class InitializeCommandHandler : PCCommandHandler<InitializeCommand>
     {
-        public Task<Unit> Handle(InitializeCommand request, CancellationToken cancellationToken)
+        public override Task<CommandResponse<bool>> Handle(InitializeCommand request, CancellationToken cancellationToken)
         {
             request.Context.MQ.DoCommand("/assist off");
 
-            return Task.FromResult(Unit.Value);
+            return CommandResponse.FromResultTask(true);
         }
     }
 }

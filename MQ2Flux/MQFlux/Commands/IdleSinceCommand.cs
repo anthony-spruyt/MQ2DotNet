@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MQFlux.Core;
+using System;
 
 namespace MQFlux.Commands
 {

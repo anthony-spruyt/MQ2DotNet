@@ -78,6 +78,7 @@
     <Compile Include="Behaviors\CasterBehavior.cs" />
     <Compile Include="Behaviors\CharacterConfigBehavior.cs" />
     <Compile Include="Behaviors\ConsciousBehavior.cs" />
+    <Compile Include="Behaviors\CommandExceptionBehavior.cs" />
     <Compile Include="Behaviors\FreeInventorySlotBehavior.cs" />
     <Compile Include="Behaviors\GroupedBehavior.cs" />
     <Compile Include="Behaviors\GroupLeaderBehavior.cs" />
@@ -93,15 +94,20 @@
     <Compile Include="Behaviors\NotInCombatBehavior.cs" />
     <Compile Include="Behaviors\NotAutoAttackingBehavior.cs" />
     <Compile Include="Behaviors\NotCastingBehavior.cs" />
+    <Compile Include="Behaviors\QueryExceptionBehavior.cs" />
     <Compile Include="Behaviors\SpellbookNotOpenBehavior.cs" />
     <Compile Include="Behaviors\NotCampingBehavior.cs" />
     <Compile Include="Behaviors\NotZoningBehavior.cs" />
     <Compile Include="Behaviors\InGameBehavior.cs" />
     <Compile Include="Behaviors\StandingStillBehavior.cs" />
-    <Compile Include="Commands\CombatCommand.cs" />
-    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Core\CombatCommand.cs" />
+    <Compile Include="Core\CombatCommandBehavior.cs" />
+    <Compile Include="Core\CombatCommandHandler.cs" />
+    <Compile Include="Core\Command.cs" />
+    <Compile Include="Core\CommandBehavior.cs" />
+    <Compile Include="Core\CommandResponse.cs" />
     <Compile Include="Commands\Handlers\IdleSinceCommandHandler.cs" />
-    <Compile Include="Commands\PCCommand.cs" />
+    <Compile Include="Core\PCCommand.cs" />
     <Compile Include="Commands\DismissAlertWindowCommand.cs" />
     <Compile Include="Commands\DispenseCommand.cs" />
     <Compile Include="Commands\EatAndDrinkCommand.cs" />
@@ -109,7 +115,7 @@
     <Compile Include="Commands\FlushDataTypeErrorsCommand.cs" />
     <Compile Include="Commands\ForageCommand.cs" />
     <Compile Include="Commands\InitializeCommand.cs" />
-    <Compile Include="Commands\ISetCacheCommand.cs" />
+    <Compile Include="Core\ISetCacheCommand.cs" />
     <Compile Include="Commands\LearnALanguageCommand.cs" />
     <Compile Include="Commands\AutoAttackCommand.cs" />
     <Compile Include="Commands\MeditateCommand.cs" />
@@ -119,6 +125,13 @@
     <Compile Include="Commands\IdleSinceCommand.cs" />
     <Compile Include="Commands\ZoningCommand.cs" />
     <Compile Include="Commands\SummonFoodAndDrinkCommand.cs" />
+    <Compile Include="Core\CommandHandler.cs" />
+    <Compile Include="Core\PCCommandBehavior.cs" />
+    <Compile Include="Core\PCCommandHandler.cs" />
+    <Compile Include="Core\QueryBehavior.cs" />
+    <Compile Include="Core\QueryHandler.cs" />
+    <Compile Include="Core\Response.cs" />
+    <Compile Include="Core\ResponseWithResult.cs" />
     <Compile Include="Extensions\CharacterTypeExtensions.cs" />
     <Compile Include="Extensions\ItemTypeExtensions.cs" />
     <Compile Include="Extensions\SpellTypeExtensions.cs" />
@@ -127,9 +140,9 @@
     <Compile Include="Commands\Handlers\AutoAttackCommandHandler.cs" />
     <Compile Include="Commands\Handlers\DoneMeditatingCommandHandler.cs" />
     <Compile Include="Commands\Handlers\MeditateCommandHandler.cs" />
-    <Compile Include="Commands\Handlers\SetCacheCommandHandler.cs" />
+    <Compile Include="Core\SetCacheCommandHandler.cs" />
     <Compile Include="Queries\IdleSinceQuery.cs" />
-    <Compile Include="Queries\Handlers\CacheQueryHandler.cs" />
+    <Compile Include="Core\CacheQueryHandler.cs" />
     <Compile Include="Queries\Handlers\CampingQueryHandler.cs" />
     <Compile Include="Commands\Handlers\ConfigUpdateNotificationHandler.cs" />
     <Compile Include="Commands\Handlers\DismissAlertWindowCommandHandler.cs" />
@@ -161,8 +174,9 @@
     <Compile Include="Models\FluxConfig.cs" />
     <Compile Include="Queries\CampingQuery.cs" />
     <Compile Include="Queries\GameStateQuery.cs" />
+    <Compile Include="Core\QueryResponse.cs" />
     <Compile Include="Queries\ZoningQuery.cs" />
-    <Compile Include="Queries\Query.cs" />
+    <Compile Include="Core\Query.cs" />
     <Compile Include="Services\MacroService.cs" />
     <Compile Include="Services\AbilityService.cs" />
     <Compile Include="Services\MemoryCacheService.cs" />
@@ -178,6 +192,7 @@
     <Compile Include="Services\IMQCommand.cs" />
     <Compile Include="Services\MQLoggerService.cs" />
     <Compile Include="MQFlux.cs" />
+    <Compile Include="Services\TargetService.cs" />
     <Compile Include="Utils\UtilityExtensions.cs" />
     <Compile Include="Utils\Wait.cs" />
   </ItemGroup>

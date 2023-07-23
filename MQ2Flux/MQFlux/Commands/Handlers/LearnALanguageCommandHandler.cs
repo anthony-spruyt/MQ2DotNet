@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using MQFlux.Core;
 using MQFlux.Services;
 using System;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class LearnALanguageCommandHandler : IRequestHandler<LearnALanguageCommand, Unit>
+    public class LearnALanguageCommandHandler : PCCommandHandler<LearnALanguageCommand>
     {
         private readonly IChatHistory chatHistory;
 
@@ -16,18 +16,18 @@ namespace MQFlux.Commands.Handlers
             this.chatHistory = chatHistory;
         }
 
-        public Task<Unit> Handle(LearnALanguageCommand request, CancellationToken cancellationToken)
+        public override Task<CommandResponse<bool>> Handle(LearnALanguageCommand request, CancellationToken cancellationToken)
         {
             if (!request.Character.AutoLearnLanguages.GetValueOrDefault(false))
             {
-                return Task.FromResult(Unit.Value);
+                return CommandResponse.FromResultTask(false);
             }
 
             var me = request.Context.TLO.Me;
 
             if (!me.Grouped)
             {
-                return Task.FromResult(Unit.Value);
+                return CommandResponse.FromResultTask(false);
             }
 
             // Assume the /language help command returns only languages you have 1 or more points in and in the same order
@@ -52,9 +52,11 @@ namespace MQFlux.Commands.Handlers
             if (languageNumber.HasValue)
             {
                 Practise(request, language, languageNumber.Value);
+
+                return CommandResponse.FromResultTask(true);
             }
 
-            return Task.FromResult(Unit.Value);
+            return CommandResponse.FromResultTask(false);
         }
 
         private void Practise(LearnALanguageCommand request, string language, int languageNumber)

@@ -1,6 +1,6 @@
-﻿using MediatR;
-using MQ2DotNet.MQ2API;
+﻿using MQ2DotNet.MQ2API;
 using MQ2DotNet.MQ2API.DataTypes;
+using MQFlux.Core;
 using MQFlux.Extensions;
 using MQFlux.Services;
 using System;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class EatAndDrinkCommandHandler : IRequestHandler<EatAndDrinkCommand, bool>
+    public class EatAndDrinkCommandHandler : PCCommandHandler<EatAndDrinkCommand>
     {
         private readonly IChatHistory chatHistory;
         private readonly IItemService itemService;
@@ -22,11 +22,11 @@ namespace MQFlux.Commands.Handlers
             this.itemService = itemService;
         }
 
-        public async Task<bool> Handle(EatAndDrinkCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<bool>> Handle(EatAndDrinkCommand request, CancellationToken cancellationToken)
         {
             if (!request.Character.AutoEatAndDrink.GetValueOrDefault(false))
             {
-                return false;
+                return CommandResponse.FromResult(false);
             }
 
             var me = request.Context.TLO.Me;
@@ -35,7 +35,7 @@ namespace MQFlux.Commands.Handlers
 
             if (!amIHungry && !amIThirsty)
             {
-                return false;
+                return CommandResponse.FromResult(false);
             }
 
             var dontConsume = request.Character.DontConsume;
@@ -44,15 +44,15 @@ namespace MQFlux.Commands.Handlers
 
             if (amIHungry && await HandleHungerAsync(dontConsume, mq, me, allMyInv, cancellationToken))
             {
-                return true;
+                return CommandResponse.FromResult(true);
             }
 
             if (amIThirsty && await HandleThirstAsync(dontConsume, mq, me, allMyInv, cancellationToken))
             {
-                return true;
+                return CommandResponse.FromResult(true);
             }
 
-            return false;
+            return CommandResponse.FromResult(false);
         }
 
         private ItemType GetLeastNutritiousConsumable(IEnumerable<ItemType> items, CharacterType me)
@@ -68,7 +68,7 @@ namespace MQFlux.Commands.Handlers
 
             if (drink != null)
             {
-                return await itemService.UseItemAsync(drink, "Drinking", cancellationToken);
+                return await itemService.UseItem(drink, "Drinking", cancellationToken);
             }
             else if (me.Grouped)
             {
@@ -93,7 +93,7 @@ namespace MQFlux.Commands.Handlers
 
             if (food != null)
             {
-                return await itemService.UseItemAsync(food, "Eating", cancellationToken);
+                return await itemService.UseItem(food, "Eating", cancellationToken);
             }
             else if (me.Grouped)
             {

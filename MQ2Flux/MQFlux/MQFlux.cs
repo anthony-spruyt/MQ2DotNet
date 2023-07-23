@@ -83,8 +83,8 @@ namespace MQFlux
             {
                 mqLogger.Log($"Started");
 
-                var commandTokens = await mediator.Send(new LoadMQCommands());
-                var allTokens = commandTokens.Append(token);
+                var response = await mediator.Send(new LoadMQCommands());
+                var allTokens = response.Result.Append(token);
                 using (CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(allTokens.ToArray()))
                 {
                     await mediator.Send(new InitializeCommand(), linkedTokenSource.Token);
@@ -96,7 +96,7 @@ namespace MQFlux
                     }
                 }
             }
-            catch (TaskCanceledException) { }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"Error in {nameof(Main)}");
@@ -197,13 +197,14 @@ namespace MQFlux
                 .AddContext(mq, chat, commands, events, spawns, tlo)
                 .AddEventService()
                 .AddChatHistory()
-                .AddMQLogging()
+                .AddMQLogger()
                 .AddConfig()
                 .AddMQCommandProvider()
                 .AddAbilityService()
                 .AddItemService()
                 .AddSpellCastingService()
-                .AddMacroService();
+                .AddMacroService()
+                .AddTargetService();
         }
 
         protected virtual void Dispose(bool disposing)

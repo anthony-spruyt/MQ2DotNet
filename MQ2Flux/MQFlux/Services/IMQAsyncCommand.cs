@@ -9,6 +9,6 @@ namespace MQFlux.Services
         string Command { get; }
         CancellationToken CancellationToken { get; }
 
-        Task HandleAsync(string[] args);
+        Task Handle(string[] args);
     }
 }

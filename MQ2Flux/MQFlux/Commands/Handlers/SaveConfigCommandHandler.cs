@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using MQFlux.Core;
 using MQFlux.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers.Handlers
 {
-    public class SaveConfigCommandHandler : IRequestHandler<SaveConfigCommand, Unit>
+    public class SaveConfigCommandHandler : CommandHandler<SaveConfigCommand, Unit>
     {
         private readonly IConfig config;
 
@@ -14,11 +15,11 @@ namespace MQFlux.Commands.Handlers.Handlers
             this.config = config;
         }
 
-        public async Task<Unit> Handle(SaveConfigCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<Unit>> Handle(SaveConfigCommand request, CancellationToken cancellationToken)
         {
-            await config.SaveAsync(request.Notify);
+            await config.Save(request.Notify);
 
-            return Unit.Value;
+            return CommandResponse.FromResult(Unit.Value);
         }
     }
 }

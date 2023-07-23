@@ -19,7 +19,7 @@ namespace MQFlux.Utils
                         {
                             await MQFlux.Yield(linkedCancellationTokenSource.Token);
                         }
-                        catch (TaskCanceledException) { }
+                        catch (OperationCanceledException) { }
 
                         if (linkedCancellationTokenSource.Token.IsCancellationRequested)
                         {

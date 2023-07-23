@@ -1,12 +1,12 @@
-﻿using MediatR;
-using MQ2DotNet.EQ;
+﻿using MQ2DotNet.EQ;
+using MQFlux.Core;
 using MQFlux.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class ForageCommandHandler : IRequestHandler<ForageCommand, bool>
+    public class ForageCommandHandler : PCCommandHandler<ForageCommand>
     {
         private readonly IAbilityService abilityService;
         private readonly IItemService itemService;
@@ -17,11 +17,11 @@ namespace MQFlux.Commands.Handlers
             this.itemService = itemService;
         }
 
-        public async Task<bool> Handle(ForageCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResponse<bool>> Handle(ForageCommand request, CancellationToken cancellationToken)
         {
             if (!request.Character.AutoForage.GetValueOrDefault(false))
             {
-                return false;
+                return CommandResponse.FromResult(false);
             }
 
             var me = request.Context.TLO.Me;
@@ -30,7 +30,7 @@ namespace MQFlux.Commands.Handlers
             // TODO can you forage on a horse?
             if (originalState != SpawnState.Sit && originalState != SpawnState.Stand)
             {
-                return false;
+                return CommandResponse.FromResult(false);
             }
 
             if (originalState == SpawnState.Sit)
@@ -38,7 +38,7 @@ namespace MQFlux.Commands.Handlers
                 me.Stand();
             }
 
-            if (await abilityService.DoAbilityAsync(request.Ability, "You have scrounged", "You fail to locate", cancellationToken))
+            if (await abilityService.DoAbility(request.Ability, "You have scrounged", "You fail to locate", cancellationToken))
             {
                 // Make sure there is something on the cursor, it is possible for something to ninja it.
                 if (request.Context.TLO.Cursor != null)
@@ -48,11 +48,11 @@ namespace MQFlux.Commands.Handlers
                     if (request.Character.ForageBlacklist.Contains(foragedItemName))
                     {
                         //await itemService.DropAsync(foragedItemName);
-                        await itemService.DestroyAsync(foragedItemName);
+                        await itemService.Destroy(foragedItemName);
                     }
                     else
                     {
-                        await itemService.AutoInventoryAsync(cancellationToken: cancellationToken);
+                        await itemService.AutoInventory(cancellationToken: cancellationToken);
                     }
                 }
             }
@@ -62,7 +62,7 @@ namespace MQFlux.Commands.Handlers
                 me.Sit();
             }
 
-            return true;
+            return CommandResponse.FromResult(true);
         }
     }
 }

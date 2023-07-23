@@ -12,19 +12,19 @@ namespace MQFlux.Services
 {
     public interface IItemService
     {
-        Task AutoInventoryAsync(Predicate<ItemType> predicate = null, CancellationToken cancellationToken = default);
+        Task AutoInventory(Predicate<ItemType> predicate = null, CancellationToken cancellationToken = default);
         /// <summary>
         /// Destroy the current item on the cursor if it matches the provided name.
         /// </summary>
         /// <param name="itemName">To ensure you dont destroy something unintended on the cursor the item name is required.</param>
         /// <returns></returns>
-        Task DestroyAsync(string itemName);
+        Task Destroy(string itemName);
         /// <summary>
         /// Drops the current item on the cursor if it matches the provided name.
         /// </summary>
         /// <param name="itemName">To ensure you dont drop something unintended on the cursor the item name is required.</param>
         /// <returns></returns>
-        Task DropAsync(string itemName);
+        Task Drop(string itemName);
         /// <summary>
         /// Move an item.
         /// </summary>
@@ -33,8 +33,8 @@ namespace MQFlux.Services
         /// <param name="invSubSlot">The optional base 1 container slot number if moving into a container.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> MoveItemAsync(ItemType item, int invSlot, int? invSubSlot = null, CancellationToken cancellationToken = default);
-        Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default);
+        Task<bool> MoveItem(ItemType item, int invSlot, int? invSubSlot = null, CancellationToken cancellationToken = default);
+        Task<bool> UseItem(ItemType item, string verb = "Using", CancellationToken cancellationToken = default);
     }
 
     public static class ItemServiceExtensions
@@ -64,7 +64,7 @@ namespace MQFlux.Services
             semaphore = new SemaphoreSlim(1);
         }
 
-        public async Task AutoInventoryAsync(Predicate<ItemType> predicate = null, CancellationToken cancellationToken = default)
+        public async Task AutoInventory(Predicate<ItemType> predicate = null, CancellationToken cancellationToken = default)
         {
             var timeout = TimeSpan.FromSeconds(5);
 
@@ -103,7 +103,7 @@ namespace MQFlux.Services
             }
         }
 
-        public Task DestroyAsync(string itemName)
+        public Task Destroy(string itemName)
         {
             if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
             {
@@ -115,7 +115,7 @@ namespace MQFlux.Services
             return Task.CompletedTask;
         }
 
-        public Task DropAsync(string itemName)
+        public Task Drop(string itemName)
         {
             if (string.Compare(itemName, context.TLO.Cursor?.Name) == 0)
             {
@@ -127,7 +127,7 @@ namespace MQFlux.Services
             return Task.CompletedTask;
         }
 
-        public async Task<bool> MoveItemAsync(ItemType item, int invSlot, int? invSubSlot, CancellationToken cancellationToken = default)
+        public async Task<bool> MoveItem(ItemType item, int invSlot, int? invSubSlot, CancellationToken cancellationToken = default)
         {
             if (!IsValidMove(item, invSlot, invSubSlot))
             {
@@ -222,7 +222,7 @@ namespace MQFlux.Services
             return true;
         }
 
-        public async Task<bool> UseItemAsync(ItemType item, string verb = "Using", CancellationToken cancellationToken = default)
+        public async Task<bool> UseItem(ItemType item, string verb = "Using", CancellationToken cancellationToken = default)
         {
             await semaphore.WaitAsync(cancellationToken);
 

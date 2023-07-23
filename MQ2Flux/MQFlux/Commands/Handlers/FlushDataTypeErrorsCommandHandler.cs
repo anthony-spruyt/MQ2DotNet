@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using MQ2DotNet.MQ2API;
+using MQFlux.Core;
 using System;
 using System.Linq;
 using System.Threading;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class FlushDataTypeErrorsCommandHandler : IRequestHandler<FlushDataTypeErrorsCommand, Unit>
+    public class FlushDataTypeErrorsCommandHandler : CommandHandler<FlushDataTypeErrorsCommand, Unit>
     {
         private readonly ILogger<FlushDataTypeErrorsCommandHandler> logger;
 
@@ -17,11 +18,11 @@ namespace MQFlux.Commands.Handlers
             this.logger = logger;
         }
 
-        public Task<Unit> Handle(FlushDataTypeErrorsCommand request, CancellationToken cancellationToken)
+        public override Task<CommandResponse<Unit>> Handle(FlushDataTypeErrorsCommand request, CancellationToken cancellationToken)
         {
             if (!MQ2DataType.DataTypeErrors.Any())
             {
-                return Task.FromResult(Unit.Value);
+                return CommandResponse.FromResultTask(Unit.Value);
             }
 
             try
@@ -41,7 +42,7 @@ namespace MQFlux.Commands.Handlers
                 logger.LogError(ex, "Failed to dump MQ2DataType errors.");
             }
 
-            return Task.FromResult(Unit.Value);
+            return CommandResponse.FromResultTask(Unit.Value);
         }
     }
 }

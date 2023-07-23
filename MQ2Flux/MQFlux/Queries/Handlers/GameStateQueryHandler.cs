@@ -1,4 +1,5 @@
 ﻿using MQ2DotNet.EQ;
+using MQFlux.Core;
 using MQFlux.Services;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,17 +18,17 @@ namespace MQFlux.Queries.Handlers
             this.context = context;
         }
 
-        public override async Task<GameState> Handle(GameStateQuery request, CancellationToken cancellationToken)
+        public override async Task<QueryResponse<GameState>> Handle(GameStateQuery request, CancellationToken cancellationToken)
         {
-            var result = await base.Handle(request, cancellationToken);
+            var response = await base.Handle(request, cancellationToken);
 
             // TODO We are supposed to get an initial event triggered in the event service from MQ2DotNet/MQ client but it does not happen.
-            if (result == GameState.Unknown)
+            if (response.Result == GameState.Unknown)
             {
-                result = context.TLO.EverQuest.GameState ?? GameState.Unknown;
+                return QueryResponse.FromResult(context.TLO.EverQuest.GameState ?? GameState.Unknown);
             }
 
-            return result;
+            return QueryResponse.FromResult(response.Result);
         }
     }
 }

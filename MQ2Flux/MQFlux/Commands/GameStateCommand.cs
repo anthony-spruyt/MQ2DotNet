@@ -1,4 +1,5 @@
 ﻿using MQ2DotNet.EQ;
+using MQFlux.Core;
 
 namespace MQFlux.Commands
 {

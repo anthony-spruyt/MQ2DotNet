@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MQFlux.Commands;
+using MQFlux.Core;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,14 +10,14 @@ namespace MQFlux.Behaviors
 
     }
 
-    public class StandingStillBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : PCCommand<TResponse>
+    public class StandingStillBehavior<TRequest, TResponse> : PCCommandBehavior<TRequest> where TRequest : PCCommand
     {
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public override Task<CommandResponse<bool>> Handle(TRequest request, RequestHandlerDelegate<CommandResponse<bool>> next, CancellationToken cancellationToken)
         {
             if (request is IStandingStillRequest standingStillRequest &&
                 standingStillRequest.Context.TLO.Me.Moving)
             {
-                return Task.FromResult(default(TResponse));
+                return ShortCircuitResultTask();
             }
 
             return next();

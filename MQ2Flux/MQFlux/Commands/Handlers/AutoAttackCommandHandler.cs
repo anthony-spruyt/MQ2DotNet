@@ -1,12 +1,12 @@
-﻿using MediatR;
+﻿using MQFlux.Core;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQFlux.Commands.Handlers
 {
-    public class AutoAttackCommandHandler : IRequestHandler<AutoAttackCommand, bool>
+    public class AutoAttackCommandHandler : CombatCommandHandler<AutoAttackCommand>
     {
-        public Task<bool> Handle(AutoAttackCommand request, CancellationToken cancellationToken)
+        public override Task<CommandResponse<bool>> Handle(AutoAttackCommand request, CancellationToken cancellationToken)
         {
             //TODO
             //if ((request.Context.TLO.Target?.Aggressive).GetValueOrDefault(false) &&
@@ -15,7 +15,7 @@ namespace MQFlux.Commands.Handlers
             //    request.Context.MQ.DoCommand("/attack on");
             //}
 
-            return Task.FromResult(false);
+            return CommandResponse.FromResultTask(false);
         }
     }
 }

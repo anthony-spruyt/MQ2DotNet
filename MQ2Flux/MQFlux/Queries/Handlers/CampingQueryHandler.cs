@@ -1,4 +1,5 @@
-﻿using MQFlux.Services;
+﻿using MQFlux.Core;
+using MQFlux.Services;
 
 namespace MQFlux.Queries.Handlers
 {
