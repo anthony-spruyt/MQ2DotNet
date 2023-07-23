@@ -82,11 +82,13 @@ namespace MQ2DotNet.MQ2API
             }
             catch (Exception ex)
             {
-                var thisType = GetType().DeclaringType ?? GetType();
-                var memberType = typeof(T).DeclaringType ?? typeof(T);
+                var thisType = GetType();
+                var thisDeclaringType = GetType().DeclaringType ?? GetType();
+                var memberType = typeof(T);
+                var memberDeclaringType = typeof(T).DeclaringType ?? typeof(T);
                 var key = string.IsNullOrWhiteSpace(index) ?
-                    $"Data Type: \"{thisType}\" Member Name: \"{name}\" Member Type: \"{memberType}\"" :
-                    $"Date Type: \"{thisType}\" Member Name: \"{name}\" Member Index: \"{index}\" Member Type: \"{memberType}\"";
+                    $"Data Type: '{thisType}' Data Type Declaring Type: '{thisDeclaringType}' Member Name: '{name}' Member Type: '{memberType}' Member Declaring Type: '{memberDeclaringType}'" :
+                    $"Data Type: '{thisType}' Data Type Declaring Type: '{thisDeclaringType}' Member Name: '{name}' Member Type: '{memberType}' Member Declaring Type: '{memberDeclaringType}' Member Index: '{index}'";
 
                 DataTypeErrors.TryAdd(key, ex);
 

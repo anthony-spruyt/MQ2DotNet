@@ -15,22 +15,22 @@
         /// <summary>
         /// Full zone name e.g. "The Plane of Knowledge"
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public virtual string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Short zone name e.g. "PoKnowledge"
         /// </summary>
-        public string ShortName => GetMember<StringType>("ShortName");
+        public virtual string ShortName => GetMember<StringType>("ShortName");
 
         /// <summary>
         /// ID of the zone
         /// </summary>
-        public int? ID => GetMember<IntType>("ID");
+        public virtual int? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// Flags for this zone, see ZONELIST::ZoneFlags in eqdata.h
         /// </summary>
-        public long? ZoneFlags => GetMember<Int64Type>("ZoneFlags");
+        public virtual long? ZoneFlags => GetMember<Int64Type>("ZoneFlags");
 
         /// <summary>
         /// Same as <see cref="Name"/>

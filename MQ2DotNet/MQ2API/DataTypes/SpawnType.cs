@@ -64,199 +64,199 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Targets the spawn (equivalent of /target)
         /// </summary>
-        public void DoTarget() => GetMember<MQ2DataType>("DoTarget");
+        public virtual void DoTarget() => GetMember<MQ2DataType>("DoTarget");
 
         /// <summary>
         /// Faces the spawn (equivalent of /face)
         /// </summary>
-        public void DoFace() => GetMember<MQ2DataType>("DoFace");
+        public virtual void DoFace() => GetMember<MQ2DataType>("DoFace");
 
         /// <summary>
         /// Left click on the spawn
         /// </summary>
-        public void LeftClick() => GetMember<MQ2DataType>("LeftClick");
+        public virtual void LeftClick() => GetMember<MQ2DataType>("LeftClick");
 
         /// <summary>
         /// Right click on the spawn
         /// </summary>
-        public void RightClick() => GetMember<MQ2DataType>("RightClick");
+        public virtual void RightClick() => GetMember<MQ2DataType>("RightClick");
 
         /// <summary>
         /// Assists the spawn (equivalent of /assist)
         /// </summary>
-        public void DoAssist() => GetMember<MQ2DataType>("DoAssist");
+        public virtual void DoAssist() => GetMember<MQ2DataType>("DoAssist");
 
         /// <summary>
         /// Level of the spawn
         /// </summary>
-        public uint? Level => GetMember<IntType>("Level");
+        public virtual uint? Level => GetMember<IntType>("Level");
 
         /// <summary>
         /// Spawn's ID
         /// </summary>
-        public uint? ID => GetMember<IntType>("ID");
+        public virtual uint? ID => GetMember<IntType>("ID");
 
         /// <summary>
         /// Internal name of the spawn e.g. a_rat01
         /// </summary>
-        public string Name => GetMember<StringType>("Name");
+        public virtual string Name => GetMember<StringType>("Name");
 
         /// <summary>
         /// Last name
         /// </summary>
-        public string Surname => GetMember<StringType>("Surname");
+        public virtual string Surname => GetMember<StringType>("Surname");
 
         /// <summary>
         /// The "cleaned up" name
         /// </summary>
-        public string CleanName => GetMember<StringType>("CleanName");
+        public virtual string CleanName => GetMember<StringType>("CleanName");
 
         /// <summary>
         /// Name displayed in game (same as EQ's %T)
         /// </summary>
-        public string DisplayName => GetMember<StringType>("DisplayName");
+        public virtual string DisplayName => GetMember<StringType>("DisplayName");
 
         /// <summary>
         /// Shortcut for -X (makes Eastward positive)
         /// </summary>
-        public float? E => GetMember<FloatType>("E");
+        public virtual float? E => GetMember<FloatType>("E");
 
         /// <summary>
         /// X, the Northward-positive coordinate
         /// </summary>
-        public float? X => GetMember<FloatType>("X");
+        public virtual float? X => GetMember<FloatType>("X");
 
         /// <summary>
         /// Same as <see cref="X"/>
         /// </summary>
-        public float? W => X;
+        public virtual float? W => X;
 
         /// <summary>
         /// Shortcut for -Y (makes Southward positive)
         /// </summary>
-        public float? S => GetMember<FloatType>("S");
+        public virtual float? S => GetMember<FloatType>("S");
 
         /// <summary>
         /// Y, the Westward-positive coordinate
         /// </summary>
-        public float? Y => GetMember<FloatType>("Y");
+        public virtual float? Y => GetMember<FloatType>("Y");
 
         /// <summary>
         /// Same as <see cref="Y"/>
         /// </summary>
-        public float? N => Y;
+        public virtual float? N => Y;
 
         /// <summary>
         /// Shortcut for -Z (makes Downward positive)
         /// </summary>
-        public float? D => GetMember<FloatType>("D");
+        public virtual float? D => GetMember<FloatType>("D");
 
         /// <summary>
         /// Z, the Upward-positive coordinate
         /// </summary>
-        public float? Z => GetMember<FloatType>("Z");
+        public virtual float? Z => GetMember<FloatType>("Z");
 
         /// <summary>
         /// Same as <see cref="Z"/>
         /// </summary>
-        public float? U => Z;
+        public virtual float? U => Z;
 
         /// <summary>
         /// Floor z value at the spawn's location
         /// </summary>
-        public float? FloorZ => GetMember<FloatType>("FloorZ");
+        public virtual float? FloorZ => GetMember<FloatType>("FloorZ");
 
         /// <summary>
         /// Next spawn in the linked list
         /// </summary>
         [JsonIgnore]
-        public SpawnType Next => GetMember<SpawnType>("Next");
+        public virtual SpawnType Next => GetMember<SpawnType>("Next");
 
         /// <summary>
         /// Next spawn in EQ's favourite data structure
         /// </summary>
         [JsonIgnore]
-        public SpawnType Prev => GetMember<SpawnType>("Prev");
+        public virtual SpawnType Prev => GetMember<SpawnType>("Prev");
 
         /// <summary>
         /// Current hit points
         /// </summary>
-        public long? CurrentHPs => GetMember<Int64Type>("CurrentHPs");
+        public virtual long? CurrentHPs => GetMember<Int64Type>("CurrentHPs");
 
         /// <summary>
         /// Maximum hit points
         /// </summary>
-        public long? MaxHPs => GetMember<Int64Type>("MaxHPs");
+        public virtual long? MaxHPs => GetMember<Int64Type>("MaxHPs");
 
         /// <summary>
         /// HP as a percentage
         /// </summary>
-        public long? PctHPs => GetMember<Int64Type>("PctHPs");
+        public virtual long? PctHPs => GetMember<Int64Type>("PctHPs");
 
         /// <summary>
         /// Dunno wtf this is or why I would care about it
         /// </summary>
-        public int? AARank => GetMember<IntType>("AARank");
+        public virtual int? AARank => GetMember<IntType>("AARank");
 
         /// <summary>
         /// Speed as a percentage of regular run speed
         /// </summary>
-        public float? Speed => GetMember<FloatType>("Speed");
+        public virtual float? Speed => GetMember<FloatType>("Speed");
 
         /// <summary>
         /// Direction the spawn is facing
         /// </summary>
-        public HeadingType Heading => GetMember<HeadingType>("Heading");
+        public virtual HeadingType Heading => GetMember<HeadingType>("Heading");
 
         /// <summary>
         /// Spawn's pet
         /// </summary>
 
         [JsonIgnore]
-        public PetType Pet => GetMember<PetType>("Pet");
+        public virtual PetType Pet => GetMember<PetType>("Pet");
 
         /// <summary>
         /// Master, if it is charmed or a pet
         /// </summary>
         [JsonIgnore]
-        public SpawnType Master => GetMember<SpawnType>("Master");
+        public virtual SpawnType Master => GetMember<SpawnType>("Master");
 
         /// <summary>
         /// Gender
         /// TODO: map to enum
         /// </summary>
-        public string Gender => GetMember<StringType>("Gender");
+        public virtual string Gender => GetMember<StringType>("Gender");
 
         /// <summary>
         /// Spawn's race
         /// </summary>
-        public RaceType Race => GetMember<RaceType>("Race");
+        public virtual RaceType Race => GetMember<RaceType>("Race");
 
         /// <summary>
         /// Class
         /// </summary>
-        public ClassType Class => GetMember<ClassType>("Class");
+        public virtual ClassType Class => GetMember<ClassType>("Class");
 
         /// <summary>
         /// Body type
         /// TODO: map to enum?
         /// </summary>
-        public BodyType Body => GetMember<BodyType>("Body");
+        public virtual BodyType Body => GetMember<BodyType>("Body");
 
         /// <summary>
         /// GM or Guide?
         /// </summary>
-        public bool GM => GetMember<BoolType>("GM");
+        public virtual bool GM => GetMember<BoolType>("GM");
 
         /// <summary>
         /// Spawn is levitating?
         /// </summary>
-        public bool Levitating => GetMember<BoolType>("Levitating");
+        public virtual bool Levitating => GetMember<BoolType>("Levitating");
 
         /// <summary>
         /// Sneaking?
         /// </summary>
-        public bool Sneaking => GetMember<BoolType>("Sneaking");
+        public virtual bool Sneaking => GetMember<BoolType>("Sneaking");
 
         /// <summary>
         /// Invis?
@@ -266,235 +266,235 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Invisibile? (Any type)
         /// </summary>
-        public bool Invis => _invis[""];
+        public virtual bool Invis => _invis[""];
 
         /// <summary>
         /// Invisibile based on type?
         /// </summary>
         /// <param name="invisType"></param>
         /// <returns></returns>
-        public bool IsInvis(InvisMode invisType) => _invis[(int)invisType];
+        public virtual bool IsInvis(InvisMode invisType) => _invis[(int)invisType];
 
         /// <summary>
         /// Height
         /// </summary>
-        public float? Height => GetMember<FloatType>("Height");
+        public virtual float? Height => GetMember<FloatType>("Height");
 
         /// <summary>
         /// The max distance from this spawn for it to hit you
         /// </summary>
-        public float? MaxRange => GetMember<FloatType>("MaxRange");
+        public virtual float? MaxRange => GetMember<FloatType>("MaxRange");
 
         /// <summary>
         /// The Max distance from this spawn for you to hit it
         /// </summary>
-        public float? MaxRangeTo => GetMember<FloatType>("MaxRangeTo");
+        public virtual float? MaxRangeTo => GetMember<FloatType>("MaxRangeTo");
 
         /// <summary>
         /// Name of the spawn's guild
         /// </summary>
-        public string Guild => GetMember<StringType>("Guild");
+        public virtual string Guild => GetMember<StringType>("Guild");
 
         /// <summary>
         /// PC, NPC, Untargetable, Mount, Pet, Corpse, Chest, Trigger, Trap, Timer, Item, Mercenary, Aura, Object, Banner, Campfire, Flyer
         /// TODO: map to an enum
         /// </summary>
-        public string Type => GetMember<StringType>("Type");
+        public virtual string Type => GetMember<StringType>("Type");
 
         /// <summary>
         /// Name of the light class this spawn has
         /// </summary>
-        public string Light => GetMember<StringType>("Light");
+        public virtual string Light => GetMember<StringType>("Light");
 
         /// <summary>
         /// StandState
         /// </summary>
-        public int? StandState => GetMember<IntType>("StandState");
+        public virtual int? StandState => GetMember<IntType>("StandState");
 
         /// <summary>
         /// STAND, SIT, DUCK, BIND, FEIGN, DEAD, STUN, HOVER, MOUNT, UNKNOWN
         /// </summary>
-        public SpawnState? State => GetMember<StringType>("State");
+        public virtual SpawnState? State => GetMember<StringType>("State");
 
         /// <summary>
         /// Standing?
         /// </summary>
-        public bool Standing => GetMember<BoolType>("Standing");
+        public virtual bool Standing => GetMember<BoolType>("Standing");
 
         /// <summary>
         /// Sitting?
         /// </summary>
-        public bool Sitting => GetMember<BoolType>("Sitting");
+        public virtual bool Sitting => GetMember<BoolType>("Sitting");
 
         /// <summary>
         /// Time this spawn has been dead for
         /// </summary>
-        public TimeSpan? TimeBeenDead => GetMember<TimeStampType>("TimeBeenDead");
+        public virtual TimeSpan? TimeBeenDead => GetMember<TimeStampType>("TimeBeenDead");
 
         /// <summary>
         /// If it's a summoned being (pet for example). Unsure if useful for druid nukes.
         /// </summary>
-        public bool IsSummoned => GetMember<BoolType>("IsSummoned");
+        public virtual bool IsSummoned => GetMember<BoolType>("IsSummoned");
 
         /// <summary>
         /// Target of this spawn's target
         /// </summary>
         [JsonIgnore]
-        public SpawnType TargetOfTarget => GetMember<SpawnType>("TargetOfTarget");
+        public virtual SpawnType TargetOfTarget => GetMember<SpawnType>("TargetOfTarget");
 
         /// <summary>
         /// Ducking?
         /// </summary>
-        public bool Ducking => GetMember<BoolType>("Ducking");
+        public virtual bool Ducking => GetMember<BoolType>("Ducking");
 
         /// <summary>
         /// Feigning?
         /// </summary>
-        public bool Feigning => GetMember<BoolType>("Feigning");
+        public virtual bool Feigning => GetMember<BoolType>("Feigning");
 
         /// <summary>
         /// Binding wounds?
         /// </summary>
-        public bool Binding => GetMember<BoolType>("Binding");
+        public virtual bool Binding => GetMember<BoolType>("Binding");
 
         /// <summary>
         /// Dead?
         /// </summary>
-        public bool Dead => GetMember<BoolType>("Dead");
+        public virtual bool Dead => GetMember<BoolType>("Dead");
 
         /// <summary>
         /// Stunned?
         /// </summary>
-        public bool Stunned => GetMember<BoolType>("Stunned");
+        public virtual bool Stunned => GetMember<BoolType>("Stunned");
 
         /// <summary>
         /// returns TRUE or FALSE if a mob is aggressive or not
         /// </summary>
-        public bool Aggressive => GetMember<BoolType>("Aggressive");
+        public virtual bool Aggressive => GetMember<BoolType>("Aggressive");
 
         /// <summary>
         /// Hovering?
         /// </summary>
-        public bool Hovering => GetMember<BoolType>("Hovering");
+        public virtual bool Hovering => GetMember<BoolType>("Hovering");
 
         /// <summary>
         /// Deity
         /// </summary>
-        public DeityType Deity => GetMember<DeityType>("Deity");
+        public virtual DeityType Deity => GetMember<DeityType>("Deity");
 
         /// <summary>
         /// 2D distance to the spawn in the XY plane
         /// </summary>
-        public float? Distance => GetMember<FloatType>("Distance");
+        public virtual float? Distance => GetMember<FloatType>("Distance");
 
         /// <summary>
         /// 3D distance to the spawn in the XYZ plane
         /// </summary>
-        public float? Distance3D => GetMember<FloatType>("Distance3D");
+        public virtual float? Distance3D => GetMember<FloatType>("Distance3D");
 
         /// <summary>
         /// 2D distance to the spawn in the XY plane, taking into account the spawn's movement but not the player's
         /// </summary>
-        public float? DistancePredict => GetMember<FloatType>("DistancePredict");
+        public virtual float? DistancePredict => GetMember<FloatType>("DistancePredict");
 
         /// <summary>
         /// 1D distance to the spawn in the X plane
         /// </summary>
-        public float? DistanceX => GetMember<FloatType>("DistanceX");
+        public virtual float? DistanceX => GetMember<FloatType>("DistanceX");
 
         /// <summary>
         /// See <see cref="DistanceX"/>
         /// </summary>
-        public float? DistanceW => DistanceX;
+        public virtual float? DistanceW => DistanceX;
 
         /// <summary>
         /// 1D distance to the spawn in the Y plane
         /// </summary>
-        public float? DistanceY => GetMember<FloatType>("DistanceY");
+        public virtual float? DistanceY => GetMember<FloatType>("DistanceY");
 
         /// <summary>
         /// See <see cref="DistanceY"/>
         /// </summary>
-        public float? DistanceN => DistanceY;
+        public virtual float? DistanceN => DistanceY;
 
         /// <summary>
         /// 1D distance to the spawn in the Z plane
         /// </summary>
-        public float? DistanceZ => GetMember<FloatType>("DistanceZ");
+        public virtual float? DistanceZ => GetMember<FloatType>("DistanceZ");
 
         /// <summary>
         /// See <see cref="DistanceZ"/>
         /// </summary>
-        public float? DistanceU => DistanceZ;
+        public virtual float? DistanceU => DistanceZ;
 
         /// <summary>
         /// Heading player must travel in to reach this spawn
         /// </summary>
-        public HeadingType HeadingTo => GetMember<HeadingType>("HeadingTo");
+        public virtual HeadingType HeadingTo => GetMember<HeadingType>("HeadingTo");
 
         /// <summary>
         /// Spell, if currently casting (only accurate on yourself, not NPCs or other group members)
         /// </summary>
-        public SpellType Casting => GetMember<SpellType>("Casting");
+        public virtual SpellType Casting => GetMember<SpellType>("Casting");
 
         /// <summary>
         /// This spawn's mount 
         /// </summary>
         [JsonIgnore]
-        public SpawnType Mount => GetMember<SpawnType>("Mount");
+        public virtual SpawnType Mount => GetMember<SpawnType>("Mount");
 
         /// <summary>
         /// Underwater?
         /// </summary>
-        public bool Underwater => GetMember<BoolType>("Underwater");
+        public virtual bool Underwater => GetMember<BoolType>("Underwater");
 
         /// <summary>
         /// Feet wet/swimming?
         /// </summary>
-        public bool FeetWet => GetMember<BoolType>("FeetWet");
+        public virtual bool FeetWet => GetMember<BoolType>("FeetWet");
 
         /// <summary>
         /// TODO: new member
         /// </summary>
-        public bool BodyWet => GetMember<BoolType>("BodyWet");
+        public virtual bool BodyWet => GetMember<BoolType>("BodyWet");
 
         /// <summary>
         /// TODO: new member
         /// </summary>
-        public bool HeadWet => GetMember<BoolType>("HeadWet");
+        public virtual bool HeadWet => GetMember<BoolType>("HeadWet");
 
         /// <summary>
         /// returns a mask as an inttype which has the following meaning:
         /// 0=Idle 1=Open 2=WeaponSheathed 4=Aggressive 8=ForcedAggressive 0x10=InstrumentEquipped 0x20=Stunned 0x40=PrimaryWeaponEquipped 0x80=SecondaryWeaponEquipped
         /// TODO: flags enum
         /// </summary>
-        public uint? PlayerState => GetMember<IntType>("PlayerState");
+        public virtual uint? PlayerState => GetMember<IntType>("PlayerState");
 
         /// <summary>
         /// Stuck?
         /// </summary>
-        public bool Stuck => GetMember<BoolType>("Stuck");
+        public virtual bool Stuck => GetMember<BoolType>("Stuck");
 
         /// <summary>
         /// Current animation ID, see https://www.macroquest2.com/wiki/index.php/Animations
         /// </summary>
-        public uint? Animation => GetMember<IntType>("Animation");
+        public virtual uint? Animation => GetMember<IntType>("Animation");
 
         /// <summary>
         /// Represents if the pc/npc is holding anything?
         /// if (pSpawn->LeftHolding || pSpawn->RightHolding)
         /// </summary>
-        public bool Holding => GetMember<BoolType>("Holding");
+        public virtual bool Holding => GetMember<BoolType>("Holding");
 
         /// <summary>
         /// Looking this angle
         /// </summary>
-        public float? Look => GetMember<FloatType>("Look");
+        public virtual float? Look => GetMember<FloatType>("Look");
 
         /// <summary>
         /// GREY, GREEN, LIGHT BLUE, BLUE, WHITE, YELLOW, RED
         /// </summary>
-        public ConColor? ConColor => GetMember<StringType>("ConColor");
+        public virtual ConColor? ConColor => GetMember<StringType>("ConColor");
 
         /// <summary>
         /// Nth closest spawn to this spawn, or the nth closest matching a search string e.g. "2,npc" for the second closest NPC
@@ -506,87 +506,87 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public SpawnType GetClosestSpawn(string query) => _nearestSpawn[query];
+        public virtual SpawnType GetClosestSpawn(string query) => _nearestSpawn[query];
 
         /// <summary>
         /// Get the nth closest NPC.
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public SpawnType GetClosestNPC(int nth = 1) => _nearestSpawn[$"{nth},npc"];
+        public virtual SpawnType GetClosestNPC(int nth = 1) => _nearestSpawn[$"{nth},npc"];
 
         /// <summary>
         /// Get the nth closest spawn to this spawn.
         /// </summary>
         /// <param name="nth"></param>
         /// <returns></returns>
-        public SpawnType GetClosestSpawn(int nth = 1) => _nearestSpawn[nth];
+        public virtual SpawnType GetClosestSpawn(int nth = 1) => _nearestSpawn[nth];
 
         /// <summary>
         /// Trader (in bazaar)?
         /// </summary>
-        public bool Trader => GetMember<BoolType>("Trader");
+        public virtual bool Trader => GetMember<BoolType>("Trader");
 
         /// <summary>
         /// AFK flag set?
         /// </summary>
-        public bool AFK => GetMember<BoolType>("AFK");
+        public virtual bool AFK => GetMember<BoolType>("AFK");
 
         /// <summary>
         /// LFG flag set?
         /// </summary>
-        public bool LFG => GetMember<BoolType>("LFG");
+        public virtual bool LFG => GetMember<BoolType>("LFG");
 
         /// <summary>
         /// Linkdead?
         /// </summary>
-        public bool Linkdead => GetMember<BoolType>("Linkdead");
+        public virtual bool Linkdead => GetMember<BoolType>("Linkdead");
 
         /// <summary>
         /// Prefix/Title before name
         /// </summary>
-        public string Title => GetMember<StringType>("Title");
+        public virtual string Title => GetMember<StringType>("Title");
 
         /// <summary>
         /// Leaving this in for older macros/etc..<see cref="Title"/> should be used instead.
         /// </summary>
         [Obsolete]
-        public string AATitle => Title;
+        public virtual string AATitle => Title;
 
         /// <summary>
         /// Suffix attached to name, eg. of servername
         /// </summary>
-        public string Suffix => GetMember<StringType>("Suffix");
+        public virtual string Suffix => GetMember<StringType>("Suffix");
 
         /// <summary>
         /// Group leader?
         /// </summary>
-        public bool GroupLeader => GetMember<BoolType>("GroupLeader");
+        public virtual bool GroupLeader => GetMember<BoolType>("GroupLeader");
 
         /// <summary>
         /// Current Raid or Group assist target?
         /// </summary>
-        public bool Assist => GetMember<BoolType>("Assist");
+        public virtual bool Assist => GetMember<BoolType>("Assist");
 
         /// <summary>
         /// Current Raid or Group marked npc mark number (raid first)
         /// </summary>
-        public int? Mark => GetMember<IntType>("Mark");
+        public virtual int? Mark => GetMember<IntType>("Mark");
 
         /// <summary>
         /// Anon flag set
         /// </summary>
-        public bool Anonymous => GetMember<BoolType>("Anonymous");
+        public virtual bool Anonymous => GetMember<BoolType>("Anonymous");
 
         /// <summary>
         /// Roleplaying flag set?
         /// </summary>
-        public bool Roleplaying => GetMember<BoolType>("Roleplaying");
+        public virtual bool Roleplaying => GetMember<BoolType>("Roleplaying");
 
         /// <summary>
         /// Returns TRUE if spawn is in LoS
         /// </summary>
-        public bool LineOfSight => GetMember<BoolType>("LineOfSight");
+        public virtual bool LineOfSight => GetMember<BoolType>("LineOfSight");
 
         /// <summary>
         /// Heading to the coordinates y,x from the spawn
@@ -599,80 +599,80 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public HeadingType GetHeading(int x, int y) => _headingToLoc[$"{y},{x}"];
+        public virtual HeadingType GetHeading(int x, int y) => _headingToLoc[$"{y},{x}"];
 
         /// <summary>
         /// Is your target moving away from you?
         /// </summary>
-        public bool Fleeing => GetMember<BoolType>("Fleeing");
+        public virtual bool Fleeing => GetMember<BoolType>("Fleeing");
 
         /// <summary>
         /// Is this a "named" spawn (ie. does it's name not start with an "a" or an "an", plus a bunch of other checks. See IsNamed() in MQ2Utilities.cpp)
         /// </summary>
-        public bool Named => GetMember<BoolType>("Named");
+        public virtual bool Named => GetMember<BoolType>("Named");
 
         /// <summary>
         /// Is a buyer? (ie. Buyer in the bazaar)
         /// </summary>
-        public bool Buyer => GetMember<BoolType>("Buyer");
+        public virtual bool Buyer => GetMember<BoolType>("Buyer");
 
         /// <summary>
         /// Moving?
         /// </summary>
-        public bool Moving => GetMember<BoolType>("Moving");
+        public virtual bool Moving => GetMember<BoolType>("Moving");
 
         /// <summary>
         /// Current Mana points (only updates when target/group)
         /// </summary>
-        public uint? CurrentMana => GetMember<IntType>("CurrentMana");
+        public virtual uint? CurrentMana => GetMember<IntType>("CurrentMana");
 
         /// <summary>
         /// Maximum Mana points (only updates when target/group)
         /// </summary>
-        public uint? MaxMana => GetMember<IntType>("MaxMana");
+        public virtual uint? MaxMana => GetMember<IntType>("MaxMana");
 
         /// <summary>
         /// Mana as a percentage
         /// </summary>
-        public int? PctMana => GetMember<IntType>("PctMana");
+        public virtual int? PctMana => GetMember<IntType>("PctMana");
 
         /// <summary>
         /// Current Endurance points (only updates when target/group)
         /// </summary>
-        public uint? CurrentEndurance => GetMember<IntType>("CurrentEndurance");
+        public virtual uint? CurrentEndurance => GetMember<IntType>("CurrentEndurance");
 
         /// <summary>
         /// Endurance as a percentage
         /// </summary>
-        public int? PctEndurance => GetMember<IntType>("PctEndurance");
+        public virtual int? PctEndurance => GetMember<IntType>("PctEndurance");
 
         /// <summary>
         /// Maximum Endurance points (only updates when target/group)
         /// </summary>
-        public uint? MaxEndurance => GetMember<IntType>("MaxEndurance");
+        public virtual uint? MaxEndurance => GetMember<IntType>("MaxEndurance");
 
         /// <summary>
         /// Loc of the spawn (Y, X)
         /// sprintf_s(DataTypeTemp, "%.2f, %.2f", pSpawn->Y, pSpawn->X);
         /// </summary>
-        public string Loc => GetMember<StringType>("Loc");
+        public virtual string Loc => GetMember<StringType>("Loc");
 
         /// <summary>
         /// Loc of the spawn (Y, X)
         /// sprintf_s(DataTypeTemp, "%.0f, %.0f", pSpawn->Y, pSpawn->X);
         /// </summary>
-        public string LocYX => GetMember<StringType>("LocYX");
+        public virtual string LocYX => GetMember<StringType>("LocYX");
 
         /// <summary>
         /// Loc of the spawn (Y, X, Z)
         /// sprintf_s(DataTypeTemp, "%.2f, %.2f, %.2f", pSpawn->Y, pSpawn->X, pSpawn->Z);
         /// </summary>
-        public string LocYXZ => GetMember<StringType>("LocYXZ");
+        public virtual string LocYXZ => GetMember<StringType>("LocYXZ");
 
         /// <summary>
         /// The spawn location.
         /// </summary>
-        public SpawnLocation? Location
+        public virtual SpawnLocation? Location
         {
             get
             {
@@ -700,47 +700,47 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Location using EQ format
         /// sprintf_s(DataTypeTemp, "%.2f, %.2f, %.2f", pSpawn->X, pSpawn->Y, pSpawn->Z);
         /// </summary>
-        public string EQLoc => GetMember<StringType>("EQLoc");
+        public virtual string EQLoc => GetMember<StringType>("EQLoc");
 
         /// <summary>
         /// Location using MQ format (Y, X, Z)
         /// sprintf_s(DataTypeTemp, "%.2f, %.2f, %.2f", pSpawn->Y, pSpawn->X, pSpawn->Z);
         /// </summary>
-        public string MQLoc => GetMember<StringType>("MQLoc");
+        public virtual string MQLoc => GetMember<StringType>("MQLoc");
 
         /// <summary>
         /// Owner, if mercenary
         /// </summary>
         [JsonIgnore]
-        public SpawnType Owner => GetMember<SpawnType>("Owner");
+        public virtual SpawnType Owner => GetMember<SpawnType>("Owner");
 
         /// <summary>
         /// The spawn a player is following using /follow on - also returns your pet's target via ${Me.Pet.Following}
         /// </summary>
         [JsonIgnore]
-        public SpawnType Following => GetMember<SpawnType>("Following");
+        public virtual SpawnType Following => GetMember<SpawnType>("Following");
 
         /// <summary>
         /// Spawn ID of this spawn's contractor
         /// MQ2 Client note: FIXME: ROF2 emu does not have MercID
         /// </summary>
-        public uint? MercID => GetMember<IntType>("MercID");
+        public virtual uint? MercID => GetMember<IntType>("MercID");
 
         /// <summary>
         /// Spawn ID of this spawn's contractor
         /// MQ2 Client note: FIXME: ROF2 emu does not have ContractorID
         /// </summary>
-        public uint? ContractorID => GetMember<IntType>("ContractorID");
+        public virtual uint? ContractorID => GetMember<IntType>("ContractorID");
 
         /// <summary>
         /// Item ID of anything that may be in the Primary slot
         /// </summary>
-        public uint? Primary => GetMember<IntType>("Primary");
+        public virtual uint? Primary => GetMember<IntType>("Primary");
 
         /// <summary>
         /// Item ID of anything that may be in the Secondary slot
         /// </summary>
-        public uint? Secondary => GetMember<IntType>("Secondary");
+        public virtual uint? Secondary => GetMember<IntType>("Secondary");
 
         /// <summary>
         /// ID of the equipment used by the spawn
@@ -753,26 +753,26 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="slot"></param>
         /// <returns></returns>
-        public uint? GetEquipmentID(EquipmentSlot slot) => (uint?)_equipment[Enum.GetName(typeof(EquipmentSlot), slot).ToLower()];
+        public virtual uint? GetEquipmentID(EquipmentSlot slot) => (uint?)_equipment[Enum.GetName(typeof(EquipmentSlot), slot).ToLower()];
 
         /// <summary>
         /// ID of the equipment used by the spawn for a slot.
         /// </summary>
         /// <param name="slotName"></param>
         /// <returns></returns>
-        public uint? GetEquipmentID(string slotName) => (uint?)_equipment[slotName];
+        public virtual uint? GetEquipmentID(string slotName) => (uint?)_equipment[slotName];
 
         /// <summary>
         /// ID of the equipment used by the spawn for a slot index [0,8].
         /// </summary>
         /// <param name="slotIndex"></param>
         /// <returns></returns>
-        public uint? GetEquipmentID(int slotIndex) => (uint?)_equipment[slotIndex];
+        public virtual uint? GetEquipmentID(int slotIndex) => (uint?)_equipment[slotIndex];
 
         /// <summary>
         /// Spawn equipment IDs for all slots.
         /// </summary>
-        public IDictionary<EquipmentSlot, uint?> Equipment
+        public virtual IDictionary<EquipmentSlot, uint?> Equipment
         {
             get
             {
@@ -792,30 +792,30 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Spawn can be targetted?
         /// </summary>
-        public bool Targetable => GetMember<BoolType>("Targetable");
+        public virtual bool Targetable => GetMember<BoolType>("Targetable");
 
         /// <summary>
         /// TRUE/FALSE on if a splash spell can land...NOTE! This check is ONLY for line of sight to the targetindicator (red/green circle)
         /// </summary>
-        public bool CanSplashLand => GetMember<BoolType>("CanSplashLand");
+        public virtual bool CanSplashLand => GetMember<BoolType>("CanSplashLand");
 
         /// <summary>
         /// TODO: new member
         /// </summary>
-        public bool IsTouchingSwitch => GetMember<BoolType>("IsTouchingSwitch");
+        public virtual bool IsTouchingSwitch => GetMember<BoolType>("IsTouchingSwitch");
 
         /// <summary>
         /// Seems broken and useless even if it wasn't
         /// </summary>
 #pragma warning disable IDE1006 // Naming Styles
-        public bool bShowHelm => GetMember<BoolType>("bShowHelm");
+        public virtual bool bShowHelm => GetMember<BoolType>("bShowHelm");
 #pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// Returns weird numbers
         /// </summary>
         [Obsolete]
-        public uint? CorpseDragCount => GetMember<IntType>("CorpseDragCount");
+        public virtual uint? CorpseDragCount => GetMember<IntType>("CorpseDragCount");
 
         /// <summary>
         /// Valid indexes are 0 and 1. TODO: What is SpawnType.CombatSkillTicks
@@ -827,49 +827,49 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public uint? GetCombatSkillTicks(bool param) => (uint?)_combatSkillTicks[param ? 1 : 0];
+        public virtual uint? GetCombatSkillTicks(bool param) => (uint?)_combatSkillTicks[param ? 1 : 0];
 
         /// <summary>
         /// Valid indexes are 0 and 1. TODO: What is SpawnType.CombatSkillTicks
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public uint? GetCombatSkillTicks(int index) => (uint?)_combatSkillTicks[index];
+        public virtual uint? GetCombatSkillTicks(int index) => (uint?)_combatSkillTicks[index];
 
         /// <summary>
         /// In a PvP area?
         /// </summary>
-        public bool InPvPArea => (uint?)GetMember<IntType>("InPvPArea") > 0;
+        public virtual bool InPvPArea => (uint?)GetMember<IntType>("InPvPArea") > 0;
 
         /// <summary>
         /// GM rank
         /// </summary>
-        public uint? GMRank => GetMember<IntType>("GMRank");
+        public virtual uint? GMRank => GetMember<IntType>("GMRank");
 
         /// <summary>
         /// TODO: new member
         /// </summary>
-        public bool TemporaryPet => GetMember<BoolType>("TemporaryPet");
+        public virtual bool TemporaryPet => GetMember<BoolType>("TemporaryPet");
 
         /// <summary>
         /// Holding animation
         /// </summary>
-        public uint? HoldingAnimation => GetMember<IntType>("HoldingAnimation");
+        public virtual uint? HoldingAnimation => GetMember<IntType>("HoldingAnimation");
 
         /// <summary>
         /// Blind?
         /// </summary>
-        public bool Blind => (uint?)GetMember<IntType>("Blind") > 0;
+        public virtual bool Blind => (uint?)GetMember<IntType>("Blind") > 0;
 
         /// <summary>
         /// Ceiling height at the spawn's current location
         /// </summary>
-        public float? CeilingHeightAtCurrLocation => GetMember<FloatType>("CeilingHeightAtCurrLocation");
+        public virtual float? CeilingHeightAtCurrLocation => GetMember<FloatType>("CeilingHeightAtCurrLocation");
 
         /// <summary>
         /// TODO: SpawnType.AssistName is always blank?
         /// </summary>
-        public string AssistName => GetMember<StringType>("AssistName");
+        public virtual string AssistName => GetMember<StringType>("AssistName");
 
         /// <summary>
         /// Spawn can see invis, takes an index of 0 - 2
@@ -884,7 +884,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="invisType"></param>
         /// <returns></returns>
-        public bool CanSeeInvis(SeeInvisType invisType = SeeInvisType.All) => (uint?)_seeInvis[(int)invisType] > 0;
+        public virtual bool CanSeeInvis(SeeInvisType invisType = SeeInvisType.All) => (uint?)_seeInvis[(int)invisType] > 0;
 
         /// <summary>
         /// Spawn status, takes an index of 0 - 5. TODO: Confirm what they mean
@@ -896,12 +896,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public uint? GetSpawnStatus(int index) => (uint?)_spawnStatus[index];
+        public virtual uint? GetSpawnStatus(int index) => (uint?)_spawnStatus[index];
 
         /// <summary>
         /// ActorDef name for this spawn
         /// </summary>
-        public string ActorDef => GetMember<StringType>("ActorDef");
+        public virtual string ActorDef => GetMember<StringType>("ActorDef");
 
         /// <summary>
         /// This is fucked, not dealing with it.
@@ -923,7 +923,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public CachedBuffType GetCachedBuff(string query) => _cachedBuff[query];
+        public virtual CachedBuffType GetCachedBuff(string query) => _cachedBuff[query];
 
         /// <summary>
         /// TODO: what is this index? buff index?
@@ -931,17 +931,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CachedBuffType GetCachedBuff(int index) => _cachedBuff[index];
+        public virtual CachedBuffType GetCachedBuff(int index) => _cachedBuff[index];
 
         /// <summary>
         /// Number of cached buffs
         /// </summary>
-        public uint? CachedBuffCount => GetMember<IntType>("CachedBuffCount");
+        public virtual uint? CachedBuffCount => GetMember<IntType>("CachedBuffCount");
 
         /// <summary>
         /// All cached buffs. Based on <see cref="GetCachedBuff(int)"/>
         /// </summary>
-        public IEnumerable<CachedBuffType> CachedBuffs
+        public virtual IEnumerable<CachedBuffType> CachedBuffs
         {
             get
             {
@@ -949,7 +949,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
                 for (int i = 0; i < count; i++)
                 {
-                    yield return GetCachedBuff(i);
+                    var buff = GetCachedBuff(i + 1);
+
+                    if (buff == null)
+                    {
+                        continue;
+                    }
+
+                    yield return buff;
                 }
             }
         }
@@ -957,7 +964,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// TODO: new member
         /// </summary>
-        public bool BuffsPopulated => GetMember<BoolType>("BuffsPopulated");
+        public virtual bool BuffsPopulated => GetMember<BoolType>("BuffsPopulated");
 
         /// <summary>
         /// This looks very similar to <see cref="_cachedBuff"/>. A more basic implementation/sub functionality of it.
@@ -969,7 +976,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="spellName"></param>
         /// <returns></returns>
-        public CachedBuffType GetBuff(string spellName) => _buff[spellName];
+        public virtual CachedBuffType GetBuff(string spellName) => _buff[spellName];
 
         /// <summary>
         /// TODO: what is this index? buff index?
@@ -977,7 +984,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CachedBuffType GetBuff(int index) => _buff[index];
+        public virtual CachedBuffType GetBuff(int index) => _buff[index];
 
         /// <summary>
         /// So many different cached buff implementations, all seem like variations of the same thing.
@@ -991,7 +998,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public CachedBuffType FindBuff(string predicate) => _findBuff[predicate];
+        public virtual CachedBuffType FindBuff(string predicate) => _findBuff[predicate];
 
         /// <summary>
         /// Another one, this is only your buffs though. IE caster name is your name.
@@ -1004,7 +1011,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="spellName"></param>
         /// <returns></returns>
-        public CachedBuffType GetMyBuff(string spellName) => _myBuff[spellName];
+        public virtual CachedBuffType GetMyBuff(string spellName) => _myBuff[spellName];
 
         /// <summary>
         /// TODO: new indexed member
@@ -1013,17 +1020,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public CachedBuffType GetMyBuff(int index) => _myBuff[index];
+        public virtual CachedBuffType GetMyBuff(int index) => _myBuff[index];
 
         /// <summary>
         /// Number of buffs
         /// </summary>
-        public uint? BuffCount => GetMember<IntType>("BuffCount");
+        public virtual uint? BuffCount => GetMember<IntType>("BuffCount");
 
         /// <summary>
         /// All buffs. Based on <see cref="GetBuff(int)"/>
         /// </summary>
-        public IEnumerable<CachedBuffType> Buffs
+        public virtual IEnumerable<CachedBuffType> Buffs
         {
             get
             {
@@ -1031,7 +1038,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
                 for (int i = 0; i < count; i++)
                 {
-                    yield return GetBuff(i + 1);
+                    var buff = GetBuff(i + 1);
+
+                    if (buff == null)
+                    {
+                        continue;
+                    }
+
+                    yield return buff;
                 }
             }
         }
@@ -1039,12 +1053,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Number of my buffs
         /// </summary>
-        public uint? MyBuffCount => GetMember<IntType>("MyBuffCount");
+        public virtual uint? MyBuffCount => GetMember<IntType>("MyBuffCount");
 
         /// <summary>
         /// All my buffs. Based on <see cref="GetMyBuff(int)"/>
         /// </summary>
-        public IEnumerable<CachedBuffType> MyBuffs
+        public virtual IEnumerable<CachedBuffType> MyBuffs
         {
             get
             {
@@ -1052,7 +1066,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
                 for (int i = 0; i < count; i++)
                 {
-                    yield return GetMyBuff(i + 1);
+                    var buff = GetMyBuff(i + 1);
+
+                    if (buff == null)
+                    {
+                        continue;
+                    }
+
+                    yield return buff;
                 }
             }
         }
@@ -1067,7 +1088,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="spellName"></param>
         /// <returns></returns>
-        public TimeSpan? GetBuffDuration(string spellName) => (TimeSpan?)_buffDuration[spellName];
+        public virtual TimeSpan? GetBuffDuration(string spellName) => (TimeSpan?)_buffDuration[spellName];
 
         /// <summary>
         /// TODO: what is this index? buff index?
@@ -1075,12 +1096,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public TimeSpan? GetBuffDuration(int index) => (TimeSpan?)_buffDuration[index];
+        public virtual TimeSpan? GetBuffDuration(int index) => (TimeSpan?)_buffDuration[index];
 
         /// <summary>
         /// All buffs and durations. Based on <see cref="GetBuff(int)"/> and <see cref="GetBuffDuration(int)"/>
         /// </summary>
-        public IDictionary<CachedBuffType, TimeSpan?> BuffDurations
+        public virtual IDictionary<CachedBuffType, TimeSpan?> BuffDurations
         {
             get
             {
@@ -1106,7 +1127,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="spellName"></param>
         /// <returns></returns>
-        public TimeSpan? GetMyBuffDuration(string spellName) => (TimeSpan?)_myBuffDuration[spellName];
+        public virtual TimeSpan? GetMyBuffDuration(string spellName) => (TimeSpan?)_myBuffDuration[spellName];
 
         /// <summary>
         /// TODO: what is this index? buff index?
@@ -1114,12 +1135,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public TimeSpan? GetMyBuffDuration(int index) => (TimeSpan?)_myBuffDuration[index];
+        public virtual TimeSpan? GetMyBuffDuration(int index) => (TimeSpan?)_myBuffDuration[index];
 
         /// <summary>
         /// All my buffs and durations. Based on <see cref="GetMyBuff(int)"/> and <see cref="GetMyBuffDuration(int)"/>
         /// </summary>
-        public IDictionary<CachedBuffType, TimeSpan?> MyBuffDurations
+        public virtual IDictionary<CachedBuffType, TimeSpan?> MyBuffDurations
         {
             get
             {
@@ -1140,6 +1161,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// This is defined as a member but there is no implementation in the switch
         /// </summary>
         [Obsolete]
-        public string GuildStatus => GetMember<StringType>("GuildStatus");
+        public virtual string GuildStatus => GetMember<StringType>("GuildStatus");
     }
 }

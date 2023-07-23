@@ -13,7 +13,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
     /// https://docs.macroquest.org/reference/data-types/datatype-cachedbuff/
     /// </summary>
     [MQ2Type("cachedbuff")]
-    [Obsolete]
     public class CachedBuffType : SpellType
     {
         internal CachedBuffType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)

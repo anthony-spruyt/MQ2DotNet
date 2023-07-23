@@ -118,7 +118,13 @@ extern "C" __declspec(dllexport) uint64_t MQVarPtr__GetUInt64(MQVarPtr& varPtr)
 { return varPtr.Get<uint64_t>(); }
 extern "C" __declspec(dllexport) void MQVarPtr__SetUInt64(MQVarPtr& varPtr, uint64_t value)
 { varPtr.Set<uint64_t>(value); }
-//TODO low + high parts and ARGB
+// High Part
+extern "C" __declspec(dllexport) uint32_t MQVarPtr__GetHighPart(MQVarPtr & varPtr)
+{ return varPtr.HighPart; }
+// Low Part
+extern "C" __declspec(dllexport) uint32_t MQVarPtr__GetLowPart(MQVarPtr & varPtr)
+{ return varPtr.LowPart; }
+//TODO ARGB
 
 // Exported MQ2Type functions
 extern "C" __declspec(dllexport) bool MQ2Type__FromData(MQ2Type* type, MQVarPtr& varPtr, const MQTypeVar &typeVar)

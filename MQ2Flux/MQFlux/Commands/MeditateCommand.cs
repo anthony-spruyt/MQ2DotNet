@@ -16,6 +16,6 @@ namespace MQFlux.Commands
     {
         public bool AllowBard => false;
         public IContext Context { get; set; }
-        public TimeSpan IdleTime => TimeSpan.FromSeconds(1);
+        public TimeSpan IdleTime => TimeSpan.FromSeconds(5);
     }
 }

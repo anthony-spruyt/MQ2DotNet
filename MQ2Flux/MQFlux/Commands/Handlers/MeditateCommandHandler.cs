@@ -42,7 +42,7 @@ namespace MQFlux.Commands.Handlers
             }
             else
             {
-                medBreak = me.PctMana < 90;
+                medBreak = me.PctMana < 98;
             }
 
             if (medBreak)

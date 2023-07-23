@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using MQFlux.Extensions;
 using MQFlux.Services;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,13 +22,29 @@ namespace MQFlux.Commands.Handlers
 
         public Task<Unit> Handle(TestCommand request, CancellationToken cancellationToken)
         {
-            mqLogger.Log($"{nameof(TestCommandHandler)}");
-
             try
             {
-                var spawnId = request.Context.TLO.Target.ID();
+                var target = request.Context.TLO.Target;
 
-                mqLogger.Log("aa");
+                if (target == null)
+                {
+                    request.Context.TLO.Me.DoTarget();
+                }
+                
+                var meBuffs = request.Context.TLO.Me.Buffs;
+                var meBuffDurations = meBuffs.Select(i => i.Duration.GetValueOrDefault(TimeSpan.Zero));
+                var spawnBuffs = request.Context.TLO.Me.Spawn.Buffs;
+                var spawnBuffDurations = spawnBuffs.Select(i => i.Duration.GetValueOrDefault(TimeSpan.Zero));
+
+                foreach ( var buff in meBuffs)
+                {
+                    mqLogger.Log($"{buff.Name} {buff.Duration}");
+                }
+
+                foreach (var buff in spawnBuffs)
+                {
+                    mqLogger.Log($"{buff.Name} {buff.Duration}");
+                }
             }
             catch (Exception ex)
             {

@@ -1,5 +1,3 @@
-using MQ2DotNet.Services;
-
 namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
@@ -70,8 +68,6 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// True if binding isn't allowed in this zone outside specified bindable areas.
         /// </summary>
         public bool NoBind => GetMember<BoolType>("NoBind");
-
-        public ZoneType Zone => ID.HasValue ? TLO.Instance?.GetZone(ID.Value) : null;
 
         /// <summary>
         /// Same as <see cref="ZoneType.Name"/>

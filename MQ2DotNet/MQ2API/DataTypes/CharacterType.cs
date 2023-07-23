@@ -197,7 +197,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// The character's spawn
         /// </summary>
-        //public SpawnType Spawn => GetMember<SpawnType>("Spawn");
+        public SpawnType Spawn => GetMember<SpawnType>("Spawn");
 
         /// <summary>
         /// Current hit points
@@ -304,7 +304,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
                 for (int i = 0; i < count; i++)
                 {
-                    yield return GetBuff(i + 1);
+                    var buff = GetBuff(i + 1);
+
+                    if (buff == null)
+                    {
+                        continue;
+                    }
+
+                    yield return buff;
                 }
             }
         }

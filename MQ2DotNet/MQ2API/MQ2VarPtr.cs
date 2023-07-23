@@ -52,6 +52,16 @@ namespace MQ2DotNet.MQ2API
             set { NativeMethods.MQVarPtr__SetUInt64(VarPtr, value); }
         }
 
+        public uint HighPart
+        {
+            get { return NativeMethods.MQVarPtr__GetHighPart(VarPtr); }
+        }
+
+        public uint LowPart
+        {
+            get { return NativeMethods.MQVarPtr__GetLowPart(VarPtr); }
+        }
+
         public MQ2VarPtr(NativeMQ2VarPtr varPtr)
         {
             VarPtr = varPtr;
@@ -107,6 +117,12 @@ namespace MQ2DotNet.MQ2API
 
             [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void MQVarPtr__SetUInt64(in NativeMQ2VarPtr varPtr, ulong value);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern uint MQVarPtr__GetHighPart(in NativeMQ2VarPtr varPtr);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern uint MQVarPtr__GetLowPart(in NativeMQ2VarPtr varPtr);
         }
     }
 }

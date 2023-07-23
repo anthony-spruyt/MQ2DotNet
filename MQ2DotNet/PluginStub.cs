@@ -358,43 +358,24 @@ namespace MQ2DotNet
 
         private static void EndProgram(string programName)
         {
-            _ = Task.Run
-            (
-                async () => 
-                {
-                    if (Programs.TryGetValue(programName, out var programAppDomain))
-                    {
-                        try
-                        {
-                            // Try to cancel cleanly
-                            programAppDomain.Cancel();
+            if (Programs.TryGetValue(programName, out var programAppDomain))
+            {
+                // Try to cancel cleanly
+                programAppDomain.Cancel();
 
-                            using (CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30)))
-                            {
-                                while (!programAppDomain.Finished || !cancellationTokenSource.Token.IsCancellationRequested)
-                                {
-                                    await Task.Yield();
-                                }
-                            }
+                if (programAppDomain.Status != TaskStatus.Canceled)
+                    MQ2.WriteChatProgramWarning($"{programName} did not respond to cancellation");
 
-                            if (programAppDomain.Status != TaskStatus.Canceled)
-                                MQ2.WriteChatProgramWarning($"{programName} did not respond to cancellation");
-                        }
-                        finally
-                        {
-                            // Regardless, unload the AppDomain which will shut everything down
-                            programAppDomain.Dispose();
-                            _appDomains.Remove(programAppDomain);
+                // Regardless, unload the AppDomain which will shut everything down
+                programAppDomain.Dispose();
+                _appDomains.Remove(programAppDomain);
 
-                            MQ2.WriteChatProgram($"{programName} stopped");
-                        }
-                    }
-                    else
-                    {
-                        MQ2.WriteChatProgram($"{programName} is not running");
-                    }
-                }
-            ).ConfigureAwait(false);
+                MQ2.WriteChatProgram($"{programName} stopped");
+            }
+            else
+            {
+                MQ2.WriteChatProgram($"{programName} is not running");
+            }
         }
 #endregion
 

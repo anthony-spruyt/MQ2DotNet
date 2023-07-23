@@ -26,7 +26,7 @@ namespace MQFlux.Commands.Handlers
 
             var me = context.TLO.Me;
 
-            if (!me.Standing && me.PctMana >= 99 && me.PctHPs >= 99)
+            if (!me.Standing && me.PctMana > 99 && me.PctHPs > 99)
             {
                 me.Stand();
 
