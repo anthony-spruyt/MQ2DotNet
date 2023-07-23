@@ -2,9 +2,9 @@
 using MQFlux.Core;
 using MQFlux.Extensions;
 using MQFlux.Services;
-using System.Threading.Tasks;
-using System.Threading;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MQFlux.Commands
 {

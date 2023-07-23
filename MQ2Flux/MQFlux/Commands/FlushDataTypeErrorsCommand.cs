@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Logging;
 using MQ2DotNet.MQ2API;
 using MQFlux.Core;
-using System.Threading.Tasks;
-using System.Threading;
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MQFlux.Commands
 {

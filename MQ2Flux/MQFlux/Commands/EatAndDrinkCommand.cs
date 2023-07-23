@@ -1,15 +1,15 @@
-﻿using MQ2DotNet.MQ2API.DataTypes;
-using MQ2DotNet.MQ2API;
+﻿using MQ2DotNet.MQ2API;
+using MQ2DotNet.MQ2API.DataTypes;
 using MQFlux.Behaviors;
 using MQFlux.Core;
 using MQFlux.Extensions;
 using MQFlux.Models;
 using MQFlux.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MQFlux.Commands
 {

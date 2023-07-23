@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using MQFlux.Core;
 using MQFlux.Services;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MQFlux.Commands
 {
