@@ -4,8 +4,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MQFlux.Commands.Handlers
+namespace MQFlux.Commands
 {
+    public class LoadMQCommands : Command<IEnumerable<CancellationToken>>
+    {
+    }
+
+
     public class LoadMQCommandsHandler : CommandHandler<LoadMQCommands, IEnumerable<CancellationToken>>
     {
         private readonly IMQCommandProvider commandProvider;

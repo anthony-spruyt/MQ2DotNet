@@ -1,4 +1,5 @@
 ﻿using MQFlux.Core;
+using MQFlux.Services;
 using System;
 
 namespace MQFlux.Commands
@@ -10,6 +11,15 @@ namespace MQFlux.Commands
         public IdleSinceCommand()
         {
             Value = DateTime.UtcNow;
+        }
+    }
+
+    public class IdleSinceCommandHandler : SetCacheCommandHandler<IdleSinceCommand, DateTime>
+    {
+        public override string Key => CacheKeys.IdleSince;
+
+        public IdleSinceCommandHandler(ICache cache) : base(cache)
+        {
         }
     }
 }

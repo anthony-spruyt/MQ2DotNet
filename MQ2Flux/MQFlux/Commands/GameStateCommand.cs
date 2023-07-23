@@ -1,5 +1,6 @@
 ﻿using MQ2DotNet.EQ;
 using MQFlux.Core;
+using MQFlux.Services;
 
 namespace MQFlux.Commands
 {
@@ -10,6 +11,15 @@ namespace MQFlux.Commands
         public GameStateCommand(GameState value)
         {
             Value = value;
+        }
+    }
+
+    public class GameStateCommandHandler : SetCacheCommandHandler<GameStateCommand, GameState>
+    {
+        public override string Key => CacheKeys.GameState;
+
+        public GameStateCommandHandler(ICache cache) : base(cache)
+        {
         }
     }
 }

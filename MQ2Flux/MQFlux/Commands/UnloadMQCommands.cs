@@ -1,11 +1,15 @@
 ﻿using MediatR;
 using MQFlux.Core;
 using MQFlux.Services;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 
-namespace MQFlux.Commands.Handlers
+namespace MQFlux.Commands
 {
+    public class UnloadMQCommands : Command<Unit>
+    {
+    }
+
     public class UnloadMQCommandsHandler : CommandHandler<UnloadMQCommands, Unit>
     {
         private readonly IMQCommandProvider commandProvider;
