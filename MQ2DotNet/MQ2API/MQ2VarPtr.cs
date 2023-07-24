@@ -67,13 +67,6 @@ namespace MQ2DotNet.MQ2API
             VarPtr = varPtr;
         }
 
-        public MQ2VarPtr(IntPtr intPtr)
-        {
-            VarPtr = default;
-
-            Ptr = intPtr;
-        }
-
         private static class NativeMethods
         {
             [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]

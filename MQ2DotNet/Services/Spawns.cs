@@ -10,9 +10,6 @@ namespace MQ2DotNet.Services
     /// <summary>
     /// Contains utility methods and properties relating to spawns
     /// </summary>
-    /// <remarks>
-    /// This is currently fucked.
-    /// </remarks>
     public class Spawns
     {
 # if WIN64

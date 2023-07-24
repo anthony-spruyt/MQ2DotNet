@@ -32,17 +32,6 @@ namespace MQ2DotNet.MQ2API
             _typeFactory = typeFactory;
             _typeVar = typeVar;
         }
-
-        /// <summary>
-        /// Creates a new MQ2DataType of the specified typename from an MQ2VarPtr
-        /// </summary>
-        /// <param name="typeName"></param>
-        /// <param name="typeFactory">MQ2TypeFactory to use with GetMember calls</param>
-        /// <param name="varPtr"></param>
-        protected MQ2DataType(string typeName, MQ2TypeFactory typeFactory, MQ2VarPtr varPtr)
-            : this(typeFactory, new MQ2TypeVar(typeName, varPtr))
-        {
-        }
         
         /// <summary>
         /// Underlying data storage. Exposed for use in basic types e.g. int, double, etc

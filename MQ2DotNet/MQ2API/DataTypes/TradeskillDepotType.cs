@@ -14,12 +14,6 @@
             _findItemCount = new IndexedMember<IntType, string, IntType, int>(this, "FindItemCount");
         }
 
-        protected TradeskillDepotType(string typeName, MQ2TypeFactory typeFactory, MQ2VarPtr varPtr) : base(typeName, typeFactory, varPtr)
-        {
-            _findItem = new IndexedMember<ItemType, string, ItemType, int>(this, "FindItem");
-            _findItemCount = new IndexedMember<IntType, string, IntType, int>(this, "FindItemCount");
-        }
-
         /// <summary>
         /// Select an item with the given name.
         /// </summary>

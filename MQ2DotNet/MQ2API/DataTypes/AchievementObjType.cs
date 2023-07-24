@@ -12,10 +12,6 @@
         {
         }
 
-        protected AchievementObjType(string typeName, MQ2TypeFactory typeFactory, MQ2VarPtr varPtr) : base(typeName, typeFactory, varPtr)
-        {
-        }
-
         public override string ToString()
         {
             return OriginalToString();

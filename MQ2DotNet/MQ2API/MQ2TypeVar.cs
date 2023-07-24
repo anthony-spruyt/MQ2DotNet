@@ -14,16 +14,10 @@ namespace MQ2DotNet.MQ2API
 
         public MQ2TypeVar(NativeMQ2TypeVar typeVar)
         {
-            NativeMethods.MQTypeVar__GetVarPtr(typeVar, out var varPtr);
-
-            VarPtr = new MQ2VarPtr(varPtr);
             Type = new MQ2Type(NativeMethods.MQTypeVar__GetType(typeVar));
-        }
 
-        public MQ2TypeVar(string typeName, MQ2VarPtr varPtr)
-        {
-            VarPtr = varPtr;
-            Type = new MQ2Type(NativeMethods.FindMQ2DataType(typeName));
+            NativeMethods.MQTypeVar__GetVarPtr(typeVar, out var varPtr);
+            VarPtr = new MQ2VarPtr(varPtr);
         }
 
         public bool TryGetMember(string memberName, string index, out MQ2TypeVar typeVar)
@@ -36,6 +30,26 @@ namespace MQ2DotNet.MQ2API
             return Type.ToString(VarPtr);
         }
 
+        internal static MQ2TypeVar FromGroundItemPtr(IntPtr pGround)
+        {
+            if (!NativeMethods.MQTypeVar__FromGroundItemPtr(pGround, out var nativeTypeVar))
+            {
+                throw new ArgumentException($"Invalid EQObject pointer.", nameof(pGround));
+            }
+
+            return new MQ2TypeVar(nativeTypeVar);
+        }
+
+        internal static MQ2TypeVar FromSpawnInfoPtr(IntPtr pSpawn)
+        {
+            if (!NativeMethods.MQTypeVar__FromSpawnInfoPtr(pSpawn, out var nativeTypeVar))
+            {
+                throw new ArgumentException($"Invalid EQObject pointer.", nameof(pSpawn));
+            }
+
+            return new MQ2TypeVar(nativeTypeVar);
+        }
+
         private static class NativeMethods
         {
             [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -44,8 +58,13 @@ namespace MQ2DotNet.MQ2API
             [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void MQTypeVar__GetVarPtr(in NativeMQ2TypeVar typeVar, out NativeMQ2VarPtr varPtr);
 
-            [DllImport("MQ2Main.dll", EntryPoint = "FindMQ2DataType", CallingConvention = CallingConvention.Cdecl)]
-            public static extern IntPtr FindMQ2DataType([MarshalAs(UnmanagedType.LPStr)] string name);
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            [return: MarshalAs(UnmanagedType.I1)]
+            public static extern bool MQTypeVar__FromSpawnInfoPtr(IntPtr @object, out NativeMQ2TypeVar typeVar);
+
+            [DllImport("MQ2DotNetLoader.dll", CallingConvention = CallingConvention.Cdecl)]
+            [return: MarshalAs(UnmanagedType.I1)]
+            public static extern bool MQTypeVar__FromGroundItemPtr(IntPtr @object, out NativeMQ2TypeVar typeVar);
         }
     }
 }

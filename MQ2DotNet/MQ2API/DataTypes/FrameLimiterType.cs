@@ -12,10 +12,6 @@
         {
         }
 
-        protected FrameLimiterType(string typeName, MQ2TypeFactory typeFactory, MQ2VarPtr varPtr) : base(typeName, typeFactory, varPtr)
-        {
-        }
-
         /// <summary>
         /// TRUE if the frame limiter feature is currently active.
         /// </summary>

@@ -43,22 +43,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="mq2TypeFactory"></param>
         /// <param name="pSpawn"></param>
-        public SpawnType(MQ2TypeFactory mq2TypeFactory, IntPtr pSpawn) 
-            : base("spawn", mq2TypeFactory, new MQ2VarPtr(pSpawn))
+        public SpawnType(MQ2TypeFactory mq2TypeFactory, IntPtr pSpawn)
+            : this(mq2TypeFactory, MQ2TypeVar.FromSpawnInfoPtr(pSpawn))
         {
-            _invis = new IndexedMember<BoolType, int, BoolType, string>(this, "Invis");
-            _nearestSpawn = new IndexedMember<SpawnType, int, SpawnType, string>(this, "NearestSpawn");
-            _headingToLoc = new IndexedMember<HeadingType>(this, "HeadingToLoc");
-            _equipment = new IndexedMember<IntType, int, IntType, string>(this, "Equipment");
-            _combatSkillTicks = new IndexedMember<IntType, int>(this, "CombatSkillTicks");
-            _seeInvis = new IndexedMember<IntType, int>(this, "SeeInvis");
-            _spawnStatus = new IndexedMember<IntType, int>(this, "SpawnStatus");
-            _cachedBuff = new IndexedMember<CachedBuffType, int, CachedBuffType, string>(this, "CachedBuff");
-            _buff = new IndexedMember<CachedBuffType, int, CachedBuffType, string>(this, "Buff");
-            _findBuff = new IndexedMember<CachedBuffType>(this, "FindBuff");
-            _myBuff = new IndexedMember<CachedBuffType, int, CachedBuffType, string>(this, "MyBuff");
-            _buffDuration = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "BuffDuration");
-            _myBuffDuration = new IndexedMember<TimeStampType, int, TimeStampType, string>(this, "MyBuffDuration");
         }
 
         /// <summary>

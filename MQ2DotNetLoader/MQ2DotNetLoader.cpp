@@ -81,6 +81,26 @@ extern "C" __declspec(dllexport) void MQTypeVar__GetVarPtr(MQTypeVar& typeVar, M
 {
 	varPtr = typeVar.VarPtr;
 }
+extern "C" __declspec(dllexport) bool MQTypeVar__FromSpawnInfoPtr(SPAWNINFO* object, MQTypeVar& typeVar)
+{
+	if (object == nullptr)
+		return false;
+	MQTypeVar Dest;
+	Dest.Type = FindMQ2DataType("spawn");
+	Dest.Set(ObserveEQObject(object));
+	typeVar = Dest;
+	return true;
+}
+extern "C" __declspec(dllexport) bool MQTypeVar__FromGroundItemPtr(GROUNDITEM* object, MQTypeVar & typeVar)
+{
+	if (object == nullptr)
+		return false;
+	MQTypeVar Dest;
+	Dest.Type = FindMQ2DataType("ground");
+	Dest.Set(MQGroundSpawn(object));
+	typeVar = Dest;
+	return true;
+}
 
 // Exported MQVarPtr functions
 // Int
@@ -119,10 +139,10 @@ extern "C" __declspec(dllexport) uint64_t MQVarPtr__GetUInt64(MQVarPtr& varPtr)
 extern "C" __declspec(dllexport) void MQVarPtr__SetUInt64(MQVarPtr& varPtr, uint64_t value)
 { varPtr.Set<uint64_t>(value); }
 // High Part
-extern "C" __declspec(dllexport) uint32_t MQVarPtr__GetHighPart(MQVarPtr & varPtr)
+extern "C" __declspec(dllexport) uint32_t MQVarPtr__GetHighPart(MQVarPtr& varPtr)
 { return varPtr.HighPart; }
 // Low Part
-extern "C" __declspec(dllexport) uint32_t MQVarPtr__GetLowPart(MQVarPtr & varPtr)
+extern "C" __declspec(dllexport) uint32_t MQVarPtr__GetLowPart(MQVarPtr& varPtr)
 { return varPtr.LowPart; }
 //TODO ARGB
 
@@ -167,6 +187,27 @@ void GetStructSizes()
 	int s1 = sizeof(MQ2Type);
 	int s2 = sizeof(MQVarPtr);
 	int s3 = sizeof(MQTypeVar);
+	// Not sure which of below is relevant WRT
+	/*
+	
+	# if WIN64
+        private const int NEXT_SPAWN_PTR_SIZE = 16;
+# else
+        private const int NEXT_SPAWN_PTR_SIZE = 8;
+#endif
+
+#if WIN64
+        private const int NEXT_GROUND_ITEM_PTR_SIZE = 8;
+#else
+        private const int NEXT_GROUND_ITEM_PTR_SIZE = 4;
+#endif
+	
+	*/
+	int s6 = sizeof(SPAWNINFO);
+	int s7 = sizeof(EQGroundItem);
+	int s8 = sizeof(MQSpawnArrayItem);
+	int s9 = sizeof(EQGroundItemPtr);
+	int s10 = sizeof(PSPAWNINFO);
 }
 
 /**

@@ -36,6 +36,7 @@ namespace MQ2DotNet.Services
             _findItemBankCount = new IndexedTLO<IntType, string, IntType, int>(this, "FindItemBankCount");
             _findItemCount = new IndexedTLO<IntType, string, IntType, int>(this, "FindItemCount");
             //_float = new IndexedTLO<FloatType>(this, "Float");
+            _ground = new IndexedTLO<GroundType, string, GroundType, int>(this, "Ground");
             _groundItemCount = new IndexedTLO<IntType>(this, "GroundItemCount");
             _heading = new IndexedTLO<HeadingType, string>(this, "Heading");
             _illusion = new IndexedTLO<KeyRingItemType, string, KeyRingItemType, int>(this, "Illusion");
@@ -475,10 +476,36 @@ namespace MQ2DotNet.Services
         public DateTime? GameTime => GetTLO<TimeType>("GameTime");
 
         /// <summary>
-        /// Object which references the ground spawn item you have targeted or the closest if none is targeted, if any in zone.
-        /// https://docs.macroquest.org/reference/top-level-objects/tlo-ground/
+        /// Access to ground spawns.
+        /// Ground[#]	Will return the #th closest item it finds. (Probably better to iterate through .Next)
+        /// Ground[name] Search for a specific ground spawn.Use =name for exact match.
+        /// https://www.redguides.com/wiki/TLO:Ground
         /// </summary>
-        public GroundType Ground => GetTLO<GroundType>("Ground");
+        private readonly IndexedTLO<GroundType, string, GroundType, int> _ground;
+
+        /// <summary>
+        /// Will return the #th closest item it finds. (Probably better to iterate through .Next)
+        /// </summary>
+        /// <param name="nth">Base 1 index.</param>
+        /// <returns></returns>
+        public GroundType GetGroundSpawn(int nth) => _ground[nth];
+
+        /// <summary>
+        /// Search for a specific ground spawn. Use =name for exact match.
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Searching directly from the Ground TLO is deprecated and will be removed in a future version. Use <see cref="GroundType.Search"/> of <see cref="TLO.Ground"/>
+        /// </remarks>
+        [Obsolete]
+        public GroundType GetGroundSpawn(string search) => _ground[search];
+
+        /// <summary>
+        /// The current current or closest ground spawn.
+        /// </summary>
+        public GroundType Ground => _ground[""];
+
 
         /// <summary>
         /// Access to all Groundspawn item count information.
@@ -495,7 +522,7 @@ namespace MQ2DotNet.Services
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public int? GetGroundItemCount(string name) => _groundItemCount[name];
+        public int? GetGroundSpawnsCount(string name) => _groundItemCount[name];
 
         /// <summary>
         /// Access to all Groundspawn item count information.
@@ -505,7 +532,24 @@ namespace MQ2DotNet.Services
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-grounditemcount/
         /// </summary>
         /// <returns></returns>
-        public int? GroundItemCount => _groundItemCount[""];
+        public int? GroundSpawnCount => _groundItemCount[""];
+
+        public IEnumerable<GroundType> GroundSpawns
+        {
+            get
+            {
+                int count = 0;
+                int total = GroundSpawnCount.GetValueOrDefault(0);
+                var current = total > 0 ? GetGroundSpawn(1) : null;
+
+                while (count < total)
+                {
+                    count++;
+                    yield return current;
+                    current = current.Next;
+                }
+            }
+        }
 
         /// <summary>
         /// Access to all group-related information.
@@ -793,6 +837,28 @@ namespace MQ2DotNet.Services
         /// <param name="search">Spawn Search - https://docs.macroquest.org/reference/general/spawn-search/</param>
         /// <returns></returns>
         public SpawnType GetNearestSpawn(int nth, string search) => _nearestSpawn[$"{nth},{search}"];
+
+        /// <summary>
+        /// Get all spawns ordered by distance from you in ascending order.
+        /// Excludes yourself, see <see cref="GetNearestSpawn"/>[2,<see cref="SpawnCount"/>]
+        /// </summary>
+        /// <param name="this"></param>
+        /// <param name="distance3D">The optional maximum 3D distance to the spawn in the XYZ plane</param>
+        /// <returns></returns>
+        public IEnumerable<SpawnType> Spawns(float? distance3D = null)
+        {
+            for (int i = 1; i < SpawnCount; i++)
+            {
+                var spawn = GetNearestSpawn(i + 1);
+
+                if (spawn == null || distance3D.HasValue && spawn.Distance3D.GetValueOrDefault(0f) > distance3D.Value)
+                {
+                    break;
+                }
+
+                yield return spawn;
+            }
+        }
 
         /// <summary>
         /// Pet object which allows you to get properties of your pet.

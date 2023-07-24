@@ -21,10 +21,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="mq2TypeFactory"></param>
         /// <param name="pGroundItem"></param>
-        public GroundType(MQ2TypeFactory mq2TypeFactory, IntPtr pGroundItem)
-            : base("ground", mq2TypeFactory, new MQ2VarPtr(pGroundItem))
+        internal GroundType(MQ2TypeFactory mq2TypeFactory, IntPtr pGroundItem)
+            : this(mq2TypeFactory, MQ2TypeVar.FromGroundItemPtr(pGroundItem))
         {
-            _search = new IndexedMember<GroundType, int, GroundType, string>(this, "Search");
         }
 
         /// <summary>
