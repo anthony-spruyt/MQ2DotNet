@@ -29,7 +29,7 @@ namespace MQFlux.Queries
             // TODO We are supposed to get an initial event triggered in the event service from MQ2DotNet/MQ client but it does not happen.
             if (response.Result == GameState.Unknown)
             {
-                return QueryResponse.FromResult(context.TLO.EverQuest.GameState ?? GameState.Unknown);
+                return QueryResponse.FromResult(context.TLO.EverQuest.GameState.GetValueOrDefault(GameState.Unknown));
             }
 
             return QueryResponse.FromResult(response.Result);

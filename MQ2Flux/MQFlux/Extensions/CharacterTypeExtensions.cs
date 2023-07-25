@@ -1,11 +1,35 @@
 ﻿using MQ2DotNet.MQ2API.DataTypes;
 using System;
+using System.Linq;
 
 namespace MQFlux.Extensions
 {
 
     public static class CharacterTypeExtensions
     {
+        public static bool DoIHaveReagentsToCast(this CharacterType @this, SpellType spell)
+        {
+            var reagents = spell.GetReagents();
+
+            if (reagents.Count() == 0)
+            {
+                return true;
+            }
+
+            var inventory = @this.Inventory.Flatten();
+
+            foreach (var reagent in reagents)
+            {
+                var availableReagentCount = inventory.Where(i => i.ID.GetValueOrDefault(0u) == reagent.ItemID).Sum(i => i.StackCount.GetValueOrDefault(0u));
+                if (availableReagentCount < reagent.RequiredCount)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static AbilityInfo GetAbilityInfo(this CharacterType @this, string name)
         {
             return new AbilityInfo(name, @this);

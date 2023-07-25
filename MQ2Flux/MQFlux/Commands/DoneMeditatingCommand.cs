@@ -33,20 +33,24 @@ namespace MQFlux.Commands
             this.mqLogger = mqLogger;
         }
 
-        public override Task<CommandResponse<bool>> Handle(DoneMeditatingCommand request, CancellationToken cancellationToken)
+        public async override Task<CommandResponse<bool>> Handle(DoneMeditatingCommand request, CancellationToken cancellationToken)
         {
             var me = context.TLO.Me;
 
             if (!me.Standing && me.PctMana > 99 && me.PctHPs > 99)
             {
-                me.Stand();
+                await Task.Delay(1000);
 
                 mqLogger.Log("Standing up because I am finished meditating", TimeSpan.Zero);
 
-                return CommandResponse.FromResultTask(true);
+                me.Stand();
+
+                await Task.Delay(1000);
+
+                return CommandResponse.FromResult(true);
             }
 
-            return CommandResponse.FromResultTask(false);
+            return CommandResponse.FromResult(false);
         }
     }
 }

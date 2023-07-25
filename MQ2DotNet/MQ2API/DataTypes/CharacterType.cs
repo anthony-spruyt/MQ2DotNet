@@ -300,7 +300,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = CountBuffs ?? 0;
+                var count = (int)CountBuffs.GetValueOrDefault(0u);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -344,7 +344,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = CountSongs ?? 0;
+                var count = (int)CountSongs.GetValueOrDefault(0u);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -871,7 +871,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = NumGems ?? 0;
+                var count = (int)NumGems.GetValueOrDefault(0u);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -1210,7 +1210,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
                 {
                     var item = new AbilityInfo(i + 1, this);
 
-                    if (item.Skill?.Activated ?? false)
+                    if ((item.Skill?.Activated).GetValueOrDefault(false))
                     {
                         items.Add(item);
                     }
@@ -1255,7 +1255,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var canCast = Class?.CanCast ?? false;
+                var canCast = (Class?.CanCast).GetValueOrDefault(false);
 
                 if (canCast)
                 {
@@ -2099,7 +2099,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = XTargetCount ?? 0;
+                var count = (int)XTargetCount.GetValueOrDefault(0u);
                 for (int i = 0; i < count; i++)
                 {
                     yield return GetXTarget(i + 1);

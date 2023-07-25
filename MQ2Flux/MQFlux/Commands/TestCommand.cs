@@ -1,12 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using MQ2DotNet.MQ2API.DataTypes;
 using MQFlux.Behaviors;
 using MQFlux.Core;
 using MQFlux.Models;
 using MQFlux.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,10 +35,7 @@ namespace MQFlux.Commands
         {
             try
             {
-                var spawns = request.Context.TLO.GroundSpawns;
-                
-
-                var count = spawns.Count();
+                await targetService.CycleFriendlies();
             }
             catch (Exception ex)
             {

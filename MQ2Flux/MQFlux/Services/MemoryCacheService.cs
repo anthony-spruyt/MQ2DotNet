@@ -9,6 +9,7 @@ namespace MQFlux.Services
         public static readonly string CharacterConfig = nameof(CharacterConfig);
         public static readonly string GameState = nameof(GameState);
         public static readonly string IdleSince = nameof(IdleSince);
+        public static readonly string IsPaused = nameof(IsPaused);
         public static readonly string Zoning = nameof(Zoning);
     }
 

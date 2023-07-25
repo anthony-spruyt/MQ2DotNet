@@ -25,6 +25,7 @@ namespace MQFlux.Commands
             {
                 new DismissAlertWindowCommand(),
                 new ForageCommand(),
+                new BuffCommand(),
                 new DispenseCommand(),
                 new SummonFoodAndDrinkCommand(),
                 new EatAndDrinkCommand(),

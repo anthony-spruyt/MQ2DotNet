@@ -266,7 +266,7 @@ namespace MQ2DotNet.Services
         {
             get
             {
-                var count = (int?)FamiliarKeyRing?.Count ?? 0;
+                var count = (int)(FamiliarKeyRing?.Count).GetValueOrDefault(0u);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -625,7 +625,7 @@ namespace MQ2DotNet.Services
         {
             get
             {
-                var count = (int?)IllusionKeyRing?.Count ?? 0;
+                var count = (int)(IllusionKeyRing?.Count).GetValueOrDefault(0u);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -780,7 +780,7 @@ namespace MQ2DotNet.Services
         {
             get
             {
-                var count = (int?)MountKeyRing?.Count ?? 0;
+                var count = (int)(MountKeyRing?.Count).GetValueOrDefault(0u);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -1274,7 +1274,7 @@ namespace MQ2DotNet.Services
         {
             get
             {
-                var count = (int?)TeleportationItemKeyRing?.Count ?? 0;
+                var count = (int)(TeleportationItemKeyRing?.Count).GetValueOrDefault(0u);
 
                 for (int i = 0; i < count; i++)
                 {

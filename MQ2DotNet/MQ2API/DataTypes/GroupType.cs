@@ -46,7 +46,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = (int?)GroupSize ?? 0;
+                var count = (int)GroupSize.GetValueOrDefault(0u);
 
                 for (var i = 0; i < count; i++)
                 {

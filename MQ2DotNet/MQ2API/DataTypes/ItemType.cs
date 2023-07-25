@@ -205,7 +205,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
                     return new ItemType[0];
                 }
 
-                var count = (int?)Container ?? 0;
+                var count = (int)Container.GetValueOrDefault(0u);
                 List<ItemType> items = new List<ItemType>(count);
 
                 for (int i = 0; i < count; i++)
@@ -307,7 +307,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = (int?)WornSlots ?? 0;
+                var count = (int)WornSlots.GetValueOrDefault(0u);
                 List<InvSlotType> items = new List<InvSlotType>(count);
 
                 for (int i = 0; i < count; i++)
@@ -470,7 +470,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                int count = (int?)Classes ?? 0;
+                int count = (int)Classes.GetValueOrDefault(0u);
                 List<ClassType> items = new List<ClassType>(count);
 
                 for (int i = 0; i < count; i++)
@@ -595,7 +595,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                int count = (int?)Deities ?? 0;
+                int count = (int)Deities.GetValueOrDefault(0u);
                 List<DeityType> items = new List<DeityType>(count);
 
                 for (int i = 0; i < count; i++)

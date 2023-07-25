@@ -194,7 +194,7 @@ namespace MQFlux.Services
                 return true;
             }
 
-            if (!await Wait.While(() => !isSpellReady(), TimeSpan.FromSeconds(8), cancellationToken))
+            if (!await Wait.While(() => !isSpellReady(), TimeSpan.FromSeconds(30), cancellationToken))
             {
                 return false;
             }
@@ -217,7 +217,7 @@ namespace MQFlux.Services
 
             try
             {
-                if (!await Wait.While(() => me.GetGem(spellName).GetValueOrDefault(0) != slot, TimeSpan.FromSeconds(8), cancellationToken))
+                if (!await Wait.While(() => me.GetGem(spellName).GetValueOrDefault(0) != slot, TimeSpan.FromSeconds(30), cancellationToken))
                 {
                     return false;
                 }

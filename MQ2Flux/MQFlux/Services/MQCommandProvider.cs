@@ -5,7 +5,6 @@ namespace MQFlux.Services
 {
     public interface IMQCommandProvider
     {
-        IEnumerable<IMQAsyncCommand> AsyncCommands { get; }
         IEnumerable<IMQCommand> Commands { get; }
         void Load();
         void Unload();
@@ -17,37 +16,28 @@ namespace MQFlux.Services
         {
             return services
                 .AddSingleton<IMQCommandProvider, MQCommandProvider>()
-                .AddSingleton<IFluxAsyncCommand, FluxAsyncCommand>();
+                .AddSingleton<IFluxCommand, FluxCommandService>();
         }
     }
 
     public class MQCommandProvider : IMQCommandProvider
     {
-        public IEnumerable<IMQAsyncCommand> AsyncCommands { get; private set; }
         public IEnumerable<IMQCommand> Commands { get; private set; }
 
         private readonly IContext context;
 
-        public MQCommandProvider(IContext context, IFluxAsyncCommand fluxAsyncCommandService)
+        public MQCommandProvider(IContext context, IFluxCommand fluxCommandService)
         {
             this.context = context;
-            AsyncCommands = new IMQAsyncCommand[]
-            {
-                fluxAsyncCommandService
-            };
+
             Commands = new IMQCommand[]
             {
-
+                fluxCommandService
             };
         }
 
         public void Load()
         {
-            foreach (var command in AsyncCommands)
-            {
-                context.Commands.AddAsyncCommand(command.Command, command.Handle);
-            }
-
             foreach (var command in Commands)
             {
                 context.Commands.AddCommand(command.Command, command.Handle);
@@ -56,11 +46,6 @@ namespace MQFlux.Services
 
         public void Unload()
         {
-            foreach (var command in AsyncCommands)
-            {
-                context.Commands.RemoveCommand(command.Command);
-            }
-
             foreach (var command in Commands)
             {
                 context.Commands.RemoveCommand(command.Command);

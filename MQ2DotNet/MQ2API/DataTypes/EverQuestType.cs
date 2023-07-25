@@ -119,7 +119,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = (int?)ChatChannels ?? 0;
+                var count = (int)ChatChannels.GetValueOrDefault(0u);
                 List<string> names = new List<string>(count);
 
                 for (int i = 0; i < count; i++)

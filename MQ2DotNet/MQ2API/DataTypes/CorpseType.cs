@@ -48,8 +48,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = Count ?? 0;
-                List<ItemType> items = new List<ItemType>((int)count);
+                var count = (int)Count.GetValueOrDefault(0u);
+                List<ItemType> items = new List<ItemType>(count);
 
                 for (int i = 0; i < count; i++)
                 {

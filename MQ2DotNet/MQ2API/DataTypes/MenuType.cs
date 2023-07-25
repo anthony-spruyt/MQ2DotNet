@@ -60,7 +60,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = (int?)NumItems ?? 0;
+                var count = (int)NumItems.GetValueOrDefault(0u);
 
                 for (int i = 0; i < count; i++)
                 {

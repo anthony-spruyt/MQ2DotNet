@@ -7,6 +7,7 @@ using MQ2DotNet.Program;
 using MQ2DotNet.Services;
 using MQFlux.Behaviors;
 using MQFlux.Commands;
+using MQFlux.Queries;
 using MQFlux.Services;
 using Serilog;
 using System;
@@ -20,7 +21,8 @@ namespace MQFlux
 {
     public class MQFlux : IProgram
     {
-        public static Task Yield(CancellationToken cancellationToken) => Task.Delay(200, cancellationToken);
+        public static Task Yield(CancellationToken cancellationToken) => Task.Delay(100, cancellationToken);
+        //public static System.Runtime.CompilerServices.YieldAwaitable Yield(CancellationToken cancellationToken) => Task.Yield();
 
         private readonly MQ2 mq;
         private readonly Chat chat;
@@ -89,9 +91,15 @@ namespace MQFlux
                 {
                     await mediator.Send(new InitializeCommand(), linkedTokenSource.Token);
 
-                    while (!linkedTokenSource.IsCancellationRequested)
+                    while (!linkedTokenSource.Token.IsCancellationRequested)
                     {
-                        await mediator.Send(new PulseCommand(), linkedTokenSource.Token);
+                        var isPaused = await mediator.Send(new IsPausedQuery(), linkedTokenSource.Token);
+
+                        if (!isPaused.Result)
+                        {
+                            await mediator.Send(new PulseCommand(), linkedTokenSource.Token);
+                        }
+
                         await Yield(linkedTokenSource.Token);
                     }
                 }

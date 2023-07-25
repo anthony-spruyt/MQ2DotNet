@@ -56,6 +56,7 @@ namespace MQ2DotNet.MQ2API
             }
 
             AssemblyName assemblyName = assembly.GetName();
+
             try
             {
                 // Can ignore any assemblies that don't reference this one
@@ -102,7 +103,7 @@ namespace MQ2DotNet.MQ2API
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error finding types in assembly: " + assemblyName?.ToString() ?? " null");
+                Debug.WriteLine($"Error finding types in assembly: {assemblyName?.ToString() ?? "null"}");
                 Debug.WriteLine(e);
             }
         }

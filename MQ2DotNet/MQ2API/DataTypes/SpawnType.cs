@@ -932,7 +932,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = CachedBuffCount ?? 0;
+                var count = (int)CachedBuffCount.GetValueOrDefault(0u);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -1021,7 +1021,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = BuffCount ?? 0;
+                var count = (int)BuffCount.GetValueOrDefault(0);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -1049,7 +1049,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = MyBuffCount ?? 0;
+                var count = (int)MyBuffCount.GetValueOrDefault(0u);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -1092,8 +1092,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = BuffCount ?? 0;
-                Dictionary<CachedBuffType, TimeSpan?> items = new Dictionary<CachedBuffType, TimeSpan?>((int)count);
+                var count = (int)BuffCount.GetValueOrDefault(0u);
+                Dictionary<CachedBuffType, TimeSpan?> items = new Dictionary<CachedBuffType, TimeSpan?>(count);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -1131,8 +1131,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = BuffCount ?? 0;
-                Dictionary<CachedBuffType, TimeSpan?> items = new Dictionary<CachedBuffType, TimeSpan?>((int)count);
+                var count = (int)BuffCount.GetValueOrDefault(0u);
+                Dictionary<CachedBuffType, TimeSpan?> items = new Dictionary<CachedBuffType, TimeSpan?>(count);
 
                 for (int i = 0; i < count; i++)
                 {

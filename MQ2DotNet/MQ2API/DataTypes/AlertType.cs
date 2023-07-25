@@ -33,8 +33,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = Size ?? 0;
-                List<AlertListType> items = new List<AlertListType>((int)count);
+                var count = (int)Size.GetValueOrDefault(0u);
+                List<AlertListType> items = new List<AlertListType>(count);
 
                 for (int i = 0; i < count; i++)
                 {

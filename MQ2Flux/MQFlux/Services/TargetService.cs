@@ -2,6 +2,7 @@
 using MQ2DotNet.MQ2API.DataTypes;
 using MQFlux.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,9 +12,10 @@ namespace MQFlux.Services
     public interface ITargetService
     {
         Task<bool> ClearTarget(CancellationToken cancellationToken = default);
+        Task<bool> CycleEnemies(float? distance = null, CancellationToken cancellationToken = default);
+        Task<bool> CycleFriendlies(float? distance = null, CancellationToken cancellationToken = default);
         Task<bool> CycleGroupMembers(CancellationToken cancellationToken = default);
-        Task<bool> CycleFriendlies(uint distance, CancellationToken cancellationToken = default);
-        Task<bool> CycleEnemies(uint distance, CancellationToken cancellationToken = default);
+        Task<bool> CycleSpawns(float? distance = null, Predicate<SpawnType> predicate = null, CancellationToken cancellationToken = default);
         Task<bool> CycleXTargets(CancellationToken cancellationToken = default);
         Task<bool> Target(GroundType ground, CancellationToken cancellationToken = default);
         Task<bool> Target(SpawnType spawn, CancellationToken cancellationToken = default);
@@ -59,40 +61,56 @@ namespace MQFlux.Services
             return Wait.While(() => context.TLO.Target != null, TimeSpan.FromSeconds(1), cancellationToken);
         }
 
-        public Task<bool> CycleEnemies(uint distance, CancellationToken cancellationToken = default)
+        public async Task<bool> CycleEnemies(float? distance = null, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var spawns = context.TLO
+                .Spawns(distance)
+                .Where(i => i.Aggressive);
+
+            return await CycleSpawnsInternal(spawns, cancellationToken);
         }
 
-        public async Task<bool> CycleFriendlies(uint distance, CancellationToken cancellationToken = default)
+        public async Task<bool> CycleFriendlies(float? distance = null, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var spawns = context.Spawns.All.Where(i => !i.Aggressive && i.Distance3D < distance);
+            var spawns = context.TLO
+                .Spawns(distance)
+                .Where(i => !i.Aggressive);
 
-                foreach (var spawn in spawns)
-                {
-                    await Target(spawn, cancellationToken);
+            return await CycleSpawnsInternal(spawns, cancellationToken);
+        }
 
-                    await Wait.While(() => !spawn.BuffsPopulated, TimeSpan.FromSeconds(5), cancellationToken);
-                }
-            }
-            catch (Exception ex)
+        public async Task<bool> CycleGroupMembers(CancellationToken cancellationToken = default)
+        {
+            if (!context.TLO.Me.Grouped)
             {
                 return false;
             }
 
-            return true;
+            var spawns = context.TLO.Group.GroupMembers
+                .Where(i => i.Present)
+                .Select(i => i.Spawn);
+
+            return await CycleSpawnsInternal(spawns, cancellationToken);
         }
 
-        public Task<bool> CycleGroupMembers(CancellationToken cancellationToken = default)
+        public async Task<bool> CycleSpawns(float? distance = null, Predicate<SpawnType> predicate = null, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var spawns = predicate == null ?
+                context.TLO
+                   .Spawns(distance) :
+                context.TLO
+                   .Spawns(distance)
+                   .Where(i => predicate(i));
+
+            return await CycleSpawnsInternal(spawns, cancellationToken);
         }
 
-        public Task<bool> CycleXTargets(CancellationToken cancellationToken = default)
+        public async Task<bool> CycleXTargets(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var spawns = context.TLO.Me.XTargets
+                .Select(i => i.Spawn);
+
+            return await CycleSpawnsInternal(spawns, cancellationToken);
         }
 
         public Task<bool> Target(GroundType ground, CancellationToken cancellationToken = default)
@@ -106,7 +124,7 @@ namespace MQFlux.Services
             }
 
             ground.DoTarget();
-            mqLogger.Log($"Target ground item \a[{ground.Name}]");
+            mqLogger.Log($"Target ground item [\ao{ground.Name}\aw]");
 
             return Wait.While(() => context.TLO.ItemTarget == null || context.TLO.ItemTarget.ID.GetValueOrDefault(0) != id, TimeSpan.FromSeconds(1), cancellationToken);
         }
@@ -122,7 +140,7 @@ namespace MQFlux.Services
             }
 
             spawn.DoTarget();
-            mqLogger.Log($"Target spawn \a[{spawn.Name}]");
+            mqLogger.Log($"Target spawn [\ao{spawn.Name}\aw]");
 
             return Wait.While(() => context.TLO.Target == null || context.TLO.Target.ID.GetValueOrDefault(0u) != id, TimeSpan.FromSeconds(1), cancellationToken);
         }
@@ -136,9 +154,34 @@ namespace MQFlux.Services
             }
 
             @switch.Target();
-            mqLogger.Log($"Target switch \a[{@switch.Name}]");
+            mqLogger.Log($"Target switch [\ao{@switch.Name}\aw]");
 
             return Wait.While(() => !@switch.IsTargeted, TimeSpan.FromSeconds(1), cancellationToken);
+        }
+
+        private async Task<bool> CycleSpawnsInternal(IEnumerable<SpawnType> spawns, CancellationToken cancellationToken)
+        {
+            uint count = 0;
+
+            foreach (var spawn in spawns)
+            {
+                if (await Target(spawn, cancellationToken))
+                {
+                    count++;
+                    await Wait.While(() => !spawn.BuffsPopulated, TimeSpan.FromSeconds(5), cancellationToken);
+                }
+            }
+
+            if (count == 0)
+            {
+                return false;
+            }
+
+            mqLogger.Log($"Cycled [\ao{count}\aw] spawns");
+
+            await ClearTarget(cancellationToken);
+
+            return true;
         }
     }
 }

@@ -151,7 +151,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="typeVar"></param>
         public static implicit operator Expansion(IntType typeVar)
         {
-            return (Expansion)((int?)typeVar?.VarPtr.Dword ?? 0);
+            return (Expansion)((int)(typeVar?.VarPtr.Dword).GetValueOrDefault(0u));
         }
     }
 }

@@ -96,8 +96,8 @@ namespace MQFlux.Services
                         }
 
                         return false;
-                    }, 
-                    TimeSpan.FromMilliseconds(2000), 
+                    },
+                    TimeSpan.FromMilliseconds(2000),
                     cancellationToken
                 );
 

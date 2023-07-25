@@ -40,7 +40,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = PersonalCount ?? 0;
+                var count = PersonalCount.GetValueOrDefault(0);
                 List<AdvLootItemType> items = new List<AdvLootItemType>(count);
 
                 for (int i = 0; i < count; i++)
@@ -75,7 +75,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = SharedCount ?? 0;
+                var count = SharedCount.GetValueOrDefault(0);
                 List<AdvLootItemType> items = new List<AdvLootItemType>(count);
 
                 for (int i = 0; i < count; i++)

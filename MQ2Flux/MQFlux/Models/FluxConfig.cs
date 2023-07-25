@@ -18,12 +18,13 @@ namespace MQFlux.Models
 
     public class DefaultConfig
     {
-        public bool? AutoLearnLanguages { get; set; } = true;
+        public bool? AutoBuff { get; set; } = true;
         public bool? AutoDispenseFoodAndDrink { get; set; } = true;
-        public bool? AutoSummonFoodAndDrink { get; set; } = true;
-        public bool? AutoForage { get; set; } = true;
         public bool? AutoEatAndDrink { get; set; } = true;
+        public bool? AutoForage { get; set; } = true;
+        public bool? AutoLearnLanguages { get; set; } = true;
         public bool? AutoPutStatFoodInTopSlots { get; set; } = true;
+        public bool? AutoSummonFoodAndDrink { get; set; } = true;
         /// <summary>
         /// Food and drink that should not be consumed, IE stat food and drink.
         /// </summary>
@@ -101,6 +102,11 @@ namespace MQFlux.Models
                 Dispensers = new List<FoodAndDrinkDispenser>(@this.Dispensers)
             };
 
+            if (!effective.AutoBuff.HasValue)
+            {
+                effective.AutoBuff = defaults.AutoBuff;
+            }
+
             if (!effective.AutoDispenseFoodAndDrink.HasValue)
             {
                 effective.AutoDispenseFoodAndDrink = defaults.AutoDispenseFoodAndDrink;
@@ -131,12 +137,12 @@ namespace MQFlux.Models
                 effective.AutoPutStatFoodInTopSlots = defaults.AutoPutStatFoodInTopSlots;
             }
 
-            if (!(effective.DontConsume?.Any() ?? false) && (defaults.DontConsume?.Any() ?? false))
+            if (!((effective.DontConsume?.Any()).GetValueOrDefault(false)) && ((defaults.DontConsume?.Any()).GetValueOrDefault(false)))
             {
                 effective.DontConsume = new List<string>(defaults.DontConsume);
             }
 
-            if (!(effective.ForageBlacklist?.Any() ?? false) && (defaults.ForageBlacklist?.Any() ?? false))
+            if (!((effective.ForageBlacklist?.Any()).GetValueOrDefault(false)) && ((defaults.ForageBlacklist?.Any()).GetValueOrDefault(false)))
             {
                 effective.ForageBlacklist = new List<string>(defaults.ForageBlacklist);
             }

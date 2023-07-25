@@ -66,7 +66,7 @@ namespace MQFlux.Services
 
         public async Task AutoInventory(Predicate<ItemType> predicate = null, CancellationToken cancellationToken = default)
         {
-            var timeout = TimeSpan.FromSeconds(5);
+            var timeout = TimeSpan.FromSeconds(10);
 
             if (!await Wait.While(() => context.TLO.Cursor == null, timeout, cancellationToken))
             {

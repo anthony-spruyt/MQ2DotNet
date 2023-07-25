@@ -36,11 +36,6 @@ namespace MQFlux.Commands
                 cancellationTokens.Add(command.CancellationToken);
             }
 
-            foreach (var asyncCommand in commandProvider.AsyncCommands)
-            {
-                cancellationTokens.Add(asyncCommand.CancellationToken);
-            }
-
             return cancellationTokens;
         }
     }

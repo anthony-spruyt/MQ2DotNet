@@ -59,7 +59,7 @@ namespace MQ2DotNet.Program
 
         public Exception Exception => _task.Exception?.InnerException;
 
-        public TaskStatus Status => _task?.Status ?? TaskStatus.Created;
+        public TaskStatus Status => (_task?.Status).GetValueOrDefault(TaskStatus.Created);
 
         public void Start(string[] args)
         {

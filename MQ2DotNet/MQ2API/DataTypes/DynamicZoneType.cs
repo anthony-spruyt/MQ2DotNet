@@ -52,7 +52,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = (int?)MaxTimers ?? 0;
+                var count = (int)MaxTimers.GetValueOrDefault(0u);
                 List<DZTimerType> items = new List<DZTimerType>(count);
 
                 for (int i = 0; i < count; i++)
@@ -110,7 +110,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                var count = (int?)Members ?? 0;
+                var count = (int)Members.GetValueOrDefault(0u);
                 List<DZMemberType> items = new List<DZMemberType>(count);
 
                 for (int i = 0; i < count; i++)

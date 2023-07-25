@@ -17,7 +17,7 @@ namespace MQFlux.Extensions
         {
             var spellBookWindow = @this.GetWindow("SpellBookWnd");
 
-            if (spellBookWindow?.Open ?? false)
+            if ((spellBookWindow?.Open).GetValueOrDefault(false))
             {
                 spellBookWindow.DoClose();
             }
@@ -27,7 +27,7 @@ namespace MQFlux.Extensions
         {
             var window = @this.GetWindow(windowName);
 
-            return window?.Open ?? false;
+            return (window?.Open).GetValueOrDefault(false);
         }
     }
 }

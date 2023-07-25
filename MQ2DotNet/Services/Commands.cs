@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MQ2DotNet.MQ2API;
+using MQ2DotNet.Utility;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.ConstrainedExecution;
@@ -6,8 +8,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MQ2DotNet.MQ2API;
-using MQ2DotNet.Utility;
 
 namespace MQ2DotNet.Services
 {
@@ -86,6 +86,10 @@ namespace MQ2DotNet.Services
         /// <param name="EQ"></param>
         /// <param name="parse"></param>
         /// <param name="inGame"></param>
+        /// <remarks>
+        /// From testing if an await is used in the handler body then it never cotinues past that, it will only execute up to the first await in the handler.
+        /// </remarks>
+        [Obsolete]
         public void AddAsyncCommand(string command, AsyncCommand handler, bool EQ = false, bool parse = true, bool inGame = false)
         {
             if (_disposed)
