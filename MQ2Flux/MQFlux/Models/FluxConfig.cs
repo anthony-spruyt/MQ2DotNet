@@ -9,14 +9,14 @@ namespace MQFlux.Models
         /// <summary>
         /// Configuration that applies to all characters.
         /// </summary>
-        public DefaultConfig Defaults { get; set; } = new DefaultConfig();
+        public DefaultConfigSection Defaults { get; set; } = new DefaultConfigSection();
         /// <summary>
         /// Character specific configuration. Overrides the default configuration.
         /// </summary>
-        public List<CharacterConfig> Characters { get; set; } = new List<CharacterConfig>();
+        public List<CharacterConfigSection> Characters { get; set; } = new List<CharacterConfigSection>();
     }
 
-    public class DefaultConfig
+    public class DefaultConfigSection
     {
         public bool? AutoBuff { get; set; } = true;
         public bool? AutoDispenseFoodAndDrink { get; set; } = true;
@@ -35,7 +35,7 @@ namespace MQFlux.Models
         public List<string> ForageBlacklist { get; set; } = new List<string>();
     }
 
-    public class CharacterConfig : DefaultConfig
+    public class CharacterConfigSection : DefaultConfigSection
     {
         /// <summary>
         /// The character name.
@@ -46,10 +46,32 @@ namespace MQFlux.Models
         /// </summary>
         public string Server { get; set; }
         /// <summary>
+        /// The buffs configuration.
+        /// </summary>
+        //public BuffsConfigSection Buffs { get; set; } = new BuffsConfigSection();
+        /// <summary>
         /// A list of food and drink dispensers.
         /// </summary>
         public List<FoodAndDrinkDispenser> Dispensers { get; set; } = new List<FoodAndDrinkDispenser>();
     }
+
+    //public class BuffsConfigSection
+    //{
+        //public List<BuffConfig> Buffs { get; set; } = new List<BuffConfig>();
+    //}
+
+    //public enum BuffSource
+    //{
+        //Spell,
+        //Item
+    //}
+
+    //public class BuffConfig
+    //{
+        //public string Name { get; set; } = null;
+
+        //public BuffSource Type { get; set; } = BuffSource.Spell;
+    //}
 
     public class FoodAndDrinkDispenser
     {
@@ -83,11 +105,11 @@ namespace MQFlux.Models
         /// <param name="this"></param>
         /// <param name="defaults"></param>
         /// <returns></returns>
-        public static CharacterConfig Effective(this CharacterConfig @this, DefaultConfig defaults)
+        public static CharacterConfigSection Effective(this CharacterConfigSection @this, DefaultConfigSection defaults)
         {
             if (@this == null)
             {
-                return new CharacterConfig();
+                return new CharacterConfigSection();
             }
 
             if (defaults == null)
@@ -95,10 +117,11 @@ namespace MQFlux.Models
                 return @this;
             }
 
-            CharacterConfig effective = new CharacterConfig()
+            CharacterConfigSection effective = new CharacterConfigSection()
             {
                 Name = @this.Name,
                 Server = @this.Server,
+                //Buffs = @this.Buffs,
                 Dispensers = new List<FoodAndDrinkDispenser>(@this.Dispensers)
             };
 

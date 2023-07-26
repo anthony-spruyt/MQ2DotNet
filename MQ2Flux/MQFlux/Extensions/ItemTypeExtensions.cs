@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace MQFlux.Extensions
 {
+    /// <summary>
+    /// TODO: move these to the <see cref="ItemType"/> class when they have been tested.
+    /// </summary>
     public static class ItemTypeExtensions
     {
         public static bool IsTimerReady(this ItemType @this)

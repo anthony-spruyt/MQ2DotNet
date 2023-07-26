@@ -5,6 +5,7 @@ using MQFlux.Models;
 using MQFlux.Notifications;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -16,7 +17,9 @@ namespace MQFlux.Services
     {
         FluxConfig FluxConfig { get; }
 
-        Task Save(bool notify = false);
+        void Save(bool notify = false);
+
+        void Upsert(CharacterConfigSection characterConfig);
     }
 
     public static class ConfigServiceExtensions
@@ -60,29 +63,41 @@ namespace MQFlux.Services
             Initialize();
         }
 
-        public async Task Save(bool notify = true)
+        public void Save(bool notify = true)
         {
             if (!notify)
             {
                 watcher.Changed -= ConfigChanged;
             }
 
-            await Task.Run
-            (
-                () =>
-                {
-                    try
-                    {
-                        File.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(FluxConfig, options: jsonOptions));
-                    }
-                    catch (Exception ex)
-                    {
-                        Log(ex, "Failed to save config to disk");
-                    }
-                }
-            );
+            try
+            {
+                File.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(FluxConfig, options: jsonOptions));
+            }
+            catch (Exception ex)
+            {
+                Log(ex, "Failed to save config to disk");
+            }
 
             watcher.Changed += ConfigChanged;
+        }
+
+        public void Upsert(CharacterConfigSection characterConfig)
+        {
+            var existingConfig = FluxConfig.Characters
+                .FirstOrDefault
+                (
+                    i =>
+                        string.Compare(i.Name, characterConfig.Name) == 0 && 
+                        string.Compare(i.Server, characterConfig.Server) == 0
+                );
+
+            if (existingConfig != null)
+            {
+                FluxConfig.Characters.Remove(existingConfig);
+            }
+
+            FluxConfig.Characters.Add(characterConfig);
         }
 
         private void Initialize()

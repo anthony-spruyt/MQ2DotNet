@@ -1,4 +1,6 @@
-﻿namespace MQ2DotNet.MQ2API.DataTypes
+﻿using MQ2DotNet.EQ;
+
+namespace MQ2DotNet.MQ2API.DataTypes
 {
     /// <summary>
     /// Provides access to the properties of a spawn search associated with an alert. For a spawn to be entered into an alert it must match all the criteria specified by the alert list.

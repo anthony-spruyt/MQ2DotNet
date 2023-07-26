@@ -2,6 +2,9 @@
 
 namespace MQFlux.Extensions
 {
+    /// <summary>
+    /// TODO: move these to the <see cref="TLO"/> class when they have been tested.
+    /// </summary>
     public static class TLOExtensions
     {
         public static bool IsSpellBookOpen(this TLO @this)

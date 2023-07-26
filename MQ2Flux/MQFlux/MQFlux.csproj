@@ -139,7 +139,6 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\ItemTypeExtensions.cs" />
     <Compile Include="Extensions\SpellTypeExtensions.cs" />
-    <Compile Include="Extensions\TestExtensions.cs" />
     <Compile Include="Extensions\TLOExtensions.cs" />
     <Compile Include="Core\SetCacheCommandHandler.cs" />
     <Compile Include="Queries\IdleSinceQuery.cs" />

@@ -12,7 +12,7 @@ namespace MQFlux.Commands
     {
         public IContext Context { get; set; }
         public FluxConfig Config { get; set; }
-        public CharacterConfig Character { get; set; }
+        public CharacterConfigSection Character { get; set; }
     }
 
     public class InitializeCommandHandler : PCCommandHandler<InitializeCommand>

@@ -1,4 +1,6 @@
-﻿using MQ2DotNet.MQ2API.DataTypes;
+﻿using MQ2DotNet.EQ;
+using MQ2DotNet.MQ2API.DataTypes;
+using MQ2DotNet.Services;
 using MQFlux.Behaviors;
 using MQFlux.Core;
 using MQFlux.Extensions;
@@ -25,7 +27,7 @@ namespace MQFlux.Commands
         IIdleTimeRequest
     {
         public bool AllowBard => false;
-        public CharacterConfig Character { get; set; }
+        public CharacterConfigSection Character { get; set; }
         public FluxConfig Config { get; set; }
         public IContext Context { get; set; }
         public TimeSpan IdleTime => TimeSpan.FromSeconds(1);
@@ -81,13 +83,13 @@ namespace MQFlux.Commands
         private async Task<bool> TryBuff(CharacterType me, SpawnType spawn, CancellationToken cancellationToken = default)
         {
             var amIBuffingMyself = spawn.ID == me.ID;
-            var bestInClass = me.SpellBook
+            var buffGroups = me.SpellBook
                 .Select(i => i.Value)
                 .Where(i => i.Beneficial && i.Duration > TimeSpan.FromMinutes(1))
                 .GroupBy(i => $"{i.GetSpellCategory()}-{i.Subcategory}-{i.SpellIcon.GetValueOrDefault(0u)}").Select(i => i.OrderByDescending(j => j.Level).First());
             var buffSpells = amIBuffingMyself ?
-                bestInClass.Where(i => IsValidSelfBuff(me, i)) :
-                bestInClass.Where(i => IsValidFriendlyBuff(me, spawn, i));
+                buffGroups.Where(i => IsValidSelfBuff(me, i)) :
+                buffGroups.Where(i => IsValidFriendlyBuff(me, spawn, i));
             var buffSpell = buffSpells.FirstOrDefault();
 
             if
@@ -109,7 +111,7 @@ namespace MQFlux.Commands
 
         private static bool IsValidFriendlyBuff(CharacterType me, SpawnType spawn, SpellType spell)
         {
-            var isBuff = spell.IsBuff();
+            var isBuff = BuffSpellCategories.Contains(spell.GetSpellCategory());
 
             if (!isBuff)
             {
@@ -117,6 +119,13 @@ namespace MQFlux.Commands
             }
 
             if (spell.TargetType == "Self")
+            {
+                return false;
+            }
+
+            var isBuffUseful = IsBuffUseful(spawn.Class, spell);
+
+            if (!isBuffUseful)
             {
                 return false;
             }
@@ -140,11 +149,48 @@ namespace MQFlux.Commands
             return stacks;
         }
 
+        private static bool IsBuffUseful(ClassType buffTargetCass, SpellType spell)
+        {
+            var @class = (Class)buffTargetCass;
+            var spellCategory = spell.GetSpellCategory();
+            switch (@class)
+            {
+                case Class.Warrior:
+                case Class.Monk:
+                case Class.Rogue:
+                case Class.Berserker:
+                    return MeleeBuffSpellCategories.Contains(spellCategory);
+                case Class.Cleric:
+                case Class.Druid:
+                case Class.Shaman:
+                case Class.Necromancer:
+                case Class.Wizard:
+                case Class.Mage:
+                case Class.Enchanter:
+                    return CasterBuffSpellCategories.Contains(spellCategory);
+                case Class.Paladin:
+                case Class.Ranger:
+                case Class.Shadowknight:
+                case Class.Bard:
+                case Class.Beastlord:
+                    return HybridBuffSpellCategories.Contains(spellCategory);
+                default:
+                    return true;
+            }
+        }
+
         private static bool IsValidSelfBuff(CharacterType me, SpellType spell)
         {
-            var isBuff = spell.IsBuff();
+            var isBuff = BuffSpellCategories.Contains(spell.GetSpellCategory());
 
             if (!isBuff)
+            {
+                return false;
+            }
+
+            var isBuffUseful = IsBuffUseful(me.Class, spell);
+
+            if (!isBuffUseful)
             {
                 return false;
             }
@@ -170,5 +216,160 @@ namespace MQFlux.Commands
 
             return stacks;
         }
+        private static readonly SpellCategory[] MeleeBuffSpellCategories = new SpellCategory[]
+        {
+            SpellCategory.AEGOLISM,
+            SpellCategory.AGILITY,
+            SpellCategory.ARMOR_CLASS,
+            SpellCategory.ATTACK,
+            SpellCategory.CHARISMA,
+            SpellCategory.DAMAGE_SHIELD,
+            SpellCategory.DEFENSIVE,
+            SpellCategory.DEXTERITY,
+            SpellCategory.ENDURANCE,
+            //SpellCategory.FAST, // Fast heals?
+            SpellCategory.HASTE,
+            //SpellCategory.HASTE_SPELL_FOCUS,
+            SpellCategory.HEALTH,
+            //SpellCategory.HEALTH_MANA,
+            SpellCategory.HP_BUFFS,
+            SpellCategory.HP_TYPE_ONE,
+            SpellCategory.HP_TYPE_TWO,
+            //SpellCategory.LEVITATE,
+            //SpellCategory.MANA,
+            //SpellCategory.MANA_FLOW,
+            SpellCategory.MOVEMENT,
+            SpellCategory.REGEN,
+            SpellCategory.RESIST_BUFF,
+            //SpellCategory.RUNE,
+            //SpellCategory.SHIELDING,
+            //SpellCategory.SPELLSHIELD,
+            //SpellCategory.SPELL_FOCUS,
+            //SpellCategory.SPELL_GUARD,
+            SpellCategory.STAMINA,
+            SpellCategory.STATISTIC_BUFFS,
+            SpellCategory.STRENGTH,
+            SpellCategory.SYMBOL,
+            //SpellCategory.UTILITY_BENEFICIAL,
+            //SpellCategory.VISION,
+            //SpellCategory.WISDOM_INTELLIGENCE
+        };
+
+        private static readonly SpellCategory[] CasterBuffSpellCategories = new SpellCategory[]
+        {
+            SpellCategory.AEGOLISM,
+            //SpellCategory.AGILITY,
+            //SpellCategory.ARMOR_CLASS,
+            //SpellCategory.ATTACK,
+            SpellCategory.CHARISMA,
+            //SpellCategory.DAMAGE_SHIELD,
+            //SpellCategory.DEFENSIVE,
+            //SpellCategory.DEXTERITY,
+            //SpellCategory.ENDURANCE,
+            //SpellCategory.FAST, // Fast heals?
+            //SpellCategory.HASTE,
+            SpellCategory.HASTE_SPELL_FOCUS,
+            SpellCategory.HEALTH,
+            SpellCategory.HEALTH_MANA,
+            SpellCategory.HP_BUFFS,
+            SpellCategory.HP_TYPE_ONE,
+            SpellCategory.HP_TYPE_TWO,
+            //SpellCategory.LEVITATE,
+            SpellCategory.MANA,
+            SpellCategory.MANA_FLOW,
+            SpellCategory.MOVEMENT,
+            SpellCategory.REGEN,
+            SpellCategory.RESIST_BUFF,
+            //SpellCategory.RUNE,
+            //SpellCategory.SHIELDING,
+            //SpellCategory.SPELLSHIELD,
+            //SpellCategory.SPELL_FOCUS,
+            //SpellCategory.SPELL_GUARD,
+            //SpellCategory.STAMINA,
+            SpellCategory.STATISTIC_BUFFS,
+            //SpellCategory.STRENGTH,
+            SpellCategory.SYMBOL,
+            //SpellCategory.UTILITY_BENEFICIAL,
+            //SpellCategory.VISION,
+            SpellCategory.WISDOM_INTELLIGENCE
+        };
+
+        private static readonly SpellCategory[] HybridBuffSpellCategories = new SpellCategory[]
+        {
+            SpellCategory.AEGOLISM,
+            SpellCategory.AGILITY,
+            SpellCategory.ARMOR_CLASS,
+            SpellCategory.ATTACK,
+            SpellCategory.CHARISMA,
+            SpellCategory.DAMAGE_SHIELD,
+            SpellCategory.DEFENSIVE,
+            SpellCategory.DEXTERITY,
+            SpellCategory.ENDURANCE,
+            //SpellCategory.FAST, // Fast heals?
+            SpellCategory.HASTE,
+            SpellCategory.HASTE_SPELL_FOCUS,
+            SpellCategory.HEALTH,
+            SpellCategory.HEALTH_MANA,
+            SpellCategory.HP_BUFFS,
+            SpellCategory.HP_TYPE_ONE,
+            SpellCategory.HP_TYPE_TWO,
+            //SpellCategory.LEVITATE,
+            SpellCategory.MANA,
+            SpellCategory.MANA_FLOW,
+            SpellCategory.MOVEMENT,
+            SpellCategory.REGEN,
+            SpellCategory.RESIST_BUFF,
+            //SpellCategory.RUNE,
+            //SpellCategory.SHIELDING,
+            //SpellCategory.SPELLSHIELD,
+            //SpellCategory.SPELL_FOCUS,
+            //SpellCategory.SPELL_GUARD,
+            SpellCategory.STAMINA,
+            SpellCategory.STATISTIC_BUFFS,
+            SpellCategory.STRENGTH,
+            SpellCategory.SYMBOL,
+            //SpellCategory.UTILITY_BENEFICIAL,
+            //SpellCategory.VISION,
+            SpellCategory.WISDOM_INTELLIGENCE
+        };
+
+        private static readonly SpellCategory[] BuffSpellCategories = new SpellCategory[]
+        {
+            SpellCategory.AEGOLISM,
+            SpellCategory.AGILITY,
+            SpellCategory.ARMOR_CLASS,
+            SpellCategory.ATTACK,
+            SpellCategory.CHARISMA,
+            SpellCategory.DAMAGE_SHIELD,
+            SpellCategory.DEFENSIVE,
+            SpellCategory.DEXTERITY,
+            SpellCategory.ENDURANCE,
+            //SpellCategory.FAST, // Fast heals?
+            SpellCategory.HASTE,
+            SpellCategory.HASTE_SPELL_FOCUS,
+            SpellCategory.HEALTH,
+            SpellCategory.HEALTH_MANA,
+            SpellCategory.HP_BUFFS,
+            SpellCategory.HP_TYPE_ONE,
+            SpellCategory.HP_TYPE_TWO,
+            //SpellCategory.LEVITATE,
+            SpellCategory.MANA,
+            SpellCategory.MANA_FLOW,
+            SpellCategory.MOVEMENT,
+            SpellCategory.REGEN,
+            SpellCategory.RESIST_BUFF,
+            //SpellCategory.RUNE,
+            //SpellCategory.SHIELDING,
+            //SpellCategory.SPELLSHIELD,
+            //SpellCategory.SPELL_FOCUS,
+            //SpellCategory.SPELL_GUARD,
+            SpellCategory.STAMINA,
+            SpellCategory.STATISTIC_BUFFS,
+            SpellCategory.STRENGTH,
+            SpellCategory.SYMBOL,
+            //SpellCategory.UTILITY_BENEFICIAL,
+            //SpellCategory.VISION,
+            SpellCategory.WISDOM_INTELLIGENCE
+        };
     }
 }

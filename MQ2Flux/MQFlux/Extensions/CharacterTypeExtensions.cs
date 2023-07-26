@@ -5,6 +5,9 @@ using System.Linq;
 namespace MQFlux.Extensions
 {
 
+    /// <summary>
+    /// TODO: move these to the <see cref="CharacterType"/> class when they have been tested.
+    /// </summary>
     public static class CharacterTypeExtensions
     {
         public static bool DoIHaveReagentsToCast(this CharacterType @this, SpellType spell)

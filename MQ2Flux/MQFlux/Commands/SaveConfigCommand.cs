@@ -23,11 +23,11 @@ namespace MQFlux.Commands
             this.config = config;
         }
 
-        public override async Task<CommandResponse<Unit>> Handle(SaveConfigCommand request, CancellationToken cancellationToken)
+        public override Task<CommandResponse<Unit>> Handle(SaveConfigCommand request, CancellationToken cancellationToken)
         {
-            await config.Save(request.Notify);
+            config.Save(request.Notify);
 
-            return CommandResponse.FromResult(Unit.Value);
+            return CommandResponse.FromResultTask(Unit.Value);
         }
     }
 }

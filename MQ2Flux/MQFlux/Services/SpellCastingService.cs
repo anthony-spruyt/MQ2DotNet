@@ -56,17 +56,30 @@ namespace MQFlux.Services
             try
             {
                 var me = context.TLO.Me;
+                string spellName = spell.Name;
+                string reason;
 
-                if
-                (
-                    !me.Class.CanCast ||
-                    me.AmICasting() ||
-                    (
-                        me.Moving &&
-                        spell.HasCastTime()
-                    )
-                )
+                if (!me.Class.CanCast)
                 {
+                    reason = "failed - you are not a spell caster";
+                    mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
+
+                    return false;
+                }
+
+                if (me.AmICasting())
+                {
+                    reason = "failed - you are already busy casting a spell";
+                    mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
+
+                    return false;
+                }
+
+                if (me.Moving && spell.HasCastTime())
+                {
+                    reason = "failed - you are moving";
+                    mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
+
                     return false;
                 }
 
@@ -74,9 +87,13 @@ namespace MQFlux.Services
 
                 if (spellBookSpell == null)
                 {
-                    // You dont know this spell.
+                    reason = "failed - you do not know this spell";
+                    mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
+
                     return false;
                 }
+
+                spellName = spellBookSpell.Name;
 
                 var gem = (int)me.GetGem(spellBookSpell.Name).GetValueOrDefault(0u);
 
@@ -86,31 +103,51 @@ namespace MQFlux.Services
 
                     if (!await MemorizeSpellInternal(gem, spellBookSpell))
                     {
+                        reason = "failed - could not memorize spell";
+                        mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
+
                         return false;
                     }
 
                     if (!await WaitForSpellReady(gem, cancellationToken))
                     {
+                        reason = "failed - spell not ready";
+                        mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
+
                         return false;
                     }
                 }
 
-                if (waitForSpellReady && !await WaitForSpellReady(gem, cancellationToken))
-                {
-                    return false;
-                }
-
                 if
                 (
-                    !me.IsSpellReady(gem) ||
-                    spellBookSpell.Mana > me.CurrentMana ||
-                    spellBookSpell.EnduranceCost > me.CurrentEndurance
+                    (
+                        waitForSpellReady &&
+                        !await WaitForSpellReady(gem, cancellationToken)
+                    ) ||
+                    !me.IsSpellReady(gem)
                 )
                 {
+                    reason = "failed - spell not ready";
+                    mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
+
                     return false;
                 }
 
-                // TODO check for reagents.
+                if (spellBookSpell.Mana > me.CurrentMana || spellBookSpell.EnduranceCost > me.CurrentEndurance)
+                {
+                    reason = $"failed - insufficient resources";
+                    mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
+
+                    return false;
+                }
+
+                if (!me.DoIHaveReagentsToCast(spellBookSpell))
+                {
+                    reason = $"failed - missing reagents";
+                    mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
+
+                    return false;
+                }
 
                 var castTime = spellBookSpell.CastTime.GetValueOrDefault(TimeSpan.Zero);
                 var timeout = castTime + TimeSpan.FromMilliseconds(1000); // add some fat
@@ -142,9 +179,9 @@ namespace MQFlux.Services
 
                 if (fizzled || interrupted)
                 {
-                    var reason = fizzled ? "fizzled" : "was interrupted";
+                    reason = fizzled ? "fizzled" : "was interrupted";
 
-                    mqLogger.Log($"Casting [\ay{spellBookSpell.Name}\aw] \ar{reason}", TimeSpan.Zero);
+                    mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
 
                     return false;
                 }
