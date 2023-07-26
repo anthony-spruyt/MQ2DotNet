@@ -20,7 +20,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Name of the skill
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-        
+
         /// <summary>
         /// Skill number
         /// </summary>
@@ -30,12 +30,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Reuse timer for the ability in milliseconds (not time remaining)
         /// </summary>
         public TimeSpan? ReuseTime => GetMember<IntType>("ReuseTime");
-        
+
         /// <summary>
         /// Minimum level for your class
         /// </summary>
         public uint? MinLevel => GetMember<IntType>("MinLevel");
-        
+
         /// <summary>
         /// Skill cap based on your current level and class
         /// </summary>
@@ -45,12 +45,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns TRUE if the skill uses the kick/bash/slam/backstab/frenzy timer
         /// </summary>
         public bool AltTimer => (uint?)GetMember<IntType>("AltTimer") > 0;
-        
+
         /// <summary>
         /// Returns TRUE if the skill requires activation, IOW it is not passive.
         /// </summary>
         public bool Activated => GetMember<BoolType>("Activated");
-        
+
         /// <summary>
         /// Skill has /autoskill on?
         /// </summary>

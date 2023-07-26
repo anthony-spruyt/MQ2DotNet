@@ -30,7 +30,7 @@
         /// <param name="typeVar"></param>
         public static implicit operator bool?(BoolType typeVar)
         {
-            
+
             if (typeVar == null || typeVar.VarPtr == null)
             {
                 return null;

@@ -14,24 +14,24 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             _items = new IndexedMember<StringType, int>(this, "Items");
         }
-        
+
         /// <summary>
         /// Select the first item in the context menu with text containg a given string
         /// </summary>
         /// <param name="containing">Text to search for</param>
         /// <returns>true if an item was found, otherwise false</returns>
         public bool Select(string containing) => GetMember<BoolType>("Select", containing);
-        
+
         /// <summary>
         /// TODO: What is this?
         /// </summary>
         public uint? NumVisibleMenus => GetMember<IntType>("NumVisibleMenus");
-        
+
         /// <summary>
         /// TODO: What is this?
         /// </summary>
         public uint? CurrMenu => GetMember<IntType>("CurrMenu");
-        
+
         /// <summary>
         /// TODO: What is this?
         /// </summary>
@@ -56,7 +56,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <returns></returns>
         public string GetItem(int index) => _items[index];
 
-        public IEnumerable<string>  Items
+        public IEnumerable<string> Items
         {
             get
             {

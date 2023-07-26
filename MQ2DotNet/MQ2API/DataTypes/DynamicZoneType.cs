@@ -126,7 +126,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The leader of the dynamic zone
         /// </summary>
         public DZMemberType Leader => GetMember<DZMemberType>("Leader");
-        
+
         /// <summary>
         /// TODO: What is this? (online doco has no info on this)
         /// </summary>

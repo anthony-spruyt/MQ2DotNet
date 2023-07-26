@@ -34,7 +34,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Current value of the timer in 100ms intervals
         /// </summary>
         public uint? Value => GetMember<IntType>("Value");
-        
+
         /// <summary>
         /// Original value of the timer in 100ms, from when the variable was first created
         /// </summary>

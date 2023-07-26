@@ -2936,7 +2936,7 @@ enum ALTCURRENCY
 
             if (id != -1)
             {
-                Ability =me.GetAltAbility(id);
+                Ability = me.GetAltAbility(id);
                 ID = id;
                 Ready = me.GetAltAbilityReady(ID.Value);
                 Timer = me.GetAltAbilityTimer(ID.Value);

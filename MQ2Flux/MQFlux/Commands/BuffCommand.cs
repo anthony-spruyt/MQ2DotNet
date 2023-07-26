@@ -92,8 +92,8 @@ namespace MQFlux.Commands
 
             if
             (
-                buffSpell == null || 
-                buffSpell.Mana.GetValueOrDefault(0) > (int)me.CurrentMana.GetValueOrDefault(0u) || 
+                buffSpell == null ||
+                buffSpell.Mana.GetValueOrDefault(0) > (int)me.CurrentMana.GetValueOrDefault(0u) ||
                 buffSpell.EnduranceCost.GetValueOrDefault(0u) > (int)me.CurrentEndurance.GetValueOrDefault(0u)
             )
             {

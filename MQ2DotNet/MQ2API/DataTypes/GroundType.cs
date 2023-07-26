@@ -43,7 +43,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <returns></returns>
         public GroundType DoFace() => GetMember<GroundType>("DoFace");
-        
+
         /// <summary>
         /// Clears the currently selected ground spawn
         /// </summary>
@@ -53,37 +53,37 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Ground item ID (not the same as item ID, this is like spawn ID)
         /// </summary>
         public int? ID => GetMember<IntType>("ID");
-        
+
         /// <summary>
         /// TODO: Document GroundType.SubID
         /// </summary>
         public int? SubID => GetMember<IntType>("SubID");
-        
+
         /// <summary>
         /// ID of the zone the spawn is in?
         /// </summary>
         public int? ZoneID => GetMember<IntType>("ZoneID");
-        
+
         /// <summary>
         /// X coordinate (Westward-positive)
         /// </summary>
         public float? W => X;
-        
+
         /// <summary>
         /// X coordinate (Westward-positive)
         /// </summary>
         public float? X => GetMember<FloatType>("X");
-        
+
         /// <summary>
         /// Y coordinate (Northward-positive)
         /// </summary>
         public float? N => Y;
-        
+
         /// <summary>
         /// Y coordinate (Northward-positive)
         /// </summary>
         public float? Y => GetMember<FloatType>("Y");
-        
+
         /// <summary>
         /// Z coordinate (Upward-positive)
         /// </summary>
@@ -92,7 +92,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Z coordinate (Upward-positive)
         /// </summary>
         public float? Z => GetMember<FloatType>("Z");
-        
+
         /// <summary>
         /// Internal name
         /// </summary>
@@ -113,18 +113,18 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Distance from player to ground item
         /// </summary>
         public float? Distance => GetMember<FloatType>("Distance");
-        
+
         /// <summary>
         /// 3D distance from character to the ground item
         /// </summary>
         public float? Distance3D => GetMember<FloatType>("Distance3D");
-        
+
         /// <summary>
         /// Direction player must move to meet this ground item.
         /// This can also be casted to a <see cref="float"/>
         /// </summary>
         public HeadingType HeadingTo => GetMember<HeadingType>("HeadingTo");
-        
+
         /// <summary>
         /// Returns TRUE if ground spawn is in line of sight
         /// </summary>

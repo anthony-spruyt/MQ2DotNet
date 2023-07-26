@@ -53,17 +53,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns the task's place (base 1) on the tasklist.
         /// </summary>
         public int? Index => GetMember<IntType>("Index");
-        
+
         /// <summary>
         /// The leader of the task
         /// </summary>
         public TaskMemberType Leader => GetMember<TaskMemberType>("Leader");
-        
+
         /// <summary>
         /// Name/title of the task
         /// </summary>
         public string Title => GetMember<StringType>("Title");
-        
+
         /// <summary>
         /// Time remaining on the task
         /// </summary>
@@ -91,7 +91,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// All task members.
         /// </summary>
-        public  IEnumerable<TaskMemberType> TaskMembers
+        public IEnumerable<TaskMemberType> TaskMembers
         {
             get
             {

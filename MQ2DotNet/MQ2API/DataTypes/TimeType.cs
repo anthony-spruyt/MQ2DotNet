@@ -19,7 +19,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public uint? Hour => GetMember<IntType>("Hour");
-        
+
         /// <summary>
         /// Hour (0-11)
         /// </summary>
@@ -61,7 +61,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         [Obsolete("Use conversion to DateTime")]
         public uint? Month => GetMember<IntType>("Month");
-        
+
         /// <summary>
         /// Year
         /// </summary>

@@ -22,7 +22,7 @@ namespace MQ2DotNet.Program
 
             // Load the assembly, and find the first/only class that inherits IProgram
             var assembly = Assembly.LoadFile(assemblyFilePath);
-            
+
             var pluginClass = assembly.GetExportedTypes().Single(t => t.GetInterfaces().Contains(typeof(IProgram)) && !t.IsAbstract);
 
             // Create an instance of the class, using Ninject to resolve any constructor dependencies
@@ -67,7 +67,7 @@ namespace MQ2DotNet.Program
                 throw new ObjectDisposedException(nameof(LoadedProgramAppDomain));
             if (_task != null)
                 throw new InvalidOperationException("Program has already been started");
-            
+
             EventLoopContext.SetExecuteRestore(() =>
             {
                 _task = _program.Main(_cts.Token, args);
@@ -80,9 +80,9 @@ namespace MQ2DotNet.Program
                 throw new ObjectDisposedException(nameof(LoadedProgramAppDomain));
             if (_cts.IsCancellationRequested)
                 throw new InvalidOperationException("Program has already been cancelled");
-            
+
             _cts.Cancel();
-            
+
             // Give the program a chance to respond to the cancellation
             EventLoopContext.DoEvents(true);
         }

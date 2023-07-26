@@ -9,7 +9,7 @@
     public class GroupMemberType : MQ2DataType
     {
         internal GroupMemberType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
-        {   
+        {
         }
 
         /// <summary>

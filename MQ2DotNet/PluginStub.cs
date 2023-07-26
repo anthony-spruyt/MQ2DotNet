@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQ2DotNet
@@ -36,9 +35,9 @@ namespace MQ2DotNet
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void fMQPulse();
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint fMQIncomingChat([MarshalAs(UnmanagedType.LPStr)]string line, uint color);
+        private delegate uint fMQIncomingChat([MarshalAs(UnmanagedType.LPStr)] string line, uint color);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate uint fMQWriteChatColor([MarshalAs(UnmanagedType.LPStr)]string line, uint color, uint filter);
+        private delegate uint fMQWriteChatColor([MarshalAs(UnmanagedType.LPStr)] string line, uint color, uint filter);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void fMQSpawn(IntPtr pSpawn);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -188,7 +187,7 @@ namespace MQ2DotNet
             }
         }
 
-#region .NET plugin commands
+        #region .NET plugin commands
         private static void NetPluginCommand(params string[] args)
         {
             // Argument parsing & validation
@@ -275,9 +274,9 @@ namespace MQ2DotNet
                 MQ2.WriteChatPlugin($"{pluginName} is not loaded");
             }
         }
-#endregion
+        #endregion
 
-#region .NET program commands
+        #region .NET program commands
         private static void NetRunCommand(params string[] args)
         {
             if (args.Length == 0)
@@ -344,7 +343,7 @@ namespace MQ2DotNet
 
                 var programAppDomain = ProgramAppDomain.Load(programFilePath, programName + "ProgramDomain");
                 _appDomains.Add(programAppDomain);
-                
+
                 MQ2.WriteChatProgram($"Starting {programName}");
 
                 programAppDomain.Start(args);
@@ -377,9 +376,9 @@ namespace MQ2DotNet
                 MQ2.WriteChatProgram($"{programName} is not running");
             }
         }
-#endregion
+        #endregion
 
-#region Plugin API callbacks, each of these will invoke the corresponding method on each loaded AppDomain
+        #region Plugin API callbacks, each of these will invoke the corresponding method on each loaded AppDomain
         private static void OnPulse()
         {
             _eventLoopContext.DoEvents(true);
@@ -586,7 +585,7 @@ namespace MQ2DotNet
                 {
                     appDomain.InvokeOnChatMQ2(line);
                 }
-                catch 
+                catch
                 {
                     // Writing an error message in chat caused by an error message in chat is probably not a great idea
                     //MQ2.WriteChatPluginError($"Exception in OnChatMQ2 in {appDomain.Name}");
@@ -597,7 +596,7 @@ namespace MQ2DotNet
                 {
                     appDomain.InvokeOnChat(line);
                 }
-                catch 
+                catch
                 {
                     //MQ2.WriteChatPluginError($"Exception in OnChat in {appDomain.Name}");
                     //MQ2.WriteChatPluginError(e.ToString());
@@ -690,7 +689,7 @@ namespace MQ2DotNet
         private static void SetGameState(uint gameState)
         {
             var gameStateEnum = Enum.IsDefined(typeof(GameState), gameState)
-                ? (GameState) gameState
+                ? (GameState)gameState
                 : GameState.Unknown;
 
             foreach (var appDomain in _appDomains)
@@ -706,6 +705,6 @@ namespace MQ2DotNet
                 }
             }
         }
-#endregion
+        #endregion
     }
 }

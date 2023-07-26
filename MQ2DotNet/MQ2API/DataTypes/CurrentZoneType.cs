@@ -16,7 +16,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// ID of the zone
         /// </summary>
         public new int? ID => GetMember<IntType>("ID");
-        
+
         /// <summary>
         /// Full zone name e.g. "The Plane of Knowledge"
         /// </summary>

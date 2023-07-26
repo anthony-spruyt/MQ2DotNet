@@ -6,7 +6,7 @@ namespace MQ2DotNet.Program
 {
     internal class ProgramAppDomain : AppDomainBase
     {
-        private LoadedProgramAppDomain LoadedProgram => (LoadedProgramAppDomain) LoadedAppDomain;
+        private LoadedProgramAppDomain LoadedProgram => (LoadedProgramAppDomain)LoadedAppDomain;
 
         private ProgramAppDomain(AppDomain appDomain, LoadedProgramAppDomain loadedProgram)
             : base(appDomain, loadedProgram)
@@ -25,7 +25,7 @@ namespace MQ2DotNet.Program
                 (appDomain, loadedProgram) => new ProgramAppDomain(appDomain, loadedProgram),
                 new[] { Path.GetDirectoryName(assemblyFilePath) },
                 assemblyFilePath);
-            
+
             return programAppDomain;
         }
 

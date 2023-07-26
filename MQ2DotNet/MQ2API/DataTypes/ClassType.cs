@@ -82,7 +82,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
-        public static implicit operator Class?(ClassType typeVar) => (Class?) (1 << (typeVar?.VarPtr.Int - 1));
+        public static implicit operator Class?(ClassType typeVar) => (Class?)(1 << (typeVar?.VarPtr.Int - 1));
 
         /// <summary>
         /// Same as <see cref="Name"/>

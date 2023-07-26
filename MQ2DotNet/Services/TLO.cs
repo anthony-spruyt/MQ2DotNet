@@ -905,7 +905,7 @@ namespace MQ2DotNet.Services
             {
                 var index = 1;
 
-                while(index <= PluginType.MAX_PLUGINS)
+                while (index <= PluginType.MAX_PLUGINS)
                 {
                     var plugin = _plugin[index];
 

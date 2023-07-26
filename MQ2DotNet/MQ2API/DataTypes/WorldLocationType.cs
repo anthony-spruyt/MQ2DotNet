@@ -22,17 +22,17 @@
         /// Access to the zone data.
         /// </summary>
         public ZoneType Zone => GetMember<ZoneType>("Zone");
-        
+
         /// <summary>
         /// Y coordinate (Northward-positive)
         /// </summary>
         public float? Y => GetMember<FloatType>("Y");
-        
+
         /// <summary>
         /// X coordinate (Westward-positive)
         /// </summary>
         public float? X => GetMember<FloatType>("X");
-        
+
         /// <summary>
         /// Z coordinate (Upward-positive)
         /// </summary>

@@ -1,5 +1,5 @@
-﻿using System;
-using MQ2DotNet.EQ;
+﻿using MQ2DotNet.EQ;
+using System;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -111,9 +111,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Implicit conversion to a nullable SpawnType enum
         /// </summary>
         /// <param name="typeVar"></param>
-        public static implicit operator EQ.SpawnType?(IntType typeVar)
+        public static implicit operator SpawnCategory?(IntType typeVar)
         {
-            return (EQ.SpawnType?)typeVar?.VarPtr.Dword;
+            return (SpawnCategory?)typeVar?.VarPtr.Dword;
         }
 
         /// <summary>

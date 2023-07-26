@@ -42,7 +42,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <returns></returns>
         public GroupMemberType GetGroupMember(int index) => _member[index];
 
-        public IEnumerable<GroupMemberType>  GroupMembers
+        public IEnumerable<GroupMemberType> GroupMembers
         {
             get
             {
@@ -129,7 +129,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// The number of caster dps mercenaries in your group.
         /// </summary>
         public uint? CasterMercCount => GetMember<IntType>("CasterMercCount");
-        
+
         /// <summary>
         /// Average HP percentage of group members, including yourself
         /// </summary>

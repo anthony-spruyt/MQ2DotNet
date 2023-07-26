@@ -31,7 +31,7 @@
         ///// Doco states seconds, but source looks like milliseconds.
         ///// </summary>
         //public long? RunTime => GetMember<Int64Type>("RunTime");
-        
+
         /// <summary>
         /// NULL if no macro running, FALSE if mqpause is off, TRUE if mqpause is on
         /// </summary>
@@ -69,7 +69,7 @@
         /// <param name="name"></param>
         /// <returns></returns>
         public bool IsOuterVar(string name) => (bool)_isOuterVariable[name];
-        
+
         /// <summary>
         /// Stack depth of the currently executing macro
         /// </summary>

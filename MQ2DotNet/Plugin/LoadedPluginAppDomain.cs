@@ -1,7 +1,7 @@
-﻿using System.IO;
+﻿using Ninject;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using Ninject;
 
 namespace MQ2DotNet.Plugin
 {
@@ -48,7 +48,7 @@ namespace MQ2DotNet.Plugin
                 {
                     // dispose-only, i.e. non-finalizable logic
                 }
-                
+
                 // Even if the constructor throws, the object is still created somehow? Guessing a nuance of AppDomain.CreateInstanceAndUnwrap
                 // So we need to check for null here :/
                 if (_plugin != null)

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using MQ2DotNet.MQ2API;
+﻿using MQ2DotNet.MQ2API;
 using MQ2DotNet.MQ2API.DataTypes;
 using MQ2DotNet.Utility;
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace MQ2DotNet.Services
 {
@@ -42,7 +42,7 @@ namespace MQ2DotNet.Services
                 var ppSpawnManager = Marshal.ReadIntPtr(NativeMethods.GetProcAddress(hDll, "pSpawnManager"));
                 var pSpawnManager = Marshal.ReadIntPtr(ppSpawnManager);
                 var pSpawn = Marshal.ReadIntPtr(pSpawnManager + NEXT_SPAWN_PTR_SIZE);
-                
+
                 while (pSpawn != IntPtr.Zero)
                 {
                     yield return new SpawnType(_mq2TypeFactory, pSpawn);
@@ -60,7 +60,7 @@ namespace MQ2DotNet.Services
             {
                 var pGroundItemListManager = GetItemList();
                 var pGroundItem = Marshal.ReadIntPtr(pGroundItemListManager);
-                
+
                 while (pGroundItem != IntPtr.Zero)
                 {
                     yield return new GroundType(_mq2TypeFactory, pGroundItem);

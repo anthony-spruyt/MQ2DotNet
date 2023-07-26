@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MQ2DotNet.EQ;
 using MQ2DotNet.MQ2API.DataTypes;
 using MQFlux.Extensions;
 using System;
@@ -52,7 +53,7 @@ namespace MQFlux.Services
                     !ability.Ready ||
                     (
                         me.AmICasting() &&
-                        string.Compare(me.Class.ShortName, "BRD") != 0
+                        me.Class != Class.Bard
                     ) ||
                     (
                         me.Class.CanCast &&

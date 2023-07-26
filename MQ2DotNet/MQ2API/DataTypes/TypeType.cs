@@ -61,7 +61,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
                 {
                     var item = GetMemberName(index);
 
-                    if (item != null )
+                    if (item != null)
                     {
                         index++;
 

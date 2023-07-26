@@ -1,5 +1,5 @@
-﻿using System;
-using MQ2DotNet.MQ2API.DataTypes;
+﻿using MQ2DotNet.MQ2API.DataTypes;
+using System;
 
 namespace MQ2DotNet.Services
 {

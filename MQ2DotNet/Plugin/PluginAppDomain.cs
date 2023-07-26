@@ -22,7 +22,7 @@ namespace MQ2DotNet.Plugin
                 (appDomain, loadedPlugin) => new PluginAppDomain(appDomain, loadedPlugin),
                 new[] { Path.GetDirectoryName(assemblyFilePath) },
                 assemblyFilePath);
-            
+
             return pluginAppDomain;
         }
     }

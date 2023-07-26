@@ -49,7 +49,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Spell ID.
         /// </summary>
         public virtual uint? ID => GetMember<IntType>("ID");
-        
+
         /// <summary>
         /// Spell Name
         /// </summary>
@@ -59,47 +59,47 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Level
         /// </summary>
         public virtual int? Level => GetMember<IntType>("Level");
-        
+
         /// <summary>
         /// Mana cost (unadjusted).
         /// </summary>
         public virtual int? Mana => GetMember<IntType>("Mana");
-        
+
         /// <summary>
         /// Resist adjustment
         /// </summary>
         public virtual int? ResistAdj => GetMember<IntType>("ResistAdj");
-        
+
         /// <summary>
         /// Maximum range to target (use <see cref="AERange"/> for AE and group spells)
         /// </summary>
         public virtual float? Range => GetMember<FloatType>("Range");
-        
+
         /// <summary>
         /// AE range (group spells use this for their range).
         /// </summary>
         public virtual float? AERange => GetMember<FloatType>("AERange");
-        
+
         /// <summary>
         /// Push back amount
         /// </summary>
         public virtual float? PushBack => GetMember<FloatType>("PushBack");
-        
+
         /// <summary>
         /// Cast time (unadjusted).
         /// </summary>
         public virtual TimeSpan? CastTime => GetMember<TimeStampType>("CastTime");
-        
+
         /// <summary>
         /// Time to recover after fizzle.
         /// </summary>
         public virtual TimeSpan? RecoveryTime => FizzleTime;
-        
+
         /// <summary>
         /// Time to recover after fizzle
         /// </summary>
         public virtual TimeSpan? FizzleTime => GetMember<TimeStampType>("FizzleTime");
-        
+
         /// <summary>
         /// Time to recast after successful cast
         /// </summary>
@@ -182,7 +182,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TODO: map to enum
         /// </summary>
         public virtual string Skill => GetMember<StringType>("Skill");
-        
+
         /// <summary>
         /// Adjusted cast time.
         /// </summary>
@@ -197,17 +197,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Duration of the spell (if any), MQ2 version
         /// </summary>
         public virtual TimeSpan? Duration => GetMember<TicksType>("Duration");
-        
+
         /// <summary>
         /// Duration of the spell (if any), EQ version
         /// </summary>
         public virtual TimeSpan? EQSpellDuration => Duration;
-        
+
         /// <summary>
         /// Message when you cast the spell
         /// </summary>
         public virtual string CastByMe => GetMember<StringType>("CastByMe");
-        
+
         /// <summary>
         /// Message when someone else casts the spell.
         /// </summary>
@@ -233,7 +233,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TODO: map to enum
         /// </summary>
         public virtual string CounterType => GetMember<StringType>("CounterType");
-        
+
         /// <summary>
         /// The number of counters that the spell adds.
         /// </summary>
@@ -471,22 +471,22 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// TODO: What is SpellType.CalcIndex
         /// </summary>
         public virtual int? CalcIndex => GetMember<IntType>("CalcIndex");
-        
+
         /// <summary>
         /// Number of spell effect slots this spell has
         /// </summary>
         public virtual int? NumEffects => GetMember<IntType>("NumEffects");
-        
+
         /// <summary>
         /// TODO: What is SpellType.AutoCast
         /// </summary>
         public virtual uint? AutoCast => GetMember<IntType>("AutoCast");
-        
+
         /// <summary>
         /// TODO: What is SpellType.Extra
         /// </summary>
         public virtual string Extra => GetMember<StringType>("Extra");
-        
+
         /// <summary>
         /// Shared recast timer number for this spell
         /// </summary>

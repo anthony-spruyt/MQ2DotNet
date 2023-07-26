@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MQ2DotNet.EQ;
 using MQFlux.Core;
 using MQFlux.Extensions;
 using System.Threading;
@@ -24,7 +25,7 @@ namespace MQFlux.Behaviors
                 notCastingRequest.Context.TLO.Me.AmICasting() &&
                 !(
                     notCastingRequest.AllowBard &&
-                    string.Compare(notCastingRequest.Context.TLO.Me.Class.ShortName, "BRD") == 0
+                    notCastingRequest.Context.TLO.Me.Class == Class.Bard
                 )
             )
             {

@@ -83,7 +83,7 @@ namespace MQ2DotNet
 
         protected StandardKernel GetInjectionKernel()
         {
-            var kernel = new StandardKernel(new NinjectSettings {InjectNonPublic = true});
+            var kernel = new StandardKernel(new NinjectSettings { InjectNonPublic = true });
             kernel.Bind<LoadedAppDomainBase>().ToConstant(this).InTransientScope();
             //kernel.Bind<Chat>().ToSelf();
             //kernel.Bind<Commands>().ToSelf();
@@ -168,7 +168,7 @@ namespace MQ2DotNet
                 throw new ObjectDisposedException(nameof(LoadedAppDomainBase));
 
             var item = new GroundType(_typeFactory, pItem);
-            
+
             EventLoopContext.SetExecuteRestore(() => OnAddGroundItem.Raise(null, item));
         }
 
@@ -182,7 +182,7 @@ namespace MQ2DotNet
                 throw new ObjectDisposedException(nameof(LoadedAppDomainBase));
 
             var item = new GroundType(_typeFactory, pItem);
-            
+
             EventLoopContext.SetExecuteRestore(() => OnRemoveGroundItem.Raise(null, item));
         }
 

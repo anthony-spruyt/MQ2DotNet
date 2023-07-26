@@ -31,7 +31,7 @@
         /// Switch ID
         /// </summary>
         public uint? ID => GetMember<IntType>("ID");
-        
+
         /// <summary>
         /// X coordinate (Westward-positive)
         /// </summary>
@@ -106,12 +106,12 @@
         /// True if the switch is in the "open" state (<see cref="State"/> == 1)
         /// </summary>
         public bool Open => GetMember<BoolType>("Open");
-        
+
         /// <summary>
         /// Direction player must move to meet this switch
         /// </summary>
         public HeadingType HeadingTo => GetMember<HeadingType>("HeadingTo");
-        
+
         /// <summary>
         /// Name
         /// </summary>
@@ -121,12 +121,12 @@
         /// 2D distance from player to this switch in the XY plane
         /// </summary>
         public float? Distance => GetMember<FloatType>("Distance");
-        
+
         /// <summary>
         /// 3D distance from player to this switch
         /// </summary>
         public float? Distance3D => GetMember<FloatType>("Distance3D");
-        
+
         /// <summary>
         /// Returns TRUE if the switch is in LoS
         /// </summary>

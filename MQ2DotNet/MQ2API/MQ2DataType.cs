@@ -32,7 +32,7 @@ namespace MQ2DotNet.MQ2API
             _typeFactory = typeFactory;
             _typeVar = typeVar;
         }
-        
+
         /// <summary>
         /// Underlying data storage. Exposed for use in basic types e.g. int, double, etc
         /// </summary>
@@ -157,7 +157,7 @@ namespace MQ2DotNet.MQ2API
             /// <returns></returns>
             public T2 this[TIndex2 index] => _owner.GetMember<T2>(_name, index.ToString());
         }
-        
+
         /// <summary>
         /// Helper class to access members with an indexer that return a string type
         /// </summary>

@@ -636,7 +636,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Does this item have Evolving experience on?
         /// </summary>
         public EvolvingItemType Evolving => GetMember<EvolvingItemType>("Evolving");
-        
+
         /// <summary>
         /// AC value on item
         /// </summary>

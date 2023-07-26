@@ -23,7 +23,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
             _tab = new IndexedMember<WindowType, string, WindowType, int>(this, "Tab");
             List = new ListMember(this);
         }
-        
+
         /// <summary>
         /// Sends a left mouse button down notification to the window/control
         /// </summary>
@@ -129,7 +129,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns TRUE if the window is open
         /// </summary>
         public bool Open => GetMember<BoolType>("Open");
-        
+
         /// <summary>
         /// Get a child window by name.
         /// </summary>
@@ -142,13 +142,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         [JsonIgnore]
         public WindowType Parent => GetMember<WindowType>("Parent");
-        
+
         /// <summary>
         /// First child window/control
         /// </summary>
         [JsonIgnore]
         public WindowType FirstChild => Children ? GetMember<WindowType>("FirstChild") : null;
-        
+
         /// <summary>
         /// Next sibling window
         /// </summary>
@@ -178,62 +178,62 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
             return items;
         }
-        
+
         /// <summary>
         /// Vertical scrollbar range
         /// </summary>
         public uint? VScrollMax => GetMember<IntType>("VScrollMax");
-        
+
         /// <summary>
         /// Vertical scrollbar position
         /// </summary>
         public uint? VScrollPos => GetMember<IntType>("VScrollPos");
-        
+
         /// <summary>
         /// Vertical scrollbar position in % to range from 0 to 100
         /// </summary>
         public int? VScrollPct => GetMember<IntType>("VScrollPct");
-        
+
         /// <summary>
         /// Horizontal scrollbar range
         /// </summary>
         public uint? HScrollMax => GetMember<IntType>("HScrollMax");
-        
+
         /// <summary>
         /// Horizontal scrollbar position
         /// </summary>
         public uint? HScrollPos => GetMember<IntType>("HScrollPos");
-        
+
         /// <summary>
         /// Horizontal scrollbar position in % to range from 0 to 100
         /// </summary>
         public uint? HScrollPct => GetMember<IntType>("HScrollPct");
-        
+
         /// <summary>
         /// Returns TRUE if the window has children
         /// </summary>
         public bool Children => GetMember<BoolType>("Children");
-        
+
         /// <summary>
         /// Returns TRUE if the window has siblings
         /// </summary>
         public bool Siblings => GetMember<BoolType>("Siblings");
-        
+
         /// <summary>
         /// Returns TRUE if the window is minimized
         /// </summary>
         public bool Minimized => GetMember<BoolType>("Minimized");
-        
+
         /// <summary>
         /// Returns TRUE if the mouse is currently over the window
         /// </summary>
         public bool MouseOver => GetMember<BoolType>("MouseOver");
-        
+
         /// <summary>
         /// Screen X position
         /// </summary>
         public uint? X => GetMember<IntType>("X");
-        
+
         /// <summary>
         /// Screen Y position
         /// </summary>
@@ -248,44 +248,44 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Width in pixels
         /// </summary>
         public uint? Width => GetMember<IntType>("Width");
-        
+
         /// <summary>
         /// Height in pixels
         /// </summary>
         public uint? Height => GetMember<IntType>("Height");
-        
+
         /// <summary>
         /// Background color
         /// </summary>
         public Color? BGColor => GetMember<ArgbType>("BGColor");
-        
+
         /// <summary>
         /// Window's text.
         /// STMLBox: returns the contents of the STML.
         /// Page: returns the name of the page's Tab.
         /// </summary>
         public string Text => GetMember<StringType>("Text");
-        
+
         /// <summary>
         /// TooltipReference text
         /// </summary>
         public string Tooltip => GetMember<StringType>("Tooltip");
-        
+
         /// <summary>
         /// Returns TRUE if the button has been checked
         /// </summary>
         public bool Checked => GetMember<BoolType>("Checked");
-        
+
         /// <summary>
         /// Returns TRUE if the window is highlighted
         /// </summary>
         public bool Highlighted => GetMember<BoolType>("Highlighted");
-        
+
         /// <summary>
         /// Returns TRUE if the window is enabled
         /// </summary>
         public bool Enabled => GetMember<BoolType>("Enabled");
-        
+
         /// <summary>
         /// Window style code
         /// </summary>
@@ -300,27 +300,27 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Name of window piece, e.g. "ChatWindow" for top level windows, or the piece name for child windows. Note: this is Custom UI dependent
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-        
+
         /// <summary>
         /// ScreenID of window piece. Note: This is not Custom UI dependent, it must be the same on all UIs
         /// </summary>
         public string ScreenID => GetMember<StringType>("ScreenID");
-        
+
         /// <summary>
         /// Type of window piece (Screen for top level windows, or Listbox, Button, Gauge, Label, Editbox, Slider, etc)
         /// </summary>
         public string Type => GetMember<StringType>("Type");
-        
+
         /// <summary>
         /// Number of items in a Listbox or Combobox
         /// </summary>
         public uint? Items => GetMember<IntType>("Items");
-        
+
         /// <summary>
         /// Has the other person clicked the Trade button?
         /// </summary>
         public bool HisTradeReady => GetMember<BoolType>("HisTradeReady");
-        
+
         /// <summary>
         /// Have I clicked the Trade button?
         /// </summary>

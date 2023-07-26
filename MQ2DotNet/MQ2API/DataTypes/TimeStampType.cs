@@ -14,7 +14,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         internal TimeStampType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
         }
-        
+
         ///// <summary>
         ///// The hours component of "hh:mm:ss"
         ///// </summary>
@@ -74,13 +74,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
         ///// </summary>
         //[Obsolete("Use conversion to TimeSpan")]
         //public long? Ticks => GetMember<Int64Type>("Ticks");
-        
+
         /// <summary>
         /// Implicit conversion to TimeSpan
         /// </summary>
         /// <param name="timestampType"></param>
         /// <returns></returns>
-        public static implicit operator TimeSpan? (TimeStampType timestampType)
+        public static implicit operator TimeSpan?(TimeStampType timestampType)
         {
             if (timestampType == null)
             {

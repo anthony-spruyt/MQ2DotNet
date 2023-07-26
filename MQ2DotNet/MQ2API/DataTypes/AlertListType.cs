@@ -26,7 +26,7 @@
         /// <summary>
         /// Any spawn with the given type
         /// </summary>
-        public EQ.SpawnType? SpawnType => GetMember<IntType>("SpawnType");
+        public SpawnCategory? SpawnType => GetMember<IntType>("SpawnType");
 
         /// <summary>
         /// Any spawn with the given Spawn ID

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MQ2DotNet.Utility;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MQ2DotNet.Utility;
 
 namespace MQ2DotNet.Services
 {
@@ -95,7 +95,7 @@ namespace MQ2DotNet.Services
                 {
                     await WaitForInternal(predicate, cancellationToken, subscribe, unsubscribe);
                 }
-                
+
                 return true;
             }
             catch (TimeoutException)

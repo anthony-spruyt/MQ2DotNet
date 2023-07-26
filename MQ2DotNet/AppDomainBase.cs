@@ -34,8 +34,8 @@ namespace MQ2DotNet
         }
 
         public string Name
-        { 
-            get 
+        {
+            get
             {
                 try
                 {
@@ -45,7 +45,7 @@ namespace MQ2DotNet
                 {
                     return $"{Guid.NewGuid()}";
                 }
-            } 
+            }
         }
 
         public bool Finished
@@ -111,14 +111,14 @@ namespace MQ2DotNet
             {
                 // Create an instance of LoadedPluginAppDomain in the new app domain
                 var loaded = (TLoaded)appDomain.CreateInstanceAndUnwrap(
-                                 assemblyName: Assembly.GetAssembly(typeof(TLoaded)).FullName, 
-                                 typeName: typeof(TLoaded).FullName ?? throw new InvalidOperationException(), 
-                                 ignoreCase: false, 
-                                 bindingAttr: BindingFlags.Default, 
-                                 binder: null, 
-                                 args: args, 
-                                 culture: null, 
-                                 activationAttributes: null) 
+                                 assemblyName: Assembly.GetAssembly(typeof(TLoaded)).FullName,
+                                 typeName: typeof(TLoaded).FullName ?? throw new InvalidOperationException(),
+                                 ignoreCase: false,
+                                 bindingAttr: BindingFlags.Default,
+                                 binder: null,
+                                 args: args,
+                                 culture: null,
+                                 activationAttributes: null)
                              ?? throw new InvalidOperationException();
 
                 return constructor(appDomain, loaded);
@@ -129,7 +129,7 @@ namespace MQ2DotNet
                 throw;
             }
         }
-        
+
         #region Events
         // All these methods forward over to the other app domain that the plugin/program/script/etc resides in
         internal void OnPulse()

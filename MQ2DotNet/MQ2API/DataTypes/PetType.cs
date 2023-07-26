@@ -76,17 +76,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Combat state
         /// </summary>
         public bool Combat => GetMember<BoolType>("Combat");
-        
+
         /// <summary>
         /// Is GHold enabled?
         /// </summary>
         public bool GHold => GetMember<BoolType>("GHold");
-        
+
         /// <summary>
         /// Is Hold enabled?
         /// </summary>
         public bool Hold => GetMember<BoolType>("Hold");
-        
+
         /// <summary>
         /// Is ReGroup enabled?
         /// </summary>
@@ -96,7 +96,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Returns the pet's current stance, (e.g. FOLLOW, GUARD)
         /// </summary>
         public PetStance? Stance => GetMember<StringType>("Stance");
-        
+
         /// <summary>
         /// Is Stop enabled?
         /// </summary>
@@ -108,7 +108,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         [JsonIgnore]
         public SpawnType Target => GetMember<SpawnType>("Target");
-        
+
         /// <summary>
         /// Is Taunt enabled?
         /// </summary>

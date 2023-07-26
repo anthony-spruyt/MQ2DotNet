@@ -18,7 +18,7 @@
         /// <param name="typeVar"></param>
         public static implicit operator byte(ByteType typeVar)
         {
-            return (byte) (typeVar.VarPtr.Dword & 0xFF);
+            return (byte)(typeVar.VarPtr.Dword & 0xFF);
         }
     }
 }

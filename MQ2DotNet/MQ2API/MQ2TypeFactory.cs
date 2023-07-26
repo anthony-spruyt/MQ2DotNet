@@ -76,7 +76,7 @@ namespace MQ2DotNet.MQ2API
                         continue;
 
                     // It needs a public constructor with a single MQ2TypeVar as a parameter
-                    var ctor = type.GetConstructor(new[] {typeof(MQ2TypeFactory), typeof(MQ2TypeVar)});
+                    var ctor = type.GetConstructor(new[] { typeof(MQ2TypeFactory), typeof(MQ2TypeVar) });
 
                     // If the type is defined in this assembly, allow an internal constructor too
                     if (ctor == null && assembly == Assembly.GetExecutingAssembly())

@@ -1,6 +1,6 @@
 ﻿namespace MQ2DotNet.EQ
 {
-    public enum SpawnType : uint
+    public enum SpawnCategory : uint
     {
         NONE = 0U,
         PC = 1U,

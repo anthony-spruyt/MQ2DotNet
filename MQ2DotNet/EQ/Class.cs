@@ -8,7 +8,6 @@ namespace MQ2DotNet.EQ
     [Flags]
     public enum Class : int
     {
-#pragma warning disable 1591
         Warrior = 0x1,
         Cleric = 0x2,
         Paladin = 0x4,
@@ -31,8 +30,7 @@ namespace MQ2DotNet.EQ
         Priest = Cleric | Druid | Shaman,
         Caster = Wizard | Mage | Enchanter | Necromancer,
         Melee = Beastlord | Berserker | Bard | Rogue | Ranger | Monk,
-        
+
         All = Tank | Priest | Caster | Melee
-#pragma warning restore 1591
     }
 }

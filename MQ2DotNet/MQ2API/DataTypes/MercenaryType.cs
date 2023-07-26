@@ -32,7 +32,7 @@
         /// Current state ID of the mercenary as a number.
         /// </summary>
         public uint? StateID => GetMember<IntType>("StateID");
-        
+
         /// <summary>
         /// Index of the mercenary in your mercenary list (1 based)
         /// </summary>

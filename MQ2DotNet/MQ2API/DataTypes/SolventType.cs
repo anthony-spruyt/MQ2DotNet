@@ -16,17 +16,17 @@
         /// Item name
         /// </summary>
         public string Name => GetMember<StringType>("Name");
-        
+
         /// <summary>
         /// Item ID
         /// </summary>
         public uint? ID => GetMember<IntType>("ID");
-        
+
         /// <summary>
         /// <see cref="ItemType"/> for the solvent, if available
         /// </summary>
         public ItemType Item => GetMember<ItemType>("Item");
-        
+
         /// <summary>
         /// How many we currently have in inventory
         /// </summary>
