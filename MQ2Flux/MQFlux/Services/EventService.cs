@@ -67,7 +67,7 @@ namespace MQFlux.Services
         {
         }
 
-        private void Events_OnAddSpawn(object sender, MQ2DotNet.MQ2API.DataTypes.SpawnType e)
+        private void Events_OnAddSpawn(object sender, SpawnType e)
         {
         }
 
@@ -110,7 +110,7 @@ namespace MQFlux.Services
         {
         }
 
-        private void Events_OnRemoveSpawn(object sender, MQ2DotNet.MQ2API.DataTypes.SpawnType e)
+        private void Events_OnRemoveSpawn(object sender, SpawnType e)
         {
         }
 
