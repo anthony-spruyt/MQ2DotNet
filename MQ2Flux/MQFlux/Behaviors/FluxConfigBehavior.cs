@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Behaviors
 {
-    public interface IConfigRequest
+    public interface IFluxConfigRequest
     {
         /// <summary>
         /// The configuration that is set by the middleware. Do not set this when creating a new request.
@@ -14,23 +14,23 @@ namespace MQFlux.Behaviors
         FluxConfig Config { get; set; }
     }
 
-    public class ConfigBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class FluxConfigBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly IConfig config;
 
-        public ConfigBehavior(IConfig config)
+        public FluxConfigBehavior(IConfig config)
         {
             this.config = config;
         }
 
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            if (request is IConfigRequest configRequest)
+            if (request is IFluxConfigRequest configRequest)
             {
-                configRequest.Config = config.FluxConfig;
+                configRequest.Config = await config.GetFluxConfig(cancellationToken);
             }
 
-            return next();
+            return await next();
         }
     }
 }

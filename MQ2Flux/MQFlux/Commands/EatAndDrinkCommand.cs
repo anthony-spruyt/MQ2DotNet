@@ -23,7 +23,7 @@ namespace MQFlux.Commands
         IBankWindowNotOpenRequest
     {
         public bool AllowBard => true;
-        public CharacterConfigSection Character { get; set; }
+        public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
         public IContext Context { get; set; }
     }

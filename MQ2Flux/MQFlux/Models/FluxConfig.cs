@@ -1,50 +1,86 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace MQFlux.Models
 {
     public class FluxConfig
     {
+        [JsonPropertyOrder(0)]
         public string Version { get; set; } = "1.0.0";
-        /// <summary>
-        /// Configuration that applies to all characters.
-        /// </summary>
-        public DefaultConfigSection Defaults { get; set; } = new DefaultConfigSection();
-        /// <summary>
-        /// Character specific configuration. Overrides the default configuration.
-        /// </summary>
-        public List<CharacterConfigSection> Characters { get; set; } = new List<CharacterConfigSection>();
-    }
-
-    public class DefaultConfigSection
-    {
+        [JsonPropertyOrder(4)]
         public bool? AutoBuff { get; set; } = true;
+        [JsonPropertyOrder(5)]
         public bool? AutoDispenseFoodAndDrink { get; set; } = true;
+        [JsonPropertyOrder(6)]
         public bool? AutoEatAndDrink { get; set; } = true;
+        [JsonPropertyOrder(7)]
         public bool? AutoForage { get; set; } = true;
+        [JsonPropertyOrder(8)]
         public bool? AutoLearnLanguages { get; set; } = true;
+        [JsonPropertyOrder(9)]
         public bool? AutoPutStatFoodInTopSlots { get; set; } = true;
+        [JsonPropertyOrder(10)]
         public bool? AutoSummonFoodAndDrink { get; set; } = true;
         /// <summary>
         /// Food and drink that should not be consumed, IE stat food and drink.
         /// </summary>
+        [JsonPropertyOrder(12)]
         public List<string> DontConsume { get; set; } = new List<string>();
         /// <summary>
         /// Foraged items that should not be kept and destroyed.
         /// </summary>
+        [JsonPropertyOrder(13)]
         public List<string> ForageBlacklist { get; set; } = new List<string>();
     }
 
-    public class CharacterConfigSection : DefaultConfigSection
+    public class CharacterConfig : FluxConfig
     {
+        public CharacterConfig()
+        {
+        }
+
+        public CharacterConfig(FluxConfig defaults, string name, string server)
+        {
+            if (defaults is null)
+            {
+                throw new ArgumentNullException(nameof(defaults));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or empty.", nameof(name));
+            }
+
+            if (string.IsNullOrEmpty(server))
+            {
+                throw new ArgumentException($"'{nameof(server)}' cannot be null or empty.", nameof(server));
+            }
+
+            Name = name;
+            Server = server;
+            AutoBuff = defaults.AutoBuff;
+            AutoDispenseFoodAndDrink = defaults.AutoDispenseFoodAndDrink;
+            AutoEatAndDrink = defaults.AutoEatAndDrink;
+            AutoForage = defaults.AutoForage;
+            AutoLearnLanguages = defaults.AutoLearnLanguages;
+            AutoPutStatFoodInTopSlots = defaults.AutoPutStatFoodInTopSlots;
+            AutoSummonFoodAndDrink = defaults.AutoSummonFoodAndDrink;
+            DontConsume = defaults.DontConsume;
+            ForageBlacklist = defaults.ForageBlacklist;
+            Version = defaults.Version;
+        }
+
         /// <summary>
         /// The character name.
         /// </summary>
-        public string Name { get; set; }
+        [JsonPropertyOrder(2)]
+        public string Name { get; set; } = null;
         /// <summary>
         /// The server short name.
         /// </summary>
-        public string Server { get; set; }
+        [JsonPropertyOrder(3)]
+        public string Server { get; set; } = null;
         /// <summary>
         /// The buffs configuration.
         /// </summary>
@@ -52,6 +88,7 @@ namespace MQFlux.Models
         /// <summary>
         /// A list of food and drink dispensers.
         /// </summary>
+        [JsonPropertyOrder(11)]
         public List<FoodAndDrinkDispenser> Dispensers { get; set; } = new List<FoodAndDrinkDispenser>();
     }
 
@@ -96,82 +133,4 @@ namespace MQFlux.Models
         /// </summary>
         public int TargetCount { get; set; } = 0;
     }
-
-    public static class FluxConfigExtensions
-    {
-        /// <summary>
-        /// Determine the effective configuration.
-        /// </summary>
-        /// <param name="this"></param>
-        /// <param name="defaults"></param>
-        /// <returns></returns>
-        public static CharacterConfigSection Effective(this CharacterConfigSection @this, DefaultConfigSection defaults)
-        {
-            if (@this == null)
-            {
-                return new CharacterConfigSection();
-            }
-
-            if (defaults == null)
-            {
-                return @this;
-            }
-
-            CharacterConfigSection effective = new CharacterConfigSection()
-            {
-                Name = @this.Name,
-                Server = @this.Server,
-                //Buffs = @this.Buffs,
-                Dispensers = new List<FoodAndDrinkDispenser>(@this.Dispensers)
-            };
-
-            if (!effective.AutoBuff.HasValue)
-            {
-                effective.AutoBuff = defaults.AutoBuff;
-            }
-
-            if (!effective.AutoDispenseFoodAndDrink.HasValue)
-            {
-                effective.AutoDispenseFoodAndDrink = defaults.AutoDispenseFoodAndDrink;
-            }
-
-            if (!effective.AutoEatAndDrink.HasValue)
-            {
-                effective.AutoEatAndDrink = defaults.AutoEatAndDrink;
-            }
-
-            if (!effective.AutoForage.HasValue)
-            {
-                effective.AutoForage = defaults.AutoForage;
-            }
-
-            if (!effective.AutoLearnLanguages.HasValue)
-            {
-                effective.AutoLearnLanguages = defaults.AutoLearnLanguages;
-            }
-
-            if (!effective.AutoSummonFoodAndDrink.HasValue)
-            {
-                effective.AutoSummonFoodAndDrink = defaults.AutoSummonFoodAndDrink;
-            }
-
-            if (!effective.AutoPutStatFoodInTopSlots.HasValue)
-            {
-                effective.AutoPutStatFoodInTopSlots = defaults.AutoPutStatFoodInTopSlots;
-            }
-
-            if (!((effective.DontConsume?.Any()).GetValueOrDefault(false)) && ((defaults.DontConsume?.Any()).GetValueOrDefault(false)))
-            {
-                effective.DontConsume = new List<string>(defaults.DontConsume);
-            }
-
-            if (!((effective.ForageBlacklist?.Any()).GetValueOrDefault(false)) && ((defaults.ForageBlacklist?.Any()).GetValueOrDefault(false)))
-            {
-                effective.ForageBlacklist = new List<string>(defaults.ForageBlacklist);
-            }
-
-            return effective;
-        }
-    }
-
 }

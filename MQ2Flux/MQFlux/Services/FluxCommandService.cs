@@ -79,13 +79,6 @@ namespace MQFlux.Services
                             return;
                         }
 
-                        if (args.Any(i => new string[] { "save", "--save", "-s" }.Contains(i)))
-                        {
-                            await mediator.Send(new SaveConfigCommand(), cancellationTokenSource.Token);
-
-                            return;
-                        }
-
                         if (args.Any(i => new string[] { "test", "--test", "-t" }.Contains(i)))
                         {
                             await mediator.Send(new TestCommand(), cancellationTokenSource.Token);

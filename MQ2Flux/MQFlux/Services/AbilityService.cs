@@ -41,10 +41,10 @@ namespace MQFlux.Services
 
         public async Task<bool> DoAbilityInternal(AbilityInfo ability, string successText = null, string failureText = null, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync(cancellationToken);
-
             try
             {
+                await semaphore.WaitAsync(cancellationToken);
+
                 var me = context.TLO.Me;
 
                 if

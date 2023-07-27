@@ -1,11 +1,8 @@
-﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MQFlux.Models;
-using MQFlux.Notifications;
 using System;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -15,11 +12,8 @@ namespace MQFlux.Services
 {
     public interface IConfig
     {
-        FluxConfig FluxConfig { get; }
-
-        void Save(bool notify = false);
-
-        void Upsert(CharacterConfigSection characterConfig);
+        Task<CharacterConfig> GetCharacterConfig(CancellationToken cancellationToken = default);
+        Task<FluxConfig> GetFluxConfig(CancellationToken cancellationToken = default);
     }
 
     public static class ConfigServiceExtensions
@@ -32,78 +26,144 @@ namespace MQFlux.Services
 
     public class ConfigService : IConfig, IDisposable
     {
-        public FluxConfig FluxConfig { get; private set; }
-
         private static readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions()
         {
             WriteIndented = true,
             MaxDepth = 64,
-            ReferenceHandler = ReferenceHandler.IgnoreCycles
+            ReferenceHandler = ReferenceHandler.IgnoreCycles,
         };
-        private const string CONFIG_FILE_NAME = "MQFlux.json";
+        private const string FLUX_CONFIG_FILE_NAME = "MQFlux.json";
         private readonly IContext context;
         private readonly IMQLogger mqLogger;
-        private readonly IMediator mediator;
         private readonly ILogger<ConfigService> logger;
-        private readonly string path;
+        private readonly string fluxConfigPath;
 
-        private FileSystemWatcher watcher;
+        private CharacterConfig characterConfig;
+        private FluxConfig fluxConfig;
         private bool disposedValue;
-        private SemaphoreSlim semaphore;
+        private SemaphoreSlim getFluxConfigSemaphore;
+        private SemaphoreSlim getCharacterConfigSemaphore;
 
-        public ConfigService(IContext context, IMQLogger mqLogger, IMediator mediator, ILogger<ConfigService> logger)
+        public ConfigService(IContext context, IMQLogger mqLogger, ILogger<ConfigService> logger)
         {
             this.context = context;
             this.mqLogger = mqLogger;
-            this.mediator = mediator;
             this.logger = logger;
-            semaphore = new SemaphoreSlim(0, 1);
-            path = Path.Combine(this.context.MQ.ConfigPath, CONFIG_FILE_NAME);
-
-            Initialize();
+            getFluxConfigSemaphore = new SemaphoreSlim(1);
+            getCharacterConfigSemaphore = new SemaphoreSlim(1);
+            fluxConfigPath = Path.Combine(this.context.MQ.ConfigPath, FLUX_CONFIG_FILE_NAME);
+            characterConfig = null;
+            fluxConfig = null;
         }
 
-        public void Save(bool notify = true)
+        public async Task<CharacterConfig> GetCharacterConfig(CancellationToken cancellationToken = default)
         {
-            if (!notify)
+            if (context.TLO.Me == null)
             {
-                watcher.Changed -= ConfigChanged;
+                return null;
             }
+
+            if (fluxConfig == null)
+            {
+                _ = await GetFluxConfig(cancellationToken);
+            }
+
+            var server = context.TLO.EverQuest.Server;
+            var name = context.TLO.Me.Name;
 
             try
             {
-                File.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(FluxConfig, options: jsonOptions));
+                await getCharacterConfigSemaphore.WaitAsync(cancellationToken);
+
+                if
+                (
+                    characterConfig == null || // not loaded
+                    string.Compare(characterConfig.Name, name, true) != 0 || // different character
+                    string.Compare(characterConfig.Server, server, true) != 0
+                )
+                {
+                    var path = Path.Combine(context.MQ.ConfigPath, $"MQFlux.{server}.{name}.json");
+
+                    if (File.Exists(path))
+                    {
+                        using (Stream stream = File.OpenRead(path))
+                        {
+                            characterConfig = stream.Length > 0 ?
+                                JsonSerializer.Deserialize<CharacterConfig>(stream, options: jsonOptions) :
+                                new CharacterConfig(fluxConfig, name, server);
+                        }
+
+                        Log("Character config loaded from disk");
+                    }
+                    else
+                    {
+                        characterConfig = new CharacterConfig(fluxConfig, name, server);
+
+                        File.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(characterConfig, options: jsonOptions));
+
+                        Log("Character config created and saved to disk");
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                Log(ex, "Failed to save config to disk");
+                characterConfig = new CharacterConfig(fluxConfig, name, server);
+
+                Log(ex, "Failed to load character config and reverted to defaults");
             }
-
-            watcher.Changed += ConfigChanged;
-        }
-
-        public void Upsert(CharacterConfigSection characterConfig)
-        {
-            var existingConfig = FluxConfig.Characters
-                .FirstOrDefault
-                (
-                    i =>
-                        string.Compare(i.Name, characterConfig.Name) == 0 && 
-                        string.Compare(i.Server, characterConfig.Server) == 0
-                );
-
-            if (existingConfig != null)
+            finally
             {
-                FluxConfig.Characters.Remove(existingConfig);
+                getCharacterConfigSemaphore.Release();
             }
 
-            FluxConfig.Characters.Add(characterConfig);
+            return characterConfig;
         }
 
-        private void Initialize()
+        public async Task<FluxConfig> GetFluxConfig(CancellationToken cancellationToken = default)
         {
-            LoadConfig();
-            CreateWatcher();
+            await getFluxConfigSemaphore.WaitAsync(cancellationToken);
+
+            try
+            {
+                if (fluxConfig == null)
+                {
+                    if (File.Exists(fluxConfigPath))
+                    {
+                        using (Stream stream = File.OpenRead(fluxConfigPath))
+                        {
+                            fluxConfig = stream.Length > 0 ?
+                                JsonSerializer.Deserialize<FluxConfig>(stream, options: jsonOptions) :
+                                new FluxConfig();
+                        }
+
+                        Log("Flux config loaded from disk");
+                    }
+                    else
+                    {
+                        fluxConfig = new FluxConfig();
+
+                        File.WriteAllBytes(fluxConfigPath, JsonSerializer.SerializeToUtf8Bytes(fluxConfig, options: jsonOptions));
+
+                        Log("Flux config created and saved to disk");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                fluxConfig = new FluxConfig();
+
+                Log(ex, "Failed to load flux config and reverted to defaults");
+            }
+            finally
+            {
+                getFluxConfigSemaphore.Release();
+            }
+
+            return fluxConfig;
         }
 
         private void Log(string text)
@@ -118,111 +178,22 @@ namespace MQFlux.Services
             logger.LogError(ex, message, args);
         }
 
-        private void CreateWatcher()
-        {
-            var directory = Path.GetDirectoryName(path);
-            var filter = Path.GetFileName(path);
-
-            watcher = new FileSystemWatcher(directory)
-            {
-                Filter = filter,
-                NotifyFilter = NotifyFilters.LastWrite,
-                EnableRaisingEvents = true
-            };
-            watcher.Changed += ConfigChanged;
-        }
-
-        private void LoadConfig()
-        {
-            try
-            {
-                if (File.Exists(path))
-                {
-                    using (Stream stream = File.OpenRead(path))
-                    {
-                        FluxConfig = stream.Length > 0 ?
-                            JsonSerializer.Deserialize<FluxConfig>(stream, options: jsonOptions) :
-                            new FluxConfig();
-                    }
-
-                    Log("Configuration loaded from disk");
-                }
-                else
-                {
-                    FluxConfig = new FluxConfig();
-
-                    File.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(FluxConfig, options: jsonOptions));
-
-                    Log("Default config created and saved to disk");
-                }
-            }
-            catch (Exception ex)
-            {
-                FluxConfig = new FluxConfig();
-
-                Log(ex, "Failed to load config, reverted to default configuration. Use the \"/flux save\" command to save the default config to disk and overwrite the bad configuration or manually fix it.");
-            }
-        }
-
-        private void ConfigChanged(object sender, FileSystemEventArgs e)
-        {
-            Task.Run
-            (
-                async () =>
-                {
-                    try
-                    {
-                        if (!semaphore.Wait(0))
-                        {
-                            return;
-                        }
-
-                        Log("Config change detected");
-
-                        await Task.Delay(1000); // Need to add cancellation token here for shutdown.
-
-                        LoadConfig();
-
-                        await mediator.Publish
-                        (
-                            new ConfigUpdateNotification()
-                            {
-                                Config = FluxConfig
-                            }
-                        );
-                    }
-                    catch (Exception ex)
-                    {
-                        Log(ex, "Config changed event handling failed");
-                    }
-                    finally
-                    {
-                        semaphore.Release();
-                    }
-                }
-            ).ConfigureAwait(false);
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
                 if (disposing)
                 {
-                    if (watcher != null)
+                    if (getFluxConfigSemaphore != null)
                     {
-                        watcher.Changed -= ConfigChanged;
-
-                        watcher.Dispose();
-
-                        watcher = null;
+                        getFluxConfigSemaphore.Dispose();
+                        getFluxConfigSemaphore = null;
                     }
 
-                    if (semaphore != null)
+                    if (getCharacterConfigSemaphore != null)
                     {
-                        semaphore.Dispose();
-
-                        semaphore = null;
+                        getCharacterConfigSemaphore.Dispose();
+                        getCharacterConfigSemaphore = null;
                     }
                 }
 

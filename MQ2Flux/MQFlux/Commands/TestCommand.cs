@@ -11,9 +11,10 @@ namespace MQFlux.Commands
 {
     public class TestCommand :
         PCCommand,
-        ICharacterConfigRequest
+        ICharacterConfigRequest,
+        IContextRequest
     {
-        public CharacterConfigSection Character { get; set; }
+        public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
         public IContext Context { get; set; }
     }
