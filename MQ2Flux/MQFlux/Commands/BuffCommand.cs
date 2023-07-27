@@ -1,6 +1,5 @@
 ﻿using MQ2DotNet.EQ;
 using MQ2DotNet.MQ2API.DataTypes;
-using MQ2DotNet.Services;
 using MQFlux.Behaviors;
 using MQFlux.Core;
 using MQFlux.Extensions;

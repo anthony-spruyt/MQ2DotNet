@@ -94,20 +94,20 @@ namespace MQFlux.Models
 
     //public class BuffsConfigSection
     //{
-        //public List<BuffConfig> Buffs { get; set; } = new List<BuffConfig>();
+    //public List<BuffConfig> Buffs { get; set; } = new List<BuffConfig>();
     //}
 
     //public enum BuffSource
     //{
-        //Spell,
-        //Item
+    //Spell,
+    //Item
     //}
 
     //public class BuffConfig
     //{
-        //public string Name { get; set; } = null;
+    //public string Name { get; set; } = null;
 
-        //public BuffSource Type { get; set; } = BuffSource.Spell;
+    //public BuffSource Type { get; set; } = BuffSource.Spell;
     //}
 
     public class FoodAndDrinkDispenser

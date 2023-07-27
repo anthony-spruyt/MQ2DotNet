@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace MQFlux.Commands
 {
-    public class InitializeCommand : 
-        PCCommand, 
-        ICharacterConfigRequest, 
+    public class InitializeCommand :
+        PCCommand,
+        ICharacterConfigRequest,
         IContextRequest
     {
         public IContext Context { get; set; }
