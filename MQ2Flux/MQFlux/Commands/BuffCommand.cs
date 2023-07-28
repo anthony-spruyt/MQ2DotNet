@@ -37,12 +37,14 @@ namespace MQFlux.Commands
         private readonly ISpellCastingService spellCastingService;
         private readonly ITargetService targetService;
         private readonly IMQLogger mqLogger;
+        private readonly IContext context;
 
-        public BuffCommandHandler(ISpellCastingService spellCastingService, ITargetService targetService, IMQLogger mqLogger)
+        public BuffCommandHandler(ISpellCastingService spellCastingService, ITargetService targetService, IMQLogger mqLogger, IContext context)
         {
             this.spellCastingService = spellCastingService;
             this.targetService = targetService;
             this.mqLogger = mqLogger;
+            this.context = context;
         }
 
         public async override Task<CommandResponse<bool>> Handle(BuffCommand request, CancellationToken cancellationToken)
@@ -52,14 +54,19 @@ namespace MQFlux.Commands
                 return CommandResponse.FromResult(false);
             }
 
-            var me = request.Context.TLO.Me;
+            //var seconds = new int[] { 1, 30, 59 };
+            //
+            //if (!seconds.Contains(DateTime.UtcNow.Second))
+            //{
+            //    return CommandResponse.FromResult(false);
+            //}
+
+            var me = context.TLO.Me;
             IEnumerable<SpawnType> spawns;
 
             if (me.Grouped)
             {
-                await targetService.CycleGroupMembers(cancellationToken);
-
-                spawns = request.Context.TLO.Group.GroupMembers
+                spawns = context.TLO.Group.GroupMembers
                     .Where(i => i.Present && i.Spawn.LineOfSight && !i.Spawn.Dead)
                     .Select(i => i.Spawn);
             }
@@ -67,45 +74,137 @@ namespace MQFlux.Commands
             {
                 spawns = new SpawnType[] { me.Spawn };
             }
+            var allInOneGoMode = false;
 
-            foreach (var spawn in spawns)
+            if (allInOneGoMode)
             {
-                if (await TryBuff(me, spawn, cancellationToken))
-                {
-                    return CommandResponse.FromResult(true);
-                }
-            }
+                var didSomething = false;
 
-            return CommandResponse.FromResult(false);
+                foreach (var spawn in spawns)
+                {
+                    var buffedThisSpawn = await TryBuff(spawn, cancellationToken);
+
+                    if (buffedThisSpawn)
+                    {
+                        if (!didSomething)
+                        {
+                            didSomething = true;
+                        }
+                    }
+
+                    await Task.Delay(100, cancellationToken);
+                }
+
+                return CommandResponse.FromResult(didSomething);
+            }
+            else
+            {
+                foreach (var spawn in spawns)
+                {
+                    if (await TryBuff(spawn, cancellationToken))
+                    {
+                        return CommandResponse.FromResult(true);
+                    }
+                }
+
+                return CommandResponse.FromResult(false);
+            }
         }
 
-        private async Task<bool> TryBuff(CharacterType me, SpawnType spawn, CancellationToken cancellationToken = default)
+        private class StacksWithComparer : IComparer<SpellType>
         {
-            var amIBuffingMyself = spawn.ID == me.ID;
-            var buffGroups = me.SpellBook
-                .Select(i => i.Value)
-                .Where(i => i.Beneficial && i.Duration > TimeSpan.FromMinutes(1))
-                .GroupBy(i => $"{i.GetSpellCategory()}-{i.Subcategory}-{i.SpellIcon.GetValueOrDefault(0u)}").Select(i => i.OrderByDescending(j => j.Level).First());
-            var buffSpells = amIBuffingMyself ?
-                buffGroups.Where(i => IsValidSelfBuff(me, i)) :
-                buffGroups.Where(i => IsValidFriendlyBuff(me, spawn, i));
-            var buffSpell = buffSpells.FirstOrDefault();
-
-            if
-            (
-                buffSpell == null ||
-                buffSpell.Mana.GetValueOrDefault(0) > (int)me.CurrentMana.GetValueOrDefault(0u) ||
-                buffSpell.EnduranceCost.GetValueOrDefault(0u) > (int)me.CurrentEndurance.GetValueOrDefault(0u)
-            )
+            public int Compare(SpellType x, SpellType y)
             {
-                return false;
+                if (x.ID == y.ID)
+                {
+                    return 0;
+                }
+                else if (x.StacksWith(y.Name))
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
             }
+        }
 
-            mqLogger.Log($"Buffing [\ao{spawn.DisplayName}\aw] with [\ay{buffSpell.Name}\aw]");
+        private async Task<bool> TryBuff(SpawnType spawn, CancellationToken cancellationToken = default)
+        {
+            await targetService.Target(spawn, waitForBuffsPopulated: true, cancellationToken);
+            
+            var me = context.TLO.Me;
+            var target = context.TLO.Target;
+            var buffedThisSpawn = false;
+            var amIBuffingMyself = spawn.ID == me.ID;
 
-            return
-                await targetService.Target(spawn, cancellationToken) &&
-                await spellCastingService.Cast(buffSpell, true, cancellationToken);
+            var allInOneGoMode = false;
+
+            if (allInOneGoMode)
+            {
+                while (true)
+                {
+                    var buffGroups = me.SpellBook
+                        .Select(i => i.Value)
+                        .Where(i => i.Beneficial && i.Duration > TimeSpan.FromMinutes(1))
+                        .GroupBy(i => $"{i.GetSpellCategory()}-{i.Subcategory}-{i.SpellIcon.GetValueOrDefault(0u)}").Select(i => i.OrderByDescending(j => j.Level).First());
+                    var buffSpells = amIBuffingMyself ?
+                        buffGroups.Where(i => IsValidSelfBuff(me, i)) :
+                        buffGroups.Where(i => IsValidFriendlyBuff(me, target, i));
+                    var comparer = new StacksWithComparer();
+                    var buffSpell = buffSpells.OrderBy(i => i, comparer).FirstOrDefault();
+
+                    if
+                    (
+                        buffSpell == null ||
+                        buffSpell.Mana > (int)me.CurrentMana ||
+                        buffSpell.EnduranceCost > (int)me.CurrentEndurance
+                    )
+                    {
+                        break;
+                    }
+
+                    mqLogger.Log($"Buffing [\ao{spawn.DisplayName}\aw] with [\ay{buffSpell.Name}\aw]");
+
+                    if (await spellCastingService.Cast(buffSpell, waitForSpellReady: true, cancellationToken))
+                    {
+                        if (!buffedThisSpawn)
+                        {
+                            buffedThisSpawn = true;
+                        }
+                    }
+                }
+
+                return buffedThisSpawn;
+            }
+            else
+            {
+                var buffGroups = me.SpellBook
+                        .Select(i => i.Value)
+                        .Where(i => i.Beneficial && i.Duration > TimeSpan.FromMinutes(1))
+                        .GroupBy(i => $"{i.GetSpellCategory()}-{i.Subcategory}-{i.SpellIcon.GetValueOrDefault(0u)}").Select(i => i.OrderByDescending(j => j.Level).First());
+                var buffSpells = amIBuffingMyself ?
+                    buffGroups.Where(i => IsValidSelfBuff(me, i)) :
+                    buffGroups.Where(i => IsValidFriendlyBuff(me, target, i));
+                var comparer = new StacksWithComparer();
+                var buffSpell = buffSpells.OrderBy(i => i, comparer).FirstOrDefault();
+
+                if
+                (
+                    buffSpell == null ||
+                    buffSpell.Mana > (int)me.CurrentMana ||
+                    buffSpell.EnduranceCost > (int)me.CurrentEndurance
+                )
+                {
+                    return false;
+                }
+
+                mqLogger.Log($"Buffing [\ao{spawn.DisplayName}\aw] with [\ay{buffSpell.Name}\aw]");
+                await spellCastingService.Cast(buffSpell, waitForSpellReady: true, cancellationToken);
+
+                return true;
+            }
         }
 
         private static bool IsValidFriendlyBuff(CharacterType me, SpawnType spawn, SpellType spell)
@@ -117,7 +216,7 @@ namespace MQFlux.Commands
                 return false;
             }
 
-            if (spell.TargetType == "Self")
+            if (spell.TargetType == "Self" || spell.Type == "Beneficial(Group)" )
             {
                 return false;
             }
@@ -138,14 +237,62 @@ namespace MQFlux.Commands
 
             var existingBuff = spawn.GetBuff(spell.Name);
 
-            if (existingBuff != null)
+            if ((existingBuff?.ID).GetValueOrDefault(0u) > 0u)
             {
                 return false;
             }
 
-            var stacks = spell.StacksSpawn((int)spawn.ID.GetValueOrDefault(0u));
+            try
+            {
+                if (!spell.WillLand(spawn))
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
 
-            return stacks;
+            return true;
+        }
+
+        private static bool IsValidSelfBuff(CharacterType me, SpellType spell)
+        {
+            var isBuff = BuffSpellCategories.Contains(spell.GetSpellCategory());
+
+            if (!isBuff)
+            {
+                return false;
+            }
+
+            var isBuffUseful = IsBuffUseful(me.Class, spell);
+
+            if (!isBuffUseful)
+            {
+                return false;
+            }
+
+            var doIHaveReagentsToCast = me.DoIHaveReagentsToCast(spell);
+
+            if (!doIHaveReagentsToCast)
+            {
+                return false;
+            }
+
+            var existingBuff = me.GetBuff(spell.Name);
+
+            if ((existingBuff?.ID).GetValueOrDefault(0) > 0)
+            {
+                return false;
+            }
+
+            if (!spell.WillLand(me))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static bool IsBuffUseful(ClassType buffTargetCass, SpellType spell)
@@ -178,43 +325,6 @@ namespace MQFlux.Commands
             }
         }
 
-        private static bool IsValidSelfBuff(CharacterType me, SpellType spell)
-        {
-            var isBuff = BuffSpellCategories.Contains(spell.GetSpellCategory());
-
-            if (!isBuff)
-            {
-                return false;
-            }
-
-            var isBuffUseful = IsBuffUseful(me.Class, spell);
-
-            if (!isBuffUseful)
-            {
-                return false;
-            }
-
-            var doIHaveReagentsToCast = me.DoIHaveReagentsToCast(spell);
-
-            if (!doIHaveReagentsToCast)
-            {
-                return false;
-            }
-
-            var existingBuff = me.GetBuff(spell.Name);
-
-            if (existingBuff != null)
-            {
-                return false;
-            }
-
-            // Doesnt matter what duration is passed in, it always returns true.
-            //var duration = spell.MyDuration.GetValueOrDefault(spell.Duration.GetValueOrDefault(TimeSpan.Zero));
-            //var stacks = spell.Stacks(duration);
-            var stacks = spell.Stacks();
-
-            return stacks;
-        }
         private static readonly SpellCategory[] MeleeBuffSpellCategories = new SpellCategory[]
         {
             SpellCategory.AEGOLISM,

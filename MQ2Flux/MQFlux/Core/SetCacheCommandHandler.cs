@@ -16,7 +16,7 @@ namespace MQFlux.Core
             this.cache = cache;
         }
 
-        public Task Handle(TRequest request, CancellationToken cancellationToken)
+        public virtual Task Handle(TRequest request, CancellationToken cancellationToken)
         {
             cache.AddOrUpdate(Key, request.Value);
 

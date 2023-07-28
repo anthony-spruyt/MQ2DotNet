@@ -18,7 +18,7 @@ namespace MQFlux.Services
         Task<bool> CycleSpawns(float? distance = null, Predicate<SpawnType> predicate = null, CancellationToken cancellationToken = default);
         Task<bool> CycleXTargets(CancellationToken cancellationToken = default);
         Task<bool> Target(GroundType ground, CancellationToken cancellationToken = default);
-        Task<bool> Target(SpawnType spawn, CancellationToken cancellationToken = default);
+        Task<bool> Target(SpawnType spawn, bool waitForBuffsPopulated = false, CancellationToken cancellationToken = default);
         Task<bool> Target(SwitchType @switch, CancellationToken cancellationToken = default);
     }
 
@@ -50,7 +50,7 @@ namespace MQFlux.Services
                 return Task.FromResult(true);
             }
 
-            mqLogger.Log("Clear target");
+            //mqLogger.Log("Clear target");
             context.MQ.DoCommand("/target clear");
 
             if (context.TLO.Target == null)
@@ -124,12 +124,12 @@ namespace MQFlux.Services
             }
 
             ground.DoTarget();
-            mqLogger.Log($"Target ground item [\ao{ground.Name}\aw]");
+            //mqLogger.Log($"Target ground item [\ao{ground.Name}\aw]");
 
             return Wait.While(() => context.TLO.ItemTarget == null || context.TLO.ItemTarget.ID.GetValueOrDefault(0) != id, TimeSpan.FromSeconds(1), cancellationToken);
         }
 
-        public Task<bool> Target(SpawnType spawn, CancellationToken cancellationToken = default)
+        public Task<bool> Target(SpawnType spawn, bool waitForBuffsPopulated = false, CancellationToken cancellationToken = default)
         {
             var id = spawn.ID.GetValueOrDefault(0u);
 
@@ -140,9 +140,20 @@ namespace MQFlux.Services
             }
 
             spawn.DoTarget();
-            mqLogger.Log($"Target spawn [\ao{spawn.Name}\aw]");
+            //mqLogger.Log($"Target spawn [\ao{spawn.Name}\aw]");
 
-            return Wait.While(() => context.TLO.Target == null || context.TLO.Target.ID.GetValueOrDefault(0u) != id, TimeSpan.FromSeconds(1), cancellationToken);
+            return Wait.While
+            (
+                () => 
+                    context.TLO.Target == null || 
+                    context.TLO.Target.ID.GetValueOrDefault(0u) != id ||
+                    (
+                        waitForBuffsPopulated &&
+                        !context.TLO.Target.BuffsPopulated
+                    ),
+                TimeSpan.FromSeconds(2),
+                cancellationToken
+            );
         }
 
         public Task<bool> Target(SwitchType @switch, CancellationToken cancellationToken = default)
@@ -154,7 +165,7 @@ namespace MQFlux.Services
             }
 
             @switch.Target();
-            mqLogger.Log($"Target switch [\ao{@switch.Name}\aw]");
+            //mqLogger.Log($"Target switch [\ao{@switch.Name}\aw]");
 
             return Wait.While(() => !@switch.IsTargeted, TimeSpan.FromSeconds(1), cancellationToken);
         }
@@ -162,24 +173,26 @@ namespace MQFlux.Services
         private async Task<bool> CycleSpawnsInternal(IEnumerable<SpawnType> spawns, CancellationToken cancellationToken)
         {
             uint count = 0;
+            uint spawnCount = 0;
 
             foreach (var spawn in spawns)
             {
-                if (await Target(spawn, cancellationToken))
+                spawnCount++;
+
+                if (await Target(spawn, waitForBuffsPopulated: true, cancellationToken))
                 {
                     count++;
-                    await Wait.While(() => !spawn.BuffsPopulated, TimeSpan.FromSeconds(5), cancellationToken);
                 }
             }
 
-            if (count == 0)
+            if (count != spawnCount)
             {
                 return false;
             }
 
-            mqLogger.Log($"Cycled [\ao{count}\aw] spawns");
+            //mqLogger.Log($"Cycled [\ao{count}\aw] spawns");
 
-            await ClearTarget(cancellationToken);
+            //await ClearTarget(cancellationToken);
 
             return true;
         }

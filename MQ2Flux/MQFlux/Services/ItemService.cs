@@ -272,7 +272,7 @@ namespace MQFlux.Services
                 var interrupted = false;
 
                 // Some spells dont write a message so assume it was successful if it timed out.
-                _ = context.DoCommandAndWaitForEQ
+                _ = await context.DoCommandAndWaitForEQ
                 (
                     command,
                     text =>

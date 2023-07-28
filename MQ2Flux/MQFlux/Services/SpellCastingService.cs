@@ -34,6 +34,9 @@ namespace MQFlux.Services
 
     public class SpellCastingService : ISpellCastingService, IDisposable
     {
+        private static readonly TimeSpan SpellReadyTimeout = TimeSpan.FromSeconds(40);
+        private static readonly TimeSpan SpellMemorizeTimeout = TimeSpan.FromSeconds(40);
+
         private readonly IContext context;
         private readonly IMQLogger mqLogger;
 
@@ -150,7 +153,7 @@ namespace MQFlux.Services
                 }
 
                 var castTime = spellBookSpell.CastTime.GetValueOrDefault(TimeSpan.Zero);
-                var timeout = castTime + TimeSpan.FromMilliseconds(1000); // add some fat
+                var timeout = castTime == TimeSpan.Zero ? TimeSpan.FromSeconds(2) : castTime + TimeSpan.FromSeconds(1);
                 var castOnYou = spellBookSpell.CastOnYou;
                 var castOnAnother = spellBookSpell.CastOnAnother;
                 var wasCastOnYou = false;
@@ -161,7 +164,7 @@ namespace MQFlux.Services
                 mqLogger.Log($"Casting [\ay{spellBookSpell.Name}\aw]", TimeSpan.Zero);
 
                 // Some spells dont write a message so assume it was successful if it timed out.
-                _ = context.DoCommandAndWaitForEQ
+                _ = await context.DoCommandAndWaitForEQ
                 (
                     $"/cast {gem}",
                     text =>
@@ -184,6 +187,11 @@ namespace MQFlux.Services
                     mqLogger.Log($"Casting [\ay{spellName}\aw] \ar{reason}", TimeSpan.Zero);
 
                     return false;
+                }
+
+                if (me.AmICasting())
+                {
+                    await Wait.While(() => me.AmICasting(), TimeSpan.FromSeconds(30), cancellationToken);
                 }
             }
             finally
@@ -225,13 +233,12 @@ namespace MQFlux.Services
 
         private async Task<bool> WaitForSpellReadyInternal(Func<bool> isSpellReady, CancellationToken cancellationToken)
         {
-            // Check if it is not already ready because waiting is expensive.
             if (isSpellReady())
             {
                 return true;
             }
 
-            if (!await Wait.While(() => !isSpellReady(), TimeSpan.FromSeconds(30), cancellationToken))
+            if (!await Wait.While(() => !isSpellReady(), SpellReadyTimeout, cancellationToken))
             {
                 return false;
             }
@@ -254,7 +261,7 @@ namespace MQFlux.Services
 
             try
             {
-                if (!await Wait.While(() => me.GetGem(spellName).GetValueOrDefault(0) != slot, TimeSpan.FromSeconds(30), cancellationToken))
+                if (!await Wait.While(() => me.GetGem(spellName).GetValueOrDefault(0) != slot, SpellMemorizeTimeout, cancellationToken))
                 {
                     return false;
                 }

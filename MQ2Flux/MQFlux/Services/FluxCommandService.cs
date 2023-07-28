@@ -86,6 +86,13 @@ namespace MQFlux.Services
                             return;
                         }
 
+                        if (args.Any(i => new string[] { "removebuffs", "--removebuffs", "-rb" }.Contains(i)))
+                        {
+                            await mediator.Send(new RemoveBuffsCommand(), cancellationTokenSource.Token);
+
+                            return;
+                        }
+
                         if (args.Any(i => new string[] { "help", "--help", "-h" }.Contains(i)))
                         {
                             LogHelp();

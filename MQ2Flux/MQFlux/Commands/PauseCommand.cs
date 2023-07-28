@@ -1,5 +1,7 @@
 ﻿using MQFlux.Core;
 using MQFlux.Services;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MQFlux.Commands
 {
@@ -20,5 +22,12 @@ namespace MQFlux.Commands
         }
 
         public override string Key => CacheKeys.IsPaused;
+
+        public override async Task Handle(PauseCommand request, CancellationToken cancellationToken)
+        {
+            await base.Handle(request, cancellationToken);
+
+            // TODO wait for pulse loop to acknowledge.
+        }
     }
 }

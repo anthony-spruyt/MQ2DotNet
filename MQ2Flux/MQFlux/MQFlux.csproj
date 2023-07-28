@@ -102,6 +102,7 @@
     <Compile Include="Behaviors\StandingStillBehavior.cs" />
     <Compile Include="Commands\BuffCommand.cs" />
     <Compile Include="Commands\PauseCommand.cs" />
+    <Compile Include="Commands\RemoveBuffsCommand.cs" />
     <Compile Include="Commands\ResumeCommand.cs" />
     <Compile Include="Commands\UnloadMQCommands.cs" />
     <Compile Include="Core\CombatCommand.cs" />
