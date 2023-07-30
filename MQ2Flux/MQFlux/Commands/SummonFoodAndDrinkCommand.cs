@@ -26,8 +26,7 @@ namespace MQFlux.Commands
         public bool AllowBard => false;
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
-        public IContext Context { get; set; }
-        public TimeSpan IdleTime => TimeSpan.FromSeconds(1);
+        public TimeSpan IdleTime => TimeSpan.FromSeconds(5);
     }
 
     public class SummonFoodAndDrinkCommandHandler : PCCommandHandler<SummonFoodAndDrinkCommand>
@@ -51,12 +50,14 @@ namespace MQFlux.Commands
         private readonly IItemService itemService;
         private readonly ISpellCastingService spellCastingService;
         private readonly IMacroService macroService;
+        private readonly IContext context;
 
-        public SummonFoodAndDrinkCommandHandler(IItemService itemService, ISpellCastingService spellCastingService, IMacroService macroService)
+        public SummonFoodAndDrinkCommandHandler(IItemService itemService, ISpellCastingService spellCastingService, IMacroService macroService, IContext context)
         {
             this.itemService = itemService;
             this.spellCastingService = spellCastingService;
             this.macroService = macroService;
+            this.context = context;
         }
 
         public override async Task<CommandResponse<bool>> Handle(SummonFoodAndDrinkCommand request, CancellationToken cancellationToken)
@@ -66,7 +67,7 @@ namespace MQFlux.Commands
                 return CommandResponse.FromResult(false);
             }
 
-            var me = request.Context.TLO.Me;
+            var me = context.TLO.Me;
             var allMyInv = me.Bags.Flatten();
             var actualFoodCount = allMyInv
                 .Where(i => i.NoRent && i.IsEdible())

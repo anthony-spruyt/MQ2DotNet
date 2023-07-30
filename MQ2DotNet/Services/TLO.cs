@@ -1104,7 +1104,15 @@ namespace MQ2DotNet.Services
         /// Object used to get information about your current target.
         /// https://docs.macroquest.org/reference/top-level-objects/tlo-target/
         /// </summary>
-        public TargetType Target => GetTLO<TargetType>("Target");
+        public TargetType Target
+        {
+            get
+            {
+                var target = GetTLO<TargetType>("Target");
+
+                return target != null && target.ID.GetValueOrDefault(0u) > 0u ? target : null;
+            }
+        }
 
         /// <summary>
         /// Object used to return information on a current Task.

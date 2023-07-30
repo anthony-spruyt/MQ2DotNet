@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MQ2DotNet.EQ;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -123,9 +124,8 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// "Beneficial(Group)", "Beneficial", "Detrimental" or "Unknown"
-        /// TODO: convert to enum
         /// </summary>
-        public virtual string Type => GetMember<StringType>("SpellType");
+        public virtual SpellKind Type => GetMember<StringType>("SpellType");
 
         /// <summary>
         /// Target type:
@@ -170,7 +170,7 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// {Unknown}
         /// TODO: convert to enum
         /// </summary>
-        public virtual string TargetType => GetMember<StringType>("TargetType");
+        public virtual TargetCategory TargetCategory => GetMember<StringType>("TargetType");
 
         /// <summary>
         /// Skill will be one of the following:
@@ -344,14 +344,13 @@ namespace MQ2DotNet.MQ2API.DataTypes
 
         /// <summary>
         /// Name of the category the spell belongs to (e.g. HP Buffs, Direct Damage, Heals, Unknown).
-        /// TODO: map to an enum
         /// </summary>
-        public virtual string Category => GetMember<StringType>("Category");
+        public virtual string CategoryName => GetMember<StringType>("Category");
 
         /// <summary>
         /// Numeric ID of the category this spell belongs to.
         /// </summary>
-        public virtual uint? CategoryID => GetMember<IntType>("CategoryID");
+        public virtual SpellCategory Category => GetMember<IntType>("CategoryID");
 
         /// <summary>
         /// Name of the subcategory this spell belongs to (e.g. "Shielding").
@@ -465,6 +464,24 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <param name="slot"></param>
         /// <returns></returns>
         public virtual int? GetAttrib(int slot) => _attrib[slot];
+
+        public IEnumerable<SPAInfo> SPAs
+        {
+            get
+            {
+                for (int i = 1; i <= 4; i++)
+                {
+                    var item = new SPAInfo(this, i);
+
+                    if (item.SPA == 0u && item.Base == 0L && item.Base2 == 0L && item.Max == 0L)
+                    {
+                        continue;
+                    }
+
+                    yield return item;
+                }
+            }
+        }
 
 
         /// <summary>
@@ -653,9 +670,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Does this spell have a given SPA?
         /// </summary>
-        /// <param name="effectIndex"></param>
+        /// <param name="spa"></param>
         /// <returns></returns>
-        public virtual bool HasSPA(int effectIndex) => _hasSPA[effectIndex];
+        public virtual bool HasSPA(SPA spa) => spa == SPA.UNKNOWN ? false : _hasSPA[(int)spa];
 
         /// <summary>
         /// TODO: What is SpellType.Trigger
@@ -718,6 +735,28 @@ namespace MQ2DotNet.MQ2API.DataTypes
         public override string ToString()
         {
             return base.ToString();
+        }
+
+        public class SPAInfo
+        {
+            public int Slot { get; }
+            public SPA SPA { get; }
+            public long Base { get; }
+            public long Base2 { get; }
+            public uint SpellGroup { get; }
+            public long Max { get; }
+
+            public SPAInfo(SpellType spell, int slot)
+            {
+                var attrib = spell.GetAttrib(slot);
+
+                Slot = slot;
+                SPA = attrib.HasValue ? (SPA)attrib.Value : SPA.UNKNOWN;
+                Base = spell.GetBase(slot).GetValueOrDefault(0L);
+                Base2 = spell.GetBase2(slot).GetValueOrDefault(0L);
+                SpellGroup = spell.SpellGroup.GetValueOrDefault(0u);
+                Max = spell.GetMax(slot).GetValueOrDefault(0L);
+            }
         }
     }
 }

@@ -15,7 +15,6 @@ namespace MQFlux.Commands
         IGroupedRequest,
         IConsciousRequest
     {
-        public IContext Context { get; set; }
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
     }
@@ -23,10 +22,12 @@ namespace MQFlux.Commands
     public class LearnALanguageCommandHandler : PCCommandHandler<LearnALanguageCommand>
     {
         private readonly IChatHistory chatHistory;
+        private readonly IContext context;
 
-        public LearnALanguageCommandHandler(IChatHistory chatHistory)
+        public LearnALanguageCommandHandler(IChatHistory chatHistory, IContext context)
         {
             this.chatHistory = chatHistory;
+            this.context = context;
         }
 
         public override Task<CommandResponse<bool>> Handle(LearnALanguageCommand request, CancellationToken cancellationToken)
@@ -36,7 +37,7 @@ namespace MQFlux.Commands
                 return CommandResponse.FromResultTask(false);
             }
 
-            var me = request.Context.TLO.Me;
+            var me = context.TLO.Me;
 
             if (!me.Grouped)
             {
@@ -64,7 +65,7 @@ namespace MQFlux.Commands
 
             if (languageNumber.HasValue)
             {
-                Practise(request, language, languageNumber.Value);
+                Practise(language, languageNumber.Value);
 
                 return CommandResponse.FromResultTask(true);
             }
@@ -72,9 +73,9 @@ namespace MQFlux.Commands
             return CommandResponse.FromResultTask(false);
         }
 
-        private void Practise(LearnALanguageCommand request, string language, int languageNumber)
+        private void Practise(string language, int languageNumber)
         {
-            var mq = request.Context.MQ;
+            var mq = context.MQ;
             var message = $"Lets practise {language}. The time is {DateTimeOffset.Now.ToLocalTime()}. One two three four five six seven eight nine ten! Lets do it all again.";
 
             if (chatHistory.NoSpam(TimeSpan.FromSeconds(1), message))

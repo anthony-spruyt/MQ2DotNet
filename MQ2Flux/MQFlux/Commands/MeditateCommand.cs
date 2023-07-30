@@ -20,22 +20,23 @@ namespace MQFlux.Commands
         IIdleTimeRequest
     {
         public bool AllowBard => false;
-        public IContext Context { get; set; }
-        public TimeSpan IdleTime => TimeSpan.FromSeconds(1);
+        public TimeSpan IdleTime => TimeSpan.FromSeconds(5);
     }
 
     public class MeditateCommandHandler : PCCommandHandler<MeditateCommand>
     {
         private readonly IMQLogger mqLogger;
+        private readonly IContext context;
 
-        public MeditateCommandHandler(IMQLogger mqLogger)
+        public MeditateCommandHandler(IMQLogger mqLogger, IContext context)
         {
             this.mqLogger = mqLogger;
+            this.context = context;
         }
 
         public override async Task<CommandResponse<bool>> Handle(MeditateCommand request, CancellationToken cancellationToken)
         {
-            var me = request.Context.TLO.Me;
+            var me = context.TLO.Me;
 
             // TODO
             if
@@ -63,13 +64,13 @@ namespace MQFlux.Commands
 
             if (medBreak)
             {
-                await Task.Delay(1000);
+                await Task.Delay(1000, cancellationToken);
 
                 mqLogger.Log("Sitting down to med", TimeSpan.Zero);
 
                 me.Sit();
 
-                await Task.Delay(1000);
+                await Task.Delay(1000, cancellationToken);
 
                 return CommandResponse.FromResult(true);
             }

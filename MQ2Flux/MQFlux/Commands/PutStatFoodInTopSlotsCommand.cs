@@ -22,18 +22,19 @@ namespace MQFlux.Commands
         public bool AllowBard => true;
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
-        public IContext Context { get; set; }
     }
 
     public class PutStatFoodInTopSlotsCommandHandler : PCCommandHandler<PutStatFoodInTopSlotsCommand>
     {
         private readonly IItemService itemService;
         private readonly IMQLogger mqLogger;
+        private readonly IContext context;
 
-        public PutStatFoodInTopSlotsCommandHandler(IItemService itemService, IMQLogger mqLogger)
+        public PutStatFoodInTopSlotsCommandHandler(IItemService itemService, IMQLogger mqLogger, IContext context)
         {
             this.itemService = itemService;
             this.mqLogger = mqLogger;
+            this.context = context;
         }
 
         public override async Task<CommandResponse<bool>> Handle(PutStatFoodInTopSlotsCommand request, CancellationToken cancellationToken)
@@ -43,7 +44,7 @@ namespace MQFlux.Commands
                 return CommandResponse.FromResult(false);
             }
 
-            var me = request.Context.TLO.Me;
+            var me = context.TLO.Me;
             var bagsAndContents = me.Bags.Flatten();
             var statFood = GetMostNutritiousConsumable(bagsAndContents.Where(i => i.IsEdible()), me);
 

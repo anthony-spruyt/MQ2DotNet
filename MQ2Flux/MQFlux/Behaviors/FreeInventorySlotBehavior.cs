@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using MQ2DotNet.EQ;
 using MQFlux.Core;
+using MQFlux.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MQFlux.Behaviors
 {
-    public interface IFreeInventorySlotsRequest : IContextRequest
+    public interface IFreeInventorySlotsRequest
     {
         int MinimumEmptySlots { get; }
         ItemSize MinimumSize { get; }
@@ -14,11 +15,18 @@ namespace MQFlux.Behaviors
 
     public class FreeInventorySlotBehavior<TRequest, TResponse> : PCCommandBehavior<TRequest> where TRequest : PCCommand
     {
+        private readonly IContext context;
+
+        public FreeInventorySlotBehavior(IContext context)
+        {
+            this.context = context;
+        }
+
         public override Task<CommandResponse<bool>> Handle(TRequest request, RequestHandlerDelegate<CommandResponse<bool>> next, CancellationToken cancellationToken)
         {
             if (request is IFreeInventorySlotsRequest freeInventorySlotsRequest &&
-                freeInventorySlotsRequest.Context.TLO.Me.FreeInventory.GetValueOrDefault(0) < freeInventorySlotsRequest.MinimumEmptySlots &&
-                freeInventorySlotsRequest.Context.TLO.Me.LargestFreeInventory < (uint)freeInventorySlotsRequest.MinimumSize)
+                context.TLO.Me.FreeInventory.GetValueOrDefault(0) < freeInventorySlotsRequest.MinimumEmptySlots &&
+                context.TLO.Me.LargestFreeInventory < (uint)freeInventorySlotsRequest.MinimumSize)
             {
                 return ShortCircuitResultTask();
             }

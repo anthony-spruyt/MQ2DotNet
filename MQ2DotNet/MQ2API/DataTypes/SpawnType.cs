@@ -910,7 +910,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public virtual CachedBuffType GetCachedBuff(string query) => _cachedBuff[query];
+        public virtual CachedBuffType GetCachedBuff(string query)
+        {
+            var buff = _cachedBuff[query];
+
+            return buff == null || buff.IsNull() ? null : buff;
+        }
 
         /// <summary>
         /// TODO: what is this index? buff index?
@@ -918,12 +923,17 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public virtual CachedBuffType GetCachedBuff(int index) => _cachedBuff[index];
+        public virtual CachedBuffType GetCachedBuff(int index)
+        {
+            var buff = _cachedBuff[index];
 
-        /// <summary>
-        /// Number of cached buffs
-        /// </summary>
-        public virtual uint? CachedBuffCount => GetMember<IntType>("CachedBuffCount");
+            return buff == null || buff.IsNull() ? null : buff;
+        }
+
+    /// <summary>
+    /// Number of cached buffs
+    /// </summary>
+    public virtual uint? CachedBuffCount => GetMember<IntType>("CachedBuffCount");
 
         /// <summary>
         /// All cached buffs. Based on <see cref="GetCachedBuff(int)"/>

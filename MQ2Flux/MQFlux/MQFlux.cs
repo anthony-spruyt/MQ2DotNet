@@ -87,9 +87,37 @@ namespace MQFlux
 
                 var response = await mediator.Send(new LoadMQCommands());
                 var allTokens = response.Result.Append(token);
+
                 using (CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(allTokens.ToArray()))
                 {
+                    if (args.Contains("-p") || args.Contains("-pause") || args.Contains("pause"))
+                    {
+                        await mediator.Send(new PauseCommand(), token);
+                    }
+
                     await mediator.Send(new InitializeCommand(), linkedTokenSource.Token);
+
+                    _ = Task.Run
+                    (
+                        async () =>
+                        {
+                            try
+                            {
+                                while (!linkedTokenSource.Token.IsCancellationRequested)
+                                {
+                                    await mediator.Send(new DismissAlertWindowCommand(), linkedTokenSource.Token);
+
+                                    await Yield(linkedTokenSource.Token);
+                                }
+                            }
+                            catch (OperationCanceledException) { }
+                            catch (Exception ex)
+                            {
+                                logger.LogError(ex, $"Error in {nameof(Main)}");
+                                mqLogger.LogError(ex);
+                            }
+                        }
+                    );
 
                     while (!linkedTokenSource.Token.IsCancellationRequested)
                     {

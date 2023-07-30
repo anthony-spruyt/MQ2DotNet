@@ -9,7 +9,6 @@ namespace MQFlux.Behaviors
             return config
                 .AddOpenBehavior(typeof(QueryExceptionBehavior<,>))
                 .AddOpenBehavior(typeof(CommandExceptionBehavior<,>))
-                .AddOpenBehavior(typeof(ContextBehavior<,>))
                 .AddOpenBehavior(typeof(FluxConfigBehavior<,>))
                 .AddOpenBehavior(typeof(CharacterConfigBehavior<,>))
                 .AddOpenBehavior(typeof(InGameBehavior<,>))

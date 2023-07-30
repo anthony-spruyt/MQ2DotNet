@@ -25,18 +25,19 @@ namespace MQFlux.Commands
         public bool AllowBard => true;
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
-        public IContext Context { get; set; }
     }
 
     public class ForageCommandHandler : PCCommandHandler<ForageCommand>
     {
         private readonly IAbilityService abilityService;
         private readonly IItemService itemService;
+        private readonly IContext context;
 
-        public ForageCommandHandler(IAbilityService abilityService, IItemService itemService)
+        public ForageCommandHandler(IAbilityService abilityService, IItemService itemService, IContext context)
         {
             this.abilityService = abilityService;
             this.itemService = itemService;
+            this.context = context;
         }
 
         public override async Task<CommandResponse<bool>> Handle(ForageCommand request, CancellationToken cancellationToken)
@@ -46,7 +47,7 @@ namespace MQFlux.Commands
                 return CommandResponse.FromResult(false);
             }
 
-            var me = request.Context.TLO.Me;
+            var me = context.TLO.Me;
             var originalState = me.State;
 
             // TODO can you forage on a horse?
@@ -63,9 +64,9 @@ namespace MQFlux.Commands
             if (await abilityService.DoAbility(request.Ability, "You have scrounged", "You fail to locate", cancellationToken))
             {
                 // Make sure there is something on the cursor, it is possible for something to ninja it.
-                if (request.Context.TLO.Cursor != null)
+                if (context.TLO.Cursor != null)
                 {
-                    var foragedItemName = request.Context.TLO.Cursor.Name;
+                    var foragedItemName = context.TLO.Cursor.Name;
 
                     if (request.Character.ForageBlacklist.Contains(foragedItemName))
                     {

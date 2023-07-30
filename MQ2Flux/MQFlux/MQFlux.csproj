@@ -88,7 +88,6 @@
     <Compile Include="Behaviors\InterruptCastingBehavior.cs" />
     <Compile Include="Behaviors\MainAssistBehavior.cs" />
     <Compile Include="Behaviors\MeleeBehavior.cs" />
-    <Compile Include="Behaviors\ContextBehavior.cs" />
     <Compile Include="Behaviors\NoItemOnCursorBehavior.cs" />
     <Compile Include="Behaviors\NotFeignedDeathBehavior.cs" />
     <Compile Include="Behaviors\NotInCombatBehavior.cs" />

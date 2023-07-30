@@ -26,19 +26,20 @@ namespace MQFlux.Commands
         public bool AllowBard => false;
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
-        public IContext Context { get; set; }
-        public TimeSpan IdleTime => TimeSpan.FromSeconds(1);
+        public TimeSpan IdleTime => TimeSpan.FromSeconds(5);
     }
 
     public class DispenseCommandHandler : PCCommandHandler<DispenseCommand>
     {
         private readonly IItemService itemService;
         private readonly IMacroService macroService;
+        private readonly IContext context;
 
-        public DispenseCommandHandler(IItemService itemService, IMacroService macroService)
+        public DispenseCommandHandler(IItemService itemService, IMacroService macroService, IContext context)
         {
             this.itemService = itemService;
             this.macroService = macroService;
+            this.context = context;
         }
 
         public override async Task<CommandResponse<bool>> Handle(DispenseCommand request, CancellationToken cancellationToken)
@@ -52,7 +53,7 @@ namespace MQFlux.Commands
 
             AddDefaultDispensers(dispensers);
 
-            if (await Dispense(dispensers, request.Context.TLO.Me, cancellationToken))
+            if (await Dispense(dispensers, context.TLO.Me, cancellationToken))
             {
                 await itemService.AutoInventory(cursor => cursor != null && dispensers.Any(i => (i.SummonID.HasValue && i.SummonID.Value == cursor.ID) || string.Compare(i.SummonName, cursor.Name) == 0), cancellationToken);
 

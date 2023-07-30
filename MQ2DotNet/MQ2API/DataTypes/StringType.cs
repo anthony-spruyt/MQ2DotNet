@@ -2,6 +2,7 @@
 using MQ2DotNet.Utility;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace MQ2DotNet.MQ2API.DataTypes
 {
@@ -14,15 +15,21 @@ namespace MQ2DotNet.MQ2API.DataTypes
     [MQ2Type("string")]
     public class StringType : MQ2DataType
     {
-        private static readonly object _lock = new object();
+        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
         private readonly string _string;
 
         internal StringType(MQ2TypeFactory mq2TypeFactory, MQ2TypeVar typeVar) : base(mq2TypeFactory, typeVar)
         {
-            lock (_lock)
+            try
             {
+                semaphoreSlim.Wait();
+
                 // Since most MQ2 strings share the same storage (DataTypeTemp), lazy evaluation is a bad idea.
                 _string = typeVar.VarPtr.Ptr != IntPtr.Zero ? Marshal.PtrToStringAnsi(typeVar.VarPtr.Ptr) : null;
+            }
+            finally
+            {
+                semaphoreSlim.Release();
             }
 
             // Standardize null, empty, whitespace handling.
@@ -127,9 +134,31 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// </summary>
         /// <param name="typeVar"></param>
         /// <returns></returns>
-        public static implicit operator SpawnState?(StringType typeVar)
+        public static implicit operator SpawnState(StringType typeVar)
         {
-            return typeVar?._string?.ToEnum<SpawnState>();
+            return (typeVar?._string?.ToEnum<SpawnState>()).GetValueOrDefault(SpawnState.Unknown);
+        }
+
+
+
+        /// <summary>
+        /// Implicit conversion to a SpellKind
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator SpellKind(StringType typeVar)
+        {
+            return (typeVar?._string?.ToEnum<SpellKind>()).GetValueOrDefault(SpellKind.Unknown);
+        }
+
+        /// <summary>
+        /// Implicit conversion to a TargetCategory
+        /// </summary>
+        /// <param name="typeVar"></param>
+        /// <returns></returns>
+        public static implicit operator TargetCategory(StringType typeVar)
+        {
+            return (typeVar?._string?.ToEnum<TargetCategory>()).GetValueOrDefault(TargetCategory.Unknown);
         }
     }
 }

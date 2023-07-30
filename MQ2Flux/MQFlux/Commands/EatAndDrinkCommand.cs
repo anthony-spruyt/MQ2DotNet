@@ -25,18 +25,19 @@ namespace MQFlux.Commands
         public bool AllowBard => true;
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
-        public IContext Context { get; set; }
     }
 
     public class EatAndDrinkCommandHandler : PCCommandHandler<EatAndDrinkCommand>
     {
         private readonly IChatHistory chatHistory;
         private readonly IItemService itemService;
+        private readonly IContext context;
 
-        public EatAndDrinkCommandHandler(IChatHistory chatHistory, IItemService itemService)
+        public EatAndDrinkCommandHandler(IChatHistory chatHistory, IItemService itemService, IContext context)
         {
             this.chatHistory = chatHistory;
             this.itemService = itemService;
+            this.context = context;
         }
 
         public override async Task<CommandResponse<bool>> Handle(EatAndDrinkCommand request, CancellationToken cancellationToken)
@@ -46,7 +47,7 @@ namespace MQFlux.Commands
                 return CommandResponse.FromResult(false);
             }
 
-            var me = request.Context.TLO.Me;
+            var me = context.TLO.Me;
             var amIHungry = me.AmIHungry();
             var amIThirsty = me.AmIThirsty();
 
@@ -56,7 +57,7 @@ namespace MQFlux.Commands
             }
 
             var dontConsume = request.Character.DontConsume;
-            var mq = request.Context.MQ;
+            var mq = context.MQ;
             var allMyInv = me.Bags.Flatten();
 
             if (amIHungry && await HandleHungerAsync(dontConsume, mq, me, allMyInv, cancellationToken))
@@ -87,7 +88,7 @@ namespace MQFlux.Commands
             {
                 return await itemService.UseItem(drink, "Drinking", cancellationToken);
             }
-            else if (me.Grouped)
+            else if (me.Grouped && !me.Class.PureCaster)
             {
                 NotifyGroup(mq, "thirsty", "drink");
             }
@@ -112,7 +113,7 @@ namespace MQFlux.Commands
             {
                 return await itemService.UseItem(food, "Eating", cancellationToken);
             }
-            else if (me.Grouped)
+            else if (me.Grouped && !me.Class.PureCaster)
             {
                 NotifyGroup(mq, "hungry", "food");
             }

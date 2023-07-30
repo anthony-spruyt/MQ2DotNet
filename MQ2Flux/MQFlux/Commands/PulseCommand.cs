@@ -23,7 +23,6 @@ namespace MQFlux.Commands
         {
             var commands = new IRequest<CommandResponse<bool>>[]
             {
-                new DismissAlertWindowCommand(),
                 new ForageCommand(),
                 new BuffCommand(),
                 new DispenseCommand(),

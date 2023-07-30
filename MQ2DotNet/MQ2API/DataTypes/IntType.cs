@@ -153,5 +153,14 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             return (Expansion)((int)(typeVar?.VarPtr.Dword).GetValueOrDefault(0u));
         }
+
+        /// <summary>
+        /// Implicit conversion to SpellCategory.
+        /// </summary>
+        /// <param name="typeVar"></param>
+        public static implicit operator SpellCategory(IntType typeVar)
+        {
+            return ((SpellCategory?)(typeVar?.VarPtr.Dword)).GetValueOrDefault(SpellCategory.UNKNOWN);
+        }
     }
 }

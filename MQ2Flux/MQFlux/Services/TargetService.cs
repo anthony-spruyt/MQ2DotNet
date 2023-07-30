@@ -34,12 +34,12 @@ namespace MQFlux.Services
     public class TargetService : ITargetService
     {
         private readonly IContext context;
-        private readonly IMQLogger mqLogger;
+        //private readonly IMQLogger mqLogger;
 
-        public TargetService(IContext context, IMQLogger mqLogger)
+        public TargetService(IContext context/*, IMQLogger mqLogger*/)
         {
             this.context = context;
-            this.mqLogger = mqLogger;
+            //this.mqLogger = mqLogger;
         }
 
         public Task<bool> ClearTarget(CancellationToken cancellationToken = default)
@@ -144,8 +144,8 @@ namespace MQFlux.Services
 
             return Wait.While
             (
-                () => 
-                    context.TLO.Target == null || 
+                () =>
+                    context.TLO.Target == null ||
                     context.TLO.Target.ID.GetValueOrDefault(0u) != id ||
                     (
                         waitForBuffsPopulated &&

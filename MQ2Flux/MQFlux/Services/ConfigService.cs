@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MQFlux.Behaviors;
 using MQFlux.Models;
 using System;
 using System.IO;
@@ -60,16 +61,27 @@ namespace MQFlux.Services
         {
             if (context.TLO.Me == null)
             {
-                return null;
+                throw new CharacterConfigException("Context.TLO.Me is null");
+            }
+
+            var server = context.TLO.EverQuest.Server;
+
+            if (string.IsNullOrWhiteSpace(server))
+            {
+                throw new CharacterConfigException("context.TLO.EverQuest.Server is null, empty or whitespace");
+            }
+
+            var name = context.TLO.Me.Name;
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new CharacterConfigException("context.TLO.Me.Name is null, empty or whitespace");
             }
 
             if (fluxConfig == null)
             {
                 _ = await GetFluxConfig(cancellationToken);
             }
-
-            var server = context.TLO.EverQuest.Server;
-            var name = context.TLO.Me.Name;
 
             try
             {

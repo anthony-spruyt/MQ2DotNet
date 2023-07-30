@@ -19,6 +19,11 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
         }
 
+        public bool IsNull()
+        {
+            return VarPtr.HighPart == 0u;
+        }
+
         /// <summary>
         /// Returns the name of the caster who applied the buff, same as <see cref="Caster"/>
         /// </summary>

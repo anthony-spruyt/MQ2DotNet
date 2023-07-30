@@ -10,10 +10,8 @@ namespace MQFlux.Commands
 {
     public class InitializeCommand :
         PCCommand,
-        ICharacterConfigRequest,
-        IContextRequest
+        ICharacterConfigRequest
     {
-        public IContext Context { get; set; }
         public FluxConfig Config { get; set; }
         public CharacterConfig Character { get; set; }
     }
@@ -21,15 +19,17 @@ namespace MQFlux.Commands
     public class InitializeCommandHandler : PCCommandHandler<InitializeCommand>
     {
         private readonly IMediator mediator;
+        private readonly IContext context;
 
-        public InitializeCommandHandler(IMediator mediator)
+        public InitializeCommandHandler(IMediator mediator, IContext context)
         {
             this.mediator = mediator;
+            this.context = context;
         }
 
         public override async Task<CommandResponse<bool>> Handle(InitializeCommand request, CancellationToken cancellationToken)
         {
-            request.Context.MQ.DoCommand("/assist off");
+            context.MQ.DoCommand("/assist off");
 
             await mediator.Send(new IdleSinceCommand(), cancellationToken);
 

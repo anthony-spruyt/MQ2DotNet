@@ -13,14 +13,20 @@ namespace MQFlux.Commands
         INotCastingRequest
     {
         public bool AllowBard => true;
-        public IContext Context { get; set; }
     }
 
     public class RemoveBuffsCommandHandler : PCCommandHandler<RemoveBuffsCommand>
     {
+        private readonly IContext context;
+
+        public RemoveBuffsCommandHandler(IContext context)
+        {
+            this.context = context;
+        }
+
         public override async Task<CommandResponse<bool>> Handle(RemoveBuffsCommand request, CancellationToken cancellationToken)
         {
-            var buffs = request.Context.TLO.Me.Buffs;
+            var buffs = context.TLO.Me.Buffs;
 
             foreach (var buff in buffs)
             {
