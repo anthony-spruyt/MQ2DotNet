@@ -127,14 +127,44 @@ namespace MQFlux.Commands
                         .Where
                         (
                             i =>
-                            i.Beneficial &&
-                            i.RecastTime.GetValueOrDefault(TimeSpan.Zero) <= maxRecastTime &&
-                            i.Duration >= minDuration &&
-                            BuffSpellCategories.Contains(i.Category) &&
-                            !SubcategoryBlacklist.Contains(i.Subcategory) &&
-                            !BuffBlacklist.Contains(i.Name) &&
-                            !i.HasSPA(SPA.FRAGILE) &&
-                            !i.HasSPA(SPA.FRAGILE_DEFENSE)
+                            {
+                                if (!i.Beneficial)
+                                {
+                                    return false;
+                                }
+
+                                if (i.RecastTime.GetValueOrDefault(TimeSpan.Zero) > maxRecastTime)
+                                {
+                                    return false;
+                                }
+
+                                if (i.Duration > TimeSpan.Zero && i.Duration < minDuration)
+                                {
+                                    return false;
+                                }
+
+                                if (!BuffSpellCategories.Contains(i.Category))
+                                {
+                                    return false;
+                                }
+
+                                if (SubcategoryBlacklist.Contains(i.Subcategory) && !SubcategoryWhitelist.Contains(i.Name))
+                                {
+                                    return false;
+                                }
+
+                                if (BuffBlacklist.Contains(i.Name))
+                                {
+                                    return false;
+                                }
+
+                                if (i.HasSPA(SPA.FRAGILE) || i.HasSPA(SPA.FRAGILE_DEFENSE))
+                                {
+                                    return false;
+                                }
+
+                                return true;
+                            }
                         )
                         .HighestLevelSpellLineSpells();
 
@@ -174,6 +204,8 @@ namespace MQFlux.Commands
             foreach (var spawn in spawns)
             {
                 await targetService.Target(spawn, waitForBuffsPopulated: true, cancellationToken);
+
+                await Task.Delay(50, cancellationToken);
 
                 var target = context.TLO.Target;
 
@@ -351,15 +383,14 @@ namespace MQFlux.Commands
         private static bool IsBuffUseful(ClassType buffTargetCass, SpellType spell)
         {
             var @class = (Class)buffTargetCass;
-            var spellCategory = spell.Category;
             switch (@class)
             {
                 case Class.Warrior:
-                    return MeleeBuffSpellCategories.Union(TankBuffSpellCategories).Contains(spellCategory);
+                    return MeleeTankBuffSpellCategories.Contains(spell.Subcategory);
                 case Class.Monk:
                 case Class.Rogue:
                 case Class.Berserker:
-                    return MeleeBuffSpellCategories.Contains(spellCategory);
+                    return MeleeBuffSpellCategories.Contains(spell.Subcategory);
                 case Class.Cleric:
                 case Class.Druid:
                 case Class.Shaman:
@@ -367,20 +398,20 @@ namespace MQFlux.Commands
                 case Class.Wizard:
                 case Class.Mage:
                 case Class.Enchanter:
-                    return CasterBuffSpellCategories.Contains(spellCategory);
+                    return CasterBuffSpellCategories.Contains(spell.Subcategory);
                 case Class.Paladin:
                 case Class.Shadowknight:
-                    return HybridBuffSpellCategories.Union(TankBuffSpellCategories).Contains(spellCategory);
+                    return HybridTankBuffSpellCategories.Contains(spell.Subcategory);
                 case Class.Ranger:
                 case Class.Bard:
                 case Class.Beastlord:
-                    return HybridBuffSpellCategories.Contains(spellCategory);
+                    return HybridBuffSpellCategories.Contains(spell.Subcategory);
                 default:
                     return true;
             }
         }
 
-        private static readonly SpellCategory[] TankBuffSpellCategories = new SpellCategory[]
+        private static readonly SpellCategory[] MeleeTankBuffSpellCategories = new SpellCategory[]
         {
             SpellCategory.AEGOLISM,
             SpellCategory.AGILITY,
@@ -419,6 +450,45 @@ namespace MQFlux.Commands
             //SpellCategory.WISDOM_INTELLIGENCE
         };
 
+        private static readonly SpellCategory[] HybridTankBuffSpellCategories = new SpellCategory[]
+        {
+            SpellCategory.AEGOLISM,
+            SpellCategory.AGILITY,
+            SpellCategory.ARMOR_CLASS,
+            SpellCategory.ATTACK,
+            //SpellCategory.CHARISMA,
+            SpellCategory.DAMAGE_SHIELD,
+            SpellCategory.DEFENSIVE,
+            SpellCategory.DEXTERITY,
+            SpellCategory.ENDURANCE,
+            //SpellCategory.FAST, // Fast heals?
+            SpellCategory.HASTE,
+            SpellCategory.HASTE_SPELL_FOCUS,
+            SpellCategory.HEALTH,
+            SpellCategory.HEALTH_MANA,
+            SpellCategory.HP_BUFFS,
+            SpellCategory.HP_TYPE_ONE,
+            SpellCategory.HP_TYPE_TWO,
+            SpellCategory.LEVITATE,
+            SpellCategory.MANA,
+            SpellCategory.MANA_FLOW,
+            SpellCategory.MOVEMENT,
+            SpellCategory.REGEN,
+            SpellCategory.RESIST_BUFF,
+            SpellCategory.RUNE,
+            SpellCategory.SHIELDING,
+            SpellCategory.SPELLSHIELD,
+            SpellCategory.SPELL_FOCUS,
+            SpellCategory.SPELL_GUARD,
+            SpellCategory.STAMINA,
+            SpellCategory.STATISTIC_BUFFS,
+            SpellCategory.STRENGTH,
+            SpellCategory.SYMBOL,
+            SpellCategory.UTILITY_BENEFICIAL,
+            //SpellCategory.VISION,
+            SpellCategory.WISDOM_INTELLIGENCE
+        };
+
         private static readonly SpellCategory[] MeleeBuffSpellCategories = new SpellCategory[]
         {
             SpellCategory.AEGOLISM,
@@ -445,7 +515,7 @@ namespace MQFlux.Commands
             //SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,
             //SpellCategory.RUNE,
-            //SpellCategory.SHIELDING,
+            SpellCategory.SHIELDING,
             //SpellCategory.SPELLSHIELD,
             //SpellCategory.SPELL_FOCUS,
             //SpellCategory.SPELL_GUARD,
@@ -481,10 +551,10 @@ namespace MQFlux.Commands
             SpellCategory.MANA,
             SpellCategory.MANA_FLOW,
             SpellCategory.MOVEMENT,
-            SpellCategory.REGEN,
+            //SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,
             //SpellCategory.RUNE,
-            //SpellCategory.SHIELDING,
+            SpellCategory.SHIELDING,
             //SpellCategory.SPELLSHIELD,
             SpellCategory.SPELL_FOCUS,
             //SpellCategory.SPELL_GUARD,
@@ -523,7 +593,7 @@ namespace MQFlux.Commands
             SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,
             //SpellCategory.RUNE,
-            //SpellCategory.SHIELDING,
+            SpellCategory.SHIELDING,
             //SpellCategory.SPELLSHIELD,
             SpellCategory.SPELL_FOCUS,
             SpellCategory.SPELL_GUARD,
@@ -535,6 +605,8 @@ namespace MQFlux.Commands
             //SpellCategory.VISION,
             SpellCategory.WISDOM_INTELLIGENCE
         };
+
+
 
         private static readonly SpellCategory[] BuffSpellCategories = new SpellCategory[]
         {
@@ -571,7 +643,7 @@ namespace MQFlux.Commands
             SpellCategory.STRENGTH,
             SpellCategory.SYMBOL,
             SpellCategory.UTILITY_BENEFICIAL,
-            //SpellCategory.VISION,
+            SpellCategory.VISION,
             SpellCategory.WISDOM_INTELLIGENCE
         };
 
@@ -580,13 +652,21 @@ namespace MQFlux.Commands
             "Share Wolf Form"
         };
 
-        private static readonly string[] SubcategoryBlacklist = new string[]
+        private static readonly SpellCategory[] SubcategoryBlacklist = new SpellCategory[]
         {
-            "Misc",
-            "Invisibility",
-            "Summoned",
-            "Undead",
-            "Invulnerability"
+            SpellCategory.MISC,
+            SpellCategory.INVISIBILITY,
+            SpellCategory.SUMMONED,
+            SpellCategory.UNDEAD,
+            SpellCategory.INVULNERABILITY,
+            SpellCategory.VISION,
+            SpellCategory.CONVERSIONS,
+            SpellCategory.ANIMAL
+        };
+
+        private static readonly string[] SubcategoryWhitelist = new string[]
+        {
+            "Shrink"
         };
     }
 }

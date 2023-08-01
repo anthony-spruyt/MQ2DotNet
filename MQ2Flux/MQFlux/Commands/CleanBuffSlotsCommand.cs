@@ -49,18 +49,21 @@ namespace MQFlux.Commands
                     .OrderBy(i => i.Level)
                     .Take(buffsToRemoveCount);
 
-                foreach (var buff in removeTheseBuffs)
+                if (removeTheseBuffs.Count() > 0)
                 {
-                    buff.Remove();
+                    foreach (var buff in removeTheseBuffs)
+                    {
+                        buff.Remove();
 
-                    mqLogger.Log($"\awRemoving [\ay{buff.Name}\aw] - I am low on buff slots", TimeSpan.Zero);
+                        mqLogger.Log($"\awRemoving [\ay{buff.Name}\aw] - I am low on buff slots", TimeSpan.Zero);
 
-                    await Task.Yield();
+                        await Task.Yield();
+                    }
+
+                    await Task.Delay(1000, cancellationToken);
+
+                    return CommandResponse.FromResult(true);
                 }
-
-                await Task.Delay(1000, cancellationToken);
-
-                return CommandResponse.FromResult(true);
             }
 
             return CommandResponse.FromResult(false);

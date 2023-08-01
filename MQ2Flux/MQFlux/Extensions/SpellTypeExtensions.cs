@@ -53,14 +53,36 @@ namespace MQFlux.Extensions
 
         public static IEnumerable<IGrouping<string, SpellType>> GroupBySpellLine(this IEnumerable<SpellType> spells)
         {
-            return spells.GroupBy(i => {
-                var targetCategory = SquashedTargetCategories.Contains(i.TargetCategory) ? "Group_or_Single" : Enum.GetName(typeof(TargetCategory), i.TargetCategory);
-                //var spas = string.Join("_", i.SPAs.OrderBy(j => j.SPA).Select(j => Enum.GetName(typeof(SPA), j.SPA)));
-                var spas = "NA";
-                var key = $"{i.CategoryName}_{i.Subcategory}_{targetCategory}_{spas}";
+            return spells.GroupBy
+            (
+                i =>
+                {
+                    var keyParts = new List<string>()
+                    {
+                        i.CategoryName,
+                        i.SubcategoryName
+                    };
+                    var targetCategory = SquashedTargetCategories.Contains(i.TargetCategory) ? "Group_or_Single" : Enum.GetName(typeof(TargetCategory), i.TargetCategory);
+                
+                    keyParts.Add(targetCategory);
 
-                return key;
-            });
+                    if (i.Subcategory == SpellCategory.RESIST_BUFF)
+                    {
+                        var resistsDifferentiator = $"ResistType{i.SpellIcon.GetValueOrDefault(0u)}";
+                    
+                        keyParts.Add(resistsDifferentiator);
+                    }
+                
+                    if (false)
+                    {
+                        var spas = string.Join("_", i.SPAs.OrderBy(j => j.SPA).Select(j => Enum.GetName(typeof(SPA), j.SPA)));
+                    
+                        keyParts.Add(spas);
+                    }
+
+                    return string.Join("_", keyParts);
+                }
+            );
         }
 
         public static IEnumerable<SpellType> HighestLevelSpellLineSpells(this IEnumerable<IGrouping<string, SpellType>> spellsLines)

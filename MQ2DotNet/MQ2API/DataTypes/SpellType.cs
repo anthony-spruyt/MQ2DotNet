@@ -356,12 +356,12 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// Name of the subcategory this spell belongs to (e.g. "Shielding").
         /// TODO: map to enum
         /// </summary>
-        public virtual string Subcategory => GetMember<StringType>("Subcategory");
+        public virtual string SubcategoryName => GetMember<StringType>("Subcategory");
 
         /// <summary>
         /// Numeric Id of the subcategory this spell belongs to.
         /// </summary>
-        public virtual uint? SubcategoryID => GetMember<IntType>("SubcategoryID");
+        public virtual SpellCategory Subcategory => GetMember<IntType>("SubcategoryID");
 
         /// <summary>
         /// Text of the nth restriction (1 based) on the spell
