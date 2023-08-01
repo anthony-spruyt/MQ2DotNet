@@ -9,11 +9,9 @@ using System.Threading.Tasks;
 namespace MQFlux.Commands
 {
     public class InitializeCommand :
-        PCCommand,
-        ICharacterConfigRequest
+        PCCommand
     {
         public FluxConfig Config { get; set; }
-        public CharacterConfig Character { get; set; }
     }
 
     public class InitializeCommandHandler : PCCommandHandler<InitializeCommand>

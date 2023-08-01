@@ -100,6 +100,8 @@
     <Compile Include="Behaviors\InGameBehavior.cs" />
     <Compile Include="Behaviors\StandingStillBehavior.cs" />
     <Compile Include="Commands\BuffCommand.cs" />
+    <Compile Include="Commands\BusyBuffingCommand.cs" />
+    <Compile Include="Commands\CleanBuffSlotsCommand.cs" />
     <Compile Include="Commands\PauseCommand.cs" />
     <Compile Include="Commands\RemoveBuffsCommand.cs" />
     <Compile Include="Commands\ResumeCommand.cs" />
@@ -141,6 +143,8 @@
     <Compile Include="Extensions\SpellTypeExtensions.cs" />
     <Compile Include="Extensions\TLOExtensions.cs" />
     <Compile Include="Core\SetCacheCommandHandler.cs" />
+    <Compile Include="Models\BusyBuffingResult.cs" />
+    <Compile Include="Queries\BusyBuffingQuery.cs" />
     <Compile Include="Queries\IdleSinceQuery.cs" />
     <Compile Include="Core\CacheQueryHandler.cs" />
     <Compile Include="Behaviors\FluxConfigBehavior.cs" />

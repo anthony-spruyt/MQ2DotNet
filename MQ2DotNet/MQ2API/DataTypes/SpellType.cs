@@ -469,7 +469,9 @@ namespace MQ2DotNet.MQ2API.DataTypes
         {
             get
             {
-                for (int i = 1; i <= 4; i++)
+                var count = NumEffects.GetValueOrDefault(0);
+
+                for (int i = 1; i <= count; i++)
                 {
                     var item = new SPAInfo(this, i);
 

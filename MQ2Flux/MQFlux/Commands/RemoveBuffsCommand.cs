@@ -27,12 +27,20 @@ namespace MQFlux.Commands
         public override async Task<CommandResponse<bool>> Handle(RemoveBuffsCommand request, CancellationToken cancellationToken)
         {
             var buffs = context.TLO.Me.Buffs;
+            var count = buffs.Count();
 
-            foreach (var buff in buffs)
+            if (count > 0)
             {
-                buff.Remove();
+                foreach (var buff in buffs)
+                {
+                    buff.Remove();
 
-                await Task.Yield();
+                    await Task.Yield();
+                }
+
+                await Task.Delay(1000, cancellationToken);
+
+                // TODO write to mqlogger
             }
 
             return CommandResponse.FromResult(buffs.Count() > 0);

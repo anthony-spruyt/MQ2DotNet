@@ -43,9 +43,24 @@ namespace MQFlux.Extensions
     /// </summary>
     public static class SpellTypeExtensions
     {
+        private static readonly TargetCategory[] SquashedTargetCategories = new TargetCategory[]
+        {
+            TargetCategory.Group_v1,
+            TargetCategory.Group_v2,
+            TargetCategory.Single,
+            TargetCategory.Single_in_Group, TargetCategory.Single_Friendly_or_Targets_Target
+        };
+
         public static IEnumerable<IGrouping<string, SpellType>> GroupBySpellLine(this IEnumerable<SpellType> spells)
         {
-            return spells.GroupBy(i => $"{i.CategoryName}_{i.Subcategory}_{i.SpellIcon}_{i.TargetCategory}");
+            return spells.GroupBy(i => {
+                var targetCategory = SquashedTargetCategories.Contains(i.TargetCategory) ? "Group_or_Single" : Enum.GetName(typeof(TargetCategory), i.TargetCategory);
+                //var spas = string.Join("_", i.SPAs.OrderBy(j => j.SPA).Select(j => Enum.GetName(typeof(SPA), j.SPA)));
+                var spas = "NA";
+                var key = $"{i.CategoryName}_{i.Subcategory}_{targetCategory}_{spas}";
+
+                return key;
+            });
         }
 
         public static IEnumerable<SpellType> HighestLevelSpellLineSpells(this IEnumerable<IGrouping<string, SpellType>> spellsLines)
@@ -200,6 +215,26 @@ namespace MQFlux.Extensions
             }
 
             if (spell1.Name == "Protection of Diamond" && spell2.Name == "Temperance")
+            {
+                return false;
+            }
+
+            if (spell1.Name == "Skin like Diamond" && spell2.Name == "Protection of Diamond")
+            {
+                return false;
+            }
+
+            if (spell1.Name == "Spirit of Wolf" && spell2.Name == "Spirit of Bih`Li")
+            {
+                return false;
+            }
+
+            if (spell1.Name == "Spirit of Wolf" && spell2.Name == "Illusion Benefit Dena")
+            {
+                return false;
+            }
+
+            if (spell1.Name == "Pack Spirit" && spell2.Name == "Spirit of Bih`Li")
             {
                 return false;
             }

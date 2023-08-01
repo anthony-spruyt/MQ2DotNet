@@ -1,9 +1,11 @@
-﻿using MQ2DotNet.EQ;
+﻿using MediatR;
+using MQ2DotNet.EQ;
 using MQ2DotNet.MQ2API.DataTypes;
 using MQFlux.Behaviors;
 using MQFlux.Core;
 using MQFlux.Extensions;
 using MQFlux.Models;
+using MQFlux.Queries;
 using MQFlux.Services;
 using System;
 using System.Collections.Generic;
@@ -28,7 +30,7 @@ namespace MQFlux.Commands
         public bool AllowBard => false;
         public CharacterConfig Character { get; set; }
         public FluxConfig Config { get; set; }
-        public TimeSpan IdleTime => TimeSpan.FromSeconds(2);
+        public TimeSpan IdleTime => TimeSpan.FromSeconds(5);
     }
 
     public class BuffCommandHandler : PCCommandHandler<BuffCommand>
@@ -37,13 +39,17 @@ namespace MQFlux.Commands
         private readonly ITargetService targetService;
         private readonly IMQLogger mqLogger;
         private readonly IContext context;
+        private readonly IMacroService macroService;
+        private readonly IMediator mediator;
 
-        public BuffCommandHandler(ISpellCastingService spellCastingService, ITargetService targetService, IMQLogger mqLogger, IContext context)
+        public BuffCommandHandler(ISpellCastingService spellCastingService, ITargetService targetService, IMQLogger mqLogger, IContext context, IMacroService macroService, IMediator mediator)
         {
             this.spellCastingService = spellCastingService;
             this.targetService = targetService;
             this.mqLogger = mqLogger;
             this.context = context;
+            this.macroService = macroService;
+            this.mediator = mediator;
         }
 
         public async override Task<CommandResponse<bool>> Handle(BuffCommand request, CancellationToken cancellationToken)
@@ -53,10 +59,13 @@ namespace MQFlux.Commands
                 return CommandResponse.FromResult(false);
             }
 
-            //if (DateTime.UtcNow.Second % 4 != 0)
-            //{
-            //    return CommandResponse.FromResult(false);
-            //})
+            var response = await mediator.Send(new BusyBuffingQuery(), cancellationToken);
+            var notBusyBuffingFrequency = TimeSpan.FromSeconds(10);
+
+            if (!response.Result.IsBusyBuffing && response.Result.Timestamp.Add(notBusyBuffingFrequency) > DateTime.UtcNow)
+            {
+                return CommandResponse.FromResult(false);
+            }
 
             var me = context.TLO.Me;
             IEnumerable<SpawnType> spawns;
@@ -72,9 +81,20 @@ namespace MQFlux.Commands
                 spawns = new SpawnType[] { me };
             }
 
-            var result = await TryBuff(spawns, cancellationToken);
+            try
+            {
+                await macroService.Pause(cancellationToken);
 
-            return CommandResponse.FromResult(result);
+                var didBuff = await TryBuff(spawns, cancellationToken);
+
+                await mediator.Send(new BusyBuffingCommand(didBuff), cancellationToken);
+
+                return CommandResponse.FromResult(didBuff);
+            }
+            finally
+            {
+                macroService.Resume();
+            }
         }
 
         private class StacksWithComparer : IComparer<SpellType>
@@ -98,6 +118,8 @@ namespace MQFlux.Commands
 
         private async Task<bool> TryBuff(IEnumerable<SpawnType> spawns, CancellationToken cancellationToken = default)
         {
+            var maxRecastTime = TimeSpan.FromSeconds(60);
+            var minDuration = TimeSpan.FromMinutes(1);
             var me = context.TLO.Me;
             var comparer = new StacksWithComparer();
             var buffs = me.SpellBook
@@ -105,24 +127,12 @@ namespace MQFlux.Commands
                         .Where
                         (
                             i =>
+                            i.Beneficial &&
+                            i.RecastTime.GetValueOrDefault(TimeSpan.Zero) <= maxRecastTime &&
+                            i.Duration >= minDuration &&
+                            BuffSpellCategories.Contains(i.Category) &&
+                            !SubcategoryBlacklist.Contains(i.Subcategory) &&
                             !BuffBlacklist.Contains(i.Name) &&
-                            i.RecastTime.GetValueOrDefault(TimeSpan.Zero) <= TimeSpan.FromSeconds(60) &&
-                            (
-                                (
-                                    i.Beneficial &&
-                                    i.Duration > TimeSpan.FromMinutes(1) &&
-                                    i.Category != SpellCategory.UTILITY_BENEFICIAL &&
-                                    BuffSpellCategories.Contains(i.Category)
-                                ) ||
-                                (
-                                    i.Category == SpellCategory.UTILITY_BENEFICIAL &&
-                                    (
-                                        i.Name.ToLower().Contains("shrink") ||
-                                        string.Compare(i.Subcategory, "Haste", true) == 0 ||
-                                        string.Compare(i.Subcategory, "Movement", true) == 0
-                                    )
-                                )
-                            ) &&
                             !i.HasSPA(SPA.FRAGILE) &&
                             !i.HasSPA(SPA.FRAGILE_DEFENSE)
                         )
@@ -158,8 +168,8 @@ namespace MQFlux.Commands
 
             // ST buffs
             var singleTargetBuffs = me.Grouped ?
-                buffs.SingleTargetGroupBuffs().OrderBy(i => i, comparer) :
-                buffs.SingleTargetFriendlyBuffs().OrderBy(i => i, comparer);
+                buffs.SingleTargetGroupBuffs().OrderBy(i => i, comparer).ThenByDescending(i => i.Level) :
+                buffs.SingleTargetFriendlyBuffs().OrderBy(i => i, comparer).ThenByDescending(i => i.Level);
 
             foreach (var spawn in spawns)
             {
@@ -200,7 +210,7 @@ namespace MQFlux.Commands
             }
 
             // self buffs
-            var selfBuffs = buffs.SelfBuffs().OrderBy(i => i, comparer);
+            var selfBuffs = buffs.SelfBuffs().OrderBy(i => i, comparer).ThenByDescending(i => i.Level);
 
             foreach (var buff in selfBuffs)
             {
@@ -235,7 +245,6 @@ namespace MQFlux.Commands
                 me.DoIHaveReagentsToCast(buff);
 
             return canCast;
-
         }
 
         private static bool WillLand(CharacterType me, SpawnType spawn, SpellType spell)
@@ -278,7 +287,7 @@ namespace MQFlux.Commands
                 try
                 {
                     // For some reason if you have all your buff slots filled then stacksTarget is false.
-                    if (me.CountBuffs == 15u)
+                    if (me.CountBuffs >= 15u)
                     {
                         me.Buffs.Last().Remove();
                     }
@@ -299,7 +308,44 @@ namespace MQFlux.Commands
 
         private static bool IsBuffUseful(SpawnType spawn, SpellType spell)
         {
-            return IsBuffUseful(spawn.Class, spell);
+            var usefulToClass = IsBuffUseful(spawn.Class, spell);
+
+            if (!usefulToClass)
+            {
+                return false;
+            }
+
+            var worthABuffSlot = IsWorthABuffSlot(spawn, spell);
+
+            if (!worthABuffSlot)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool IsWorthABuffSlot(SpawnType spawn, SpellType spell)
+        {
+            var longTermBuffCount = spawn.Buffs.Count(i => i.DurationWindow.GetValueOrDefault(0u) == 0u);
+
+            // No slots left
+            if (longTermBuffCount >= 15)
+            {
+                return false;
+            }
+            // 1 or 2 slot left
+            else if (longTermBuffCount >= 13)
+            {
+                var spellName = spell.Name.ToLower();
+
+                if (spell.Category == SpellCategory.RESIST_BUFF || spellName.Contains("resist") || spellName.Contains("endure"))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static bool IsBuffUseful(ClassType buffTargetCass, SpellType spell)
@@ -309,6 +355,7 @@ namespace MQFlux.Commands
             switch (@class)
             {
                 case Class.Warrior:
+                    return MeleeBuffSpellCategories.Union(TankBuffSpellCategories).Contains(spellCategory);
                 case Class.Monk:
                 case Class.Rogue:
                 case Class.Berserker:
@@ -322,8 +369,9 @@ namespace MQFlux.Commands
                 case Class.Enchanter:
                     return CasterBuffSpellCategories.Contains(spellCategory);
                 case Class.Paladin:
-                case Class.Ranger:
                 case Class.Shadowknight:
+                    return HybridBuffSpellCategories.Union(TankBuffSpellCategories).Contains(spellCategory);
+                case Class.Ranger:
                 case Class.Bard:
                 case Class.Beastlord:
                     return HybridBuffSpellCategories.Contains(spellCategory);
@@ -332,7 +380,7 @@ namespace MQFlux.Commands
             }
         }
 
-        private static readonly SpellCategory[] MeleeBuffSpellCategories = new SpellCategory[]
+        private static readonly SpellCategory[] TankBuffSpellCategories = new SpellCategory[]
         {
             SpellCategory.AEGOLISM,
             SpellCategory.AGILITY,
@@ -351,11 +399,50 @@ namespace MQFlux.Commands
             SpellCategory.HP_BUFFS,
             SpellCategory.HP_TYPE_ONE,
             SpellCategory.HP_TYPE_TWO,
-            //SpellCategory.LEVITATE,
+            SpellCategory.LEVITATE,
             //SpellCategory.MANA,
             //SpellCategory.MANA_FLOW,
             SpellCategory.MOVEMENT,
             SpellCategory.REGEN,
+            SpellCategory.RESIST_BUFF,
+            SpellCategory.RUNE,
+            SpellCategory.SHIELDING,
+            SpellCategory.SPELLSHIELD,
+            //SpellCategory.SPELL_FOCUS,
+            SpellCategory.SPELL_GUARD,
+            SpellCategory.STAMINA,
+            SpellCategory.STATISTIC_BUFFS,
+            SpellCategory.STRENGTH,
+            SpellCategory.SYMBOL,
+            SpellCategory.UTILITY_BENEFICIAL,
+            //SpellCategory.VISION,
+            //SpellCategory.WISDOM_INTELLIGENCE
+        };
+
+        private static readonly SpellCategory[] MeleeBuffSpellCategories = new SpellCategory[]
+        {
+            SpellCategory.AEGOLISM,
+            SpellCategory.AGILITY,
+            SpellCategory.ARMOR_CLASS,
+            SpellCategory.ATTACK,
+            //SpellCategory.CHARISMA,
+            //SpellCategory.DAMAGE_SHIELD,
+            //SpellCategory.DEFENSIVE,
+            SpellCategory.DEXTERITY,
+            SpellCategory.ENDURANCE,
+            //SpellCategory.FAST, // Fast heals?
+            SpellCategory.HASTE,
+            //SpellCategory.HASTE_SPELL_FOCUS,
+            SpellCategory.HEALTH,
+            //SpellCategory.HEALTH_MANA,
+            SpellCategory.HP_BUFFS,
+            SpellCategory.HP_TYPE_ONE,
+            SpellCategory.HP_TYPE_TWO,
+            SpellCategory.LEVITATE,
+            //SpellCategory.MANA,
+            //SpellCategory.MANA_FLOW,
+            SpellCategory.MOVEMENT,
+            //SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,
             //SpellCategory.RUNE,
             //SpellCategory.SHIELDING,
@@ -390,7 +477,7 @@ namespace MQFlux.Commands
             SpellCategory.HP_BUFFS,
             SpellCategory.HP_TYPE_ONE,
             SpellCategory.HP_TYPE_TWO,
-            //SpellCategory.LEVITATE,
+            SpellCategory.LEVITATE,
             SpellCategory.MANA,
             SpellCategory.MANA_FLOW,
             SpellCategory.MOVEMENT,
@@ -399,7 +486,7 @@ namespace MQFlux.Commands
             //SpellCategory.RUNE,
             //SpellCategory.SHIELDING,
             //SpellCategory.SPELLSHIELD,
-            //SpellCategory.SPELL_FOCUS,
+            SpellCategory.SPELL_FOCUS,
             //SpellCategory.SPELL_GUARD,
             //SpellCategory.STAMINA,
             SpellCategory.STATISTIC_BUFFS,
@@ -429,7 +516,7 @@ namespace MQFlux.Commands
             SpellCategory.HP_BUFFS,
             SpellCategory.HP_TYPE_ONE,
             SpellCategory.HP_TYPE_TWO,
-            //SpellCategory.LEVITATE,
+            SpellCategory.LEVITATE,
             SpellCategory.MANA,
             SpellCategory.MANA_FLOW,
             SpellCategory.MOVEMENT,
@@ -438,8 +525,8 @@ namespace MQFlux.Commands
             //SpellCategory.RUNE,
             //SpellCategory.SHIELDING,
             //SpellCategory.SPELLSHIELD,
-            //SpellCategory.SPELL_FOCUS,
-            //SpellCategory.SPELL_GUARD,
+            SpellCategory.SPELL_FOCUS,
+            SpellCategory.SPELL_GUARD,
             SpellCategory.STAMINA,
             SpellCategory.STATISTIC_BUFFS,
             SpellCategory.STRENGTH,
@@ -468,17 +555,17 @@ namespace MQFlux.Commands
             SpellCategory.HP_BUFFS,
             SpellCategory.HP_TYPE_ONE,
             SpellCategory.HP_TYPE_TWO,
-            //SpellCategory.LEVITATE,
+            SpellCategory.LEVITATE,
             SpellCategory.MANA,
             SpellCategory.MANA_FLOW,
             SpellCategory.MOVEMENT,
             SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,
-            //SpellCategory.RUNE,
-            //SpellCategory.SHIELDING,
-            //SpellCategory.SPELLSHIELD,
-            //SpellCategory.SPELL_FOCUS,
-            //SpellCategory.SPELL_GUARD,
+            SpellCategory.RUNE,
+            SpellCategory.SHIELDING,
+            SpellCategory.SPELLSHIELD,
+            SpellCategory.SPELL_FOCUS,
+            SpellCategory.SPELL_GUARD,
             SpellCategory.STAMINA,
             SpellCategory.STATISTIC_BUFFS,
             SpellCategory.STRENGTH,
@@ -490,6 +577,16 @@ namespace MQFlux.Commands
 
         private static readonly string[] BuffBlacklist = new string[]
         {
+            "Share Wolf Form"
+        };
+
+        private static readonly string[] SubcategoryBlacklist = new string[]
+        {
+            "Misc",
+            "Invisibility",
+            "Summoned",
+            "Undead",
+            "Invulnerability"
         };
     }
 }

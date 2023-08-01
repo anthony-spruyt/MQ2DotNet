@@ -1,11 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using MQFlux.Behaviors;
+﻿using MQFlux.Behaviors;
 using MQFlux.Core;
-using MQFlux.Extensions;
 using MQFlux.Models;
 using MQFlux.Services;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

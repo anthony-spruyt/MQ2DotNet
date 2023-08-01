@@ -35,7 +35,7 @@ namespace MQFlux.Services
     public class SpellCastingService : ISpellCastingService, IDisposable
     {
         private static readonly TimeSpan SpellReadyTimeout = TimeSpan.FromSeconds(40);
-        private static readonly TimeSpan SpellMemorizeTimeout = TimeSpan.FromSeconds(40);
+        private static readonly TimeSpan SpellMemorizeTimeout = TimeSpan.FromSeconds(5);
 
         private readonly IContext context;
         private readonly IMQLogger mqLogger;

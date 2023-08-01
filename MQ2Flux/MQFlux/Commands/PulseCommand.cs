@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MQFlux.Behaviors;
 using MQFlux.Core;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace MQFlux.Commands
         {
             var commands = new IRequest<CommandResponse<bool>>[]
             {
+                new CleanBuffSlotsCommand(),
                 new ForageCommand(),
                 new BuffCommand(),
                 new DispenseCommand(),
@@ -35,14 +37,20 @@ namespace MQFlux.Commands
             };
 
             CommandResponse<bool> response;
+            IRequest<CommandResponse<bool>> command;
 
             for (int i = 0; i < commands.Length; i++)
             {
-                response = await mediator.Send(commands[i], cancellationToken);
+                command = commands[i];
+
+                response = await mediator.Send(command, cancellationToken);
 
                 if (response.Result)
                 {
-                    await mediator.Send(new IdleSinceCommand(), cancellationToken);
+                    if (!(command is IIdleTimeRequest))
+                    {
+                        await mediator.Send(new IdleSinceCommand(), cancellationToken);
+                    }
 
                     break;
                 }

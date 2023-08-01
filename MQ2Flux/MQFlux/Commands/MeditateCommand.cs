@@ -20,7 +20,7 @@ namespace MQFlux.Commands
         IIdleTimeRequest
     {
         public bool AllowBard => false;
-        public TimeSpan IdleTime => TimeSpan.FromSeconds(5);
+        public TimeSpan IdleTime => TimeSpan.FromSeconds(2);
     }
 
     public class MeditateCommandHandler : PCCommandHandler<MeditateCommand>
