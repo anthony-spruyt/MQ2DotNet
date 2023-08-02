@@ -41,8 +41,9 @@ namespace MQFlux.Commands
         private readonly IContext context;
         private readonly IMacroService macroService;
         private readonly IMediator mediator;
+        private readonly IItemService itemService;
 
-        public BuffCommandHandler(ISpellCastingService spellCastingService, ITargetService targetService, IMQLogger mqLogger, IContext context, IMacroService macroService, IMediator mediator)
+        public BuffCommandHandler(ISpellCastingService spellCastingService, ITargetService targetService, IMQLogger mqLogger, IContext context, IMacroService macroService, IMediator mediator, IItemService itemService)
         {
             this.spellCastingService = spellCastingService;
             this.targetService = targetService;
@@ -50,6 +51,7 @@ namespace MQFlux.Commands
             this.context = context;
             this.macroService = macroService;
             this.mediator = mediator;
+            this.itemService = itemService;
         }
 
         public async override Task<CommandResponse<bool>> Handle(BuffCommand request, CancellationToken cancellationToken)
@@ -85,7 +87,7 @@ namespace MQFlux.Commands
             {
                 await macroService.Pause(cancellationToken);
 
-                var didBuff = await TryBuff(spawns, cancellationToken);
+                var didBuff = await TryBuff(request.Character.BuffConfig, spawns, cancellationToken);
 
                 await mediator.Send(new BusyBuffingCommand(didBuff), cancellationToken);
 
@@ -116,13 +118,18 @@ namespace MQFlux.Commands
             }
         }
 
-        private async Task<bool> TryBuff(IEnumerable<SpawnType> spawns, CancellationToken cancellationToken = default)
+        private async Task<bool> TryBuff(BuffConfig buffConfig, IEnumerable<SpawnType> spawns, CancellationToken cancellationToken = default)
         {
             var maxRecastTime = TimeSpan.FromSeconds(60);
             var minDuration = TimeSpan.FromMinutes(1);
             var me = context.TLO.Me;
             var comparer = new StacksWithComparer();
-            var buffs = me.SpellBook
+            IEnumerable<SpellType> buffs;
+            IEnumerable<ItemType> items;
+
+            if (buffConfig.Mode == BuffMode.Auto)
+            {
+                buffs = me.SpellBook
                         .Select(i => i.Value)
                         .Where
                         (
@@ -163,10 +170,107 @@ namespace MQFlux.Commands
                                     return false;
                                 }
 
+                                if (!buffConfig.AutoResistBuff && i.Subcategory == SpellCategory.RESIST_BUFF)
+                                {
+                                    return false;
+                                }
+
                                 return true;
                             }
                         )
                         .HighestLevelSpellLineSpells();
+
+                items = me.Inventory
+                    .Flatten()
+                    .Where
+                    (
+                        i =>
+                        {
+                            if (i?.Clicky?.Spell == null)
+                            {
+                                return false;
+                            }
+
+                            var spell = i?.Clicky?.Spell;
+
+                            if (!spell.Beneficial)
+                            {
+                                return false;
+                            }
+
+                            //if (spell.RecastTime.GetValueOrDefault(TimeSpan.Zero) > maxRecastTime)
+                            //{
+                            //    return false;
+                            //}
+
+                            //if (spell.Duration > TimeSpan.Zero && spell.Duration < minDuration)
+                            //{
+                            //    return false;
+                            //}
+
+                            if (!BuffSpellCategories.Contains(spell.Category))
+                            {
+                                return false;
+                            }
+
+                            //if (SubcategoryBlacklist.Contains(spell.Subcategory) && !SubcategoryWhitelist.Contains(i.Name))
+                            //{
+                            //    return false;
+                            //}
+
+                            if (BuffBlacklist.Contains(spell.Name))
+                            {
+                                return false;
+                            }
+
+                            //if (spell.HasSPA(SPA.FRAGILE) || spell.HasSPA(SPA.FRAGILE_DEFENSE))
+                            //{
+                            //    return false;
+                            //}
+
+                            //if (!buffConfig.AutoResistBuff && spell.Subcategory == SpellCategory.RESIST_BUFF)
+                            //{
+                            //    return false;
+                            //}
+
+                            return true;
+                        }
+                    );
+            }
+            else if (buffConfig.Mode == BuffMode.Config)
+            {
+                buffs = me.SpellBook
+                    .Select(i => i.Value)
+                    .Where
+                    (
+                        i => buffConfig.Buffs
+                            .Any
+                            (
+                                j =>
+                                    j.Type == BuffSource.Spell && 
+                                    string.Compare(j.Name, i.Name, true) == 0
+                            )
+                    );
+
+                items = me.Inventory
+                    .Flatten()
+                    .Where
+                    (
+                        i => 
+                            i.Clicky != null && 
+                            i.Clicky.Spell.Beneficial && 
+                            buffConfig.Buffs.Any
+                            (
+                                j => 
+                                    j.Type == BuffSource.Item && 
+                                    string.Compare(j.Name, i.Name, true) == 0
+                            )
+                    );
+            }
+            else
+            {
+                throw new NotSupportedException($"'{buffConfig.Mode}' is not supported");
+            }
 
             // AoE group buffs
             if (me.Grouped)
@@ -262,6 +366,22 @@ namespace MQFlux.Commands
 
                 mqLogger.Log($"Buffing myself with [\ay{buff.Name}\aw]");
                 await spellCastingService.Cast(buff, waitForSpellReady: true, cancellationToken);
+
+                return true;
+            }
+
+            // clicky/item buffs
+            foreach (var item in items)
+            {
+                var willLand = WillLand(me, me, item.Clicky.Spell);
+
+                if (!willLand)
+                {
+                    continue;
+                }
+
+                mqLogger.Log($"Buffing myself with [\ag{item.Name}\aw]");
+                await itemService.UseItem(item, cancellationToken: cancellationToken);
 
                 return true;
             }
@@ -433,6 +553,7 @@ namespace MQFlux.Commands
             SpellCategory.LEVITATE,
             //SpellCategory.MANA,
             //SpellCategory.MANA_FLOW,
+            SpellCategory.MISC,
             SpellCategory.MOVEMENT,
             SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,
@@ -472,6 +593,7 @@ namespace MQFlux.Commands
             SpellCategory.LEVITATE,
             SpellCategory.MANA,
             SpellCategory.MANA_FLOW,
+            SpellCategory.MISC,
             SpellCategory.MOVEMENT,
             SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,
@@ -511,6 +633,7 @@ namespace MQFlux.Commands
             SpellCategory.LEVITATE,
             //SpellCategory.MANA,
             //SpellCategory.MANA_FLOW,
+            SpellCategory.MISC,
             SpellCategory.MOVEMENT,
             //SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,
@@ -550,6 +673,7 @@ namespace MQFlux.Commands
             SpellCategory.LEVITATE,
             SpellCategory.MANA,
             SpellCategory.MANA_FLOW,
+            SpellCategory.MISC,
             SpellCategory.MOVEMENT,
             //SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,
@@ -589,6 +713,7 @@ namespace MQFlux.Commands
             SpellCategory.LEVITATE,
             SpellCategory.MANA,
             SpellCategory.MANA_FLOW,
+            SpellCategory.MISC,
             SpellCategory.MOVEMENT,
             SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,
@@ -630,6 +755,7 @@ namespace MQFlux.Commands
             SpellCategory.LEVITATE,
             SpellCategory.MANA,
             SpellCategory.MANA_FLOW,
+            SpellCategory.MISC,
             SpellCategory.MOVEMENT,
             SpellCategory.REGEN,
             SpellCategory.RESIST_BUFF,

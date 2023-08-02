@@ -132,7 +132,18 @@ namespace MQ2DotNet.MQ2API.DataTypes
         /// <summary>
         /// Activatable spell effect, if any.
         /// </summary>
-        public ItemSpellType Clicky => GetMember<ItemSpellType>("Clicky");
+        public ItemSpellType Clicky
+        {
+            get
+            {
+                // This MQ member returns true again when it should not.
+                var clicky = GetMember<ItemSpellType>("Clicky");
+
+                var spellID = clicky.SpellID.GetValueOrDefault(0u);
+
+                return spellID > 0u && spellID < uint.MaxValue ? clicky : null;
+            }
+        }
 
         /// <summary>
         /// Combat proc effect.

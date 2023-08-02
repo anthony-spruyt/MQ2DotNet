@@ -84,7 +84,8 @@ namespace MQFlux.Models
         /// <summary>
         /// The buffs configuration.
         /// </summary>
-        //public BuffsConfigSection Buffs { get; set; } = new BuffsConfigSection();
+        [JsonPropertyOrder(14)]
+        public BuffConfig BuffConfig { get; set; } = new BuffConfig();
         /// <summary>
         /// A list of food and drink dispensers.
         /// </summary>
@@ -92,23 +93,30 @@ namespace MQFlux.Models
         public List<FoodAndDrinkDispenser> Dispensers { get; set; } = new List<FoodAndDrinkDispenser>();
     }
 
-    //public class BuffsConfigSection
-    //{
-    //public List<BuffConfig> Buffs { get; set; } = new List<BuffConfig>();
-    //}
+    public class BuffConfig
+    {
+        public BuffMode Mode { get; set; } = BuffMode.Auto;
+        public bool AutoResistBuff { get; set; } = false;
+        public List<BuffConfigItem> Buffs { get; set; } = new List<BuffConfigItem>();
+    }
 
-    //public enum BuffSource
-    //{
-    //Spell,
-    //Item
-    //}
+    public enum BuffMode
+    {
+        Auto,
+        Config
+    }
 
-    //public class BuffConfig
-    //{
-    //public string Name { get; set; } = null;
+    public enum BuffSource
+    {
+        Spell,
+        Item
+    }
 
-    //public BuffSource Type { get; set; } = BuffSource.Spell;
-    //}
+    public class BuffConfigItem
+    {
+        public string Name { get; set; } = null;
+        public BuffSource Type { get; set; } = BuffSource.Spell;
+    }
 
     public class FoodAndDrinkDispenser
     {
